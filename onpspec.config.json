@@ -1,0 +1,10 @@
+{
+  "testCommand": "./mvnw -q test",
+  "reporter": "exitcode",
+  "testGlobs": [
+    "src/test/**/*.java"
+  ],
+  "srcGlobs": [
+    "src/main/**/*.java"
+  ]
+}

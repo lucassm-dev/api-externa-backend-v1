@@ -1,0 +1,33 @@
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Env / segredos
+.env
+
+# IDE - IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Eclipse / STS
+.settings/
+.project
+.classpath
+bin/
+
+# VS Code
+.vscode/
+
+# Sistema operacional
+.DS_Store
+
+# Logs
+*.log
+
+# Graphify (grafo local, não vai para o repo)
+graphify-out/
+
+# Python venv (criado pelo graphify)
+.venv/
