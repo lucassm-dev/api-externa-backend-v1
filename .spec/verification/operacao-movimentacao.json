@@ -1,0 +1,72 @@
+{
+  "feature": "operacao-movimentacao",
+  "timestamp": "2026-08-23T18:05:17.936Z",
+  "gitRev": null,
+  "command": "./mvnw -q test",
+  "reporter": "exitcode",
+  "exitCode": 0,
+  "testsParsed": 0,
+  "results": {
+    "AC-401": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-402": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-403": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-404": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-405": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-406": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-407": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-409": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-412": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-413": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-410": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-411": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    }
+  },
+  "principles": {}
+}

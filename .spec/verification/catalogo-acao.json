@@ -1,0 +1,67 @@
+{
+  "feature": "catalogo-acao",
+  "timestamp": "2026-08-23T18:10:27.252Z",
+  "gitRev": null,
+  "command": "./mvnw -q test",
+  "reporter": "exitcode",
+  "exitCode": 0,
+  "testsParsed": 0,
+  "results": {
+    "AC-201": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-202": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-203": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-204": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-205": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-206": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-207": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-208": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-209": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-210": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-211": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    }
+  },
+  "principles": {}
+}
