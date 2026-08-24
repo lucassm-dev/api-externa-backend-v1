@@ -1,0 +1,20 @@
+CREATE TABLE corretora (
+    id                 BIGSERIAL    PRIMARY KEY,
+    cnpj               VARCHAR(14)  NOT NULL,
+    razao_social       VARCHAR(255) NOT NULL,
+    nome_fantasia      VARCHAR(255),
+    email              VARCHAR(255),
+    telefone           VARCHAR(20),
+    cep                VARCHAR(9),
+    logradouro         VARCHAR(255),
+    numero             VARCHAR(20),
+    complemento        VARCHAR(100),
+    bairro             VARCHAR(100),
+    cidade             VARCHAR(100),
+    uf                 CHAR(2),
+    situacao_cadastral VARCHAR(50),
+    validada_na_cvm    BOOLEAN      NOT NULL DEFAULT FALSE,
+    data_base_cvm      DATE,
+    data_cadastro      TIMESTAMP    NOT NULL DEFAULT NOW(),
+    CONSTRAINT uk_corretora_cnpj UNIQUE (cnpj)
+);
