@@ -1,0 +1,179 @@
+package com.apiexternabackend.services;
+
+import com.apiexternabackend.domains.Corretora;
+import com.apiexternabackend.domains.dtos.CorretoraRequestDTO;
+import com.apiexternabackend.domains.dtos.CorretoraResponseDTO;
+import com.apiexternabackend.infra.client.cnpj.dto.CnpjResponseDTO;
+import com.apiexternabackend.infra.client.cep.dto.CepResponseDTO;
+import com.apiexternabackend.infra.facade.CnpjFacade;
+import com.apiexternabackend.infra.facade.CepFacade;
+import com.apiexternabackend.infra.facade.CvmFacade;
+import com.apiexternabackend.infra.facade.CvmFacade.ResultadoVerificacaoCvm;
+import com.apiexternabackend.mappers.CorretoraMapper;
+import com.apiexternabackend.repositories.CorretoraRepository;
+import com.apiexternabackend.resources.exceptions.BusinessException;
+import com.apiexternabackend.resources.exceptions.DuplicateResourceException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDate;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class CorretoraServiceTest {
+
+    // CNPJ válido: XP Investimentos — dígitos verificadores corretos
+    private static final String CNPJ_VALIDO = "02332886000104";
+    private static final String CNPJ_INVALIDO_FORMATO = "1234";
+    private static final String CNPJ_INVALIDO_DIGITO = "12345678000100";
+
+    @Mock private CorretoraRepository repository;
+    @Mock private CorretoraMapper mapper;
+    @Mock private CnpjFacade cnpjFacade;
+    @Mock private CepFacade cepFacade;
+    @Mock private CvmFacade cvmFacade;
+
+    @InjectMocks
+    private CorretoraService service;
+
+    private CnpjResponseDTO cnpjResponse;
+    private CepResponseDTO cepResponse;
+    private Corretora corretora;
+    private CorretoraResponseDTO responseDTO;
+
+    @BeforeEach
+    void setUp() {
+        cnpjResponse = new CnpjResponseDTO();
+        cnpjResponse.setRazaoSocial("XP INVESTIMENTOS");
+        cnpjResponse.setSituacaoCadastral("ATIVA");
+
+        cepResponse = new CepResponseDTO();
+        cepResponse.setCep("04538-133");
+        cepResponse.setLocalidade("São Paulo");
+        cepResponse.setUf("SP");
+
+        corretora = new Corretora();
+        corretora.setId(1L);
+        corretora.setCnpj(CNPJ_VALIDO);
+
+        responseDTO = new CorretoraResponseDTO();
+        responseDTO.setId(1L);
+        responseDTO.setCnpj(CNPJ_VALIDO);
+        responseDTO.setDataBaseCvm(LocalDate.now());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-101 CNPJ mal formatado é rejeitado antes de qualquer chamada externa")
+    void deveRejeitarCnpjMalFormatadoSemChamarFonteExterna() {
+        CorretoraRequestDTO dto = new CorretoraRequestDTO(CNPJ_INVALIDO_FORMATO);
+
+        assertThatThrownBy(() -> service.cadastrar(dto))
+                .isInstanceOf(BusinessException.class);
+
+        verify(cnpjFacade, never()).buscar(anyString());
+        verify(cvmFacade, never()).verificar(anyString());
+        verify(cepFacade, never()).buscar(anyString());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-101 CNPJ com dígitos verificadores inválidos é rejeitado antes de chamadas externas")
+    void deveRejeitarCnpjComDigitosInvalidos() {
+        CorretoraRequestDTO dto = new CorretoraRequestDTO(CNPJ_INVALIDO_DIGITO);
+
+        assertThatThrownBy(() -> service.cadastrar(dto))
+                .isInstanceOf(BusinessException.class);
+
+        verify(cnpjFacade, never()).buscar(anyString());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-102 CNPJ válido busca dados cadastrais e endereço e persiste a corretora")
+    void deveBuscarDadosEPersistirCorretoraValida() {
+        when(repository.existsByCnpj(CNPJ_VALIDO)).thenReturn(false);
+        when(cnpjFacade.buscar(CNPJ_VALIDO)).thenReturn(cnpjResponse);
+        when(cvmFacade.verificar(CNPJ_VALIDO)).thenReturn(ResultadoVerificacaoCvm.autorizada(LocalDate.now()));
+        when(repository.save(any())).thenReturn(corretora);
+        when(mapper.toResponse(corretora)).thenReturn(responseDTO);
+
+        CorretoraResponseDTO result = service.cadastrar(new CorretoraRequestDTO(CNPJ_VALIDO));
+
+        assertThat(result.getCnpj()).isEqualTo(CNPJ_VALIDO);
+        assertThat(result.getDataBaseCvm()).isNotNull();
+    }
+
+    @Test
+    @DisplayName("@spec:AC-103 CNPJ não encontrado na Receita impede o cadastro")
+    void deveRejeitarCnpjNaoEncontradoNaReceita() {
+        when(repository.existsByCnpj(CNPJ_VALIDO)).thenReturn(false);
+        when(cnpjFacade.buscar(CNPJ_VALIDO))
+                .thenThrow(new BusinessException("CNPJ não encontrado na base da Receita"));
+
+        assertThatThrownBy(() -> service.cadastrar(new CorretoraRequestDTO(CNPJ_VALIDO)))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining("Receita");
+    }
+
+    @Test
+    @DisplayName("@spec:AC-104 CNPJ duplicado é impedido")
+    void deveRejeitarCnpjDuplicado() {
+        when(repository.existsByCnpj(CNPJ_VALIDO)).thenReturn(true);
+
+        assertThatThrownBy(() -> service.cadastrar(new CorretoraRequestDTO(CNPJ_VALIDO)))
+                .isInstanceOf(DuplicateResourceException.class);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-105 Corretora não autorizada na CVM não é cadastrada")
+    void deveRejeitarCorretoraInautorizada() {
+        when(repository.existsByCnpj(CNPJ_VALIDO)).thenReturn(false);
+        when(cnpjFacade.buscar(CNPJ_VALIDO)).thenReturn(cnpjResponse);
+        when(cvmFacade.verificar(CNPJ_VALIDO))
+                .thenReturn(ResultadoVerificacaoCvm.naoAutorizada(LocalDate.now(), "Corretora não autorizada na CVM"));
+
+        assertThatThrownBy(() -> service.cadastrar(new CorretoraRequestDTO(CNPJ_VALIDO)))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining("não autorizada");
+    }
+
+    @Test
+    @DisplayName("@spec:AC-106 Falha ao verificar CVM retorna mensagem de falha, não de reprovada")
+    void deveMensagemDeFalhaQuandoCvmIndisponivel() {
+        when(repository.existsByCnpj(CNPJ_VALIDO)).thenReturn(false);
+        when(cnpjFacade.buscar(CNPJ_VALIDO)).thenReturn(cnpjResponse);
+        when(cvmFacade.verificar(CNPJ_VALIDO))
+                .thenReturn(ResultadoVerificacaoCvm.falhaVerificacao(null,
+                        "Não foi possível verificar a autorização na CVM: base de dados indisponível"));
+
+        assertThatThrownBy(() -> service.cadastrar(new CorretoraRequestDTO(CNPJ_VALIDO)))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining("verificar")
+                .hasMessageNotContaining("não autorizada");
+    }
+
+    @Test
+    @DisplayName("@spec:AC-107 Resposta informa a data da base CVM usada na verificação")
+    void deveRetornarDataDaBaseCvmNaResposta() {
+        LocalDate dataBase = LocalDate.now();
+        when(repository.existsByCnpj(CNPJ_VALIDO)).thenReturn(false);
+        when(cnpjFacade.buscar(CNPJ_VALIDO)).thenReturn(cnpjResponse);
+        when(cvmFacade.verificar(CNPJ_VALIDO)).thenReturn(ResultadoVerificacaoCvm.autorizada(dataBase));
+        when(repository.save(any())).thenReturn(corretora);
+        when(mapper.toResponse(corretora)).thenReturn(responseDTO);
+
+        CorretoraResponseDTO result = service.cadastrar(new CorretoraRequestDTO(CNPJ_VALIDO));
+
+        assertThat(result.getDataBaseCvm()).isEqualTo(dataBase);
+    }
+}
