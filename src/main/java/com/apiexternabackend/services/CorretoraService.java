@@ -30,9 +30,9 @@ public class CorretoraService {
     private final CvmFacade cvmFacade;
 
     public CorretoraResponseDTO cadastrar(CorretoraRequestDTO dto) {
-        String cnpj = normalizarCnpj(dto.getCnpj());
+        String cnpj = cnpjFacade.normalizar(dto.getCnpj());
 
-        validarFormatoCnpj(cnpj);
+        cnpjFacade.validar(cnpj);
 
         if (repository.existsByCnpj(cnpj)) {
             throw new DuplicateResourceException("Corretora já cadastrada com o CNPJ: " + cnpj);
@@ -63,7 +63,14 @@ public class CorretoraService {
     }
 
     public Page<CorretoraResponseDTO> listar(Pageable pageable) {
-        return repository.findAll(pageable).map(mapper::toResponse);
+        return repository.findAllByAtivoTrue(pageable).map(mapper::toResponse);
+    }
+
+    public void excluir(Long id) {
+        Corretora corretora = repository.findByIdAndAtivoTrue(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Corretora não encontrada: " + id));
+        corretora.setAtivo(false);
+        repository.save(corretora);
     }
 
     public CorretoraResponseDTO buscarPorId(Long id) {
@@ -73,40 +80,9 @@ public class CorretoraService {
     }
 
     public CorretoraResponseDTO buscarPorCnpj(String cnpj) {
-        return repository.findByCnpj(normalizarCnpj(cnpj))
+        return repository.findByCnpj(cnpjFacade.normalizar(cnpj))
                 .map(mapper::toResponse)
                 .orElseThrow(() -> new ResourceNotFoundException("Corretora não encontrada: " + cnpj));
-    }
-
-    private String normalizarCnpj(String cnpj) {
-        return cnpj == null ? "" : cnpj.replaceAll("[^0-9]", "");
-    }
-
-    private void validarFormatoCnpj(String cnpj) {
-        // AC-101: CNPJ mal formatado é rejeitado antes de qualquer chamada externa
-        if (cnpj == null || cnpj.length() != 14 || !cnpj.matches("\\d{14}")) {
-            throw new BusinessException("CNPJ inválido: " + cnpj);
-        }
-        if (!validarDigitosCnpj(cnpj)) {
-            throw new BusinessException("CNPJ com dígitos verificadores inválidos: " + cnpj);
-        }
-    }
-
-    private boolean validarDigitosCnpj(String cnpj) {
-        if (cnpj.chars().distinct().count() == 1) return false;
-        int[] pesos1 = {5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
-        int[] pesos2 = {6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
-        return calcDigito(cnpj, pesos1) == Character.getNumericValue(cnpj.charAt(12)) &&
-               calcDigito(cnpj, pesos2) == Character.getNumericValue(cnpj.charAt(13));
-    }
-
-    private int calcDigito(String cnpj, int[] pesos) {
-        int soma = 0;
-        for (int i = 0; i < pesos.length; i++) {
-            soma += Character.getNumericValue(cnpj.charAt(i)) * pesos[i];
-        }
-        int resto = soma % 11;
-        return resto < 2 ? 0 : 11 - resto;
     }
 
     private String extrairCep(CnpjResponseDTO dados) {

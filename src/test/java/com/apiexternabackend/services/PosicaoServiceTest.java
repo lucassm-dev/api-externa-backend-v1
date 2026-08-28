@@ -43,7 +43,7 @@ class PosicaoServiceTest {
     void setUp() {
         carteira = new Carteira();
         carteira.setId(1L);
-        acao = new Acao(1L, "PETR4", "Petrobras", Mercado.BR, "BRL", null, null);
+        acao = new Acao(1L, "PETR4", "Petrobras", Mercado.BR, "BRL", null, null, true);
     }
 
     private Operacao compra(int qty, String preco) {

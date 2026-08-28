@@ -1,49 +1,42 @@
 package com.apiexternabackend.infra.facade;
 
-import com.apiexternabackend.domains.CvmParticipante;
-import com.apiexternabackend.repositories.CvmParticipanteRepository;
+import com.apiexternabackend.config.CvmFeignConfig;
+import com.apiexternabackend.infra.client.cvm.CvmCorretoraClient;
+import com.apiexternabackend.infra.client.cvm.dto.CvmCorretoraResponseDTO;
+import com.apiexternabackend.resources.exceptions.ExternalServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
-/**
- * Verifica autorização de corretora na base local da CVM.
- * Distingue "não autorizada" (consta como irregular) de
- * "falha na verificação" (base vazia/ausente — RN-C04).
- */
 @Component
 @RequiredArgsConstructor
 public class CvmFacade {
 
-    private static final String SITUACAO_AUTORIZADA = "AUTORIZADO";
+    private static final String SITUACAO_AUTORIZADA = "EM FUNCIONAMENTO NORMAL";
 
-    private final CvmParticipanteRepository repository;
+    private final CvmCorretoraClient client;
 
     public ResultadoVerificacaoCvm verificar(String cnpj) {
-        Optional<LocalDate> dataBase = repository.findDataBaseMaisRecente();
-
-        if (dataBase.isEmpty()) {
+        try {
+            CvmCorretoraResponseDTO resultado = client.buscarPorCnpj(cnpj);
+            String situacao = resultado.getStatus() != null ? resultado.getStatus().trim() : "";
+            if (!SITUACAO_AUTORIZADA.equalsIgnoreCase(situacao)) {
+                return ResultadoVerificacaoCvm.naoAutorizada(LocalDate.now(),
+                        "Corretora não autorizada na CVM: situação = " + situacao);
+            }
+            return ResultadoVerificacaoCvm.autorizada(LocalDate.now());
+        } catch (ExternalServiceException e) {
+            if (CvmFeignConfig.CNPJ_NAO_ENCONTRADO.equals(e.getMessage())) {
+                return ResultadoVerificacaoCvm.naoAutorizada(LocalDate.now(),
+                        "Corretora não autorizada na CVM: CNPJ não consta na base de participantes");
+            }
             return ResultadoVerificacaoCvm.falhaVerificacao(null,
-                    "Não foi possível verificar a autorização na CVM: base de dados indisponível");
+                    "Não foi possível verificar a autorização na CVM: " + e.getMessage());
+        } catch (Exception e) {
+            return ResultadoVerificacaoCvm.falhaVerificacao(null,
+                    "Não foi possível verificar a autorização na CVM: " + e.getMessage());
         }
-
-        Optional<CvmParticipante> participante = repository.findByCnpj(cnpj);
-
-        if (participante.isEmpty()) {
-            return ResultadoVerificacaoCvm.naoAutorizada(dataBase.get(),
-                    "Corretora não autorizada na CVM: CNPJ não consta na base de participantes");
-        }
-
-        boolean autorizada = SITUACAO_AUTORIZADA.equalsIgnoreCase(participante.get().getSituacao().trim());
-
-        if (!autorizada) {
-            return ResultadoVerificacaoCvm.naoAutorizada(dataBase.get(),
-                    "Corretora não autorizada na CVM: situação = " + participante.get().getSituacao());
-        }
-
-        return ResultadoVerificacaoCvm.autorizada(dataBase.get());
     }
 
     public record ResultadoVerificacaoCvm(

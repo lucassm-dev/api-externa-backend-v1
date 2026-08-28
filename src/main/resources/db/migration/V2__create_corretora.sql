@@ -11,7 +11,7 @@ CREATE TABLE corretora (
     complemento        VARCHAR(100),
     bairro             VARCHAR(100),
     cidade             VARCHAR(100),
-    uf                 CHAR(2),
+    uf                 VARCHAR(2),
     situacao_cadastral VARCHAR(50),
     validada_na_cvm    BOOLEAN      NOT NULL DEFAULT FALSE,
     data_base_cvm      DATE,

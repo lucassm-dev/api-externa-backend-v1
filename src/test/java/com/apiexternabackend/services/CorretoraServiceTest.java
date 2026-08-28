@@ -13,6 +13,7 @@ import com.apiexternabackend.mappers.CorretoraMapper;
 import com.apiexternabackend.repositories.CorretoraRepository;
 import com.apiexternabackend.resources.exceptions.BusinessException;
 import com.apiexternabackend.resources.exceptions.DuplicateResourceException;
+import com.apiexternabackend.resources.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -55,6 +58,8 @@ class CorretoraServiceTest {
 
     @BeforeEach
     void setUp() {
+        lenient().when(cnpjFacade.normalizar(anyString())).thenAnswer(inv -> inv.getArgument(0));
+
         cnpjResponse = new CnpjResponseDTO();
         cnpjResponse.setRazaoSocial("XP INVESTIMENTOS");
         cnpjResponse.setSituacaoCadastral("ATIVA");
@@ -77,9 +82,9 @@ class CorretoraServiceTest {
     @Test
     @DisplayName("@spec:AC-101 CNPJ mal formatado é rejeitado antes de qualquer chamada externa")
     void deveRejeitarCnpjMalFormatadoSemChamarFonteExterna() {
-        CorretoraRequestDTO dto = new CorretoraRequestDTO(CNPJ_INVALIDO_FORMATO);
+        doThrow(new BusinessException("CNPJ inválido")).when(cnpjFacade).validar(any());
 
-        assertThatThrownBy(() -> service.cadastrar(dto))
+        assertThatThrownBy(() -> service.cadastrar(new CorretoraRequestDTO(CNPJ_INVALIDO_FORMATO)))
                 .isInstanceOf(BusinessException.class);
 
         verify(cnpjFacade, never()).buscar(anyString());
@@ -90,12 +95,50 @@ class CorretoraServiceTest {
     @Test
     @DisplayName("@spec:AC-101 CNPJ com dígitos verificadores inválidos é rejeitado antes de chamadas externas")
     void deveRejeitarCnpjComDigitosInvalidos() {
-        CorretoraRequestDTO dto = new CorretoraRequestDTO(CNPJ_INVALIDO_DIGITO);
+        doThrow(new BusinessException("CNPJ com dígitos verificadores inválidos")).when(cnpjFacade).validar(any());
 
-        assertThatThrownBy(() -> service.cadastrar(dto))
+        assertThatThrownBy(() -> service.cadastrar(new CorretoraRequestDTO(CNPJ_INVALIDO_DIGITO)))
                 .isInstanceOf(BusinessException.class);
 
         verify(cnpjFacade, never()).buscar(anyString());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-419 CorretoraService delega validação ao CnpjFacade sem reimplementar")
+    void deveDelegarValidacaoAoCnpjFacade() {
+        when(repository.existsByCnpj(any())).thenReturn(false);
+        when(cnpjFacade.buscar(any())).thenReturn(cnpjResponse);
+        when(cvmFacade.verificar(any())).thenReturn(ResultadoVerificacaoCvm.autorizada(LocalDate.now()));
+        when(repository.save(any())).thenReturn(corretora);
+        when(mapper.toResponse(corretora)).thenReturn(responseDTO);
+
+        service.cadastrar(new CorretoraRequestDTO(CNPJ_VALIDO));
+
+        verify(cnpjFacade).validar(any());
+        verify(cnpjFacade).normalizar(CNPJ_VALIDO);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-420 Corretora ativa é desativada ao excluir")
+    void deveDesativarCorretoraAoExcluir() {
+        Corretora ativa = new Corretora();
+        ativa.setId(1L);
+        ativa.setAtivo(true);
+        when(repository.findByIdAndAtivoTrue(1L)).thenReturn(java.util.Optional.of(ativa));
+
+        service.excluir(1L);
+
+        verify(repository).save(ativa);
+        assertThat(ativa.getAtivo()).isFalse();
+    }
+
+    @Test
+    @DisplayName("@spec:AC-421 Excluir corretora inexistente ou inativa lança ResourceNotFoundException")
+    void deveLancarNotFoundAoExcluirCorretoraInexistente() {
+        when(repository.findByIdAndAtivoTrue(99L)).thenReturn(java.util.Optional.empty());
+
+        assertThatThrownBy(() -> service.excluir(99L))
+                .isInstanceOf(ResourceNotFoundException.class);
     }
 
     @Test

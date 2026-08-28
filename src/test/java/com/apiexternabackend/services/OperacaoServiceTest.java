@@ -62,15 +62,15 @@ class OperacaoServiceTest {
 
     @BeforeEach
     void setUp() {
-        investidor = new Investidor(1L, "João", "joao@email.com", "12345678901");
+        investidor = new Investidor(1L, "João", "joao@email.com", "12345678901", true);
         corretora = new Corretora();
         corretora.setId(1L);
 
         carteiraBR = new Carteira(1L, investidor, corretora, Mercado.BR, "CartBR", true);
         carteiraUS = new Carteira(2L, investidor, corretora, Mercado.US, "CartUS", true);
 
-        acaoBR = new Acao(1L, "PETR4", "Petrobras", Mercado.BR, "BRL", new BigDecimal("38"), LocalDateTime.now());
-        acaoUS = new Acao(2L, "AAPL", "Apple", Mercado.US, "USD", new BigDecimal("150"), LocalDateTime.now());
+        acaoBR = new Acao(1L, "PETR4", "Petrobras", Mercado.BR, "BRL", new BigDecimal("38"), LocalDateTime.now(), true);
+        acaoUS = new Acao(2L, "AAPL", "Apple", Mercado.US, "USD", new BigDecimal("150"), LocalDateTime.now(), true);
 
         operacao = new Operacao(1L, carteiraBR, acaoBR, TipoOperacao.COMPRA, 100, new BigDecimal("38"), LocalDateTime.now());
 

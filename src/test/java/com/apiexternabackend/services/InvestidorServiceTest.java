@@ -24,6 +24,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -45,7 +46,7 @@ class InvestidorServiceTest {
     @BeforeEach
     void setUp() {
         requestDTO = new InvestidorRequestDTO("João Silva", "joao@email.com", "12345678901");
-        investidor = new Investidor(1L, "João Silva", "joao@email.com", "12345678901");
+        investidor = new Investidor(1L, "João Silva", "joao@email.com", "12345678901", true);
         responseDTO = new InvestidorResponseDTO(1L, "João Silva", "joao@email.com");
     }
 
@@ -90,7 +91,7 @@ class InvestidorServiceTest {
     void deveListarInvestidoresPaginados() {
         PageRequest pageable = PageRequest.of(0, 10);
         Page<Investidor> page = new PageImpl<>(List.of(investidor));
-        when(repository.findAll(pageable)).thenReturn(page);
+        when(repository.findAllByAtivoTrue(pageable)).thenReturn(page);
         when(mapper.toResponse(investidor)).thenReturn(responseDTO);
 
         Page<InvestidorResponseDTO> result = service.listar(pageable);
@@ -116,6 +117,27 @@ class InvestidorServiceTest {
         when(repository.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.buscarPorId(99L))
+                .isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-422 Investidor ativo é desativado ao excluir")
+    void deveDesativarInvestidorAoExcluir() {
+        Investidor ativo = new Investidor(1L, "João", "joao@email.com", "12345678901", true);
+        when(repository.findByIdAndAtivoTrue(1L)).thenReturn(Optional.of(ativo));
+
+        service.excluir(1L);
+
+        verify(repository).save(ativo);
+        assertThat(ativo.getAtivo()).isFalse();
+    }
+
+    @Test
+    @DisplayName("@spec:AC-423 Excluir investidor inexistente ou inativo lança ResourceNotFoundException")
+    void deveLancarNotFoundAoExcluirInvestidorInexistente() {
+        when(repository.findByIdAndAtivoTrue(99L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.excluir(99L))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 }

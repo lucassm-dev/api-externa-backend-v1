@@ -60,8 +60,8 @@ class AcaoServiceTest {
         cotacaoBR = new CotacaoResultado(new BigDecimal("38.00"), agora);
         cotacaoUS = new CotacaoResultado(new BigDecimal("150.00"), agora);
 
-        acaoBR = new Acao(1L, "PETR4", "Petrobras", Mercado.BR, "BRL", new BigDecimal("38.00"), agora);
-        acaoUS = new Acao(2L, "AAPL", "Apple Inc.", Mercado.US, "USD", new BigDecimal("150.00"), agora);
+        acaoBR = new Acao(1L, "PETR4", "Petrobras", Mercado.BR, "BRL", new BigDecimal("38.00"), agora, true);
+        acaoUS = new Acao(2L, "AAPL", "Apple Inc.", Mercado.US, "USD", new BigDecimal("150.00"), agora, true);
 
         responseBR = new AcaoResponseDTO(1L, "PETR4", "Petrobras", Mercado.BR, "BRL", new BigDecimal("38.00"), agora);
         responseUS = new AcaoResponseDTO(2L, "AAPL", "Apple Inc.", Mercado.US, "USD", new BigDecimal("150.00"), agora);
@@ -135,7 +135,7 @@ class AcaoServiceTest {
     @Test
     @DisplayName("@spec:AC-206 Listar ações retorna página")
     void deveListarAcoesPaginadas() {
-        when(repository.findAll(any(org.springframework.data.domain.Pageable.class)))
+        when(repository.findAllByAtivoTrue(any(org.springframework.data.domain.Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(acaoBR)));
         when(mapper.toResponse(acaoBR)).thenReturn(responseBR);
 
@@ -217,5 +217,25 @@ class AcaoServiceTest {
         assertThatThrownBy(() -> service.cadastrar(new AcaoRequestDTO("PETR4", Mercado.BR)))
                 .isInstanceOf(ExternalServiceException.class)
                 .hasMessageContaining("Limite");
+    }
+
+    @Test
+    @DisplayName("@spec:AC-424 Ação ativa é desativada ao excluir pelo ticker")
+    void deveDesativarAcaoAoExcluir() {
+        when(repository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
+
+        service.excluir("PETR4");
+
+        verify(repository).save(acaoBR);
+        assertThat(acaoBR.getAtivo()).isFalse();
+    }
+
+    @Test
+    @DisplayName("@spec:AC-425 Excluir ação inexistente ou inativa lança ResourceNotFoundException")
+    void deveLancarNotFoundAoExcluirAcaoInexistente() {
+        when(repository.findByTickerAndAtivoTrue("XXXX3")).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.excluir("XXXX3"))
+                .isInstanceOf(ResourceNotFoundException.class);
     }
 }

@@ -44,4 +44,7 @@ public class Acao {
     private BigDecimal cotacaoAtual;
 
     private LocalDateTime dataHoraCotacao;
+
+    @Column(nullable = false)
+    private Boolean ativo = true;
 }

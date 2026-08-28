@@ -51,6 +51,9 @@ public class Corretora {
     @Column(nullable = false)
     private Boolean validadaNaCvm = false;
 
+    @Column(nullable = false)
+    private Boolean ativo = true;
+
     private LocalDate dataBaseCvm;
 
     @Column(nullable = false)

@@ -1,17 +1,16 @@
 package com.apiexternabackend.infra.facade;
 
-import com.apiexternabackend.domains.CvmParticipante;
+import com.apiexternabackend.config.CvmFeignConfig;
+import com.apiexternabackend.infra.client.cvm.CvmCorretoraClient;
+import com.apiexternabackend.infra.client.cvm.dto.CvmCorretoraResponseDTO;
 import com.apiexternabackend.infra.facade.CvmFacade.ResultadoVerificacaoCvm;
-import com.apiexternabackend.repositories.CvmParticipanteRepository;
+import com.apiexternabackend.resources.exceptions.ExternalServiceException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDate;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -20,33 +19,32 @@ import static org.mockito.Mockito.when;
 class CvmFacadeTest {
 
     private static final String CNPJ = "02332886000104";
-    private static final LocalDate DATA_BASE = LocalDate.now();
 
     @Mock
-    private CvmParticipanteRepository repository;
+    private CvmCorretoraClient client;
 
     @InjectMocks
     private CvmFacade facade;
 
     @Test
-    @DisplayName("@spec:AC-105 CNPJ autorizado na CVM retorna resultado autorizado com data da base")
-    void deveRetornarAutorizadoQuandoSituacaoAutorizado() {
-        CvmParticipante p = new CvmParticipante(CNPJ, "Corretora X", "CORRETORA", "AUTORIZADO", DATA_BASE);
-        when(repository.findDataBaseMaisRecente()).thenReturn(Optional.of(DATA_BASE));
-        when(repository.findByCnpj(CNPJ)).thenReturn(Optional.of(p));
+    @DisplayName("@spec:AC-105 CNPJ em funcionamento normal retorna resultado autorizado")
+    void deveRetornarAutorizadoQuandoSituacaoEmFuncionamentoNormal() {
+        CvmCorretoraResponseDTO dto = new CvmCorretoraResponseDTO();
+        dto.setStatus("EM FUNCIONAMENTO NORMAL");
+        when(client.buscarPorCnpj(CNPJ)).thenReturn(dto);
 
         ResultadoVerificacaoCvm result = facade.verificar(CNPJ);
 
         assertThat(result.autorizada()).isTrue();
-        assertThat(result.dataBase()).isEqualTo(DATA_BASE);
+        assertThat(result.dataBase()).isNotNull();
     }
 
     @Test
-    @DisplayName("@spec:AC-105 CNPJ com situação diferente de AUTORIZADO é não-autorizado")
-    void deveRetornarNaoAutorizadoQuandoSituacaoCancelado() {
-        CvmParticipante p = new CvmParticipante(CNPJ, "Corretora X", "CORRETORA", "CANCELADO", DATA_BASE);
-        when(repository.findDataBaseMaisRecente()).thenReturn(Optional.of(DATA_BASE));
-        when(repository.findByCnpj(CNPJ)).thenReturn(Optional.of(p));
+    @DisplayName("@spec:AC-105 CNPJ com situação diferente de EM FUNCIONAMENTO NORMAL é não-autorizado")
+    void deveRetornarNaoAutorizadoQuandoSituacaoCancelada() {
+        CvmCorretoraResponseDTO dto = new CvmCorretoraResponseDTO();
+        dto.setStatus("CANCELADA");
+        when(client.buscarPorCnpj(CNPJ)).thenReturn(dto);
 
         ResultadoVerificacaoCvm result = facade.verificar(CNPJ);
 
@@ -55,10 +53,10 @@ class CvmFacadeTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-105 CNPJ que não consta na CVM é não-autorizado")
+    @DisplayName("@spec:AC-105 CNPJ não encontrado na CVM é não-autorizado")
     void deveRetornarNaoAutorizadoQuandoCnpjNaoConsta() {
-        when(repository.findDataBaseMaisRecente()).thenReturn(Optional.of(DATA_BASE));
-        when(repository.findByCnpj(CNPJ)).thenReturn(Optional.empty());
+        when(client.buscarPorCnpj(CNPJ))
+                .thenThrow(new ExternalServiceException(CvmFeignConfig.CNPJ_NAO_ENCONTRADO));
 
         ResultadoVerificacaoCvm result = facade.verificar(CNPJ);
 
@@ -67,9 +65,10 @@ class CvmFacadeTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-106 Base CVM vazia resulta em falha de verificação, não reprovação")
-    void deveRetornarFalhaVerificacaoQuandoBaseVazia() {
-        when(repository.findDataBaseMaisRecente()).thenReturn(Optional.empty());
+    @DisplayName("@spec:AC-106 Falha na chamada CVM resulta em falha de verificação, não reprovação")
+    void deveRetornarFalhaVerificacaoQuandoCvmIndisponivel() {
+        when(client.buscarPorCnpj(CNPJ))
+                .thenThrow(new ExternalServiceException("Erro ao consultar CVM: HTTP 500"));
 
         ResultadoVerificacaoCvm result = facade.verificar(CNPJ);
 

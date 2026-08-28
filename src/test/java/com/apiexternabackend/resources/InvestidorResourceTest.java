@@ -22,6 +22,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -120,5 +121,24 @@ class InvestidorResourceTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isConflict());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-422 DELETE /investidores/{id} com investidor ativo retorna 204")
+    void deveExcluirInvestidorAtivo() throws Exception {
+        mockMvc.perform(delete("/investidores/1"))
+                .andExpect(status().isNoContent());
+
+        org.mockito.Mockito.verify(service).excluir(1L);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-423 DELETE /investidores/{id} com id inexistente retorna 404")
+    void deveRetornar404AoExcluirInvestidorInexistente() throws Exception {
+        org.mockito.Mockito.doThrow(new ResourceNotFoundException("Investidor não encontrado: 99"))
+                .when(service).excluir(99L);
+
+        mockMvc.perform(delete("/investidores/99"))
+                .andExpect(status().isNotFound());
     }
 }

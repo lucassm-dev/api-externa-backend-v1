@@ -52,13 +52,20 @@ public class AcaoService {
     }
 
     public Page<AcaoResponseDTO> listar(Pageable pageable) {
-        return repository.findAll(pageable).map(mapper::toResponse);
+        return repository.findAllByAtivoTrue(pageable).map(mapper::toResponse);
     }
 
     public AcaoResponseDTO buscarPorTicker(String ticker) {
         return repository.findByTicker(ticker.toUpperCase().trim())
                 .map(mapper::toResponse)
                 .orElseThrow(() -> new ResourceNotFoundException("Ação não encontrada: " + ticker));
+    }
+
+    public void excluir(String ticker) {
+        Acao acao = repository.findByTickerAndAtivoTrue(ticker.toUpperCase().trim())
+                .orElseThrow(() -> new ResourceNotFoundException("Ação não encontrada: " + ticker));
+        acao.setAtivo(false);
+        repository.save(acao);
     }
 
     public AcaoResponseDTO atualizarCotacao(Long id) {

@@ -31,7 +31,14 @@ public class InvestidorService {
     }
 
     public Page<InvestidorResponseDTO> listar(Pageable pageable) {
-        return repository.findAll(pageable).map(mapper::toResponse);
+        return repository.findAllByAtivoTrue(pageable).map(mapper::toResponse);
+    }
+
+    public void excluir(Long id) {
+        Investidor investidor = repository.findByIdAndAtivoTrue(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Investidor não encontrado: " + id));
+        investidor.setAtivo(false);
+        repository.save(investidor);
     }
 
     public InvestidorResponseDTO buscarPorId(Long id) {

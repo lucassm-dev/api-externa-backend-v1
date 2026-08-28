@@ -27,6 +27,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -136,5 +137,24 @@ class AcaoResourceTest {
                         .content(objectMapper.writeValueAsString(new AcaoRequestDTO("PETR4", Mercado.BR))))
                 .andExpect(status().isBadGateway())
                 .andExpect(jsonPath("$.message").value(org.hamcrest.Matchers.containsString("Limite")));
+    }
+
+    @Test
+    @DisplayName("@spec:AC-424 DELETE /acoes/{ticker} com ação ativa retorna 204")
+    void deveExcluirAcaoAtiva() throws Exception {
+        mockMvc.perform(delete("/acoes/PETR4"))
+                .andExpect(status().isNoContent());
+
+        org.mockito.Mockito.verify(service).excluir("PETR4");
+    }
+
+    @Test
+    @DisplayName("@spec:AC-425 DELETE /acoes/{ticker} com ticker inexistente retorna 404")
+    void deveRetornar404AoExcluirAcaoInexistente() throws Exception {
+        org.mockito.Mockito.doThrow(new ResourceNotFoundException("Ação não encontrada: XXXX3"))
+                .when(service).excluir("XXXX3");
+
+        mockMvc.perform(delete("/acoes/XXXX3"))
+                .andExpect(status().isNotFound());
     }
 }

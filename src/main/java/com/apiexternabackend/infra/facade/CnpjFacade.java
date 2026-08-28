@@ -14,6 +14,19 @@ public class CnpjFacade {
 
     private final CnpjClient client;
 
+    public String normalizar(String cnpj) {
+        return cnpj == null ? "" : cnpj.replaceAll("[^0-9]", "");
+    }
+
+    public void validar(String cnpj) {
+        if (cnpj == null || cnpj.length() != 14 || !cnpj.matches("\\d{14}")) {
+            throw new BusinessException("CNPJ inválido: " + cnpj);
+        }
+        if (cnpj.chars().distinct().count() == 1 || !validarDigitos(cnpj)) {
+            throw new BusinessException("CNPJ com dígitos verificadores inválidos: " + cnpj);
+        }
+    }
+
     public CnpjResponseDTO buscar(String cnpj) {
         try {
             return client.buscarPorCnpj(cnpj);
@@ -22,5 +35,21 @@ public class CnpjFacade {
         } catch (FeignException e) {
             throw new ExternalServiceException("Serviço de CNPJ indisponível. Tente novamente mais tarde.", e);
         }
+    }
+
+    private boolean validarDigitos(String cnpj) {
+        int[] pesos1 = {5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
+        int[] pesos2 = {6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
+        return calcDigito(cnpj, pesos1) == Character.getNumericValue(cnpj.charAt(12)) &&
+               calcDigito(cnpj, pesos2) == Character.getNumericValue(cnpj.charAt(13));
+    }
+
+    private int calcDigito(String cnpj, int[] pesos) {
+        int soma = 0;
+        for (int i = 0; i < pesos.length; i++) {
+            soma += Character.getNumericValue(cnpj.charAt(i)) * pesos[i];
+        }
+        int resto = soma % 11;
+        return resto < 2 ? 0 : 11 - resto;
     }
 }

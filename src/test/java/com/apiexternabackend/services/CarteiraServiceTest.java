@@ -50,7 +50,7 @@ class CarteiraServiceTest {
 
     @BeforeEach
     void setUp() {
-        investidor = new Investidor(1L, "João", "joao@email.com", "12345678901");
+        investidor = new Investidor(1L, "João", "joao@email.com", "12345678901", true);
         corretora = new Corretora();
         corretora.setId(1L);
         corretora.setRazaoSocial("XP");

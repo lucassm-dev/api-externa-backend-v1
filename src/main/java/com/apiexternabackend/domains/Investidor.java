@@ -32,6 +32,9 @@ public class Investidor {
     @Column(nullable = false, unique = true)
     private String cpf;
 
+    @Column(nullable = false)
+    private Boolean ativo = true;
+
     public Investidor(String nome, String email, String cpf) {
         this.nome = nome;
         this.email = email;

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,5 +48,11 @@ public class AcaoResource {
     @PutMapping("/{id}/atualizar-cotacao")
     public ResponseEntity<AcaoResponseDTO> atualizarCotacao(@PathVariable Long id) {
         return ResponseEntity.ok(service.atualizarCotacao(id));
+    }
+
+    @DeleteMapping("/{ticker}")
+    public ResponseEntity<Void> excluir(@PathVariable String ticker) {
+        service.excluir(ticker);
+        return ResponseEntity.noContent().build();
     }
 }

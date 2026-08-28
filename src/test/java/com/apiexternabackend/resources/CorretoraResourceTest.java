@@ -19,6 +19,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -136,6 +138,25 @@ class CorretoraResourceTest {
         mockMvc.perform(get("/corretoras/cnpj/" + CNPJ_VALIDO))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.cnpj").value(CNPJ_VALIDO));
+    }
+
+    @Test
+    @DisplayName("@spec:AC-420 DELETE /corretoras/{id} com corretora ativa retorna 204")
+    void deveExcluirCorretoraAtiva() throws Exception {
+        mockMvc.perform(delete("/corretoras/1"))
+                .andExpect(status().isNoContent());
+
+        org.mockito.Mockito.verify(service).excluir(1L);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-421 DELETE /corretoras/{id} com id inexistente retorna 404")
+    void deveRetornar404AoExcluirCorretoraInexistente() throws Exception {
+        org.mockito.Mockito.doThrow(new ResourceNotFoundException("Corretora não encontrada: 99"))
+                .when(service).excluir(99L);
+
+        mockMvc.perform(delete("/corretoras/99"))
+                .andExpect(status().isNotFound());
     }
 
     @Test

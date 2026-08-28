@@ -1,0 +1,112 @@
+{
+  "runId": "api-externa-backend-v1-refactor-cnpj-delete-mtasr57f",
+  "feature": "refactor-cnpj-delete",
+  "agent": "claude",
+  "modo": "paralelo",
+  "paralelizar": null,
+  "modeloForcado": null,
+  "esforcoForcado": null,
+  "geradoEm": "2026-08-27 00:40",
+  "branchTrabalho": "spec/refactor-cnpj-delete",
+  "baseDir": ".spec/features/refactor-cnpj-delete",
+  "specDir": ".spec",
+  "repoName": "api-externa-backend-v1",
+  "logsDir": "../onp-worktrees/api-externa-backend-v1-refactor-cnpj-delete-logs",
+  "ondas": [
+    [
+      "faixa-1",
+      "faixa-2",
+      "faixa-3"
+    ]
+  ],
+  "faixas": [
+    {
+      "id": "faixa-1",
+      "branch": "spec/refactor-cnpj-delete-faixa-1",
+      "worktree": "../onp-worktrees/api-externa-backend-v1-refactor-cnpj-delete-faixa-1",
+      "tarefas": [
+        {
+          "id": "T-001",
+          "titulo": "Validação CNPJ no CnpjFacade + DELETE Corretora",
+          "modelo": "claude-sonnet-5",
+          "esforco": "medium",
+          "arquivos": [
+            "src/main/java/com/apiexternabackend/infra/facade/CnpjFacade.java",
+            "src/main/java/com/apiexternabackend/services/CorretoraService.java",
+            "src/main/java/com/apiexternabackend/domains/Corretora.java",
+            "src/main/java/com/apiexternabackend/resources/CorretoraResource.java",
+            "src/main/resources/db/migration/V8__add_ativo_corretora.sql",
+            "src/test/java/com/apiexternabackend/services/CorretoraServiceTest.java",
+            "src/test/java/com/apiexternabackend/resources/CorretoraResourceTest.java"
+          ],
+          "refs": [
+            "US-408",
+            "US-409",
+            "AC-415",
+            "AC-416",
+            "AC-417",
+            "AC-418",
+            "AC-419",
+            "AC-420",
+            "AC-421"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-2",
+      "branch": "spec/refactor-cnpj-delete-faixa-2",
+      "worktree": "../onp-worktrees/api-externa-backend-v1-refactor-cnpj-delete-faixa-2",
+      "tarefas": [
+        {
+          "id": "T-002",
+          "titulo": "DELETE Investidor",
+          "modelo": "claude-sonnet-5",
+          "esforco": "medium",
+          "arquivos": [
+            "src/main/java/com/apiexternabackend/domains/Investidor.java",
+            "src/main/java/com/apiexternabackend/services/InvestidorService.java",
+            "src/main/java/com/apiexternabackend/resources/InvestidorResource.java",
+            "src/main/resources/db/migration/V9__add_ativo_investidor.sql",
+            "src/test/java/com/apiexternabackend/services/InvestidorServiceTest.java",
+            "src/test/java/com/apiexternabackend/resources/InvestidorResourceTest.java"
+          ],
+          "refs": [
+            "US-410",
+            "AC-422",
+            "AC-423"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-3",
+      "branch": "spec/refactor-cnpj-delete-faixa-3",
+      "worktree": "../onp-worktrees/api-externa-backend-v1-refactor-cnpj-delete-faixa-3",
+      "tarefas": [
+        {
+          "id": "T-003",
+          "titulo": "DELETE Ação",
+          "modelo": "claude-sonnet-5",
+          "esforco": "medium",
+          "arquivos": [
+            "src/main/java/com/apiexternabackend/domains/Acao.java",
+            "src/main/java/com/apiexternabackend/services/AcaoService.java",
+            "src/main/java/com/apiexternabackend/resources/AcaoResource.java",
+            "src/main/resources/db/migration/V10__add_ativo_acao.sql",
+            "src/test/java/com/apiexternabackend/services/AcaoServiceTest.java",
+            "src/test/java/com/apiexternabackend/resources/AcaoResourceTest.java"
+          ],
+          "refs": [
+            "US-411",
+            "AC-424",
+            "AC-425"
+          ]
+        }
+      ]
+    }
+  ],
+  "sequenciais": [],
+  "concluidas": [],
+  "avisos": []
+}

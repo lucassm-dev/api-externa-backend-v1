@@ -1,63 +1,43 @@
 {
-  "feature": "cadastro-corretora",
-  "timestamp": "2026-08-27T00:59:49.925Z",
+  "feature": "refactor-cnpj-delete",
+  "timestamp": "2026-08-27T00:55:45.495Z",
   "gitRev": "a2466c8",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
   "testsParsed": 0,
   "results": {
-    "AC-101": {
+    "AC-415": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-102": {
+    "AC-416": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-103": {
+    "AC-417": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-104": {
+    "AC-418": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-105": {
+    "AC-419": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-106": {
+    "AC-420": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-107": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
-    "AC-108": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
-    "AC-109": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
-    "AC-110": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
-    "AC-111": {
+    "AC-421": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
