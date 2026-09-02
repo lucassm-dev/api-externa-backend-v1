@@ -41,7 +41,7 @@ public class BrapiAdapter implements CotacaoAdapter {
             }
 
             LocalDateTime dataHora = result.getRegularMarketTime() != null
-                    ? LocalDateTime.ofInstant(Instant.ofEpochSecond(result.getRegularMarketTime()), ZoneId.systemDefault())
+                    ? LocalDateTime.ofInstant(Instant.parse(result.getRegularMarketTime()), ZoneId.systemDefault())
                     : LocalDateTime.now();
 
             return new CotacaoResultado(result.getRegularMarketPrice(), dataHora);
@@ -53,7 +53,7 @@ public class BrapiAdapter implements CotacaoAdapter {
             if (e.status() == 429) {
                 throw new ExternalServiceException("Limite de requisições da fonte BR excedido. Tente mais tarde.");
             }
-            throw new ExternalServiceException("Fonte BR (brapi) indisponível: " + e.getMessage(), e);
+            throw new ExternalServiceException("Fonte BR (brapi) indisponível. Tente novamente mais tarde.");
         }
     }
 }

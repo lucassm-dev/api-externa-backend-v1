@@ -14,8 +14,8 @@ public class TwelveDataResponseDTO {
     private String name;
     private String currency;
 
-    @JsonProperty("close")
-    private String close;
+    @JsonProperty("price")
+    private String price;
 
     @JsonProperty("datetime")
     private String datetime;

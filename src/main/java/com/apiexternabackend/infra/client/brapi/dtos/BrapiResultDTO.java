@@ -20,7 +20,7 @@ public class BrapiResultDTO {
     private BigDecimal regularMarketPrice;
 
     @JsonProperty("regularMarketTime")
-    private Long regularMarketTime;
+    private String regularMarketTime;
 
     private String currency;
 }

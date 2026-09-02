@@ -16,9 +16,13 @@ public class FeignConfig {
 
     @Bean
     public ErrorDecoder errorDecoder() {
+        ErrorDecoder defaultDecoder = new ErrorDecoder.Default();
         return (methodKey, response) -> {
-            String msg = "Erro na chamada externa [" + methodKey + "]: HTTP " + response.status();
-            return new ExternalServiceException(msg);
+            // 4xx: deixa propagar como FeignException para cada adapter tratar com contexto
+            if (response.status() < 500) {
+                return defaultDecoder.decode(methodKey, response);
+            }
+            return new ExternalServiceException("Serviço externo indisponível (HTTP " + response.status() + ")");
         };
     }
 }

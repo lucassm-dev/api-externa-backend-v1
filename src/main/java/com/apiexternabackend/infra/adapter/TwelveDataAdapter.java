@@ -34,19 +34,21 @@ public class TwelveDataAdapter implements CotacaoAdapter {
                 throw new BusinessException("Ticker não encontrado na fonte US: " + ticker + " — " + msg);
             }
 
-            if (response.getClose() == null || response.getClose().isBlank()) {
+            if (response.getPrice() == null || response.getPrice().isBlank()) {
                 throw new BusinessException("Ticker não encontrado na fonte US: " + ticker);
             }
 
-            BigDecimal preco = new BigDecimal(response.getClose());
+            BigDecimal preco = new BigDecimal(response.getPrice());
             return new CotacaoResultado(preco, LocalDateTime.now());
         } catch (BusinessException | ExternalServiceException e) {
             throw e;
+        } catch (FeignException.NotFound e) {
+            throw new BusinessException("Ticker não encontrado na fonte US: " + ticker);
         } catch (FeignException e) {
             if (e.status() == 429) {
                 throw new ExternalServiceException("Limite de requisições da fonte US excedido. Tente mais tarde.");
             }
-            throw new ExternalServiceException("Fonte US (Twelve Data) indisponível: " + e.getMessage(), e);
+            throw new ExternalServiceException("Fonte US (Twelve Data) indisponível. Tente novamente mais tarde.");
         }
     }
 }
