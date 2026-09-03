@@ -1,0 +1,124 @@
+@baseUrl = http://localhost:8080
+
+### Cadastrar investidor
+POST {{baseUrl}}/investidores
+Content-Type: application/json
+
+{
+  "nome": "Investidor Teste",
+  "email": "investidor.teste@email.com",
+  "cpf": "12345678901"
+}
+
+### Listar investidores
+GET {{baseUrl}}/investidores
+
+### Buscar investidor por ID
+GET {{baseUrl}}/investidores/1
+
+### Cadastrar corretora
+POST {{baseUrl}}/corretoras
+Content-Type: application/json
+
+{
+  "cnpj": "02332886000104"
+}
+
+### Listar corretoras
+GET {{baseUrl}}/corretoras
+
+### Buscar corretora por ID
+GET {{baseUrl}}/corretoras/1
+
+### Buscar corretora por CNPJ
+GET {{baseUrl}}/corretoras/cnpj/02332886000104
+
+### Cadastrar ação
+POST {{baseUrl}}/acoes
+Content-Type: application/json
+
+{
+  "ticker": "PETR4",
+  "mercado": "BR"
+}
+
+### Listar ações
+GET {{baseUrl}}/acoes
+
+### Buscar ação por ticker
+GET {{baseUrl}}/acoes/ticker/PETR4
+
+### Atualizar cotação da ação
+PUT {{baseUrl}}/acoes/1/atualizar-cotacao
+
+### Criar carteira
+POST {{baseUrl}}/carteiras
+Content-Type: application/json
+
+{
+  "investidorId": 1,
+  "corretoraId": 1,
+  "mercado": "BR",
+  "nome": "Carteira Principal"
+}
+
+### Listar carteiras do investidor
+GET {{baseUrl}}/carteiras?investidorId=1
+
+### Renomear carteira
+PATCH {{baseUrl}}/carteiras/1
+Content-Type: application/json
+
+{
+  "nome": "Carteira Renomeada"
+}
+
+### Comprar ação
+POST {{baseUrl}}/operacoes/compra
+Content-Type: application/json
+
+{
+  "carteiraId": 1,
+  "ticker": "PETR4",
+  "quantidade": 10
+}
+
+### Vender ação
+POST {{baseUrl}}/operacoes/venda
+Content-Type: application/json
+
+{
+  "carteiraId": 1,
+  "ticker": "PETR4",
+  "quantidade": 5
+}
+
+### Listar histórico de operações
+GET {{baseUrl}}/operacoes?investidorId=1
+
+### Editar operação
+PUT {{baseUrl}}/operacoes/1
+Content-Type: application/json
+
+{
+  "quantidade": 12,
+  "precoUnitario": 35.50
+}
+
+### Listar posições da carteira
+GET {{baseUrl}}/carteiras/1/posicoes
+
+### Excluir operação
+DELETE {{baseUrl}}/operacoes/1
+
+### Excluir carteira
+DELETE {{baseUrl}}/carteiras/1
+
+### Excluir ação
+DELETE {{baseUrl}}/acoes/PETR4
+
+### Excluir corretora
+DELETE {{baseUrl}}/corretoras/1
+
+### Excluir investidor
+DELETE {{baseUrl}}/investidores/1
