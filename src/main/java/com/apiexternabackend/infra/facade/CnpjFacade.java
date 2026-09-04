@@ -2,8 +2,8 @@ package com.apiexternabackend.infra.facade;
 
 import com.apiexternabackend.infra.client.cnpj.CnpjClient;
 import com.apiexternabackend.infra.client.cnpj.dto.CnpjResponseDTO;
-import com.apiexternabackend.resources.exceptions.BusinessException;
-import com.apiexternabackend.resources.exceptions.ExternalServiceException;
+import com.apiexternabackend.resources.exceptions.IntegracaoExternaException;
+import com.apiexternabackend.resources.exceptions.RegraVioladaException;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -20,10 +20,10 @@ public class CnpjFacade {
 
     public void validar(String cnpj) {
         if (cnpj == null || cnpj.length() != 14 || !cnpj.matches("\\d{14}")) {
-            throw new BusinessException("CNPJ inválido: " + cnpj);
+            throw new RegraVioladaException("COR-003", "CNPJ inválido: " + cnpj);
         }
         if (cnpj.chars().distinct().count() == 1 || !validarDigitos(cnpj)) {
-            throw new BusinessException("CNPJ com dígitos verificadores inválidos: " + cnpj);
+            throw new RegraVioladaException("COR-003", "CNPJ com dígitos verificadores inválidos: " + cnpj);
         }
     }
 
@@ -31,9 +31,10 @@ public class CnpjFacade {
         try {
             return client.buscarPorCnpj(cnpj);
         } catch (FeignException.NotFound e) {
-            throw new BusinessException("CNPJ não encontrado na base da Receita: " + cnpj);
+            throw new RegraVioladaException("COR-003", "CNPJ não encontrado na base da Receita: " + cnpj);
         } catch (FeignException e) {
-            throw new ExternalServiceException("Serviço de CNPJ indisponível. Tente novamente mais tarde.", e);
+            throw new IntegracaoExternaException("EXT-007",
+                    "Serviço de CNPJ indisponível. Tente novamente mais tarde.", false, e);
         }
     }
 

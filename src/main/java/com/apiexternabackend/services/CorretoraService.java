@@ -11,9 +11,10 @@ import com.apiexternabackend.infra.facade.CvmFacade;
 import com.apiexternabackend.infra.facade.CvmFacade.ResultadoVerificacaoCvm;
 import com.apiexternabackend.mappers.CorretoraMapper;
 import com.apiexternabackend.repositories.CorretoraRepository;
-import com.apiexternabackend.resources.exceptions.BusinessException;
-import com.apiexternabackend.resources.exceptions.DuplicateResourceException;
-import com.apiexternabackend.resources.exceptions.ResourceNotFoundException;
+import com.apiexternabackend.resources.exceptions.IntegracaoExternaException;
+import com.apiexternabackend.resources.exceptions.RecursoDuplicadoException;
+import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
+import com.apiexternabackend.resources.exceptions.RegraVioladaException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +36,7 @@ public class CorretoraService {
         cnpjFacade.validar(cnpj);
 
         if (repository.existsByCnpj(cnpj)) {
-            throw new DuplicateResourceException("Corretora já cadastrada com o CNPJ: " + cnpj);
+            throw new RecursoDuplicadoException("COR-002", "Corretora já cadastrada com o CNPJ: " + cnpj);
         }
 
         // Busca dados cadastrais (Receita/BrasilAPI) — AC-103
@@ -45,10 +46,10 @@ public class CorretoraService {
         ResultadoVerificacaoCvm resultadoCvm = cvmFacade.verificar(cnpj);
 
         if (resultadoCvm.falhaVerificacao()) {
-            throw new BusinessException(resultadoCvm.mensagem());
+            throw new IntegracaoExternaException("EXT-007", resultadoCvm.mensagem(), false);
         }
         if (!resultadoCvm.autorizada()) {
-            throw new BusinessException(resultadoCvm.mensagem());
+            throw new RegraVioladaException("COR-003", resultadoCvm.mensagem());
         }
 
         // Busca endereço pelo CEP — AC-102
@@ -68,7 +69,7 @@ public class CorretoraService {
 
     public void excluir(Long id) {
         Corretora corretora = repository.findByIdAndAtivoTrue(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Corretora não encontrada: " + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("COR-001", "Corretora não encontrada: " + id));
         corretora.setAtivo(false);
         repository.save(corretora);
     }
@@ -76,13 +77,13 @@ public class CorretoraService {
     public CorretoraResponseDTO buscarPorId(Long id) {
         return repository.findById(id)
                 .map(mapper::toResponse)
-                .orElseThrow(() -> new ResourceNotFoundException("Corretora não encontrada: " + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("COR-001", "Corretora não encontrada: " + id));
     }
 
     public CorretoraResponseDTO buscarPorCnpj(String cnpj) {
         return repository.findByCnpj(cnpjFacade.normalizar(cnpj))
                 .map(mapper::toResponse)
-                .orElseThrow(() -> new ResourceNotFoundException("Corretora não encontrada: " + cnpj));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("COR-001", "Corretora não encontrada: " + cnpj));
     }
 
     private String extrairCep(CnpjResponseDTO dados) {

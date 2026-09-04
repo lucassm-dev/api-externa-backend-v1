@@ -1,16 +1,20 @@
 package com.apiexternabackend.infra.facade;
 
-import com.apiexternabackend.config.CvmFeignConfig;
 import com.apiexternabackend.infra.client.cvm.CvmCorretoraClient;
 import com.apiexternabackend.infra.client.cvm.dto.CvmCorretoraResponseDTO;
 import com.apiexternabackend.infra.facade.CvmFacade.ResultadoVerificacaoCvm;
-import com.apiexternabackend.resources.exceptions.ExternalServiceException;
+import feign.FeignException;
+import feign.Request;
+import feign.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -55,8 +59,7 @@ class CvmFacadeTest {
     @Test
     @DisplayName("@spec:AC-105 CNPJ não encontrado na CVM é não-autorizado")
     void deveRetornarNaoAutorizadoQuandoCnpjNaoConsta() {
-        when(client.buscarPorCnpj(CNPJ))
-                .thenThrow(new ExternalServiceException(CvmFeignConfig.CNPJ_NAO_ENCONTRADO));
+        when(client.buscarPorCnpj(CNPJ)).thenThrow(feignException(404));
 
         ResultadoVerificacaoCvm result = facade.verificar(CNPJ);
 
@@ -67,13 +70,19 @@ class CvmFacadeTest {
     @Test
     @DisplayName("@spec:AC-106 Falha na chamada CVM resulta em falha de verificação, não reprovação")
     void deveRetornarFalhaVerificacaoQuandoCvmIndisponivel() {
-        when(client.buscarPorCnpj(CNPJ))
-                .thenThrow(new ExternalServiceException("Erro ao consultar CVM: HTTP 500"));
+        when(client.buscarPorCnpj(CNPJ)).thenThrow(feignException(500));
 
         ResultadoVerificacaoCvm result = facade.verificar(CNPJ);
 
         assertThat(result.falhaVerificacao()).isTrue();
         assertThat(result.mensagem()).contains("verificar");
         assertThat(result.mensagem()).doesNotContain("não autorizada");
+    }
+
+    private FeignException feignException(int status) {
+        Request request = Request.create(Request.HttpMethod.GET, "/cvm/participantes",
+                Collections.emptyMap(), null, StandardCharsets.UTF_8, null);
+        Response response = Response.builder().status(status).reason("erro").request(request).build();
+        return FeignException.errorStatus("CvmCorretoraClient#buscarPorCnpj", response);
     }
 }

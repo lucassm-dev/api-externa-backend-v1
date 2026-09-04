@@ -1,9 +1,8 @@
 package com.apiexternabackend.infra.facade;
 
-import com.apiexternabackend.config.CvmFeignConfig;
 import com.apiexternabackend.infra.client.cvm.CvmCorretoraClient;
 import com.apiexternabackend.infra.client.cvm.dto.CvmCorretoraResponseDTO;
-import com.apiexternabackend.resources.exceptions.ExternalServiceException;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -26,13 +25,9 @@ public class CvmFacade {
                         "Corretora não autorizada na CVM: situação = " + situacao);
             }
             return ResultadoVerificacaoCvm.autorizada(LocalDate.now());
-        } catch (ExternalServiceException e) {
-            if (CvmFeignConfig.CNPJ_NAO_ENCONTRADO.equals(e.getMessage())) {
-                return ResultadoVerificacaoCvm.naoAutorizada(LocalDate.now(),
-                        "Corretora não autorizada na CVM: CNPJ não consta na base de participantes");
-            }
-            return ResultadoVerificacaoCvm.falhaVerificacao(null,
-                    "Não foi possível verificar a autorização na CVM: " + e.getMessage());
+        } catch (FeignException.NotFound e) {
+            return ResultadoVerificacaoCvm.naoAutorizada(LocalDate.now(),
+                    "Corretora não autorizada na CVM: CNPJ não consta na base de participantes");
         } catch (Exception e) {
             return ResultadoVerificacaoCvm.falhaVerificacao(null,
                     "Não foi possível verificar a autorização na CVM: " + e.getMessage());
