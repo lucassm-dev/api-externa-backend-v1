@@ -1,12 +1,18 @@
 {
-  "runId": "api-externa-backend-v1-spec-01-padronizacao-erros-mtn961wr",
+  "runId": "api-externa-backend-v1-spec-01-padronizacao-erros-mtn9dkzk",
   "feature": "spec-01-padronizacao-erros",
   "agent": "claude",
   "modo": "paralelo",
-  "paralelizar": null,
+  "paralelizar": [
+    "T-408",
+    "T-409",
+    "T-410",
+    "T-411",
+    "T-412"
+  ],
   "modeloForcado": null,
   "esforcoForcado": null,
-  "geradoEm": "2026-09-04 17:53",
+  "geradoEm": "2026-09-04 17:59",
   "branchTrabalho": "spec/spec-01-padronizacao-erros",
   "baseDir": ".spec/features/spec-01-padronizacao-erros",
   "specDir": ".spec",
@@ -20,11 +26,7 @@
     ],
     [
       "faixa-4",
-      "faixa-5",
-      "faixa-6"
-    ],
-    [
-      "faixa-7"
+      "faixa-5"
     ]
   ],
   "faixas": [
@@ -32,35 +34,6 @@
       "id": "faixa-1",
       "branch": "spec/spec-01-padronizacao-erros-faixa-1",
       "worktree": "../onp-worktrees/api-externa-backend-v1-spec-01-padronizacao-erros-faixa-1",
-      "tarefas": [
-        {
-          "id": "T-407",
-          "titulo": "Fundação: hierarquia de exceções, StandardError com código, GlobalExceptionHandler",
-          "modelo": "claude-sonnet-5",
-          "esforco": "medium",
-          "arquivos": [
-            "src/main/java/com/apiexternabackend/resources/exceptions/NegocioException.java",
-            "src/main/java/com/apiexternabackend/resources/exceptions/RecursoNaoEncontradoException.java",
-            "src/main/java/com/apiexternabackend/resources/exceptions/RecursoDuplicadoException.java",
-            "src/main/java/com/apiexternabackend/resources/exceptions/RegraVioladaException.java",
-            "src/main/java/com/apiexternabackend/resources/exceptions/IntegracaoExternaException.java",
-            "src/main/java/com/apiexternabackend/resources/exceptions/StandardError.java",
-            "src/main/java/com/apiexternabackend/resources/exceptions/GlobalExceptionHandler.java",
-            "src/main/java/com/apiexternabackend/resources/exceptions/ResourceNotFoundException.java",
-            "src/main/java/com/apiexternabackend/resources/exceptions/DuplicateResourceException.java",
-            "src/main/java/com/apiexternabackend/resources/exceptions/BusinessException.java",
-            "src/main/java/com/apiexternabackend/resources/exceptions/ExternalServiceException.java"
-          ],
-          "refs": [
-            "US-412"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "faixa-2",
-      "branch": "spec/spec-01-padronizacao-erros-faixa-2",
-      "worktree": "../onp-worktrees/api-externa-backend-v1-spec-01-padronizacao-erros-faixa-2",
       "tarefas": [
         {
           "id": "T-408",
@@ -82,9 +55,9 @@
       ]
     },
     {
-      "id": "faixa-3",
-      "branch": "spec/spec-01-padronizacao-erros-faixa-3",
-      "worktree": "../onp-worktrees/api-externa-backend-v1-spec-01-padronizacao-erros-faixa-3",
+      "id": "faixa-2",
+      "branch": "spec/spec-01-padronizacao-erros-faixa-2",
+      "worktree": "../onp-worktrees/api-externa-backend-v1-spec-01-padronizacao-erros-faixa-2",
       "tarefas": [
         {
           "id": "T-409",
@@ -104,9 +77,9 @@
       ]
     },
     {
-      "id": "faixa-4",
-      "branch": "spec/spec-01-padronizacao-erros-faixa-4",
-      "worktree": "../onp-worktrees/api-externa-backend-v1-spec-01-padronizacao-erros-faixa-4",
+      "id": "faixa-3",
+      "branch": "spec/spec-01-padronizacao-erros-faixa-3",
+      "worktree": "../onp-worktrees/api-externa-backend-v1-spec-01-padronizacao-erros-faixa-3",
       "tarefas": [
         {
           "id": "T-410",
@@ -131,9 +104,9 @@
       ]
     },
     {
-      "id": "faixa-5",
-      "branch": "spec/spec-01-padronizacao-erros-faixa-5",
-      "worktree": "../onp-worktrees/api-externa-backend-v1-spec-01-padronizacao-erros-faixa-5",
+      "id": "faixa-4",
+      "branch": "spec/spec-01-padronizacao-erros-faixa-4",
+      "worktree": "../onp-worktrees/api-externa-backend-v1-spec-01-padronizacao-erros-faixa-4",
       "tarefas": [
         {
           "id": "T-411",
@@ -154,9 +127,9 @@
       ]
     },
     {
-      "id": "faixa-6",
-      "branch": "spec/spec-01-padronizacao-erros-faixa-6",
-      "worktree": "../onp-worktrees/api-externa-backend-v1-spec-01-padronizacao-erros-faixa-6",
+      "id": "faixa-5",
+      "branch": "spec/spec-01-padronizacao-erros-faixa-5",
+      "worktree": "../onp-worktrees/api-externa-backend-v1-spec-01-padronizacao-erros-faixa-5",
       "tarefas": [
         {
           "id": "T-412",
@@ -173,34 +146,28 @@
           ]
         }
       ]
-    },
+    }
+  ],
+  "sequenciais": [
     {
-      "id": "faixa-7",
-      "branch": "spec/spec-01-padronizacao-erros-faixa-7",
-      "worktree": "../onp-worktrees/api-externa-backend-v1-spec-01-padronizacao-erros-faixa-7",
-      "tarefas": [
-        {
-          "id": "T-413",
-          "titulo": "Catálogo docs/erros.md e testes diretos do GlobalExceptionHandler (AC-426/427/428)",
-          "modelo": "claude-sonnet-5",
-          "esforco": "medium",
-          "arquivos": [
-            "docs/erros.md",
-            "src/test/java/com/apiexternabackend/resources/exceptions/GlobalExceptionHandlerTest.java"
-          ],
-          "refs": [
-            "AC-426",
-            "AC-427",
-            "AC-428",
-            "AC-433"
-          ]
-        }
+      "id": "T-413",
+      "titulo": "Catálogo docs/erros.md e testes diretos do GlobalExceptionHandler (AC-426/427/428)",
+      "modelo": "claude-sonnet-5",
+      "esforco": "medium",
+      "arquivos": [
+        "docs/erros.md",
+        "src/test/java/com/apiexternabackend/resources/exceptions/GlobalExceptionHandlerTest.java"
+      ],
+      "refs": [
+        "AC-426",
+        "AC-427",
+        "AC-428",
+        "AC-433"
       ]
     }
   ],
-  "sequenciais": [],
-  "concluidas": [],
-  "avisos": [
-    "T-407 está [em-andamento] — entrou no plano; se já houver trabalho local, commite antes de executar"
-  ]
+  "concluidas": [
+    "T-407"
+  ],
+  "avisos": []
 }

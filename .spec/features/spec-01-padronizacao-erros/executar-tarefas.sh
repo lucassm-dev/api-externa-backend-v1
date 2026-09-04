@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# executar-tarefas.sh — gerado por `onp-spec plano spec-01-padronizacao-erros` em 2026-09-04 17:53
+# executar-tarefas.sh — gerado por `onp-spec plano spec-01-padronizacao-erros` em 2026-09-04 17:59
 # NÃO edite à mão: mudou tasks.md ou a config, regenere o plano.
 #
 # uso:
@@ -14,7 +14,7 @@
 set -u
 set -o pipefail
 
-RUN_ID='api-externa-backend-v1-spec-01-padronizacao-erros-mtn961wr'
+RUN_ID='api-externa-backend-v1-spec-01-padronizacao-erros-mtn9dkzk'
 FEATURE='spec-01-padronizacao-erros'
 BASE_BRANCH='spec/spec-01-padronizacao-erros'
 ENGINE='.claude/skills/onp-spec-driven/scripts/onp-spec.mjs'
@@ -166,7 +166,7 @@ iniciar_resumos() {
   trap 'parar_resumos; node "$ENGINE" resumo "$FEATURE" --gravar >/dev/null 2>&1 || true' EXIT
 }
 
-# ── faixa-1: T-407 ──
+# ── faixa-1: T-408 ──
 executar_faixa_1() {
   local WT="$WT_BASE-faixa-1"
   preparar_worktree 'faixa-1' 'spec/spec-01-padronizacao-erros-faixa-1' "$WT" || return 1
@@ -174,37 +174,7 @@ executar_faixa_1() {
   : > "$LOG_DIR/faixa-1.log"
   (
     cd "$WT" || exit 9
-    rodar_tarefa 'faixa-1' 'T-407' 'Você executa UMA tarefa da feature "spec-01-padronizacao-erros" (fluxo onp-spec, spec-anchored).
-Leia primeiro: .spec/features/spec-01-padronizacao-erros/spec.md, .spec/features/spec-01-padronizacao-erros/tasks.md e .spec/constituicao.md.
-
-Sua tarefa (somente ela):
-T-407 — "Fundação: hierarquia de exceções, StandardError com código, GlobalExceptionHandler"
-  critérios/refs: US-412
-  arquivos permitidos (e seus testes): src/main/java/com/apiexternabackend/resources/exceptions/NegocioException.java, src/main/java/com/apiexternabackend/resources/exceptions/RecursoNaoEncontradoException.java, src/main/java/com/apiexternabackend/resources/exceptions/RecursoDuplicadoException.java, src/main/java/com/apiexternabackend/resources/exceptions/RegraVioladaException.java, src/main/java/com/apiexternabackend/resources/exceptions/IntegracaoExternaException.java, src/main/java/com/apiexternabackend/resources/exceptions/StandardError.java, src/main/java/com/apiexternabackend/resources/exceptions/GlobalExceptionHandler.java, src/main/java/com/apiexternabackend/resources/exceptions/ResourceNotFoundException.java, src/main/java/com/apiexternabackend/resources/exceptions/DuplicateResourceException.java, src/main/java/com/apiexternabackend/resources/exceptions/BusinessException.java, src/main/java/com/apiexternabackend/resources/exceptions/ExternalServiceException.java
-  mensagem de commit: "T-407 spec-01-padronizacao-erros: Fundação: hierarquia de exceções, StandardError com código, GlobalExceptionHandler"
-
-Regras inegociáveis:
-- Todo critério de aceite referenciado vira teste com @spec:AC-xxx no título.
-- NUNCA enfraqueça, pule (skip/todo) ou apague um teste para passar — teste pulado não é prova e o audit acusa.
-- Rode os testes localmente com `./mvnw -q test` até passarem.
-- NÃO edite tasks.md, NÃO rode onp-spec verify/audit e NÃO toque em outras tarefas — o orquestrador cuida disso.
-- Ao final de CADA tarefa: `git add` só no que você tocou e um commit próprio.' 'claude-sonnet-5' medium
-  ) >> "$LOG_DIR/faixa-1.log" 2>&1
-  local st=$?
-  mesclar_faixa 'faixa-1' 'spec/spec-01-padronizacao-erros-faixa-1' "$WT" "$st" || return 1
-  marcar_concluidas T-407
-  return 0
-}
-
-# ── faixa-2: T-408 ──
-executar_faixa_2() {
-  local WT="$WT_BASE-faixa-2"
-  preparar_worktree 'faixa-2' 'spec/spec-01-padronizacao-erros-faixa-2' "$WT" || return 1
-  evento --tipo faixa --faixa 'faixa-2' --estado executando --tentativa "$(tentativa 'faixa-2')"
-  : > "$LOG_DIR/faixa-2.log"
-  (
-    cd "$WT" || exit 9
-    rodar_tarefa 'faixa-2' 'T-408' 'Você executa UMA tarefa da feature "spec-01-padronizacao-erros" (fluxo onp-spec, spec-anchored).
+    rodar_tarefa 'faixa-1' 'T-408' 'Você executa UMA tarefa da feature "spec-01-padronizacao-erros" (fluxo onp-spec, spec-anchored).
 Leia primeiro: .spec/features/spec-01-padronizacao-erros/spec.md, .spec/features/spec-01-padronizacao-erros/tasks.md e .spec/constituicao.md.
 
 Sua tarefa (somente ela):
@@ -219,22 +189,22 @@ Regras inegociáveis:
 - Rode os testes localmente com `./mvnw -q test` até passarem.
 - NÃO edite tasks.md, NÃO rode onp-spec verify/audit e NÃO toque em outras tarefas — o orquestrador cuida disso.
 - Ao final de CADA tarefa: `git add` só no que você tocou e um commit próprio.' 'claude-sonnet-5' medium
-  ) >> "$LOG_DIR/faixa-2.log" 2>&1
+  ) >> "$LOG_DIR/faixa-1.log" 2>&1
   local st=$?
-  mesclar_faixa 'faixa-2' 'spec/spec-01-padronizacao-erros-faixa-2' "$WT" "$st" || return 1
+  mesclar_faixa 'faixa-1' 'spec/spec-01-padronizacao-erros-faixa-1' "$WT" "$st" || return 1
   marcar_concluidas T-408
   return 0
 }
 
-# ── faixa-3: T-409 ──
-executar_faixa_3() {
-  local WT="$WT_BASE-faixa-3"
-  preparar_worktree 'faixa-3' 'spec/spec-01-padronizacao-erros-faixa-3' "$WT" || return 1
-  evento --tipo faixa --faixa 'faixa-3' --estado executando --tentativa "$(tentativa 'faixa-3')"
-  : > "$LOG_DIR/faixa-3.log"
+# ── faixa-2: T-409 ──
+executar_faixa_2() {
+  local WT="$WT_BASE-faixa-2"
+  preparar_worktree 'faixa-2' 'spec/spec-01-padronizacao-erros-faixa-2' "$WT" || return 1
+  evento --tipo faixa --faixa 'faixa-2' --estado executando --tentativa "$(tentativa 'faixa-2')"
+  : > "$LOG_DIR/faixa-2.log"
   (
     cd "$WT" || exit 9
-    rodar_tarefa 'faixa-3' 'T-409' 'Você executa UMA tarefa da feature "spec-01-padronizacao-erros" (fluxo onp-spec, spec-anchored).
+    rodar_tarefa 'faixa-2' 'T-409' 'Você executa UMA tarefa da feature "spec-01-padronizacao-erros" (fluxo onp-spec, spec-anchored).
 Leia primeiro: .spec/features/spec-01-padronizacao-erros/spec.md, .spec/features/spec-01-padronizacao-erros/tasks.md e .spec/constituicao.md.
 
 Sua tarefa (somente ela):
@@ -249,22 +219,22 @@ Regras inegociáveis:
 - Rode os testes localmente com `./mvnw -q test` até passarem.
 - NÃO edite tasks.md, NÃO rode onp-spec verify/audit e NÃO toque em outras tarefas — o orquestrador cuida disso.
 - Ao final de CADA tarefa: `git add` só no que você tocou e um commit próprio.' 'claude-sonnet-5' medium
-  ) >> "$LOG_DIR/faixa-3.log" 2>&1
+  ) >> "$LOG_DIR/faixa-2.log" 2>&1
   local st=$?
-  mesclar_faixa 'faixa-3' 'spec/spec-01-padronizacao-erros-faixa-3' "$WT" "$st" || return 1
+  mesclar_faixa 'faixa-2' 'spec/spec-01-padronizacao-erros-faixa-2' "$WT" "$st" || return 1
   marcar_concluidas T-409
   return 0
 }
 
-# ── faixa-4: T-410 ──
-executar_faixa_4() {
-  local WT="$WT_BASE-faixa-4"
-  preparar_worktree 'faixa-4' 'spec/spec-01-padronizacao-erros-faixa-4' "$WT" || return 1
-  evento --tipo faixa --faixa 'faixa-4' --estado executando --tentativa "$(tentativa 'faixa-4')"
-  : > "$LOG_DIR/faixa-4.log"
+# ── faixa-3: T-410 ──
+executar_faixa_3() {
+  local WT="$WT_BASE-faixa-3"
+  preparar_worktree 'faixa-3' 'spec/spec-01-padronizacao-erros-faixa-3' "$WT" || return 1
+  evento --tipo faixa --faixa 'faixa-3' --estado executando --tentativa "$(tentativa 'faixa-3')"
+  : > "$LOG_DIR/faixa-3.log"
   (
     cd "$WT" || exit 9
-    rodar_tarefa 'faixa-4' 'T-410' 'Você executa UMA tarefa da feature "spec-01-padronizacao-erros" (fluxo onp-spec, spec-anchored).
+    rodar_tarefa 'faixa-3' 'T-410' 'Você executa UMA tarefa da feature "spec-01-padronizacao-erros" (fluxo onp-spec, spec-anchored).
 Leia primeiro: .spec/features/spec-01-padronizacao-erros/spec.md, .spec/features/spec-01-padronizacao-erros/tasks.md e .spec/constituicao.md.
 
 Sua tarefa (somente ela):
@@ -279,22 +249,22 @@ Regras inegociáveis:
 - Rode os testes localmente com `./mvnw -q test` até passarem.
 - NÃO edite tasks.md, NÃO rode onp-spec verify/audit e NÃO toque em outras tarefas — o orquestrador cuida disso.
 - Ao final de CADA tarefa: `git add` só no que você tocou e um commit próprio.' 'claude-sonnet-5' medium
-  ) >> "$LOG_DIR/faixa-4.log" 2>&1
+  ) >> "$LOG_DIR/faixa-3.log" 2>&1
   local st=$?
-  mesclar_faixa 'faixa-4' 'spec/spec-01-padronizacao-erros-faixa-4' "$WT" "$st" || return 1
+  mesclar_faixa 'faixa-3' 'spec/spec-01-padronizacao-erros-faixa-3' "$WT" "$st" || return 1
   marcar_concluidas T-410
   return 0
 }
 
-# ── faixa-5: T-411 ──
-executar_faixa_5() {
-  local WT="$WT_BASE-faixa-5"
-  preparar_worktree 'faixa-5' 'spec/spec-01-padronizacao-erros-faixa-5' "$WT" || return 1
-  evento --tipo faixa --faixa 'faixa-5' --estado executando --tentativa "$(tentativa 'faixa-5')"
-  : > "$LOG_DIR/faixa-5.log"
+# ── faixa-4: T-411 ──
+executar_faixa_4() {
+  local WT="$WT_BASE-faixa-4"
+  preparar_worktree 'faixa-4' 'spec/spec-01-padronizacao-erros-faixa-4' "$WT" || return 1
+  evento --tipo faixa --faixa 'faixa-4' --estado executando --tentativa "$(tentativa 'faixa-4')"
+  : > "$LOG_DIR/faixa-4.log"
   (
     cd "$WT" || exit 9
-    rodar_tarefa 'faixa-5' 'T-411' 'Você executa UMA tarefa da feature "spec-01-padronizacao-erros" (fluxo onp-spec, spec-anchored).
+    rodar_tarefa 'faixa-4' 'T-411' 'Você executa UMA tarefa da feature "spec-01-padronizacao-erros" (fluxo onp-spec, spec-anchored).
 Leia primeiro: .spec/features/spec-01-padronizacao-erros/spec.md, .spec/features/spec-01-padronizacao-erros/tasks.md e .spec/constituicao.md.
 
 Sua tarefa (somente ela):
@@ -309,22 +279,22 @@ Regras inegociáveis:
 - Rode os testes localmente com `./mvnw -q test` até passarem.
 - NÃO edite tasks.md, NÃO rode onp-spec verify/audit e NÃO toque em outras tarefas — o orquestrador cuida disso.
 - Ao final de CADA tarefa: `git add` só no que você tocou e um commit próprio.' 'claude-sonnet-5' medium
-  ) >> "$LOG_DIR/faixa-5.log" 2>&1
+  ) >> "$LOG_DIR/faixa-4.log" 2>&1
   local st=$?
-  mesclar_faixa 'faixa-5' 'spec/spec-01-padronizacao-erros-faixa-5' "$WT" "$st" || return 1
+  mesclar_faixa 'faixa-4' 'spec/spec-01-padronizacao-erros-faixa-4' "$WT" "$st" || return 1
   marcar_concluidas T-411
   return 0
 }
 
-# ── faixa-6: T-412 ──
-executar_faixa_6() {
-  local WT="$WT_BASE-faixa-6"
-  preparar_worktree 'faixa-6' 'spec/spec-01-padronizacao-erros-faixa-6' "$WT" || return 1
-  evento --tipo faixa --faixa 'faixa-6' --estado executando --tentativa "$(tentativa 'faixa-6')"
-  : > "$LOG_DIR/faixa-6.log"
+# ── faixa-5: T-412 ──
+executar_faixa_5() {
+  local WT="$WT_BASE-faixa-5"
+  preparar_worktree 'faixa-5' 'spec/spec-01-padronizacao-erros-faixa-5' "$WT" || return 1
+  evento --tipo faixa --faixa 'faixa-5' --estado executando --tentativa "$(tentativa 'faixa-5')"
+  : > "$LOG_DIR/faixa-5.log"
   (
     cd "$WT" || exit 9
-    rodar_tarefa 'faixa-6' 'T-412' 'Você executa UMA tarefa da feature "spec-01-padronizacao-erros" (fluxo onp-spec, spec-anchored).
+    rodar_tarefa 'faixa-5' 'T-412' 'Você executa UMA tarefa da feature "spec-01-padronizacao-erros" (fluxo onp-spec, spec-anchored).
 Leia primeiro: .spec/features/spec-01-padronizacao-erros/spec.md, .spec/features/spec-01-padronizacao-erros/tasks.md e .spec/constituicao.md.
 
 Sua tarefa (somente ela):
@@ -339,22 +309,17 @@ Regras inegociáveis:
 - Rode os testes localmente com `./mvnw -q test` até passarem.
 - NÃO edite tasks.md, NÃO rode onp-spec verify/audit e NÃO toque em outras tarefas — o orquestrador cuida disso.
 - Ao final de CADA tarefa: `git add` só no que você tocou e um commit próprio.' 'claude-sonnet-5' medium
-  ) >> "$LOG_DIR/faixa-6.log" 2>&1
+  ) >> "$LOG_DIR/faixa-5.log" 2>&1
   local st=$?
-  mesclar_faixa 'faixa-6' 'spec/spec-01-padronizacao-erros-faixa-6' "$WT" "$st" || return 1
+  mesclar_faixa 'faixa-5' 'spec/spec-01-padronizacao-erros-faixa-5' "$WT" "$st" || return 1
   marcar_concluidas T-412
   return 0
 }
 
-# ── faixa-7: T-413 ──
-executar_faixa_7() {
-  local WT="$WT_BASE-faixa-7"
-  preparar_worktree 'faixa-7' 'spec/spec-01-padronizacao-erros-faixa-7' "$WT" || return 1
-  evento --tipo faixa --faixa 'faixa-7' --estado executando --tentativa "$(tentativa 'faixa-7')"
-  : > "$LOG_DIR/faixa-7.log"
-  (
-    cd "$WT" || exit 9
-    rodar_tarefa 'faixa-7' 'T-413' 'Você executa UMA tarefa da feature "spec-01-padronizacao-erros" (fluxo onp-spec, spec-anchored).
+# ── sequencial T-413 (fora da seleção do usuário) ──
+executar_seq_T_413() {
+  info 'sequencial T-413 — Catálogo docs/erros.md e testes diretos do GlobalExceptionHandler (AC-426/427/428)'
+  if rodar_tarefa seq 'T-413' 'Você executa UMA tarefa da feature "spec-01-padronizacao-erros" (fluxo onp-spec, spec-anchored).
 Leia primeiro: .spec/features/spec-01-padronizacao-erros/spec.md, .spec/features/spec-01-padronizacao-erros/tasks.md e .spec/constituicao.md.
 
 Sua tarefa (somente ela):
@@ -368,12 +333,19 @@ Regras inegociáveis:
 - NUNCA enfraqueça, pule (skip/todo) ou apague um teste para passar — teste pulado não é prova e o audit acusa.
 - Rode os testes localmente com `./mvnw -q test` até passarem.
 - NÃO edite tasks.md, NÃO rode onp-spec verify/audit e NÃO toque em outras tarefas — o orquestrador cuida disso.
-- Ao final de CADA tarefa: `git add` só no que você tocou e um commit próprio.' 'claude-sonnet-5' medium
-  ) >> "$LOG_DIR/faixa-7.log" 2>&1
-  local st=$?
-  mesclar_faixa 'faixa-7' 'spec/spec-01-padronizacao-erros-faixa-7' "$WT" "$st" || return 1
-  marcar_concluidas T-413
-  return 0
+- Ao final de CADA tarefa: `git add` só no que você tocou e um commit próprio.' 'claude-sonnet-5' medium >> "$LOG_DIR/seq.log" 2>&1; then
+    # commit de segurança se o agente esqueceu (rastreabilidade > perfeição)
+    if [ -n "$(git status --porcelain)" ]; then
+      git add -A && git commit -q -m 'T-413 spec-01-padronizacao-erros: Catálogo docs/erros.md e testes diretos do GlobalExceptionHandler (AC-426/427/428) (auto-commit do plano)'
+    fi
+    marcar_concluidas T-413
+    verde "✔ T-413 concluída"
+    return 0
+  fi
+  vermelho "✘ T-413 falhou (log: $LOG_DIR/seq.log)"
+  amarelo "  reexecute só ela: bash .spec/features/spec-01-padronizacao-erros/executar-tarefas.sh --seq T-413"
+  FALHAS="$FALHAS T-413"
+  return 1
 }
 
 # ── gate: quem decide é a máquina ────────────────────────────────────
@@ -437,30 +409,24 @@ executar_tudo() {
   wait "$PID_FAIXA_1" || true
   wait "$PID_FAIXA_2" || true
   wait "$PID_FAIXA_3" || true
-  # onda 2: faixa-4 ∥ faixa-5 ∥ faixa-6
-  info "onda 2: faixa-4 ∥ faixa-5 ∥ faixa-6 — janelas limpas em paralelo"
+  # onda 2: faixa-4 ∥ faixa-5
+  info "onda 2: faixa-4 ∥ faixa-5 — janelas limpas em paralelo"
   executar_faixa_4 & PID_FAIXA_4=$!
   executar_faixa_5 & PID_FAIXA_5=$!
-  executar_faixa_6 & PID_FAIXA_6=$!
   wait "$PID_FAIXA_4" || true
   wait "$PID_FAIXA_5" || true
-  wait "$PID_FAIXA_6" || true
-  # onda 3: faixa-7
-  info "onda 3: faixa-7 — janelas limpas em paralelo"
-  executar_faixa_7 & PID_FAIXA_7=$!
-  wait "$PID_FAIXA_7" || true
+  executar_seq_T_413 || true
   encerrar tudo
 }
 
 listar() {
   echo "execução: $RUN_ID (feature $FEATURE, branch $BASE_BRANCH)"
-  echo "  faixa-1  onda 1  T-407"
-  echo "  faixa-2  onda 1  T-408"
-  echo "  faixa-3  onda 1  T-409"
-  echo "  faixa-4  onda 2  T-410"
-  echo "  faixa-5  onda 2  T-411"
-  echo "  faixa-6  onda 2  T-412"
-  echo "  faixa-7  onda 3  T-413"
+  echo "  faixa-1  onda 1  T-408"
+  echo "  faixa-2  onda 1  T-409"
+  echo "  faixa-3  onda 1  T-410"
+  echo "  faixa-4  onda 2  T-411"
+  echo "  faixa-5  onda 2  T-412"
+  echo "  seq       T-413 (sequencial)"
   echo
   echo "reexecutar uma faixa:    --faixa <id>"
   echo "reexecutar sequencial:   --seq <T-xxx>"
@@ -496,12 +462,11 @@ case "$MODO" in
       faixa-3) evento --tipo inicio --escopo "faixa:faixa-3"; iniciar_resumos; executar_faixa_3 || true; encerrar "faixa:faixa-3" ;;
       faixa-4) evento --tipo inicio --escopo "faixa:faixa-4"; iniciar_resumos; executar_faixa_4 || true; encerrar "faixa:faixa-4" ;;
       faixa-5) evento --tipo inicio --escopo "faixa:faixa-5"; iniciar_resumos; executar_faixa_5 || true; encerrar "faixa:faixa-5" ;;
-      faixa-6) evento --tipo inicio --escopo "faixa:faixa-6"; iniciar_resumos; executar_faixa_6 || true; encerrar "faixa:faixa-6" ;;
-      faixa-7) evento --tipo inicio --escopo "faixa:faixa-7"; iniciar_resumos; executar_faixa_7 || true; encerrar "faixa:faixa-7" ;;
       *) falhar "faixa desconhecida: '$ALVO' — veja as disponíveis com --listar" ;;
     esac ;;
   seq)
     case "$ALVO" in
+      T-413) evento --tipo inicio --escopo "seq:T-413"; iniciar_resumos; executar_seq_T_413 || true; encerrar "seq:T-413" ;;
       *) falhar "tarefa sequencial desconhecida: '$ALVO' — veja as disponíveis com --listar" ;;
     esac ;;
 esac

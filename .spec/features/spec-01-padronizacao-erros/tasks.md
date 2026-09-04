@@ -2,8 +2,7 @@
 
 > feature: spec-01-padronizacao-erros
 
-## T-407 — Fundação: hierarquia de exceções, StandardError com código, GlobalExceptionHandler [em-andamento]
-
+## T-407 — Fundação: hierarquia de exceções, StandardError com código, GlobalExceptionHandler [concluida]
 - Refs: US-412
 - Arquivos: src/main/java/com/apiexternabackend/resources/exceptions/NegocioException.java, src/main/java/com/apiexternabackend/resources/exceptions/RecursoNaoEncontradoException.java, src/main/java/com/apiexternabackend/resources/exceptions/RecursoDuplicadoException.java, src/main/java/com/apiexternabackend/resources/exceptions/RegraVioladaException.java, src/main/java/com/apiexternabackend/resources/exceptions/IntegracaoExternaException.java, src/main/java/com/apiexternabackend/resources/exceptions/StandardError.java, src/main/java/com/apiexternabackend/resources/exceptions/GlobalExceptionHandler.java, src/main/java/com/apiexternabackend/resources/exceptions/ResourceNotFoundException.java, src/main/java/com/apiexternabackend/resources/exceptions/DuplicateResourceException.java, src/main/java/com/apiexternabackend/resources/exceptions/BusinessException.java, src/main/java/com/apiexternabackend/resources/exceptions/ExternalServiceException.java
 - Notas: pré-requisito de compilação para todas as outras tarefas — feita sequencialmente, fora do plano paralelo, antes de liberar T-408..T-412.
