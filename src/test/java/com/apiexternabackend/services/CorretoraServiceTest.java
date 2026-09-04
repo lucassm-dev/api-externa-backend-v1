@@ -11,9 +11,10 @@ import com.apiexternabackend.infra.facade.CvmFacade;
 import com.apiexternabackend.infra.facade.CvmFacade.ResultadoVerificacaoCvm;
 import com.apiexternabackend.mappers.CorretoraMapper;
 import com.apiexternabackend.repositories.CorretoraRepository;
-import com.apiexternabackend.resources.exceptions.BusinessException;
-import com.apiexternabackend.resources.exceptions.DuplicateResourceException;
-import com.apiexternabackend.resources.exceptions.ResourceNotFoundException;
+import com.apiexternabackend.resources.exceptions.IntegracaoExternaException;
+import com.apiexternabackend.resources.exceptions.RecursoDuplicadoException;
+import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
+import com.apiexternabackend.resources.exceptions.RegraVioladaException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -82,10 +83,10 @@ class CorretoraServiceTest {
     @Test
     @DisplayName("@spec:AC-101 CNPJ mal formatado é rejeitado antes de qualquer chamada externa")
     void deveRejeitarCnpjMalFormatadoSemChamarFonteExterna() {
-        doThrow(new BusinessException("CNPJ inválido")).when(cnpjFacade).validar(any());
+        doThrow(new RegraVioladaException("COR-003", "CNPJ inválido")).when(cnpjFacade).validar(any());
 
         assertThatThrownBy(() -> service.cadastrar(new CorretoraRequestDTO(CNPJ_INVALIDO_FORMATO)))
-                .isInstanceOf(BusinessException.class);
+                .isInstanceOf(RegraVioladaException.class);
 
         verify(cnpjFacade, never()).buscar(anyString());
         verify(cvmFacade, never()).verificar(anyString());
@@ -95,10 +96,10 @@ class CorretoraServiceTest {
     @Test
     @DisplayName("@spec:AC-101 CNPJ com dígitos verificadores inválidos é rejeitado antes de chamadas externas")
     void deveRejeitarCnpjComDigitosInvalidos() {
-        doThrow(new BusinessException("CNPJ com dígitos verificadores inválidos")).when(cnpjFacade).validar(any());
+        doThrow(new RegraVioladaException("COR-003", "CNPJ com dígitos verificadores inválidos")).when(cnpjFacade).validar(any());
 
         assertThatThrownBy(() -> service.cadastrar(new CorretoraRequestDTO(CNPJ_INVALIDO_DIGITO)))
-                .isInstanceOf(BusinessException.class);
+                .isInstanceOf(RegraVioladaException.class);
 
         verify(cnpjFacade, never()).buscar(anyString());
     }
@@ -133,12 +134,23 @@ class CorretoraServiceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-421 Excluir corretora inexistente ou inativa lança ResourceNotFoundException")
+    @DisplayName("@spec:AC-421 Excluir corretora inexistente ou inativa lança RecursoNaoEncontradoException")
     void deveLancarNotFoundAoExcluirCorretoraInexistente() {
         when(repository.findByIdAndAtivoTrue(99L)).thenReturn(java.util.Optional.empty());
 
         assertThatThrownBy(() -> service.excluir(99L))
-                .isInstanceOf(ResourceNotFoundException.class);
+                .isInstanceOf(RecursoNaoEncontradoException.class);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-433 Corretora não encontrada traz o código COR-001 do catálogo")
+    void deveTrazerCodigoCor001AoNaoEncontrarCorretora() {
+        when(repository.findById(99L)).thenReturn(java.util.Optional.empty());
+
+        assertThatThrownBy(() -> service.buscarPorId(99L))
+                .isInstanceOf(RecursoNaoEncontradoException.class)
+                .extracting(e -> ((RecursoNaoEncontradoException) e).getCodigo())
+                .isEqualTo("COR-001");
     }
 
     @Test
@@ -161,10 +173,10 @@ class CorretoraServiceTest {
     void deveRejeitarCnpjNaoEncontradoNaReceita() {
         when(repository.existsByCnpj(CNPJ_VALIDO)).thenReturn(false);
         when(cnpjFacade.buscar(CNPJ_VALIDO))
-                .thenThrow(new BusinessException("CNPJ não encontrado na base da Receita"));
+                .thenThrow(new RegraVioladaException("COR-003", "CNPJ não encontrado na base da Receita"));
 
         assertThatThrownBy(() -> service.cadastrar(new CorretoraRequestDTO(CNPJ_VALIDO)))
-                .isInstanceOf(BusinessException.class)
+                .isInstanceOf(RegraVioladaException.class)
                 .hasMessageContaining("Receita");
     }
 
@@ -174,7 +186,18 @@ class CorretoraServiceTest {
         when(repository.existsByCnpj(CNPJ_VALIDO)).thenReturn(true);
 
         assertThatThrownBy(() -> service.cadastrar(new CorretoraRequestDTO(CNPJ_VALIDO)))
-                .isInstanceOf(DuplicateResourceException.class);
+                .isInstanceOf(RecursoDuplicadoException.class);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-433 CNPJ duplicado traz o código COR-002 do catálogo")
+    void deveTrazerCodigoCor002AoDuplicarCnpj() {
+        when(repository.existsByCnpj(CNPJ_VALIDO)).thenReturn(true);
+
+        assertThatThrownBy(() -> service.cadastrar(new CorretoraRequestDTO(CNPJ_VALIDO)))
+                .isInstanceOf(RecursoDuplicadoException.class)
+                .extracting(e -> ((RecursoDuplicadoException) e).getCodigo())
+                .isEqualTo("COR-002");
     }
 
     @Test
@@ -186,8 +209,22 @@ class CorretoraServiceTest {
                 .thenReturn(ResultadoVerificacaoCvm.naoAutorizada(LocalDate.now(), "Corretora não autorizada na CVM"));
 
         assertThatThrownBy(() -> service.cadastrar(new CorretoraRequestDTO(CNPJ_VALIDO)))
-                .isInstanceOf(BusinessException.class)
+                .isInstanceOf(RegraVioladaException.class)
                 .hasMessageContaining("não autorizada");
+    }
+
+    @Test
+    @DisplayName("@spec:AC-433 Corretora não autorizada na CVM traz o código COR-003 do catálogo")
+    void deveTrazerCodigoCor003AoNaoAutorizar() {
+        when(repository.existsByCnpj(CNPJ_VALIDO)).thenReturn(false);
+        when(cnpjFacade.buscar(CNPJ_VALIDO)).thenReturn(cnpjResponse);
+        when(cvmFacade.verificar(CNPJ_VALIDO))
+                .thenReturn(ResultadoVerificacaoCvm.naoAutorizada(LocalDate.now(), "Corretora não autorizada na CVM"));
+
+        assertThatThrownBy(() -> service.cadastrar(new CorretoraRequestDTO(CNPJ_VALIDO)))
+                .isInstanceOf(RegraVioladaException.class)
+                .extracting(e -> ((RegraVioladaException) e).getCodigo())
+                .isEqualTo("COR-003");
     }
 
     @Test
@@ -200,9 +237,24 @@ class CorretoraServiceTest {
                         "Não foi possível verificar a autorização na CVM: base de dados indisponível"));
 
         assertThatThrownBy(() -> service.cadastrar(new CorretoraRequestDTO(CNPJ_VALIDO)))
-                .isInstanceOf(BusinessException.class)
+                .isInstanceOf(IntegracaoExternaException.class)
                 .hasMessageContaining("verificar")
                 .hasMessageNotContaining("não autorizada");
+    }
+
+    @Test
+    @DisplayName("@spec:AC-434 Falha de infraestrutura ao verificar CVM retorna EXT-007 (503), distinto de COR-003 (422)")
+    void deveRetornarExt007QuandoCvmIndisponivel() {
+        when(repository.existsByCnpj(CNPJ_VALIDO)).thenReturn(false);
+        when(cnpjFacade.buscar(CNPJ_VALIDO)).thenReturn(cnpjResponse);
+        when(cvmFacade.verificar(CNPJ_VALIDO))
+                .thenReturn(ResultadoVerificacaoCvm.falhaVerificacao(null,
+                        "Não foi possível verificar a autorização na CVM: base de dados indisponível"));
+
+        assertThatThrownBy(() -> service.cadastrar(new CorretoraRequestDTO(CNPJ_VALIDO)))
+                .isInstanceOf(IntegracaoExternaException.class)
+                .extracting(e -> ((IntegracaoExternaException) e).getCodigo())
+                .isEqualTo("EXT-007");
     }
 
     @Test

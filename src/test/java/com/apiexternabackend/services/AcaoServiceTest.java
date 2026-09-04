@@ -9,10 +9,10 @@ import com.apiexternabackend.infra.adapter.CotacaoResultado;
 import com.apiexternabackend.infra.adapter.TwelveDataAdapter;
 import com.apiexternabackend.mappers.AcaoMapper;
 import com.apiexternabackend.repositories.AcaoRepository;
-import com.apiexternabackend.resources.exceptions.BusinessException;
-import com.apiexternabackend.resources.exceptions.DuplicateResourceException;
-import com.apiexternabackend.resources.exceptions.ExternalServiceException;
-import com.apiexternabackend.resources.exceptions.ResourceNotFoundException;
+import com.apiexternabackend.resources.exceptions.IntegracaoExternaException;
+import com.apiexternabackend.resources.exceptions.RecursoDuplicadoException;
+import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
+import com.apiexternabackend.resources.exceptions.RegraVioladaException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -104,10 +105,10 @@ class AcaoServiceTest {
     void deveRejeitarTickerInexistente() {
         when(repository.existsByTicker("XXXX3")).thenReturn(false);
         when(brapiAdapter.buscarCotacao("XXXX3"))
-                .thenThrow(new BusinessException("Ticker não encontrado na fonte BR: XXXX3"));
+                .thenThrow(new RegraVioladaException("EXT-008", "Ticker não encontrado na fonte BR: XXXX3"));
 
         assertThatThrownBy(() -> service.cadastrar(new AcaoRequestDTO("XXXX3", Mercado.BR)))
-                .isInstanceOf(BusinessException.class)
+                .isInstanceOf(RegraVioladaException.class)
                 .hasMessageContaining("não encontrado");
     }
 
@@ -117,7 +118,7 @@ class AcaoServiceTest {
         when(repository.existsByTicker("PETR4")).thenReturn(true);
 
         assertThatThrownBy(() -> service.cadastrar(new AcaoRequestDTO("PETR4", Mercado.BR)))
-                .isInstanceOf(DuplicateResourceException.class);
+                .isInstanceOf(RecursoDuplicadoException.class);
     }
 
     @Test
@@ -161,7 +162,7 @@ class AcaoServiceTest {
         when(repository.findByTicker("XXXX3")).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.buscarPorTicker("XXXX3"))
-                .isInstanceOf(ResourceNotFoundException.class);
+                .isInstanceOf(RecursoNaoEncontradoException.class);
     }
 
     @Test
@@ -193,11 +194,11 @@ class AcaoServiceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-210 Fonte indisponível retorna última cotação conhecida, não falha")
+    @DisplayName("@spec:AC-210 @spec:AC-432 Fonte indisponível (não é cota) retorna última cotação conhecida, preserva comportamento atual")
     void deveRetornarUltimaCotacaoQuandoFonteIndisponivel() {
         when(repository.findById(1L)).thenReturn(Optional.of(acaoBR));
         when(brapiAdapter.buscarCotacao("PETR4"))
-                .thenThrow(new ExternalServiceException("Fonte BR indisponível"));
+                .thenThrow(new IntegracaoExternaException("EXT-010", "Fonte BR indisponível", false));
         when(mapper.toResponse(acaoBR)).thenReturn(responseBR);
 
         // Não deve lançar exceção — retorna a última cotação conhecida
@@ -208,15 +209,48 @@ class AcaoServiceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-211 Cota excedida resulta em mensagem específica de limite")
+    @DisplayName("@spec:AC-211 @spec:AC-429 Cota excedida resulta em exceção mapeada para 429 com mensagem de limite")
     void deveMensagemEspecificaParaLimiteExcedido() {
         when(repository.existsByTicker("PETR4")).thenReturn(false);
         when(brapiAdapter.buscarCotacao("PETR4"))
-                .thenThrow(new ExternalServiceException("Limite de requisições da fonte BR excedido"));
+                .thenThrow(new IntegracaoExternaException("EXT-009", "Limite de requisições da fonte BR excedido", true));
 
         assertThatThrownBy(() -> service.cadastrar(new AcaoRequestDTO("PETR4", Mercado.BR)))
-                .isInstanceOf(ExternalServiceException.class)
-                .hasMessageContaining("Limite");
+                .isInstanceOf(IntegracaoExternaException.class)
+                .hasMessageContaining("Limite")
+                .extracting(e -> ((IntegracaoExternaException) e).getHttpStatus())
+                .isEqualTo(HttpStatus.TOO_MANY_REQUESTS);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-431 Atualizar cotação com cota estourada propaga 429, não silencia devolvendo a cotação antiga")
+    void deveLancarExcecaoDe429AoAtualizarCotacaoComCotaEstourada() {
+        when(repository.findById(1L)).thenReturn(Optional.of(acaoBR));
+        when(brapiAdapter.buscarCotacao("PETR4"))
+                .thenThrow(new IntegracaoExternaException("EXT-009", "Limite de requisições da fonte BR excedido", true));
+
+        assertThatThrownBy(() -> service.atualizarCotacao(1L))
+                .isInstanceOf(IntegracaoExternaException.class)
+                .extracting(e -> ((IntegracaoExternaException) e).getHttpStatus())
+                .isEqualTo(HttpStatus.TOO_MANY_REQUESTS);
+
+        verify(repository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-433 Exceções de Ação carregam código do catálogo (ACA-001/ACA-002)")
+    void deveExcecoesDeAcaoCarregaremCodigoDoCatalogo() {
+        when(repository.existsByTicker("PETR4")).thenReturn(true);
+        assertThatThrownBy(() -> service.cadastrar(new AcaoRequestDTO("PETR4", Mercado.BR)))
+                .isInstanceOf(RecursoDuplicadoException.class)
+                .extracting(e -> ((RecursoDuplicadoException) e).getCodigo())
+                .isEqualTo("ACA-002");
+
+        when(repository.findByTicker("XXXX3")).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> service.buscarPorTicker("XXXX3"))
+                .isInstanceOf(RecursoNaoEncontradoException.class)
+                .extracting(e -> ((RecursoNaoEncontradoException) e).getCodigo())
+                .isEqualTo("ACA-001");
     }
 
     @Test
@@ -231,11 +265,11 @@ class AcaoServiceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-425 Excluir ação inexistente ou inativa lança ResourceNotFoundException")
+    @DisplayName("@spec:AC-425 Excluir ação inexistente ou inativa lança RecursoNaoEncontradoException")
     void deveLancarNotFoundAoExcluirAcaoInexistente() {
         when(repository.findByTickerAndAtivoTrue("XXXX3")).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.excluir("XXXX3"))
-                .isInstanceOf(ResourceNotFoundException.class);
+                .isInstanceOf(RecursoNaoEncontradoException.class);
     }
 }

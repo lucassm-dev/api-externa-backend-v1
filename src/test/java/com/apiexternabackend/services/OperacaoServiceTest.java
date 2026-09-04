@@ -17,7 +17,7 @@ import com.apiexternabackend.mappers.OperacaoMapper;
 import com.apiexternabackend.repositories.AcaoRepository;
 import com.apiexternabackend.repositories.CarteiraAcaoRepository;
 import com.apiexternabackend.repositories.OperacaoRepository;
-import com.apiexternabackend.resources.exceptions.BusinessException;
+import com.apiexternabackend.resources.exceptions.RegraVioladaException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -100,7 +100,7 @@ class OperacaoServiceTest {
         when(acaoRepository.findByTicker("AAPL")).thenReturn(Optional.of(acaoUS));
 
         assertThatThrownBy(() -> service.comprar(new OperacaoRequestDTO(1L, "AAPL", 10)))
-                .isInstanceOf(BusinessException.class)
+                .isInstanceOf(RegraVioladaException.class)
                 .hasMessageContaining("mercado");
     }
 
@@ -111,7 +111,7 @@ class OperacaoServiceTest {
         when(acaoRepository.findByTicker("PETR4")).thenReturn(Optional.of(acaoBR));
 
         assertThatThrownBy(() -> service.comprar(new OperacaoRequestDTO(2L, "PETR4", 10)))
-                .isInstanceOf(BusinessException.class)
+                .isInstanceOf(RegraVioladaException.class)
                 .hasMessageContaining("mercado");
     }
 
@@ -124,7 +124,7 @@ class OperacaoServiceTest {
         when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L)).thenReturn(Optional.of(posicao));
 
         assertThatThrownBy(() -> service.vender(new OperacaoRequestDTO(1L, "PETR4", 100)))
-                .isInstanceOf(BusinessException.class)
+                .isInstanceOf(RegraVioladaException.class)
                 .hasMessageContaining("posição atual");
     }
 
@@ -147,11 +147,11 @@ class OperacaoServiceTest {
     @DisplayName("@spec:AC-309 Carteira inativa não recebe operações")
     void deveRejeitarOperacaoEmCarteiraInativa() {
         when(carteiraService.buscarAtiva(1L))
-                .thenThrow(new com.apiexternabackend.resources.exceptions.ResourceNotFoundException(
-                        "Carteira não encontrada ou inativa: 1"));
+                .thenThrow(new com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException(
+                        "CAR-001", "Carteira não encontrada ou inativa: 1"));
 
         assertThatThrownBy(() -> service.comprar(new OperacaoRequestDTO(1L, "PETR4", 10)))
-                .isInstanceOf(com.apiexternabackend.resources.exceptions.ResourceNotFoundException.class);
+                .isInstanceOf(com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException.class);
     }
 
     @Test

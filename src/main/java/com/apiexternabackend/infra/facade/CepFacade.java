@@ -2,8 +2,8 @@ package com.apiexternabackend.infra.facade;
 
 import com.apiexternabackend.infra.client.cep.CepClient;
 import com.apiexternabackend.infra.client.cep.dto.CepResponseDTO;
-import com.apiexternabackend.resources.exceptions.BusinessException;
-import com.apiexternabackend.resources.exceptions.ExternalServiceException;
+import com.apiexternabackend.resources.exceptions.IntegracaoExternaException;
+import com.apiexternabackend.resources.exceptions.RegraVioladaException;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -19,13 +19,14 @@ public class CepFacade {
         try {
             CepResponseDTO resp = client.buscarPorCep(cepLimpo);
             if (resp == null || !resp.isValido()) {
-                throw new BusinessException("CEP não encontrado: " + cep);
+                throw new RegraVioladaException("COR-003", "CEP não encontrado: " + cep);
             }
             return resp;
-        } catch (BusinessException e) {
+        } catch (RegraVioladaException e) {
             throw e;
         } catch (FeignException e) {
-            throw new ExternalServiceException("Serviço de CEP indisponível. Tente novamente mais tarde.", e);
+            throw new IntegracaoExternaException("EXT-007",
+                    "Serviço de CEP indisponível. Tente novamente mais tarde.", false, e);
         }
     }
 }

@@ -9,7 +9,7 @@ import com.apiexternabackend.mappers.CarteiraMapper;
 import com.apiexternabackend.repositories.CarteiraRepository;
 import com.apiexternabackend.repositories.CorretoraRepository;
 import com.apiexternabackend.repositories.InvestidorRepository;
-import com.apiexternabackend.resources.exceptions.ResourceNotFoundException;
+import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,10 +26,10 @@ public class CarteiraService {
 
     public CarteiraResponseDTO criar(CarteiraRequestDTO dto) {
         Investidor investidor = investidorRepository.findById(dto.getInvestidorId())
-                .orElseThrow(() -> new ResourceNotFoundException("Investidor não encontrado: " + dto.getInvestidorId()));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("AUT-003", "Investidor não encontrado: " + dto.getInvestidorId()));
 
         Corretora corretora = corretoraRepository.findById(dto.getCorretoraId())
-                .orElseThrow(() -> new ResourceNotFoundException("Corretora não encontrada: " + dto.getCorretoraId()));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("COR-001", "Corretora não encontrada: " + dto.getCorretoraId()));
 
         Carteira carteira = new Carteira();
         carteira.setInvestidor(investidor);
@@ -61,11 +61,11 @@ public class CarteiraService {
     public Carteira buscarAtiva(Long id) {
         return carteiraRepository.findById(id)
                 .filter(Carteira::getAtiva)
-                .orElseThrow(() -> new ResourceNotFoundException("Carteira não encontrada ou inativa: " + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("CAR-001", "Carteira não encontrada ou inativa: " + id));
     }
 
     public Carteira buscarPorId(Long id) {
         return carteiraRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Carteira não encontrada: " + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("CAR-001", "Carteira não encontrada: " + id));
     }
 }

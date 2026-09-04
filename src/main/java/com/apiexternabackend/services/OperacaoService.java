@@ -16,8 +16,8 @@ import com.apiexternabackend.mappers.OperacaoMapper;
 import com.apiexternabackend.repositories.AcaoRepository;
 import com.apiexternabackend.repositories.CarteiraAcaoRepository;
 import com.apiexternabackend.repositories.OperacaoRepository;
-import com.apiexternabackend.resources.exceptions.BusinessException;
-import com.apiexternabackend.resources.exceptions.ResourceNotFoundException;
+import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
+import com.apiexternabackend.resources.exceptions.RegraVioladaException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,11 +70,11 @@ public class OperacaoService {
         // AC-404: não vende mais que a posição atual
         CarteiraAcao posicao = carteiraAcaoRepository
                 .findByCarteiraIdAndAcaoId(carteira.getId(), acao.getId())
-                .orElseThrow(() -> new BusinessException(
+                .orElseThrow(() -> new RegraVioladaException("OPE-003",
                         "Sem posição em " + dto.getTicker() + " nesta carteira"));
 
         if (dto.getQuantidade() > posicao.getQuantidade()) {
-            throw new BusinessException(
+            throw new RegraVioladaException("OPE-004",
                     "Quantidade excede a posição atual (" + posicao.getQuantidade() + " unidades)");
         }
 
@@ -119,17 +119,17 @@ public class OperacaoService {
 
     private Operacao buscarOperacao(Long id) {
         return operacaoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Operação não encontrada: " + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("OPE-001", "Operação não encontrada: " + id));
     }
 
     private Acao buscarAcao(String ticker) {
         return acaoRepository.findByTicker(ticker.toUpperCase().trim())
-                .orElseThrow(() -> new ResourceNotFoundException("Ação não encontrada: " + ticker));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("ACA-001", "Ação não encontrada: " + ticker));
     }
 
     private void validarMercado(Carteira carteira, Acao acao) {
         if (carteira.getMercado() != acao.getMercado()) {
-            throw new BusinessException(
+            throw new RegraVioladaException("OPE-002",
                     "Incompatibilidade de mercado: carteira é " + carteira.getMercado()
                     + " mas ação " + acao.getTicker() + " é " + acao.getMercado());
         }

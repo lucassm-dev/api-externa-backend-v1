@@ -5,8 +5,8 @@ import com.apiexternabackend.domains.dtos.InvestidorRequestDTO;
 import com.apiexternabackend.domains.dtos.InvestidorResponseDTO;
 import com.apiexternabackend.mappers.InvestidorMapper;
 import com.apiexternabackend.repositories.InvestidorRepository;
-import com.apiexternabackend.resources.exceptions.DuplicateResourceException;
-import com.apiexternabackend.resources.exceptions.ResourceNotFoundException;
+import com.apiexternabackend.resources.exceptions.RecursoDuplicadoException;
+import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,10 +21,10 @@ public class InvestidorService {
 
     public InvestidorResponseDTO cadastrar(InvestidorRequestDTO dto) {
         if (repository.existsByEmail(dto.getEmail())) {
-            throw new DuplicateResourceException("E-mail já está em uso: " + dto.getEmail());
+            throw new RecursoDuplicadoException("AUT-001", "E-mail já está em uso: " + dto.getEmail());
         }
         if (repository.existsByCpf(dto.getCpf())) {
-            throw new DuplicateResourceException("CPF já está em uso: " + dto.getCpf());
+            throw new RecursoDuplicadoException("AUT-002", "CPF já está em uso: " + dto.getCpf());
         }
         Investidor salvo = repository.save(mapper.toEntity(dto));
         return mapper.toResponse(salvo);
@@ -36,14 +36,14 @@ public class InvestidorService {
 
     public void excluir(Long id) {
         Investidor investidor = repository.findByIdAndAtivoTrue(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Investidor não encontrado: " + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("AUT-003", "Investidor não encontrado: " + id));
         investidor.setAtivo(false);
         repository.save(investidor);
     }
 
     public InvestidorResponseDTO buscarPorId(Long id) {
         Investidor investidor = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Investidor não encontrado: " + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("AUT-003", "Investidor não encontrado: " + id));
         return mapper.toResponse(investidor);
     }
 }

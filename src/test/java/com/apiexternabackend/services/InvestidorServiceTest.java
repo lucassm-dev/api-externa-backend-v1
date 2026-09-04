@@ -5,8 +5,8 @@ import com.apiexternabackend.domains.dtos.InvestidorRequestDTO;
 import com.apiexternabackend.domains.dtos.InvestidorResponseDTO;
 import com.apiexternabackend.mappers.InvestidorMapper;
 import com.apiexternabackend.repositories.InvestidorRepository;
-import com.apiexternabackend.resources.exceptions.DuplicateResourceException;
-import com.apiexternabackend.resources.exceptions.ResourceNotFoundException;
+import com.apiexternabackend.resources.exceptions.RecursoDuplicadoException;
+import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -71,7 +71,7 @@ class InvestidorServiceTest {
         when(repository.existsByEmail(requestDTO.getEmail())).thenReturn(true);
 
         assertThatThrownBy(() -> service.cadastrar(requestDTO))
-                .isInstanceOf(DuplicateResourceException.class)
+                .isInstanceOf(RecursoDuplicadoException.class)
                 .hasMessageContaining("E-mail");
     }
 
@@ -82,7 +82,7 @@ class InvestidorServiceTest {
         when(repository.existsByCpf(requestDTO.getCpf())).thenReturn(true);
 
         assertThatThrownBy(() -> service.cadastrar(requestDTO))
-                .isInstanceOf(DuplicateResourceException.class)
+                .isInstanceOf(RecursoDuplicadoException.class)
                 .hasMessageContaining("CPF");
     }
 
@@ -117,7 +117,7 @@ class InvestidorServiceTest {
         when(repository.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.buscarPorId(99L))
-                .isInstanceOf(ResourceNotFoundException.class);
+                .isInstanceOf(RecursoNaoEncontradoException.class);
     }
 
     @Test
@@ -133,11 +133,11 @@ class InvestidorServiceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-423 Excluir investidor inexistente ou inativo lança ResourceNotFoundException")
+    @DisplayName("@spec:AC-423 Excluir investidor inexistente ou inativo lança RecursoNaoEncontradoException")
     void deveLancarNotFoundAoExcluirInvestidorInexistente() {
         when(repository.findByIdAndAtivoTrue(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.excluir(99L))
-                .isInstanceOf(ResourceNotFoundException.class);
+                .isInstanceOf(RecursoNaoEncontradoException.class);
     }
 }

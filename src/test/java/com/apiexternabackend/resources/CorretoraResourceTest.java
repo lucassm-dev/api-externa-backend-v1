@@ -2,10 +2,11 @@ package com.apiexternabackend.resources;
 
 import com.apiexternabackend.domains.dtos.CorretoraRequestDTO;
 import com.apiexternabackend.domains.dtos.CorretoraResponseDTO;
-import com.apiexternabackend.resources.exceptions.BusinessException;
-import com.apiexternabackend.resources.exceptions.DuplicateResourceException;
 import com.apiexternabackend.resources.exceptions.GlobalExceptionHandler;
-import com.apiexternabackend.resources.exceptions.ResourceNotFoundException;
+import com.apiexternabackend.resources.exceptions.IntegracaoExternaException;
+import com.apiexternabackend.resources.exceptions.RecursoDuplicadoException;
+import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
+import com.apiexternabackend.resources.exceptions.RegraVioladaException;
 import com.apiexternabackend.services.CorretoraService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -67,36 +68,40 @@ class CorretoraResourceTest {
     @Test
     @DisplayName("@spec:AC-104 POST /corretoras com CNPJ duplicado retorna 409")
     void deveRetornar409ParaCnpjDuplicado() throws Exception {
-        when(service.cadastrar(any())).thenThrow(new DuplicateResourceException("CNPJ duplicado"));
+        when(service.cadastrar(any())).thenThrow(new RecursoDuplicadoException("COR-002", "CNPJ duplicado"));
 
         mockMvc.perform(post("/corretoras")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CorretoraRequestDTO(CNPJ_VALIDO))))
-                .andExpect(status().isConflict());
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.codigo").value("COR-002"));
     }
 
     @Test
     @DisplayName("@spec:AC-105 POST /corretoras com corretora não autorizada retorna 422")
     void deveRetornar422ParaCorretoraNaoAutorizada() throws Exception {
-        when(service.cadastrar(any())).thenThrow(new BusinessException("Corretora não autorizada na CVM"));
+        when(service.cadastrar(any())).thenThrow(new RegraVioladaException("COR-003", "Corretora não autorizada na CVM"));
 
         mockMvc.perform(post("/corretoras")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CorretoraRequestDTO(CNPJ_VALIDO))))
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(jsonPath("$.message").value("Corretora não autorizada na CVM"));
+                .andExpect(jsonPath("$.message").value("Corretora não autorizada na CVM"))
+                .andExpect(jsonPath("$.codigo").value("COR-003"));
     }
 
     @Test
-    @DisplayName("@spec:AC-106 POST /corretoras com falha na CVM retorna mensagem de falha")
-    void deveRetornarMensagemDeFalhaQuandoCvmIndisponivel() throws Exception {
+    @DisplayName("@spec:AC-434 POST /corretoras com falha de infraestrutura ao consultar CVM retorna 503 com EXT-007, não 422")
+    void deveRetornar503QuandoCvmIndisponivel() throws Exception {
         when(service.cadastrar(any()))
-                .thenThrow(new BusinessException("Não foi possível verificar a autorização na CVM"));
+                .thenThrow(new IntegracaoExternaException("EXT-007",
+                        "Não foi possível verificar a autorização na CVM", false));
 
         mockMvc.perform(post("/corretoras")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CorretoraRequestDTO(CNPJ_VALIDO))))
-                .andExpect(status().isUnprocessableEntity())
+                .andExpect(status().isServiceUnavailable())
+                .andExpect(jsonPath("$.codigo").value("EXT-007"))
                 .andExpect(jsonPath("$.message").value(org.hamcrest.Matchers.containsString("verificar")));
     }
 
@@ -124,7 +129,7 @@ class CorretoraResourceTest {
     @Test
     @DisplayName("@spec:AC-109 GET /corretoras/{id} com id inexistente retorna 404")
     void deveRetornar404ParaIdInexistente() throws Exception {
-        when(service.buscarPorId(99L)).thenThrow(new ResourceNotFoundException("Corretora não encontrada: 99"));
+        when(service.buscarPorId(99L)).thenThrow(new RecursoNaoEncontradoException("COR-001", "Corretora não encontrada: 99"));
 
         mockMvc.perform(get("/corretoras/99"))
                 .andExpect(status().isNotFound());
@@ -152,7 +157,7 @@ class CorretoraResourceTest {
     @Test
     @DisplayName("@spec:AC-421 DELETE /corretoras/{id} com id inexistente retorna 404")
     void deveRetornar404AoExcluirCorretoraInexistente() throws Exception {
-        org.mockito.Mockito.doThrow(new ResourceNotFoundException("Corretora não encontrada: 99"))
+        org.mockito.Mockito.doThrow(new RecursoNaoEncontradoException("COR-001", "Corretora não encontrada: 99"))
                 .when(service).excluir(99L);
 
         mockMvc.perform(delete("/corretoras/99"))
@@ -160,15 +165,14 @@ class CorretoraResourceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-111 Fonte externa indisponível retorna 502 com erro tratado")
-    void deveRetornar502QuandoFonteExternaIndisponivel() throws Exception {
+    @DisplayName("@spec:AC-111 Fonte externa indisponível retorna 503 com erro tratado")
+    void deveRetornar503QuandoFonteExternaIndisponivel() throws Exception {
         when(service.cadastrar(any()))
-                .thenThrow(new com.apiexternabackend.resources.exceptions.ExternalServiceException(
-                        "Serviço de CNPJ indisponível"));
+                .thenThrow(new IntegracaoExternaException("EXT-007", "Serviço de CNPJ indisponível", false));
 
         mockMvc.perform(post("/corretoras")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CorretoraRequestDTO(CNPJ_VALIDO))))
-                .andExpect(status().isBadGateway());
+                .andExpect(status().isServiceUnavailable());
     }
 }

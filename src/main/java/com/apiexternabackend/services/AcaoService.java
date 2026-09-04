@@ -10,9 +10,9 @@ import com.apiexternabackend.infra.adapter.CotacaoResultado;
 import com.apiexternabackend.infra.adapter.TwelveDataAdapter;
 import com.apiexternabackend.mappers.AcaoMapper;
 import com.apiexternabackend.repositories.AcaoRepository;
-import com.apiexternabackend.resources.exceptions.DuplicateResourceException;
-import com.apiexternabackend.resources.exceptions.ExternalServiceException;
-import com.apiexternabackend.resources.exceptions.ResourceNotFoundException;
+import com.apiexternabackend.resources.exceptions.IntegracaoExternaException;
+import com.apiexternabackend.resources.exceptions.RecursoDuplicadoException;
+import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -35,7 +35,7 @@ public class AcaoService {
         String ticker = dto.getTicker().toUpperCase().trim();
 
         if (repository.existsByTicker(ticker)) {
-            throw new DuplicateResourceException("Ação já cadastrada com o ticker: " + ticker);
+            throw new RecursoDuplicadoException("ACA-002", "Ação já cadastrada com o ticker: " + ticker);
         }
 
         CotacaoAdapter adapter = adapterPara(dto.getMercado());
@@ -58,19 +58,19 @@ public class AcaoService {
     public AcaoResponseDTO buscarPorTicker(String ticker) {
         return repository.findByTicker(ticker.toUpperCase().trim())
                 .map(mapper::toResponse)
-                .orElseThrow(() -> new ResourceNotFoundException("Ação não encontrada: " + ticker));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("ACA-001", "Ação não encontrada: " + ticker));
     }
 
     public void excluir(String ticker) {
         Acao acao = repository.findByTickerAndAtivoTrue(ticker.toUpperCase().trim())
-                .orElseThrow(() -> new ResourceNotFoundException("Ação não encontrada: " + ticker));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("ACA-001", "Ação não encontrada: " + ticker));
         acao.setAtivo(false);
         repository.save(acao);
     }
 
     public AcaoResponseDTO atualizarCotacao(Long id) {
         Acao acao = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Ação não encontrada: " + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("ACA-001", "Ação não encontrada: " + id));
 
         try {
             CotacaoAdapter adapter = adapterPara(acao.getMercado());
@@ -78,8 +78,12 @@ public class AcaoService {
             acao.setCotacaoAtual(cotacao.preco());
             acao.setDataHoraCotacao(cotacao.dataHora());
             return mapper.toResponse(repository.save(acao));
-        } catch (ExternalServiceException e) {
-            // RN-Q05: fonte indisponível → retorna última cotação conhecida
+        } catch (IntegracaoExternaException e) {
+            if (e.isLimiteExcedido()) {
+                // AC-431: cota estourada não é silenciada — propaga 429 explícito
+                throw e;
+            }
+            // RN-Q05/AC-210/AC-432: fonte indisponível (não é cota) → retorna última cotação conhecida
             log.warn("Fonte de cotação indisponível para {}: {}. Retornando última cotação conhecida.",
                     acao.getTicker(), e.getMessage());
             acao.setDataHoraCotacao(acao.getDataHoraCotacao() != null ? acao.getDataHoraCotacao() : LocalDateTime.now());

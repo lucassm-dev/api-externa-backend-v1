@@ -2,9 +2,9 @@ package com.apiexternabackend.resources;
 
 import com.apiexternabackend.domains.dtos.InvestidorRequestDTO;
 import com.apiexternabackend.domains.dtos.InvestidorResponseDTO;
-import com.apiexternabackend.resources.exceptions.DuplicateResourceException;
+import com.apiexternabackend.resources.exceptions.RecursoDuplicadoException;
 import com.apiexternabackend.resources.exceptions.GlobalExceptionHandler;
-import com.apiexternabackend.resources.exceptions.ResourceNotFoundException;
+import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
 import com.apiexternabackend.services.InvestidorService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -105,7 +105,7 @@ class InvestidorResourceTest {
     @Test
     @DisplayName("@spec:AC-055 GET /investidores/{id} com id inexistente retorna 404")
     void deveRetornar404ParaIdInexistente() throws Exception {
-        when(service.buscarPorId(99L)).thenThrow(new ResourceNotFoundException("Investidor não encontrado: 99"));
+        when(service.buscarPorId(99L)).thenThrow(new RecursoNaoEncontradoException("AUT-003", "Investidor não encontrado: 99"));
 
         mockMvc.perform(get("/investidores/99"))
                 .andExpect(status().isNotFound());
@@ -115,7 +115,7 @@ class InvestidorResourceTest {
     @DisplayName("@spec:AC-052 POST /investidores com e-mail duplicado retorna 409")
     void deveRetornar409ParaEmailDuplicado() throws Exception {
         InvestidorRequestDTO req = new InvestidorRequestDTO("João", "joao@email.com", "12345678901");
-        when(service.cadastrar(any())).thenThrow(new DuplicateResourceException("E-mail já está em uso"));
+        when(service.cadastrar(any())).thenThrow(new RecursoDuplicadoException("AUT-001", "E-mail já está em uso"));
 
         mockMvc.perform(post("/investidores")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -135,7 +135,7 @@ class InvestidorResourceTest {
     @Test
     @DisplayName("@spec:AC-423 DELETE /investidores/{id} com id inexistente retorna 404")
     void deveRetornar404AoExcluirInvestidorInexistente() throws Exception {
-        org.mockito.Mockito.doThrow(new ResourceNotFoundException("Investidor não encontrado: 99"))
+        org.mockito.Mockito.doThrow(new RecursoNaoEncontradoException("AUT-003", "Investidor não encontrado: 99"))
                 .when(service).excluir(99L);
 
         mockMvc.perform(delete("/investidores/99"))

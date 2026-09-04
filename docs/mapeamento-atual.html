@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Mapeamento Atual — FEF Invest (api-externa-backend-v1)</title>
+<style>
+  :root {
+    --bg: #0f172a; --panel: #16213a; --panel2: #1c2842; --text: #e6ebf5; --muted: #93a2c0;
+    --accent: #4f8cff; --border: #2a3a5c;
+    --warn-bg: #4a2b0a; --warn-text: #ffb454; --warn-border: #a15c0d;
+    --q-bg: #2b1f4a; --q-text: #c4a8ff; --q-border: #6b46b3;
+    --ok-bg: #113322; --ok-text: #7fe0a3;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+  header { padding: 28px 32px 18px; border-bottom: 1px solid var(--border); position: sticky; top:0; background: var(--bg); z-index: 10; }
+  header h1 { margin: 0 0 6px; font-size: 22px; }
+  header p { margin: 0; color: var(--muted); font-size: 14px; }
+  nav { display:flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+  nav a { color: var(--accent); text-decoration:none; font-size:13px; padding:6px 12px; border:1px solid var(--border); border-radius: 20px; background: var(--panel); }
+  nav a:hover { background: var(--panel2); }
+  main { max-width: 1180px; margin: 0 auto; padding: 24px 32px 80px; }
+  section { margin-bottom: 46px; }
+  section h2 { font-size: 19px; border-bottom: 1px solid var(--border); padding-bottom:10px; margin-bottom: 14px; }
+  section > p.lead { color: var(--muted); font-size: 13.5px; margin-top:-4px; margin-bottom:16px; }
+  .search { width: 100%; max-width: 420px; padding: 9px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--panel); color: var(--text); font-size: 14px; margin-bottom: 14px; }
+  .search::placeholder { color: var(--muted); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--panel); border-radius: 8px; overflow: hidden; }
+  thead th { text-align:left; background: var(--panel2); padding: 10px 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; font-size: 11px; letter-spacing: .03em; border-bottom: 1px solid var(--border); }
+  tbody td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: rgba(255,255,255,0.02); }
+  code { background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+  .badge { display:inline-block; font-size: 11px; font-weight:600; padding: 2px 8px; border-radius: 10px; white-space:nowrap; margin-right:4px;}
+  .badge-warn { background: var(--warn-bg); color: var(--warn-text); border: 1px solid var(--warn-border); }
+  .badge-q { background: var(--q-bg); color: var(--q-text); border: 1px solid var(--q-border); }
+  .badge-ok { background: var(--ok-bg); color: var(--ok-text); }
+  .cod { font-weight:700; color: var(--accent); white-space:nowrap; }
+  .muted { color: var(--muted); }
+  .count { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+  .top { text-align:right; }
+  .top a { color: var(--accent); font-size:12px; text-decoration:none; }
+  footer { text-align:center; color: var(--muted); font-size: 12px; padding: 30px; border-top: 1px solid var(--border); }
+  .open-item { background: var(--panel); border: 1px solid var(--border); border-left: 4px solid var(--q-border); border-radius: 6px; padding: 12px 16px; margin-bottom: 10px; }
+  .open-item .cod { display:block; margin-bottom:4px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Mapeamento atual — api-externa-backend-v1 (FEF Invest)</h1>
+  <p>Gerado em 04/09/2026 · leitura de código + specs em <code>.spec/features/</code> + testes ao vivo via curl com Docker/Postgres/Flyway rodando · Bloco A do prompt de trabalho.</p>
+  <p><span class="badge badge-ok">atualizado 04/09/2026</span> pós-SPEC-01 (padronização de erros): RN-COR-05, RN-COT-02, RN-COT-04, MOV-07 e Q-MAP-06 refletem o comportamento novo — ver <code>docs/erros.md</code> para o catálogo completo de códigos.</p>
+  <nav>
+    <a href="#regras">① Regras de negócio</a>
+    <a href="#calculos">② Cálculos</a>
+    <a href="#movimentacoes">③ Movimentações</a>
+    <a href="#abertas">④ Perguntas em aberto</a>
+  </nav>
+</header>
+<main>
+
+<section id="regras">
+  <h2>① Regras de negócio</h2>
+  <p class="lead">Cobre corretora, ação, carteira, operação, exclusões e cotações. Testado ao vivo onde indicado.</p>
+  <input class="search" data-target="tbl-regras" placeholder="Buscar nas regras de negócio...">
+  <div class="count" id="count-regras"></div>
+  <table id="tbl-regras">
+    <thead><tr><th style="width:90px">Código</th><th>Regra</th><th style="width:230px">Onde está</th><th style="width:110px">Especificada?</th></tr></thead>
+    <tbody>
+      <tr><td class="cod">RN-COR-01</td><td>CNPJ mal formatado é rejeitado antes de qualquer chamada externa (14 dígitos numéricos).</td><td><code>CnpjFacade.java:21</code></td><td>AC-101</td></tr>
+      <tr><td class="cod">RN-COR-02</td><td>CNPJ precisa ter dígitos verificadores válidos (algoritmo mod 11).</td><td><code>CnpjFacade.java:40-54</code></td><td>AC-416/417</td></tr>
+      <tr><td class="cod">RN-COR-03</td><td>CNPJ duplicado impede cadastro — <span class="badge badge-warn">⚠️ inconsistência</span> a checagem (<code>existsByCnpj</code>) não filtra <code>ativo=true</code>, o mesmo padrão que causa o bug confirmado em RN-ACA-02. Não testado ao vivo (nenhuma corretora foi excluída na sessão), mas o código é idêntico ao de Ação.</td><td><code>CorretoraService.java:37</code>, <code>CorretoraRepository.java:12</code></td><td>AC-104</td></tr>
+      <tr><td class="cod">RN-COR-04</td><td>Corretora só é cadastrada se autorizada na CVM (situação = "EM FUNCIONAMENTO NORMAL").</td><td><code>CvmFacade.java:20-28</code></td><td>AC-105</td></tr>
+      <tr><td class="cod">RN-COR-05</td><td>Falha ao verificar a CVM (base indisponível) não vira "reprovada" — mensagem distinta de "falha de verificação". <span class="badge badge-ok">✔ corrigido na SPEC-01</span> desde 04/09/2026 os dois casos também têm status HTTP e código de erro diferentes: fonte indisponível → <b>503</b> (<code>EXT-007</code>); CVM respondeu "não autorizada" → <b>422</b> (<code>COR-003</code>). Antes ambos caíam juntos em 422 genérico.</td><td><code>CvmFacade.java</code>, <code>CorretoraService.cadastrar:48-53</code></td><td>AC-106, AC-434</td></tr>
+      <tr><td class="cod">RN-COR-06</td><td>Exclusão de corretora é lógica (<code>ativo=false</code>) e <b>não verifica</b> se há carteiras ativas vinculadas. <span class="badge badge-warn">⚠️ inconsistência</span> testado ao vivo: excluí a corretora 11 com uma carteira ativa apontando pra ela — retornou 204 e a carteira ficou órfã, referenciando uma corretora inativa.</td><td><code>CorretoraService.java:69-74</code></td><td><span class="muted">não</span></td></tr>
+      <tr><td class="cod">RN-ACA-01</td><td>Ticker precisa existir na fonte do mercado informado (BR→brapi, US→Twelve Data); mercado errado nunca consulta a fonte certa.</td><td><code>AcaoService.java:41-42</code>, <code>BrapiAdapter</code>, <code>TwelveDataAdapter</code></td><td>AC-201/202/203/205</td></tr>
+      <tr><td class="cod">RN-ACA-02</td><td>Ticker duplicado impede cadastro — <span class="badge badge-warn">⚠️ BUG CONFIRMADO AO VIVO</span> <code>existsByTicker</code> não filtra <code>ativo=true</code>: cadastrei MGLU3, excluí, tentei recadastrar → 409 "já cadastrada". É exatamente o bug relatado pelo usuário (base do SPEC-03).</td><td><code>AcaoService.java:37</code>, <code>AcaoRepository.java:12</code></td><td>AC-204</td></tr>
+      <tr><td class="cod">RN-ACA-03</td><td>Moeda é derivada do mercado (BR→BRL, US→USD), nunca digitada.</td><td><code>AcaoService.java:47</code></td><td>ASM-203</td></tr>
+      <tr><td class="cod">RN-ACA-04</td><td>Exclusão de ação é lógica (<code>ativo=false</code>) e some da listagem paginada.</td><td><code>AcaoService.java:64-69</code>, <code>AcaoRepository.findAllByAtivoTrue</code></td><td>AC-424</td></tr>
+      <tr><td class="cod">RN-ACA-05</td><td>Busca individual por ticker (<code>GET /acoes/ticker/{ticker}</code>) <b>não</b> filtra <code>ativo=true</code>. <span class="badge badge-warn">⚠️ inconsistência</span> testado ao vivo: <code>GET /acoes/ticker/MGLU3</code> continuou retornando 200 com os dados completos mesmo depois de excluída.</td><td><code>AcaoService.buscarPorTicker:58-61</code>, <code>AcaoRepository.findByTicker</code> (sem filtro)</td><td><span class="muted">não</span></td></tr>
+      <tr><td class="cod">RN-ACA-06</td><td>Nenhuma regra bloqueia excluir ação que está em carteira com posição ativa. <span class="badge badge-warn">⚠️ inconsistência</span> — o prompt de trabalho supunha que essa regra existia; o código não a implementa.</td><td><code>AcaoService.excluir:64-69</code></td><td><span class="muted">não</span></td></tr>
+      <tr><td class="cod">RN-CAR-01</td><td>Carteira exige um investidor e uma corretora existentes.</td><td><code>CarteiraService.java:27-32</code></td><td>AC-301/303</td></tr>
+      <tr><td class="cod">RN-CAR-02</td><td>Carteira tem um único mercado (BR ou US), imutável após a criação (não há endpoint de troca).</td><td><code>Carteira.java:40-42</code></td><td>ASM-302 (aberta)</td></tr>
+      <tr><td class="cod">RN-CAR-03</td><td>Exclusão de carteira é lógica (<code>ativa=false</code>); movimentações e posições devem permanecer no banco, mas sumir das consultas. <span class="badge badge-warn">⚠️ inconsistência parcial</span> testado ao vivo: <code>GET /carteiras/{id}/posicoes</code> continuou retornando a posição de uma carteira já inativa (AC-308 diz que deveria sumir "dos totais e da rentabilidade").</td><td><code>CarteiraService.excluir:55-59</code>, <code>ConsultaOperacaoService.posicoes:33-41</code></td><td>AC-308</td></tr>
+      <tr><td class="cod">RN-CAR-04</td><td>Carteira inativa não recebe novas operações (bloqueio via <code>buscarAtiva</code>).</td><td><code>CarteiraService.java:61-65</code>, usado em <code>OperacaoService</code></td><td>AC-309</td></tr>
+      <tr><td class="cod">RN-CAR-05</td><td>Nome de carteira inativa é reutilizável (sem constraint <code>unique</code> em nome).</td><td><code>V5__create_carteira.sql</code> (sem unique de nome)</td><td>AC-310</td></tr>
+      <tr><td class="cod">RN-OPE-01</td><td>Só é possível operar (comprar/vender) ação do mesmo mercado da carteira.</td><td><code>OperacaoService.validarMercado:130-135</code></td><td>AC-305/AC-403 (testado ao vivo em outra sessão de raciocínio, código claro)</td></tr>
+      <tr><td class="cod">RN-OPE-02</td><td>Compra/venda usam a cotação buscada no momento da operação — nada digitado.</td><td><code>OperacaoService.comprar:47</code>, <code>vender:81</code></td><td>AC-401</td></tr>
+      <tr><td class="cod">RN-OPE-03</td><td>Não é possível vender mais que a posição atual. Testado ao vivo: tentei vender 100 com posição de 5 → 422 "Quantidade excede a posição atual (5 unidades)".</td><td><code>OperacaoService.vender:76-79</code></td><td>AC-404</td></tr>
+      <tr><td class="cod">RN-OPE-04</td><td>Ação já excluída (<code>ativo=false</code>) continua podendo ser comprada/vendida. <span class="badge badge-warn">⚠️ inconsistência confirmada ao vivo</span> — comprei 1 PETR4 (já excluída na sessão) numa carteira nova sem nenhum bloqueio, usando cotação armazenada de dias atrás.</td><td><code>OperacaoService.buscarAcao:125-128</code> (usa <code>findByTicker</code> sem filtro)</td><td><span class="muted">não</span></td></tr>
+      <tr><td class="cod">RN-OPE-05</td><td><code>PUT /operacoes/{id}</code> (editar) não tem <b>nenhuma</b> validação de preço unitário — aceita zero, negativo, valores absurdos. <span class="badge badge-warn">⚠️ BUG CONFIRMADO AO VIVO</span> editei o preço para <code>-50</code> e a posição recalculada ficou com <code>precoMedio = -50.0000</code> e rentabilidade de <code>97.32</code>.</td><td><code>OperacaoEditarDTO.java</code> (sem <code>@Positive</code>/<code>@DecimalMin</code>), <code>OperacaoService.editar:97-108</code></td><td><span class="muted">não</span></td></tr>
+      <tr><td class="cod">RN-EXC-01</td><td>Todas as exclusões (investidor, corretora, ação, carteira) são lógicas via campo <code>ativo</code>/<code>ativa</code>, exceto Operação (ver MOV-09, hard delete).</td><td><code>V8/V9/V10 migrations</code>, entidades correspondentes</td><td>refactor-cnpj-delete/spec.md</td></tr>
+      <tr><td class="cod">RN-COT-01</td><td>Toda cotação exibida vem acompanhada do horário em que foi obtida.</td><td><code>AcaoResponseDTO.dataHoraCotacao</code></td><td>AC-209 (confirmado ao vivo)</td></tr>
+      <tr><td class="cod">RN-COT-02</td><td>Fonte de cotação indisponível retorna a última cotação conhecida em vez de falhar — mas só no endpoint <code>atualizar-cotacao</code>. <span class="badge badge-ok">✔ refinado na SPEC-01</span> desde 04/09/2026 esse fallback só se aplica quando a fonte está genuinamente fora do ar; se for cota (rate limit) estourada, o endpoint agora propaga <b>429</b> (<code>EXT-009</code>) em vez de mascarar o erro devolvendo a cotação velha silenciosamente. <span class="badge badge-q">❓ dúvida (não mudou)</span> compra/venda continuam chamando a cotação diretamente sem nenhum fallback nem tratamento especial.</td><td><code>AcaoService.atualizarCotacao</code> (agora com <code>IntegracaoExternaException.isLimiteExcedido()</code>) vs <code>OperacaoService.comprar</code>/<code>vender</code> (sem fallback)</td><td>AC-210, AC-431, AC-432</td></tr>
+      <tr><td class="cod">RN-COT-03</td><td>Não existe nenhum cache/TTL de cotação — toda compra, venda ou atualização bate na API externa a cada chamada. <span class="badge badge-q">❓ dúvida</span> relevante para consumo de cota (tema do Bloco B.2 do prompt).</td><td><code>BrapiAdapter.java</code>, <code>TwelveDataAdapter.java</code> (sem <code>@Cacheable</code>)</td><td><span class="muted">não</span></td></tr>
+      <tr><td class="cod">RN-COT-04</td><td>Limite de requisições da fonte externa agora vira <b>429</b> de verdade. <span class="badge badge-ok">✔ corrigido na SPEC-01</span> desde 04/09/2026 <code>IntegracaoExternaException</code> carrega um flag <code>limiteExcedido</code>: cota estourada → 429 (<code>EXT-009</code>); indisponibilidade genuína → 503 (<code>EXT-010</code>). Antes os dois casos caíam juntos em 502.</td><td><code>BrapiAdapter.java</code>, <code>TwelveDataAdapter.java</code>, <code>GlobalExceptionHandler.java</code>, catálogo em <code>docs/erros.md</code></td><td>AC-429, AC-430</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="calculos">
+  <h2>② Cálculos</h2>
+  <p class="lead">Fórmula por extenso + exemplo numérico. Exemplos marcados "validado ao vivo" vieram de requisições reais feitas durante este mapeamento (ver Movimentações). Exemplos de preço médio ponderado com preços diferentes usam o teste automatizado, pois na sessão ao vivo as duas compras caíram na mesma cotação.</p>
+  <input class="search" data-target="tbl-calc" placeholder="Buscar nos cálculos...">
+  <div class="count" id="count-calc"></div>
+  <table id="tbl-calc">
+    <thead><tr><th style="width:90px">Código</th><th>Cálculo</th><th>Fórmula</th><th style="width:260px">Exemplo numérico real</th><th style="width:190px">Onde está</th></tr></thead>
+    <tbody>
+      <tr><td class="cod">CALC-01</td><td>Preço médio ponderado da posição</td><td>A cada evento, recalcula do zero a partir de <b>todo</b> o histórico: soma o custo de todas as compras (preço × quantidade) e divide pela quantidade líquida acumulada até aquele ponto.</td><td>Teste automatizado <code>PosicaoServiceTest.devecalcularPrecoMedioPonderado</code>: 100 unid. a R$38 + 100 unid. a R$42 → posição de 200 unid. ao preço médio de <b>R$40,0000</b>. Validado ao vivo (mesma cotação nas duas compras): 10@47,27 + 10@47,27 → 20@47,2700.</td><td><code>PosicaoService.recalcular:37-53</code></td></tr>
+      <tr><td class="cod">CALC-02</td><td>Redução do custo na venda</td><td>Não existe "preço médio de venda" — a venda reduz o custo total proporcionalmente: <code>custoUnitario = custoTotal / quantidade</code>; <code>custoTotal -= custoUnitario × quantidadeVendida</code>.</td><td>Posição de 20 unid. com custo total R$945,40 (PM 47,27); vendi as 20 → custoTotal cai a zero, posição é removida (ver CALC-03/MOV-03).</td><td><code>PosicaoService.java:45-51</code></td></tr>
+      <tr><td class="cod">CALC-03</td><td>Quantidade atual da posição</td><td>Soma das quantidades compradas menos soma das quantidades vendidas, recalculado do histórico completo a cada operação.</td><td>Validado ao vivo: compra 10 + compra 10 − venda 20 + compra 5 = <b>5</b> unidades na posição final.</td><td><code>PosicaoService.java:37-53</code></td></tr>
+      <tr><td class="cod">CALC-04</td><td>Rentabilidade não realizada (RN-P05)</td><td><code>(cotaçãoAtual − preçoMedio) × quantidade</code></td><td>Validado ao vivo: cotação atual R$46,87, PM R$47,27, 20 unid. → (46,87 − 47,27) × 20 = <b>−R$8,00</b>.</td><td><code>ConsultaOperacaoService.calcularRentabilidade:43-51</code></td></tr>
+      <tr><td class="cod">CALC-05</td><td>Lucro/prejuízo <b>realizado</b> (venda)</td><td><span class="badge badge-warn">⚠️</span><span class="badge badge-q">❓</span> <b>Não existe no código.</b> A spec (AC-406) exige que o resultado de uma venda — <code>(preço de venda − preço médio) × quantidade</code> — seja somado no acumulado realizado da carteira e do ticker, mas não há campo, tabela ou serviço que calcule ou armazene isso.</td><td>Validado ao vivo: vendi 20 PETR4 com lucro/prejuízo implícito de <code>(47,27−47,27)×20=0</code>, mas nenhum endpoint retornou esse valor nem antes nem depois — não existe onde consultar.</td><td><span class="muted">não implementado</span></td></tr>
+      <tr><td class="cod">CALC-06</td><td>Valor total da operação</td><td><code>quantidade × precoUnitario</code></td><td>Validado ao vivo: 10 × R$47,27 = <b>R$472,70</b>.</td><td><code>OperacaoMapper</code> (campo <code>valorTotal</code>)</td></tr>
+      <tr><td class="cod">CALC-07</td><td>Valor total investido / consolidado por carteira</td><td><span class="badge badge-q">❓</span> Não existe endpoint nem cálculo de total consolidado da carteira (soma das posições). Só existe rentabilidade não realizada por posição individual.</td><td>—</td><td><span class="muted">não implementado</span></td></tr>
+      <tr><td class="cod">CALC-08</td><td>Conversão de moeda USD → BRL</td><td><span class="badge badge-q">❓</span> Não existe. Ação de mercado US grava e retorna valores sempre em USD, sem qualquer conversão para BRL. É o tema do Bloco B.1/SPEC-06 do prompt.</td><td>—</td><td><span class="muted">não implementado</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="movimentacoes">
+  <h2>③ Movimentações (mudanças de estado)</h2>
+  <p class="lead">Antes → depois de cada operação que altera dados. Todas testadas ao vivo nesta sessão, exceto onde indicado.</p>
+  <input class="search" data-target="tbl-mov" placeholder="Buscar nas movimentações...">
+  <div class="count" id="count-mov"></div>
+  <table id="tbl-mov">
+    <thead><tr><th style="width:90px">Código</th><th>Movimentação</th><th>O que muda no banco</th><th>Regras que bloqueiam</th><th style="width:190px">Onde está</th></tr></thead>
+    <tbody>
+      <tr><td class="cod">MOV-01</td><td>Compra</td><td>Insere <code>Operacao(tipo=COMPRA)</code>; recalcula/insere <code>CarteiraAcao</code> (posição) a partir do histórico completo.</td><td>Carteira precisa estar ativa (RN-CAR-04); ação e carteira do mesmo mercado (RN-OPE-01).</td><td><code>OperacaoService.comprar:40-61</code></td></tr>
+      <tr><td class="cod">MOV-02</td><td>Venda</td><td>Insere <code>Operacao(tipo=VENDA)</code>; recalcula posição (reduz custo/quantidade); remove <code>CarteiraAcao</code> se a quantidade zerar.</td><td>Quantidade ≤ posição atual (RN-OPE-03); carteira ativa; mesmo mercado.</td><td><code>OperacaoService.vender:63-95</code></td></tr>
+      <tr><td class="cod">MOV-03</td><td>Recompra após zerar posição</td><td>Nova linha em <code>CarteiraAcao</code> criada do zero; preço médio recalculado só com as compras "abertas" restantes no histórico. O histórico de operações antigas (inclusive a venda que zerou) permanece intacto no banco.</td><td>Nenhuma regra específica além das de MOV-01. <span class="badge badge-q">❓</span> nenhum lucro/prejuízo realizado é persistido nesse processo (ver CALC-05).</td><td><code>PosicaoService.recalcular</code></td></tr>
+      <tr><td class="cod">MOV-04</td><td>Exclusão de ação</td><td><code>ativo: true → false</code> na tabela <code>acao</code>.</td><td><span class="badge badge-warn">⚠️</span> Nenhuma — deveria bloquear se a ação está em posição ativa de alguma carteira, mas não bloqueia hoje.</td><td><code>AcaoService.excluir:64-69</code></td></tr>
+      <tr><td class="cod">MOV-05</td><td>Exclusão de corretora</td><td><code>ativo: true → false</code> na tabela <code>corretora</code>.</td><td><span class="badge badge-warn">⚠️</span> Nenhuma — testado ao vivo: excluí uma corretora com carteira ativa vinculada e nada impediu.</td><td><code>CorretoraService.excluir:69-74</code></td></tr>
+      <tr><td class="cod">MOV-06</td><td>Exclusão de carteira</td><td><code>ativa: true → false</code> na tabela <code>carteira</code>; posições e operações permanecem no banco.</td><td><span class="badge badge-warn">⚠️</span> Nenhuma regra impede excluir com posição ativa; e a posição continua aparecendo em <code>GET /carteiras/{id}/posicoes</code> mesmo com a carteira inativa (deveria sumir conforme AC-308).</td><td><code>CarteiraService.excluir:55-59</code></td></tr>
+      <tr><td class="cod">MOV-07</td><td>Atualização de cotação</td><td><code>cotacaoAtual</code>/<code>dataHoraCotacao</code> atualizados com o valor da fonte; se a fonte estiver indisponível, mantém os valores antigos (RN-COT-02). <span class="badge badge-ok">✔ SPEC-01</span> se for cota estourada, nada muda no banco e a operação retorna erro 429 em vez de mascarar.</td><td>Nenhuma para indisponibilidade (sempre executável, fallback). Cota estourada agora bloqueia com 429.</td><td><code>AcaoService.atualizarCotacao</code></td></tr>
+      <tr><td class="cod">MOV-08</td><td>Editar operação (<code>PUT /operacoes/{id}</code>)</td><td>Atualiza <code>quantidade</code>/<code>precoUnitario</code> da <code>Operacao</code> existente; recalcula a posição inteira a partir do histórico atualizado.</td><td><span class="badge badge-warn">⚠️ BUG CONFIRMADO</span> nenhuma validação de preço — testei com <code>precoUnitario=-50</code> e a posição recalculada ficou com <code>precoMedio=-50.0000</code>.</td><td><code>OperacaoService.editar:97-108</code>, <code>OperacaoEditarDTO.java</code></td></tr>
+      <tr><td class="cod">MOV-09</td><td>Excluir operação (<code>DELETE /operacoes/{id}</code>)</td><td>Remove a linha da tabela <code>operacao</code> — <span class="badge badge-warn">⚠️</span> <b>hard delete</b>, diferente do padrão de exclusão lógica usado em todo o resto do sistema (investidor, corretora, ação, carteira). Recalcula a posição em seguida.</td><td>Nenhuma.</td><td><code>OperacaoService.excluir:110-118</code></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="abertas">
+  <h2>④ Perguntas em aberto</h2>
+  <p class="lead">Tudo que não deu para determinar sozinho, ou que precisa de decisão do Lucas antes de qualquer implementação.</p>
+
+  <div class="open-item">
+    <span class="cod">Q-MAP-01</span>
+    Deve existir bloqueio de exclusão de ação/corretora/carteira quando há posição ou vínculo ativo? O prompt de trabalho (Bloco A) supunha que essa regra já existia ("Excluir ação que está em carteira ativa continua bloqueado — confirme essa regra"). O mapeamento mostrou que <b>nenhuma dessas exclusões é bloqueada hoje</b> (RN-ACA-06, RN-COR-06, MOV-06).
+  </div>
+  <div class="open-item">
+    <span class="cod">Q-MAP-02</span>
+    Como registrar e calcular o lucro/prejuízo <b>realizado</b> (por carteira e por ticker)? Já está especificado em <code>AC-406</code> na spec <code>operacao-movimentacao</code>, mas nunca foi implementado — não existe campo, tabela nem serviço para isso (CALC-05).
+  </div>
+  <div class="open-item">
+    <span class="cod">Q-MAP-03</span>
+    A exclusão de Operação (<code>DELETE /operacoes/{id}</code>) é <b>hard delete</b>, diferente de todo o resto do sistema que usa exclusão lógica (<code>ativo</code>/<code>ativa</code>). É intencional, ou deveria ser soft delete também (para preservar auditoria)?
+  </div>
+  <div class="open-item">
+    <span class="cod">Q-MAP-04</span>
+    Deve haver validação de preço em <code>OperacaoEditarDTO</code> (positivo, com teto de sanidade)? Hoje aceita qualquer valor, incluindo negativo, corrompendo silenciosamente o preço médio da posição (RN-OPE-05, MOV-08) — isso é exatamente o escopo do SPEC-04 do Bloco C.
+  </div>
+  <div class="open-item">
+    <span class="cod">Q-MAP-05</span>
+    Deve haver cache/TTL de cotação para não estourar a cota gratuita das APIs externas (brapi/Twelve Data)? Hoje toda compra, venda e atualização de cotação bate direto na fonte, sem nenhum cache (RN-COT-03).
+  </div>
+  <div class="open-item" style="border-left-color: var(--ok-text);">
+    <span class="cod">Q-MAP-06</span> <span class="badge badge-ok">✔ respondida — SPEC-01</span>
+    O limite de requisições (429) das fontes externas deveria retornar 429 ao cliente, em vez do 502 genérico atual? (RN-COT-04) — implementado em 04/09/2026: <code>IntegracaoExternaException</code> distingue cota estourada (429) de indisponibilidade (503). A parte de fallback em compra/venda usando a última cotação conhecida continua em aberto — decisão registrada em <code>docs/DECISOES-MAPEAMENTO.md</code>, escopo da SPEC-07.
+  </div>
+  <div class="open-item">
+    <span class="cod">Q-MAP-07</span>
+    O mesmo bug de recadastro confirmado em Ação (RN-ACA-02) provavelmente também afeta Corretora (RN-COR-03), já que o código de <code>existsByCnpj</code> segue o mesmo padrão sem filtro de <code>ativo</code>. Não foi possível testar ao vivo nesta sessão por falta de uma corretora excluída disponível — confirma a hipótese antes de decidir a correção do SPEC-03 (hard delete vs. soft delete + filtro)?
+  </div>
+  <div class="open-item">
+    <span class="cod">Q-MAP-08</span>
+    <code>GET /acoes/ticker/{ticker}</code> retorna ações já excluídas (<code>ativo=false</code>) com os dados completos, e essas ações continuam podendo ser compradas/vendidas normalmente (RN-ACA-05, RN-OPE-04). Isso deve ser corrigido junto com o SPEC-03, ou é um problema separado?
+  </div>
+</section>
+
+</main>
+<footer>Mapeamento gerado localmente para uso offline — sem CDN, sem chamadas de rede, sem localStorage.</footer>
+
+<script>
+(function() {
+  function attachFilter(inputSelector, tableId, countId) {
+    var input = document.querySelector('input[data-target="' + tableId + '"]');
+    var table = document.getElementById(tableId);
+    var countEl = document.getElementById(countId);
+    var rows = Array.prototype.slice.call(table.querySelectorAll('tbody tr'));
+    function updateCount() {
+      var visible = rows.filter(function(r) { return r.style.display !== 'none'; }).length;
+      countEl.textContent = visible + ' de ' + rows.length + ' itens';
+    }
+    input.addEventListener('input', function() {
+      var q = input.value.toLowerCase();
+      rows.forEach(function(row) {
+        var text = row.textContent.toLowerCase();
+        row.style.display = text.indexOf(q) === -1 ? 'none' : '';
+      });
+      updateCount();
+    });
+    updateCount();
+  }
+  attachFilter(null, 'tbl-regras', 'count-regras');
+  attachFilter(null, 'tbl-calc', 'count-calc');
+  attachFilter(null, 'tbl-mov', 'count-mov');
+})();
+</script>
+</body>
+</html>

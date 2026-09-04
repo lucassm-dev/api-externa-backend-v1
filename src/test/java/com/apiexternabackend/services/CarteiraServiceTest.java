@@ -10,7 +10,7 @@ import com.apiexternabackend.mappers.CarteiraMapper;
 import com.apiexternabackend.repositories.CarteiraRepository;
 import com.apiexternabackend.repositories.CorretoraRepository;
 import com.apiexternabackend.repositories.InvestidorRepository;
-import com.apiexternabackend.resources.exceptions.ResourceNotFoundException;
+import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -96,7 +96,7 @@ class CarteiraServiceTest {
         when(corretoraRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.criar(new CarteiraRequestDTO(1L, 99L, Mercado.BR, "X")))
-                .isInstanceOf(ResourceNotFoundException.class)
+                .isInstanceOf(RecursoNaoEncontradoException.class)
                 .hasMessageContaining("Corretora");
     }
 
