@@ -1,12 +1,27 @@
 {
   "feature": "spec-01-padronizacao-erros",
-  "timestamp": "2026-09-04T22:55:47.147Z",
-  "gitRev": "dd7758c",
+  "timestamp": "2026-09-04T22:59:48.255Z",
+  "gitRev": "5a8ac15",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
   "testsParsed": 0,
   "results": {
+    "AC-426": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-427": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-428": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
     "AC-429": {
       "status": "pass",
       "testName": null,

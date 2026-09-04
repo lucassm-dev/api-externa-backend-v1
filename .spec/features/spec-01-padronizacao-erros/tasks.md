@@ -4,7 +4,8 @@
 
 ## T-407 — Fundação: hierarquia de exceções, StandardError com código, GlobalExceptionHandler [concluida]
 - Refs: US-412
-- Arquivos: src/main/java/com/apiexternabackend/resources/exceptions/NegocioException.java, src/main/java/com/apiexternabackend/resources/exceptions/RecursoNaoEncontradoException.java, src/main/java/com/apiexternabackend/resources/exceptions/RecursoDuplicadoException.java, src/main/java/com/apiexternabackend/resources/exceptions/RegraVioladaException.java, src/main/java/com/apiexternabackend/resources/exceptions/IntegracaoExternaException.java, src/main/java/com/apiexternabackend/resources/exceptions/StandardError.java, src/main/java/com/apiexternabackend/resources/exceptions/GlobalExceptionHandler.java, src/main/java/com/apiexternabackend/resources/exceptions/ResourceNotFoundException.java, src/main/java/com/apiexternabackend/resources/exceptions/DuplicateResourceException.java, src/main/java/com/apiexternabackend/resources/exceptions/BusinessException.java, src/main/java/com/apiexternabackend/resources/exceptions/ExternalServiceException.java
+- Arquivos: src/main/java/com/apiexternabackend/resources/exceptions/NegocioException.java, src/main/java/com/apiexternabackend/resources/exceptions/RecursoNaoEncontradoException.java, src/main/java/com/apiexternabackend/resources/exceptions/RecursoDuplicadoException.java, src/main/java/com/apiexternabackend/resources/exceptions/RegraVioladaException.java, src/main/java/com/apiexternabackend/resources/exceptions/IntegracaoExternaException.java, src/main/java/com/apiexternabackend/resources/exceptions/StandardError.java, src/main/java/com/apiexternabackend/resources/exceptions/GlobalExceptionHandler.java
+- Notas: removeu ResourceNotFoundException.java, DuplicateResourceException.java, BusinessException.java e ExternalServiceException.java (não listados aqui por não existirem mais)
 - Notas: pré-requisito de compilação para todas as outras tarefas — feita sequencialmente, fora do plano paralelo, antes de liberar T-408..T-412.
 
 ## T-408 — Migrar catálogo de Ação (ACA-001/002) e comportamento de cota estourada em atualizar-cotacao [concluida]
@@ -32,8 +33,7 @@
 - Arquivos: src/main/java/com/apiexternabackend/services/OperacaoService.java, src/test/java/com/apiexternabackend/services/OperacaoServiceTest.java, src/test/java/com/apiexternabackend/resources/OperacaoResourceTest.java
 - Notas: nenhuma mudança de status HTTP aqui — só troca de tipo de exceção e adição de código.
 
-## T-413 — Catálogo docs/erros.md e testes diretos do GlobalExceptionHandler (AC-426/427/428) [pendente]
-
+## T-413 — Catálogo docs/erros.md e testes diretos do GlobalExceptionHandler (AC-426/427/428) [concluida]
 - Refs: AC-426, AC-427, AC-428, AC-433
 - Arquivos: docs/erros.md, src/test/java/com/apiexternabackend/resources/exceptions/GlobalExceptionHandlerTest.java
 - Notas: depende de T-408..T-412 concluídas (o catálogo documenta os códigos que elas introduzem). Teste novo cobre: payload padronizado genérico, validação com fieldErrors, exceção não mapeada → 500 com código SYS-001 sem stacktrace.
