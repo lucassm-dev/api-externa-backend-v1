@@ -5,7 +5,7 @@ import com.apiexternabackend.domains.dtos.CarteiraRequestDTO;
 import com.apiexternabackend.domains.dtos.CarteiraResponseDTO;
 import com.apiexternabackend.domains.enums.Mercado;
 import com.apiexternabackend.resources.exceptions.GlobalExceptionHandler;
-import com.apiexternabackend.resources.exceptions.ResourceNotFoundException;
+import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
 import com.apiexternabackend.services.CarteiraService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -61,7 +61,7 @@ class CarteiraResourceTest {
     @Test
     @DisplayName("@spec:AC-303 POST /carteiras com corretora inexistente retorna 404")
     void deveRetornar404ParaCorretoraNaoEncontrada() throws Exception {
-        when(service.criar(any())).thenThrow(new ResourceNotFoundException("Corretora não encontrada: 99"));
+        when(service.criar(any())).thenThrow(new RecursoNaoEncontradoException("COR-001", "Corretora não encontrada: 99"));
 
         mockMvc.perform(post("/carteiras")
                         .contentType(MediaType.APPLICATION_JSON)
