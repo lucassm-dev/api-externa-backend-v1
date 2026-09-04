@@ -62,7 +62,7 @@ class OperacaoServiceTest {
 
     @BeforeEach
     void setUp() {
-        investidor = new Investidor(1L, "João", "joao@email.com", "12345678901", true);
+        investidor = new Investidor(1L, "João", "joao@email.com", "12345678901", "hash", LocalDateTime.now(), true);
         corretora = new Corretora();
         corretora.setId(1L);
 

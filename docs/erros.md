@@ -25,8 +25,14 @@ NegocioException (abstrata)
 ├── RecursoNaoEncontradoException   → 404
 ├── RecursoDuplicadoException       → 409
 ├── RegraVioladaException           → 422
-└── IntegracaoExternaException      → 429 (limiteExcedido=true) ou 503 (limiteExcedido=false)
+├── IntegracaoExternaException      → 429 (limiteExcedido=true) ou 503 (limiteExcedido=false)
+└── CredenciaisInvalidasException   → 401 (login incorreto — único caso de negócio fixo em 401)
 ```
+
+401/403 de autenticação/autorização (token ausente, expirado, acesso negado)
+**não** passam pela hierarquia acima — são escritos direto pelo
+`JwtAuthenticationEntryPoint`/`JwtAccessDeniedHandler` no filtro de
+segurança, antes do Spring MVC processar a requisição (ver `AUT-005/006/007`).
 
 Implementação: `src/main/java/com/apiexternabackend/resources/exceptions/`.
 
@@ -62,14 +68,22 @@ Implementação: `src/main/java/com/apiexternabackend/resources/exceptions/`.
 
 ## AUT — Investidor / autenticação
 
-> Reservado para `Investidor` porque a SPEC-02 unifica esta entidade com
-> autenticação/JWT — hoje cobre só cadastro/consulta, sem login ainda.
+> Desde a SPEC-02, `Investidor` tem cadastro com senha (`POST /auth/cadastro`)
+> e login com JWT (`POST /auth/login`). AUT-005/006/007 são escritos direto
+> pelo `JwtAuthenticationEntryPoint`/`JwtAccessDeniedHandler` — não passam
+> pelo `GlobalExceptionHandler` porque acontecem no filtro de segurança,
+> antes do Spring MVC.
 
 | Código | Situação | Status HTTP | Exceção |
 |---|---|---|---|
 | AUT-001 | E-mail já cadastrado | 409 | RecursoDuplicadoException |
 | AUT-002 | CPF já cadastrado | 409 | RecursoDuplicadoException |
 | AUT-003 | Investidor não encontrado | 404 | RecursoNaoEncontradoException |
+| AUT-004 | Login com e-mail ou senha incorretos (mensagem genérica, não revela qual campo errou) | 401 | CredenciaisInvalidasException |
+| AUT-005 | Token ausente, malformado ou com assinatura inválida | 401 | `JwtAuthenticationEntryPoint` |
+| AUT-006 | Token expirado | 401 | `JwtAuthenticationEntryPoint` |
+| AUT-007 | Acesso negado (autenticado, sem permissão) | 403 | `JwtAccessDeniedHandler` |
+| AUT-008 | Senha fora da política mínima (8+ caracteres, com letra e número) | 422 | RegraVioladaException |
 
 ## EXT — Integração externa
 

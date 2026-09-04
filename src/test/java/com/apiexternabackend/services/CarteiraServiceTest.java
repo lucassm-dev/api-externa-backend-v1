@@ -11,6 +11,7 @@ import com.apiexternabackend.repositories.CarteiraRepository;
 import com.apiexternabackend.repositories.CorretoraRepository;
 import com.apiexternabackend.repositories.InvestidorRepository;
 import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,7 +51,7 @@ class CarteiraServiceTest {
 
     @BeforeEach
     void setUp() {
-        investidor = new Investidor(1L, "João", "joao@email.com", "12345678901", true);
+        investidor = new Investidor(1L, "João", "joao@email.com", "12345678901", "hash", LocalDateTime.now(), true);
         corretora = new Corretora();
         corretora.setId(1L);
         corretora.setRazaoSocial("XP");

@@ -18,6 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
+import java.time.LocalDateTime;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +48,7 @@ class InvestidorServiceTest {
     @BeforeEach
     void setUp() {
         requestDTO = new InvestidorRequestDTO("João Silva", "joao@email.com", "12345678901");
-        investidor = new Investidor(1L, "João Silva", "joao@email.com", "12345678901", true);
+        investidor = new Investidor(1L, "João Silva", "joao@email.com", "12345678901", "hash", LocalDateTime.now(), true);
         responseDTO = new InvestidorResponseDTO(1L, "João Silva", "joao@email.com");
     }
 
@@ -123,7 +125,7 @@ class InvestidorServiceTest {
     @Test
     @DisplayName("@spec:AC-422 Investidor ativo é desativado ao excluir")
     void deveDesativarInvestidorAoExcluir() {
-        Investidor ativo = new Investidor(1L, "João", "joao@email.com", "12345678901", true);
+        Investidor ativo = new Investidor(1L, "João", "joao@email.com", "12345678901", "hash", LocalDateTime.now(), true);
         when(repository.findByIdAndAtivoTrue(1L)).thenReturn(Optional.of(ativo));
 
         service.excluir(1L);

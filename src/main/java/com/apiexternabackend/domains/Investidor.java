@@ -11,6 +11,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "investidor")
 @Getter
@@ -33,11 +35,18 @@ public class Investidor {
     private String cpf;
 
     @Column(nullable = false)
+    private String senha;
+
+    @Column(name = "criado_em", nullable = false)
+    private LocalDateTime criadoEm = LocalDateTime.now();
+
+    @Column(nullable = false)
     private Boolean ativo = true;
 
-    public Investidor(String nome, String email, String cpf) {
+    public Investidor(String nome, String email, String cpf, String senha) {
         this.nome = nome;
         this.email = email;
         this.cpf = cpf;
+        this.senha = senha;
     }
 }
