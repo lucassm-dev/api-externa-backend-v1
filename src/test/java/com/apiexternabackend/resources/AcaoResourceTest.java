@@ -3,10 +3,10 @@ package com.apiexternabackend.resources;
 import com.apiexternabackend.domains.dtos.AcaoRequestDTO;
 import com.apiexternabackend.domains.dtos.AcaoResponseDTO;
 import com.apiexternabackend.domains.enums.Mercado;
-import com.apiexternabackend.resources.exceptions.BusinessException;
-import com.apiexternabackend.resources.exceptions.ExternalServiceException;
 import com.apiexternabackend.resources.exceptions.GlobalExceptionHandler;
-import com.apiexternabackend.resources.exceptions.ResourceNotFoundException;
+import com.apiexternabackend.resources.exceptions.IntegracaoExternaException;
+import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
+import com.apiexternabackend.resources.exceptions.RegraVioladaException;
 import com.apiexternabackend.services.AcaoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -78,7 +78,7 @@ class AcaoResourceTest {
     @DisplayName("@spec:AC-203 POST /acoes com ticker inexistente retorna 422")
     void deveRejeitarTickerInexistente() throws Exception {
         when(service.cadastrar(any()))
-                .thenThrow(new BusinessException("Ticker não encontrado na fonte BR: XXXX3"));
+                .thenThrow(new RegraVioladaException("EXT-008", "Ticker não encontrado na fonte BR: XXXX3"));
 
         mockMvc.perform(post("/acoes")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -108,12 +108,14 @@ class AcaoResourceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-207 GET /acoes/ticker/{ticker} com ticker inexistente retorna 404")
+    @DisplayName("@spec:AC-207 @spec:AC-433 GET /acoes/ticker/{ticker} com ticker inexistente retorna 404 com código ACA-001")
     void deveRetornar404ParaTickerInexistente() throws Exception {
-        when(service.buscarPorTicker("XXXX3")).thenThrow(new ResourceNotFoundException("Ação não encontrada: XXXX3"));
+        when(service.buscarPorTicker("XXXX3"))
+                .thenThrow(new RecursoNaoEncontradoException("ACA-001", "Ação não encontrada: XXXX3"));
 
         mockMvc.perform(get("/acoes/ticker/XXXX3"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.codigo").value("ACA-001"));
     }
 
     @Test
@@ -127,16 +129,36 @@ class AcaoResourceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-211 Limite de cota da fonte retorna 502 com mensagem específica")
+    @DisplayName("@spec:AC-211 @spec:AC-429 Limite de cota da fonte retorna 429 com mensagem específica")
     void deveMensagemEspecificaParaLimiteExcedido() throws Exception {
         when(service.cadastrar(any()))
-                .thenThrow(new ExternalServiceException("Limite de requisições da fonte BR excedido"));
+                .thenThrow(new IntegracaoExternaException("EXT-009", "Limite de requisições da fonte BR excedido", true));
 
         mockMvc.perform(post("/acoes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new AcaoRequestDTO("PETR4", Mercado.BR))))
-                .andExpect(status().isBadGateway())
+                .andExpect(status().isTooManyRequests())
                 .andExpect(jsonPath("$.message").value(org.hamcrest.Matchers.containsString("Limite")));
+    }
+
+    @Test
+    @DisplayName("@spec:AC-431 @spec:AC-433 PUT /acoes/{id}/atualizar-cotacao com cota estourada retorna 429 explícito com código EXT-009")
+    void deveRetornar429ParaAtualizarCotacaoComCotaEstourada() throws Exception {
+        when(service.atualizarCotacao(1L))
+                .thenThrow(new IntegracaoExternaException("EXT-009", "Limite de requisições da fonte BR excedido. Tente mais tarde.", true));
+
+        mockMvc.perform(put("/acoes/1/atualizar-cotacao"))
+                .andExpect(status().isTooManyRequests())
+                .andExpect(jsonPath("$.codigo").value("EXT-009"));
+    }
+
+    @Test
+    @DisplayName("@spec:AC-432 PUT /acoes/{id}/atualizar-cotacao com fonte indisponível preserva 200 (AC-210)")
+    void deveManterAtualizarCotacaoRetornando200QuandoFonteIndisponivel() throws Exception {
+        when(service.atualizarCotacao(1L)).thenReturn(buildResponse("PETR4", Mercado.BR, "BRL"));
+
+        mockMvc.perform(put("/acoes/1/atualizar-cotacao"))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -151,7 +173,7 @@ class AcaoResourceTest {
     @Test
     @DisplayName("@spec:AC-425 DELETE /acoes/{ticker} com ticker inexistente retorna 404")
     void deveRetornar404AoExcluirAcaoInexistente() throws Exception {
-        org.mockito.Mockito.doThrow(new ResourceNotFoundException("Ação não encontrada: XXXX3"))
+        org.mockito.Mockito.doThrow(new RecursoNaoEncontradoException("ACA-001", "Ação não encontrada: XXXX3"))
                 .when(service).excluir("XXXX3");
 
         mockMvc.perform(delete("/acoes/XXXX3"))
