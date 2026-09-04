@@ -1,7 +1,7 @@
 package com.apiexternabackend.infra.facade;
 
 import com.apiexternabackend.infra.client.cnpj.CnpjClient;
-import com.apiexternabackend.resources.exceptions.BusinessException;
+import com.apiexternabackend.resources.exceptions.RegraVioladaException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,7 +46,7 @@ class CnpjFacadeTest {
     @DisplayName("@spec:AC-417 CNPJ com dígitos verificadores inválidos é rejeitado")
     void deveRejeitarCnpjComDigitosInvalidos() {
         assertThatThrownBy(() -> facade.validar(CNPJ_DIGITOS_INVALIDOS))
-                .isInstanceOf(BusinessException.class)
+                .isInstanceOf(RegraVioladaException.class)
                 .hasMessageContaining("dígitos verificadores inválidos");
     }
 
@@ -54,7 +54,7 @@ class CnpjFacadeTest {
     @DisplayName("@spec:AC-418 CNPJ com comprimento diferente de 14 é rejeitado")
     void deveRejeitarCnpjComComprimentoErrado() {
         assertThatThrownBy(() -> facade.validar("1234"))
-                .isInstanceOf(BusinessException.class)
+                .isInstanceOf(RegraVioladaException.class)
                 .hasMessageContaining("inválido");
     }
 
@@ -62,6 +62,15 @@ class CnpjFacadeTest {
     @DisplayName("@spec:AC-418 CNPJ nulo é rejeitado como formato inválido")
     void deveRejeitarCnpjNulo() {
         assertThatThrownBy(() -> facade.validar(null))
-                .isInstanceOf(BusinessException.class);
+                .isInstanceOf(RegraVioladaException.class);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-433 CNPJ inválido traz o código COR-003 do catálogo")
+    void deveTrazerCodigoCor003AoRejeitarCnpjInvalido() {
+        assertThatThrownBy(() -> facade.validar(CNPJ_DIGITOS_INVALIDOS))
+                .isInstanceOf(RegraVioladaException.class)
+                .extracting(e -> ((RegraVioladaException) e).getCodigo())
+                .isEqualTo("COR-003");
     }
 }
