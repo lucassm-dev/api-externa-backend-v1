@@ -22,14 +22,12 @@
 - Arquivos: src/main/java/com/apiexternabackend/services/CorretoraService.java, src/main/java/com/apiexternabackend/infra/facade/CnpjFacade.java, src/main/java/com/apiexternabackend/infra/facade/CepFacade.java, src/main/java/com/apiexternabackend/infra/facade/CvmFacade.java, src/main/java/com/apiexternabackend/config/CvmFeignConfig.java, src/test/java/com/apiexternabackend/services/CorretoraServiceTest.java, src/test/java/com/apiexternabackend/resources/CorretoraResourceTest.java, src/test/java/com/apiexternabackend/infra/facade/CnpjFacadeTest.java
 - Notas: `CorretoraService.cadastrar` passa a checar `resultadoCvm.falhaVerificacao()` (→ IntegracaoExternaException EXT-007, 503) separado de `!resultadoCvm.autorizada()` (→ RegraVioladaException COR-003, 422) — comportamento novo confirmado com o Lucas (AC-434).
 
-## T-411 — Migrar catálogo de Carteira (CAR-001) e Investidor/AUT (AUT-001/002/003) [pendente]
-
+## T-411 — Migrar catálogo de Carteira (CAR-001) e Investidor/AUT (AUT-001/002/003) [concluida]
 - Refs: AC-433
 - Arquivos: src/main/java/com/apiexternabackend/services/CarteiraService.java, src/main/java/com/apiexternabackend/services/InvestidorService.java, src/test/java/com/apiexternabackend/services/CarteiraServiceTest.java, src/test/java/com/apiexternabackend/resources/CarteiraResourceTest.java, src/test/java/com/apiexternabackend/resources/InvestidorResourceTest.java
 - Notas: prefixo AUT- reservado para Investidor porque a SPEC-02 unifica Investidor com autenticação/JWT.
 
-## T-412 — Migrar catálogo de Operação (OPE-001/002/003/004) [pendente]
-
+## T-412 — Migrar catálogo de Operação (OPE-001/002/003/004) [concluida]
 - Refs: AC-433
 - Arquivos: src/main/java/com/apiexternabackend/services/OperacaoService.java, src/test/java/com/apiexternabackend/services/OperacaoServiceTest.java, src/test/java/com/apiexternabackend/resources/OperacaoResourceTest.java
 - Notas: nenhuma mudança de status HTTP aqui — só troca de tipo de exceção e adição de código.

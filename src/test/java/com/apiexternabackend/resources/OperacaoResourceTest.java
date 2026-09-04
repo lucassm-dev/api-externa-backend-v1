@@ -5,7 +5,7 @@ import com.apiexternabackend.domains.dtos.OperacaoEditarDTO;
 import com.apiexternabackend.domains.dtos.OperacaoRequestDTO;
 import com.apiexternabackend.domains.dtos.OperacaoResponseDTO;
 import com.apiexternabackend.domains.enums.TipoOperacao;
-import com.apiexternabackend.resources.exceptions.BusinessException;
+import com.apiexternabackend.resources.exceptions.RegraVioladaException;
 import com.apiexternabackend.resources.exceptions.GlobalExceptionHandler;
 import com.apiexternabackend.services.ConsultaOperacaoService;
 import com.apiexternabackend.services.OperacaoService;
@@ -80,7 +80,7 @@ class OperacaoResourceTest {
     @DisplayName("@spec:AC-404 POST /operacoes/venda acima da posição retorna 422")
     void deveRejeitarVendaAcimaDataPosicao() throws Exception {
         when(operacaoService.vender(any()))
-                .thenThrow(new BusinessException("Quantidade excede a posição atual"));
+                .thenThrow(new RegraVioladaException("OPE-004", "Quantidade excede a posição atual"));
 
         mockMvc.perform(post("/operacoes/venda")
                         .contentType(MediaType.APPLICATION_JSON)
