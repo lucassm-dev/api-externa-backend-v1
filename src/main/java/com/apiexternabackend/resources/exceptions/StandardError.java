@@ -15,6 +15,7 @@ public class StandardError {
 
     private Instant timestamp;
     private Integer status;
+    private String codigo;
     private String error;
     private String message;
     private String path;
@@ -23,9 +24,10 @@ public class StandardError {
     public StandardError() {
     }
 
-    public StandardError(Instant timestamp, Integer status, String error, String message, String path) {
+    public StandardError(Instant timestamp, Integer status, String codigo, String error, String message, String path) {
         this.timestamp = timestamp;
         this.status = status;
+        this.codigo = codigo;
         this.error = error;
         this.message = message;
         this.path = path;

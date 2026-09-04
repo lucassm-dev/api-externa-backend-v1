@@ -1,0 +1,206 @@
+{
+  "runId": "api-externa-backend-v1-spec-01-padronizacao-erros-mtn961wr",
+  "feature": "spec-01-padronizacao-erros",
+  "agent": "claude",
+  "modo": "paralelo",
+  "paralelizar": null,
+  "modeloForcado": null,
+  "esforcoForcado": null,
+  "geradoEm": "2026-09-04 17:53",
+  "branchTrabalho": "spec/spec-01-padronizacao-erros",
+  "baseDir": ".spec/features/spec-01-padronizacao-erros",
+  "specDir": ".spec",
+  "repoName": "api-externa-backend-v1",
+  "logsDir": "../onp-worktrees/api-externa-backend-v1-spec-01-padronizacao-erros-logs",
+  "ondas": [
+    [
+      "faixa-1",
+      "faixa-2",
+      "faixa-3"
+    ],
+    [
+      "faixa-4",
+      "faixa-5",
+      "faixa-6"
+    ],
+    [
+      "faixa-7"
+    ]
+  ],
+  "faixas": [
+    {
+      "id": "faixa-1",
+      "branch": "spec/spec-01-padronizacao-erros-faixa-1",
+      "worktree": "../onp-worktrees/api-externa-backend-v1-spec-01-padronizacao-erros-faixa-1",
+      "tarefas": [
+        {
+          "id": "T-407",
+          "titulo": "Fundação: hierarquia de exceções, StandardError com código, GlobalExceptionHandler",
+          "modelo": "claude-sonnet-5",
+          "esforco": "medium",
+          "arquivos": [
+            "src/main/java/com/apiexternabackend/resources/exceptions/NegocioException.java",
+            "src/main/java/com/apiexternabackend/resources/exceptions/RecursoNaoEncontradoException.java",
+            "src/main/java/com/apiexternabackend/resources/exceptions/RecursoDuplicadoException.java",
+            "src/main/java/com/apiexternabackend/resources/exceptions/RegraVioladaException.java",
+            "src/main/java/com/apiexternabackend/resources/exceptions/IntegracaoExternaException.java",
+            "src/main/java/com/apiexternabackend/resources/exceptions/StandardError.java",
+            "src/main/java/com/apiexternabackend/resources/exceptions/GlobalExceptionHandler.java",
+            "src/main/java/com/apiexternabackend/resources/exceptions/ResourceNotFoundException.java",
+            "src/main/java/com/apiexternabackend/resources/exceptions/DuplicateResourceException.java",
+            "src/main/java/com/apiexternabackend/resources/exceptions/BusinessException.java",
+            "src/main/java/com/apiexternabackend/resources/exceptions/ExternalServiceException.java"
+          ],
+          "refs": [
+            "US-412"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-2",
+      "branch": "spec/spec-01-padronizacao-erros-faixa-2",
+      "worktree": "../onp-worktrees/api-externa-backend-v1-spec-01-padronizacao-erros-faixa-2",
+      "tarefas": [
+        {
+          "id": "T-408",
+          "titulo": "Migrar catálogo de Ação (ACA-001/002) e comportamento de cota estourada em atualizar-cotacao",
+          "modelo": "claude-sonnet-5",
+          "esforco": "medium",
+          "arquivos": [
+            "src/main/java/com/apiexternabackend/services/AcaoService.java",
+            "src/test/java/com/apiexternabackend/services/AcaoServiceTest.java",
+            "src/test/java/com/apiexternabackend/resources/AcaoResourceTest.java"
+          ],
+          "refs": [
+            "AC-429",
+            "AC-431",
+            "AC-432",
+            "AC-433"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-3",
+      "branch": "spec/spec-01-padronizacao-erros-faixa-3",
+      "worktree": "../onp-worktrees/api-externa-backend-v1-spec-01-padronizacao-erros-faixa-3",
+      "tarefas": [
+        {
+          "id": "T-409",
+          "titulo": "Migrar adapters de cotação (Brapi/TwelveData) para IntegracaoExternaException tipada (EXT-008/009/010)",
+          "modelo": "claude-sonnet-5",
+          "esforco": "medium",
+          "arquivos": [
+            "src/main/java/com/apiexternabackend/infra/adapter/BrapiAdapter.java",
+            "src/main/java/com/apiexternabackend/infra/adapter/TwelveDataAdapter.java",
+            "src/main/java/com/apiexternabackend/config/FeignConfig.java"
+          ],
+          "refs": [
+            "AC-429",
+            "AC-430"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-4",
+      "branch": "spec/spec-01-padronizacao-erros-faixa-4",
+      "worktree": "../onp-worktrees/api-externa-backend-v1-spec-01-padronizacao-erros-faixa-4",
+      "tarefas": [
+        {
+          "id": "T-410",
+          "titulo": "Migrar catálogo de Corretora (COR-001/002/003) e separar CVM indisponível de CVM não autorizada (EXT-007)",
+          "modelo": "claude-sonnet-5",
+          "esforco": "medium",
+          "arquivos": [
+            "src/main/java/com/apiexternabackend/services/CorretoraService.java",
+            "src/main/java/com/apiexternabackend/infra/facade/CnpjFacade.java",
+            "src/main/java/com/apiexternabackend/infra/facade/CepFacade.java",
+            "src/main/java/com/apiexternabackend/infra/facade/CvmFacade.java",
+            "src/main/java/com/apiexternabackend/config/CvmFeignConfig.java",
+            "src/test/java/com/apiexternabackend/services/CorretoraServiceTest.java",
+            "src/test/java/com/apiexternabackend/resources/CorretoraResourceTest.java",
+            "src/test/java/com/apiexternabackend/infra/facade/CnpjFacadeTest.java"
+          ],
+          "refs": [
+            "AC-433",
+            "AC-434"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-5",
+      "branch": "spec/spec-01-padronizacao-erros-faixa-5",
+      "worktree": "../onp-worktrees/api-externa-backend-v1-spec-01-padronizacao-erros-faixa-5",
+      "tarefas": [
+        {
+          "id": "T-411",
+          "titulo": "Migrar catálogo de Carteira (CAR-001) e Investidor/AUT (AUT-001/002/003)",
+          "modelo": "claude-sonnet-5",
+          "esforco": "medium",
+          "arquivos": [
+            "src/main/java/com/apiexternabackend/services/CarteiraService.java",
+            "src/main/java/com/apiexternabackend/services/InvestidorService.java",
+            "src/test/java/com/apiexternabackend/services/CarteiraServiceTest.java",
+            "src/test/java/com/apiexternabackend/resources/CarteiraResourceTest.java",
+            "src/test/java/com/apiexternabackend/resources/InvestidorResourceTest.java"
+          ],
+          "refs": [
+            "AC-433"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-6",
+      "branch": "spec/spec-01-padronizacao-erros-faixa-6",
+      "worktree": "../onp-worktrees/api-externa-backend-v1-spec-01-padronizacao-erros-faixa-6",
+      "tarefas": [
+        {
+          "id": "T-412",
+          "titulo": "Migrar catálogo de Operação (OPE-001/002/003/004)",
+          "modelo": "claude-sonnet-5",
+          "esforco": "medium",
+          "arquivos": [
+            "src/main/java/com/apiexternabackend/services/OperacaoService.java",
+            "src/test/java/com/apiexternabackend/services/OperacaoServiceTest.java",
+            "src/test/java/com/apiexternabackend/resources/OperacaoResourceTest.java"
+          ],
+          "refs": [
+            "AC-433"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-7",
+      "branch": "spec/spec-01-padronizacao-erros-faixa-7",
+      "worktree": "../onp-worktrees/api-externa-backend-v1-spec-01-padronizacao-erros-faixa-7",
+      "tarefas": [
+        {
+          "id": "T-413",
+          "titulo": "Catálogo docs/erros.md e testes diretos do GlobalExceptionHandler (AC-426/427/428)",
+          "modelo": "claude-sonnet-5",
+          "esforco": "medium",
+          "arquivos": [
+            "docs/erros.md",
+            "src/test/java/com/apiexternabackend/resources/exceptions/GlobalExceptionHandlerTest.java"
+          ],
+          "refs": [
+            "AC-426",
+            "AC-427",
+            "AC-428",
+            "AC-433"
+          ]
+        }
+      ]
+    }
+  ],
+  "sequenciais": [],
+  "concluidas": [],
+  "avisos": [
+    "T-407 está [em-andamento] — entrou no plano; se já houver trabalho local, commite antes de executar"
+  ]
+}
