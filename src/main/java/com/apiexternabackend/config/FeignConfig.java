@@ -1,6 +1,6 @@
 package com.apiexternabackend.config;
 
-import com.apiexternabackend.resources.exceptions.ExternalServiceException;
+import com.apiexternabackend.resources.exceptions.IntegracaoExternaException;
 import feign.Logger;
 import feign.codec.ErrorDecoder;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +22,8 @@ public class FeignConfig {
             if (response.status() < 500) {
                 return defaultDecoder.decode(methodKey, response);
             }
-            return new ExternalServiceException("Serviço externo indisponível (HTTP " + response.status() + ")");
+            return new IntegracaoExternaException("EXT-010",
+                    "Serviço externo indisponível (HTTP " + response.status() + ")", false);
         };
     }
 }

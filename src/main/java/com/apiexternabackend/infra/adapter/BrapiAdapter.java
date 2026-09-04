@@ -3,8 +3,8 @@ package com.apiexternabackend.infra.adapter;
 import com.apiexternabackend.infra.client.brapi.BrapiClient;
 import com.apiexternabackend.infra.client.brapi.dtos.BrapiResponseDTO;
 import com.apiexternabackend.infra.client.brapi.dtos.BrapiResultDTO;
-import com.apiexternabackend.resources.exceptions.BusinessException;
-import com.apiexternabackend.resources.exceptions.ExternalServiceException;
+import com.apiexternabackend.resources.exceptions.IntegracaoExternaException;
+import com.apiexternabackend.resources.exceptions.RegraVioladaException;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,13 +31,13 @@ public class BrapiAdapter implements CotacaoAdapter {
             List<BrapiResultDTO> results = response.getResults();
 
             if (results == null || results.isEmpty()) {
-                throw new BusinessException("Ticker não encontrado na fonte BR: " + ticker);
+                throw new RegraVioladaException("EXT-008", "Ticker não encontrado na fonte BR: " + ticker);
             }
 
             BrapiResultDTO result = results.get(0);
 
             if (result.getRegularMarketPrice() == null) {
-                throw new BusinessException("Ticker não encontrado na fonte BR: " + ticker);
+                throw new RegraVioladaException("EXT-008", "Ticker não encontrado na fonte BR: " + ticker);
             }
 
             LocalDateTime dataHora = result.getRegularMarketTime() != null
@@ -45,15 +45,17 @@ public class BrapiAdapter implements CotacaoAdapter {
                     : LocalDateTime.now();
 
             return new CotacaoResultado(result.getRegularMarketPrice(), dataHora);
-        } catch (BusinessException e) {
+        } catch (RegraVioladaException | IntegracaoExternaException e) {
             throw e;
         } catch (FeignException.NotFound e) {
-            throw new BusinessException("Ticker não encontrado na fonte BR: " + ticker);
+            throw new RegraVioladaException("EXT-008", "Ticker não encontrado na fonte BR: " + ticker);
         } catch (FeignException e) {
             if (e.status() == 429) {
-                throw new ExternalServiceException("Limite de requisições da fonte BR excedido. Tente mais tarde.");
+                throw new IntegracaoExternaException("EXT-009",
+                        "Limite de requisições da fonte BR excedido. Tente novamente mais tarde.", true);
             }
-            throw new ExternalServiceException("Fonte BR (brapi) indisponível. Tente novamente mais tarde.");
+            throw new IntegracaoExternaException("EXT-010",
+                    "Fonte BR (brapi) indisponível. Tente novamente mais tarde.", false);
         }
     }
 }
