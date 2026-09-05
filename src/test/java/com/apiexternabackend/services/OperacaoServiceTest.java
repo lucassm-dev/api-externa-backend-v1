@@ -274,4 +274,29 @@ class OperacaoServiceTest {
         assertThat(operacao.getCotacaoNoMomento()).isEqualByComparingTo(acaoBR.getCotacaoAtual());
         verify(posicaoService).recalcular(carteiraBR, acaoBR);
     }
+
+    @Test
+    @DisplayName("@spec:AC-472 Excluir operação marca inativa em vez de apagar")
+    void deveMarcarInativaAoExcluir() {
+        when(operacaoRepository.findByIdAndAtivoTrue(1L)).thenReturn(Optional.of(operacao));
+
+        service.excluir(1L, INVESTIDOR_ID);
+
+        org.mockito.ArgumentCaptor<Operacao> captor = org.mockito.ArgumentCaptor.forClass(Operacao.class);
+        verify(operacaoRepository).save(captor.capture());
+        assertThat(captor.getValue().getAtivo()).isFalse();
+        verify(operacaoRepository, org.mockito.Mockito.never()).delete(any());
+        verify(posicaoService).recalcular(carteiraBR, acaoBR);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-473 Operação já excluída não pode ser editada nem excluída de novo")
+    void deveRetornar404AoOperarSobreOperacaoJaExcluida() {
+        when(operacaoRepository.findByIdAndAtivoTrue(1L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.excluir(1L, INVESTIDOR_ID))
+                .isInstanceOf(RecursoNaoEncontradoException.class);
+        assertThatThrownBy(() -> service.editar(1L, 10, null, INVESTIDOR_ID))
+                .isInstanceOf(RecursoNaoEncontradoException.class);
+    }
 }

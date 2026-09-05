@@ -148,4 +148,74 @@ class PosicaoServiceTest {
 
         verify(carteiraAcaoRepository).delete(posicao);
     }
+
+    @Test
+    @DisplayName("@spec:AC-469 Venda grava preço médio de compra e lucro realizado do momento")
+    void deveGravarPrecoMedioELucroRealizadoNaVenda() {
+        Operacao compra = compra(100, "38");
+        Operacao venda = venda(40, "45");
+        when(operacaoRepository.findByCarteiraIdAndAcaoIdAndAtivoTrueOrderByDataHoraAsc(1L, 1L))
+                .thenReturn(List.of(compra, venda));
+        when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L)).thenReturn(Optional.empty());
+
+        service.recalcular(carteira, acao);
+
+        assertThat(venda.getPrecoMedioCompraNoMomento()).isEqualByComparingTo("38.0000");
+        assertThat(venda.getLucroRealizado()).isEqualByComparingTo("280.0000"); // (45-38)*40
+        verify(operacaoRepository).save(venda);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-474 Excluir uma venda recalcula o lucro realizado da venda restante")
+    void deveRecalcularLucroRestanteAoExcluirVendaAnterior() {
+        // compra 100@30 -> venda 100@40 (zera) -> compra 100@50 -> venda 50@60
+        // a venda intermediária já foi excluída (soft delete) — não aparece no histórico ativo
+        Operacao compra1 = compra(100, "30");
+        Operacao compra2 = compra(100, "50");
+        Operacao vendaRestante = venda(50, "60");
+        when(operacaoRepository.findByCarteiraIdAndAcaoIdAndAtivoTrueOrderByDataHoraAsc(1L, 1L))
+                .thenReturn(List.of(compra1, compra2, vendaRestante));
+        when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L)).thenReturn(Optional.empty());
+
+        service.recalcular(carteira, acao);
+
+        // preço médio misto (100@30 + 100@50)/200 = 40 — diferente do que seria se a venda excluída ainda contasse
+        assertThat(vendaRestante.getPrecoMedioCompraNoMomento()).isEqualByComparingTo("40.0000");
+        assertThat(vendaRestante.getLucroRealizado()).isEqualByComparingTo("1000.0000"); // (60-40)*50
+    }
+
+    @Test
+    @DisplayName("@spec:AC-475 Editar preço/quantidade de uma venda recalcula o próprio lucro realizado")
+    void deveRecalcularLucroDaPropriaVendaAoEditar() {
+        Operacao compraBase = compra(100, "30");
+        Operacao vendaEditavel = venda(50, "50");
+        when(operacaoRepository.findByCarteiraIdAndAcaoIdAndAtivoTrueOrderByDataHoraAsc(1L, 1L))
+                .thenReturn(List.of(compraBase, vendaEditavel));
+        when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L)).thenReturn(Optional.empty());
+
+        service.recalcular(carteira, acao);
+        assertThat(vendaEditavel.getLucroRealizado()).isEqualByComparingTo("1000.0000"); // (50-30)*50
+
+        vendaEditavel.setPrecoUnitario(new BigDecimal("70")); // simula edição do preço da própria venda
+        service.recalcular(carteira, acao);
+        assertThat(vendaEditavel.getPrecoMedioCompraNoMomento()).isEqualByComparingTo("30.0000");
+        assertThat(vendaEditavel.getLucroRealizado()).isEqualByComparingTo("2000.0000"); // (70-30)*50
+    }
+
+    @Test
+    @DisplayName("@spec:AC-476 Editar uma compra recalcula em cascata o lucro de vendas posteriores")
+    void deveRecalcularLucroDeVendaPosteriorAoEditarCompraAnterior() {
+        Operacao compraEditavel = compra(100, "30");
+        Operacao venda = venda(50, "50");
+        when(operacaoRepository.findByCarteiraIdAndAcaoIdAndAtivoTrueOrderByDataHoraAsc(1L, 1L))
+                .thenReturn(List.of(compraEditavel, venda));
+        when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L)).thenReturn(Optional.empty());
+
+        service.recalcular(carteira, acao);
+        assertThat(venda.getLucroRealizado()).isEqualByComparingTo("1000.0000"); // (50-30)*50
+
+        compraEditavel.setPrecoUnitario(new BigDecimal("20")); // simula edição do preço da compra
+        service.recalcular(carteira, acao);
+        assertThat(venda.getLucroRealizado()).isEqualByComparingTo("1500.0000"); // (50-20)*50
+    }
 }
