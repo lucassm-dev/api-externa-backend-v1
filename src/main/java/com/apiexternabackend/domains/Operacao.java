@@ -58,4 +58,13 @@ public class Operacao {
 
     @Column(name = "cotacao_no_momento", precision = 18, scale = 4)
     private BigDecimal cotacaoNoMomento;
+
+    @Column(nullable = false)
+    private Boolean ativo = true;
+
+    @Column(name = "preco_medio_compra_no_momento", precision = 18, scale = 4)
+    private BigDecimal precoMedioCompraNoMomento;
+
+    @Column(name = "lucro_realizado", precision = 18, scale = 4)
+    private BigDecimal lucroRealizado;
 }

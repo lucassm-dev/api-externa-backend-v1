@@ -2,6 +2,7 @@ package com.apiexternabackend.resources;
 
 import com.apiexternabackend.config.InvestidorPrincipal;
 import com.apiexternabackend.domains.dtos.CarteiraAcaoResponseDTO;
+import com.apiexternabackend.domains.dtos.LucroRealizadoResponseDTO;
 import com.apiexternabackend.domains.dtos.OperacaoEditarDTO;
 import com.apiexternabackend.domains.dtos.OperacaoRequestDTO;
 import com.apiexternabackend.domains.dtos.OperacaoResponseDTO;
@@ -74,5 +75,11 @@ public class OperacaoResource {
     public ResponseEntity<List<CarteiraAcaoResponseDTO>> posicoes(
             @PathVariable Long id, @AuthenticationPrincipal InvestidorPrincipal principal) {
         return ResponseEntity.ok(consultaService.posicoes(id, principal.id()));
+    }
+
+    @GetMapping("/carteiras/{id}/lucro-realizado")
+    public ResponseEntity<LucroRealizadoResponseDTO> lucroRealizado(
+            @PathVariable Long id, @AuthenticationPrincipal InvestidorPrincipal principal) {
+        return ResponseEntity.ok(consultaService.lucroRealizado(id, principal.id()));
     }
 }

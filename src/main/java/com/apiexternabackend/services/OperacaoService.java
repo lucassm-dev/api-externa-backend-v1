@@ -129,12 +129,13 @@ public class OperacaoService {
         Carteira carteira = operacao.getCarteira();
         Acao acao = operacao.getAcao();
 
-        operacaoRepository.delete(operacao);
-        posicaoService.recalcular(carteira, acao); // AC-413
+        operacao.setAtivo(false); // AC-472: soft delete — mantém rastreabilidade
+        operacaoRepository.save(operacao);
+        posicaoService.recalcular(carteira, acao); // AC-413/AC-474
     }
 
     private Operacao buscarOperacao(Long id, Long investidorId) {
-        Operacao operacao = operacaoRepository.findById(id)
+        Operacao operacao = operacaoRepository.findByIdAndAtivoTrue(id) // AC-473: excluída não é reoperável
                 .orElseThrow(() -> new RecursoNaoEncontradoException("OPE-001", "Operação não encontrada: " + id));
         if (!operacao.getCarteira().getInvestidor().getId().equals(investidorId)) {
             // não revela que a operação existe e é de outro investidor (mesma semântica de CAR-001/ASM-411)
