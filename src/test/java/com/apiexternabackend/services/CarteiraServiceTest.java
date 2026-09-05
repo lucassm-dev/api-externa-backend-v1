@@ -11,6 +11,7 @@ import com.apiexternabackend.repositories.CarteiraRepository;
 import com.apiexternabackend.repositories.CorretoraRepository;
 import com.apiexternabackend.repositories.InvestidorRepository;
 import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,6 +43,9 @@ class CarteiraServiceTest {
     @InjectMocks
     private CarteiraService service;
 
+    private static final Long INVESTIDOR_ID = 1L;
+    private static final Long OUTRO_INVESTIDOR_ID = 2L;
+
     private Investidor investidor;
     private Corretora corretora;
     private Carteira carteiraBR;
@@ -50,7 +54,7 @@ class CarteiraServiceTest {
 
     @BeforeEach
     void setUp() {
-        investidor = new Investidor(1L, "João", "joao@email.com", "12345678901", true);
+        investidor = new Investidor(INVESTIDOR_ID, "João", "joao@email.com", "12345678901", "hash", LocalDateTime.now(), true);
         corretora = new Corretora();
         corretora.setId(1L);
         corretora.setRazaoSocial("XP");
@@ -62,14 +66,14 @@ class CarteiraServiceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-301 Criar carteira vincula ao investidor, mercado e corretora")
+    @DisplayName("@spec:AC-301 Criar carteira vincula ao investidor do token, mercado e corretora")
     void deveCriarCarteira() {
-        when(investidorRepository.findById(1L)).thenReturn(Optional.of(investidor));
+        when(investidorRepository.findById(INVESTIDOR_ID)).thenReturn(Optional.of(investidor));
         when(corretoraRepository.findById(1L)).thenReturn(Optional.of(corretora));
         when(carteiraRepository.save(any())).thenReturn(carteiraBR);
         when(mapper.toResponse(carteiraBR)).thenReturn(responseBR);
 
-        CarteiraResponseDTO result = service.criar(new CarteiraRequestDTO(1L, 1L, Mercado.BR, "Carteira BR"));
+        CarteiraResponseDTO result = service.criar(new CarteiraRequestDTO(1L, Mercado.BR, "Carteira BR"), INVESTIDOR_ID);
 
         assertThat(result.getMercado()).isEqualTo(Mercado.BR);
         assertThat(result.getInvestidorId()).isEqualTo(1L);
@@ -78,13 +82,13 @@ class CarteiraServiceTest {
     @Test
     @DisplayName("@spec:AC-302 Investidor pode ter múltiplas carteiras")
     void devePermitirMultiplasCarteiras() {
-        when(investidorRepository.findById(1L)).thenReturn(Optional.of(investidor));
+        when(investidorRepository.findById(INVESTIDOR_ID)).thenReturn(Optional.of(investidor));
         when(corretoraRepository.findById(1L)).thenReturn(Optional.of(corretora));
         when(carteiraRepository.save(any())).thenReturn(carteiraBR).thenReturn(carteiraUS);
         when(mapper.toResponse(any())).thenReturn(responseBR);
 
-        service.criar(new CarteiraRequestDTO(1L, 1L, Mercado.BR, "Carteira BR"));
-        service.criar(new CarteiraRequestDTO(1L, 1L, Mercado.US, "Carteira US"));
+        service.criar(new CarteiraRequestDTO(1L, Mercado.BR, "Carteira BR"), INVESTIDOR_ID);
+        service.criar(new CarteiraRequestDTO(1L, Mercado.US, "Carteira US"), INVESTIDOR_ID);
 
         verify(carteiraRepository, org.mockito.Mockito.times(2)).save(any());
     }
@@ -92,10 +96,10 @@ class CarteiraServiceTest {
     @Test
     @DisplayName("@spec:AC-303 Criar carteira com corretora inexistente é recusado")
     void deveRejeitarCorretoraNaoEncontrada() {
-        when(investidorRepository.findById(1L)).thenReturn(Optional.of(investidor));
+        when(investidorRepository.findById(INVESTIDOR_ID)).thenReturn(Optional.of(investidor));
         when(corretoraRepository.findById(99L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> service.criar(new CarteiraRequestDTO(1L, 99L, Mercado.BR, "X")))
+        assertThatThrownBy(() -> service.criar(new CarteiraRequestDTO(99L, Mercado.BR, "X"), INVESTIDOR_ID))
                 .isInstanceOf(RecursoNaoEncontradoException.class)
                 .hasMessageContaining("Corretora");
     }
@@ -103,16 +107,16 @@ class CarteiraServiceTest {
     @Test
     @DisplayName("@spec:AC-304 BR totaliza em BRL, US em USD — moedas nunca somadas")
     void deveMercadoDerivaMoeda() {
-        when(investidorRepository.findById(1L)).thenReturn(Optional.of(investidor));
+        when(investidorRepository.findById(INVESTIDOR_ID)).thenReturn(Optional.of(investidor));
         when(corretoraRepository.findById(1L)).thenReturn(Optional.of(corretora));
         when(carteiraRepository.save(any())).thenReturn(carteiraBR);
         CarteiraResponseDTO respBR = new CarteiraResponseDTO(1L, 1L, 1L, "XP", Mercado.BR, "BRL", "BR", true);
         CarteiraResponseDTO respUS = new CarteiraResponseDTO(2L, 1L, 1L, "XP", Mercado.US, "USD", "US", true);
         when(mapper.toResponse(any())).thenReturn(respBR).thenReturn(respUS);
 
-        CarteiraResponseDTO br = service.criar(new CarteiraRequestDTO(1L, 1L, Mercado.BR, "BR"));
+        CarteiraResponseDTO br = service.criar(new CarteiraRequestDTO(1L, Mercado.BR, "BR"), INVESTIDOR_ID);
         when(carteiraRepository.save(any())).thenReturn(carteiraUS);
-        CarteiraResponseDTO us = service.criar(new CarteiraRequestDTO(1L, 1L, Mercado.US, "US"));
+        CarteiraResponseDTO us = service.criar(new CarteiraRequestDTO(1L, Mercado.US, "US"), INVESTIDOR_ID);
 
         assertThat(br.getMoeda()).isEqualTo("BRL");
         assertThat(us.getMoeda()).isEqualTo("USD");
@@ -122,11 +126,11 @@ class CarteiraServiceTest {
     @DisplayName("@spec:AC-306 Listagem filtra carteiras pelo id do investidor")
     void deveListarApenasCarteirasDoInvestidor() {
         PageRequest pageable = PageRequest.of(0, 10);
-        when(carteiraRepository.findByInvestidorIdAndAtivaTrue(1L, pageable))
+        when(carteiraRepository.findByInvestidorIdAndAtivaTrue(INVESTIDOR_ID, pageable))
                 .thenReturn(new PageImpl<>(List.of(carteiraBR)));
         when(mapper.toResponse(carteiraBR)).thenReturn(responseBR);
 
-        Page<CarteiraResponseDTO> result = service.listarPorInvestidor(1L, pageable);
+        Page<CarteiraResponseDTO> result = service.listarPorInvestidor(INVESTIDOR_ID, pageable);
 
         assertThat(result.getContent()).hasSize(1);
         assertThat(result.getContent().get(0).getInvestidorId()).isEqualTo(1L);
@@ -140,7 +144,7 @@ class CarteiraServiceTest {
         CarteiraResponseDTO novoNome = new CarteiraResponseDTO(1L, 1L, 1L, "XP", Mercado.BR, "BRL", "Novo Nome", true);
         when(mapper.toResponse(carteiraBR)).thenReturn(novoNome);
 
-        CarteiraResponseDTO result = service.renomear(1L, "Novo Nome");
+        CarteiraResponseDTO result = service.renomear(1L, "Novo Nome", INVESTIDOR_ID);
 
         assertThat(result.getNome()).isEqualTo("Novo Nome");
         assertThat(carteiraBR.getNome()).isEqualTo("Novo Nome");
@@ -151,7 +155,7 @@ class CarteiraServiceTest {
     void deveExcluirLogicamenteCarteira() {
         when(carteiraRepository.findById(1L)).thenReturn(Optional.of(carteiraBR));
 
-        service.excluir(1L);
+        service.excluir(1L, INVESTIDOR_ID);
 
         assertThat(carteiraBR.getAtiva()).isFalse();
         verify(carteiraRepository).save(carteiraBR);
@@ -160,17 +164,34 @@ class CarteiraServiceTest {
     @Test
     @DisplayName("@spec:AC-310 Nome de carteira inativa pode ser reutilizado em nova carteira")
     void devePermitirNomeDeInativaEmNovaCarteira() {
-        Carteira carteiraInativa = new Carteira(3L, investidor, corretora, Mercado.BR, "Teste", false);
-        when(investidorRepository.findById(1L)).thenReturn(Optional.of(investidor));
+        when(investidorRepository.findById(INVESTIDOR_ID)).thenReturn(Optional.of(investidor));
         when(corretoraRepository.findById(1L)).thenReturn(Optional.of(corretora));
         Carteira novaCarteira = new Carteira(4L, investidor, corretora, Mercado.BR, "Teste", true);
         when(carteiraRepository.save(any())).thenReturn(novaCarteira);
         CarteiraResponseDTO resp = new CarteiraResponseDTO(4L, 1L, 1L, "XP", Mercado.BR, "BRL", "Teste", true);
         when(mapper.toResponse(novaCarteira)).thenReturn(resp);
 
-        CarteiraResponseDTO result = service.criar(new CarteiraRequestDTO(1L, 1L, Mercado.BR, "Teste"));
+        CarteiraResponseDTO result = service.criar(new CarteiraRequestDTO(1L, Mercado.BR, "Teste"), INVESTIDOR_ID);
 
         assertThat(result.getNome()).isEqualTo("Teste");
         assertThat(result.getAtiva()).isTrue();
+    }
+
+    @Test
+    @DisplayName("@spec:AC-006 Carteira de outro investidor não é encontrada ao buscar")
+    void deveTratarCarteiraDeOutroInvestidorComoNaoEncontrada() {
+        when(carteiraRepository.findById(1L)).thenReturn(Optional.of(carteiraBR));
+
+        assertThatThrownBy(() -> service.buscarAtiva(1L, OUTRO_INVESTIDOR_ID))
+                .isInstanceOf(RecursoNaoEncontradoException.class);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-443 Renomear carteira de outro investidor é recusado como não encontrada")
+    void deveRecusarRenomearCarteiraDeOutroInvestidor() {
+        when(carteiraRepository.findById(1L)).thenReturn(Optional.of(carteiraBR));
+
+        assertThatThrownBy(() -> service.renomear(1L, "Hack", OUTRO_INVESTIDOR_ID))
+                .isInstanceOf(RecursoNaoEncontradoException.class);
     }
 }

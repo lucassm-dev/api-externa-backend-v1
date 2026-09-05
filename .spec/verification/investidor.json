@@ -1,27 +1,12 @@
 {
   "feature": "investidor",
-  "timestamp": "2026-09-04T23:00:39.148Z",
-  "gitRev": "e50dcbb",
+  "timestamp": "2026-09-05T00:22:51.939Z",
+  "gitRev": "c1fc546",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
   "testsParsed": 0,
   "results": {
-    "AC-051": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
-    "AC-052": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
-    "AC-053": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
     "AC-054": {
       "status": "pass",
       "testName": null,

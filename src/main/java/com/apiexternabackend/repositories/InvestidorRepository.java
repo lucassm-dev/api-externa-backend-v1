@@ -13,6 +13,8 @@ public interface InvestidorRepository extends JpaRepository<Investidor, Long> {
 
     boolean existsByCpf(String cpf);
 
+    Optional<Investidor> findByEmail(String email);
+
     Page<Investidor> findAllByAtivoTrue(Pageable pageable);
 
     Optional<Investidor> findByIdAndAtivoTrue(Long id);

@@ -38,8 +38,8 @@ public class OperacaoService {
     private final TwelveDataAdapter twelveDataAdapter;
 
     @Transactional
-    public OperacaoResponseDTO comprar(OperacaoRequestDTO dto) {
-        Carteira carteira = carteiraService.buscarAtiva(dto.getCarteiraId()); // AC-309
+    public OperacaoResponseDTO comprar(OperacaoRequestDTO dto, Long investidorId) {
+        Carteira carteira = carteiraService.buscarAtiva(dto.getCarteiraId(), investidorId); // AC-309
         Acao acao = buscarAcao(dto.getTicker());
 
         validarMercado(carteira, acao); // AC-305/AC-403
@@ -61,8 +61,8 @@ public class OperacaoService {
     }
 
     @Transactional
-    public OperacaoResponseDTO vender(OperacaoRequestDTO dto) {
-        Carteira carteira = carteiraService.buscarAtiva(dto.getCarteiraId()); // AC-309
+    public OperacaoResponseDTO vender(OperacaoRequestDTO dto, Long investidorId) {
+        Carteira carteira = carteiraService.buscarAtiva(dto.getCarteiraId(), investidorId); // AC-309
         Acao acao = buscarAcao(dto.getTicker());
 
         validarMercado(carteira, acao); // AC-305/AC-403
@@ -95,8 +95,8 @@ public class OperacaoService {
     }
 
     @Transactional
-    public OperacaoResponseDTO editar(Long id, Integer novaQuantidade, java.math.BigDecimal novoPreco) {
-        Operacao operacao = buscarOperacao(id);
+    public OperacaoResponseDTO editar(Long id, Integer novaQuantidade, java.math.BigDecimal novoPreco, Long investidorId) {
+        Operacao operacao = buscarOperacao(id, investidorId);
 
         if (novaQuantidade != null) operacao.setQuantidade(novaQuantidade);
         if (novoPreco != null) operacao.setPrecoUnitario(novoPreco);
@@ -108,8 +108,8 @@ public class OperacaoService {
     }
 
     @Transactional
-    public void excluir(Long id) {
-        Operacao operacao = buscarOperacao(id);
+    public void excluir(Long id, Long investidorId) {
+        Operacao operacao = buscarOperacao(id, investidorId);
         Carteira carteira = operacao.getCarteira();
         Acao acao = operacao.getAcao();
 
@@ -117,9 +117,14 @@ public class OperacaoService {
         posicaoService.recalcular(carteira, acao); // AC-413
     }
 
-    private Operacao buscarOperacao(Long id) {
-        return operacaoRepository.findById(id)
+    private Operacao buscarOperacao(Long id, Long investidorId) {
+        Operacao operacao = operacaoRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("OPE-001", "Operação não encontrada: " + id));
+        if (!operacao.getCarteira().getInvestidor().getId().equals(investidorId)) {
+            // não revela que a operação existe e é de outro investidor (mesma semântica de CAR-001/ASM-411)
+            throw new RecursoNaoEncontradoException("OPE-001", "Operação não encontrada: " + id);
+        }
+        return operacao;
     }
 
     private Acao buscarAcao(String ticker) {

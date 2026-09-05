@@ -14,9 +14,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CarteiraRequestDTO {
 
-    @NotNull(message = "ID do investidor é obrigatório")
-    private Long investidorId;
-
     @NotNull(message = "ID da corretora é obrigatório")
     private Long corretoraId;
 

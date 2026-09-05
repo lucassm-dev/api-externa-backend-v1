@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class InvestidorRequestDTO {
+public class AuthCadastroRequestDTO {
 
     @NotBlank(message = "Nome é obrigatório")
     private String nome;
@@ -24,4 +24,7 @@ public class InvestidorRequestDTO {
     @NotBlank(message = "CPF é obrigatório")
     @Pattern(regexp = "\\d{11}", message = "CPF deve conter 11 dígitos numéricos")
     private String cpf;
+
+    @NotBlank(message = "Senha é obrigatória")
+    private String senha;
 }
