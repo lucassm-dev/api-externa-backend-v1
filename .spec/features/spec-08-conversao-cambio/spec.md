@@ -119,6 +119,20 @@ ações BRL e USD, para não misturar moedas na mesma soma.
 - **Então** o total e o detalhamento por ticker são convertidos para BRL
   (usando a taxa histórica de cada venda) antes de somar
 
+### US-430 — Carteira sem restrição de mercado (Q-MAP-09)
+
+Como investidor, quero poder comprar ações brasileiras e americanas na mesma
+carteira, para não precisar duplicar carteiras só por causa do mercado da
+ação (uma corretora brasileira permite investir em ações americanas via BDR
+ou conta internacional — restringir seria artificial).
+
+#### AC-497 — Comprar/vender ação de mercado diferente do da carteira é permitido
+
+- **Dado** que uma carteira tem mercado BR e a ação é US (ou vice-versa)
+- **Quando** compro ou vendo essa ação nessa carteira
+- **Então** a operação é aceita normalmente — sem erro de incompatibilidade
+  de mercado (a checagem OPE-002 é removida)
+
 ## Fora de escopo
 
 - Decompor o lucro em efeito-preço vs. efeito-câmbio — item "desejável" do
@@ -127,6 +141,10 @@ ações BRL e USD, para não misturar moedas na mesma soma.
 - Corrigir retroativamente `taxaCambioNaOperacao` de operações antigas
   (ficam com o valor padrão da migração, `1`) — não há taxa histórica real
   para recuperar.
+- Remover o campo `Carteira.mercado` do banco/DTOs — Q-MAP-09 pede remover o
+  **bloqueio** de cadastro por mercado, não necessariamente o campo em si
+  (ver ASM-434). Continua sendo coletado no cadastro da carteira, só deixa
+  de restringir quais ações podem ser compradas/vendidas nela.
 
 ## Suposições
 
@@ -137,6 +155,7 @@ ações BRL e USD, para não misturar moedas na mesma soma.
 | ASM-431 | A decisão "última taxa conhecida, com aviso" (aprovada nesta conversa) vale tanto para compra/venda (aviso na operação) quanto para o consolidado (aviso no payload) quando a taxa atual usada estiver desatualizada. | confirmada | Validado com o usuário nesta conversa (AskUserQuestion). |
 | ASM-432 | `custoTotalBrl` é armazenado em `CarteiraAcao`, recalculado no mesmo loop de `PosicaoService.recalcular` que já existe (paralelo ao `custoTotal` nativo) — não é uma tabela/cálculo separado. | aberta | — |
 | ASM-433 | `lucroRealizadoBrl` é um novo campo persistido por operação de venda (paralelo a `lucroRealizado`), calculado como `lucroRealizado × taxaCambioNaOperacao` da própria venda. | aberta | — |
+| ASM-434 | Q-MAP-09 remove o **bloqueio** (`OperacaoService.validarMercado`, erro OPE-002) mas não o campo `Carteira.mercado` em si — ele continua existindo no cadastro, só deixa de restringir operações. Removê-lo do schema/DTOs seria uma mudança maior, fora do que Q-MAP-09 pede explicitamente ("não implemente... bloqueio de cadastro por mercado"). | confirmada | Decisão do usuário nesta conversa (AskUserQuestion — incluir Q-MAP-09 nesta spec). |
 
 ## Perguntas em aberto
 
