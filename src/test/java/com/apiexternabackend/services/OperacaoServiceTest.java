@@ -46,6 +46,7 @@ class OperacaoServiceTest {
     @Mock private PosicaoService posicaoService;
     @Mock private OperacaoMapper mapper;
     @Mock private CotacaoCacheService cotacaoCacheService;
+    @Mock private CambioCacheService cambioCacheService;
 
     @InjectMocks
     private OperacaoService service;
@@ -73,10 +74,10 @@ class OperacaoServiceTest {
         acaoBR = new Acao(1L, "PETR4", "Petrobras", Mercado.BR, "BRL", new BigDecimal("38"), LocalDateTime.now(), true);
         acaoUS = new Acao(2L, "AAPL", "Apple", Mercado.US, "USD", new BigDecimal("150"), LocalDateTime.now(), true);
 
-        operacao = new Operacao(1L, carteiraBR, acaoBR, TipoOperacao.COMPRA, 100, new BigDecimal("38"), LocalDateTime.now(), false, new BigDecimal("38"), true, null, null);
+        operacao = new Operacao(1L, carteiraBR, acaoBR, TipoOperacao.COMPRA, 100, new BigDecimal("38"), LocalDateTime.now(), false, new BigDecimal("38"), true, null, null, BigDecimal.ONE, null, null);
 
         responseDTO = new OperacaoResponseDTO(1L, 1L, "PETR4", TipoOperacao.COMPRA, 100,
-                new BigDecimal("38"), new BigDecimal("3800"), LocalDateTime.now(), "BRL", java.util.List.of(), null, null);
+                new BigDecimal("38"), new BigDecimal("3800"), LocalDateTime.now(), "BRL", java.util.List.of(), null, null, null);
     }
 
     @Test
@@ -95,31 +96,37 @@ class OperacaoServiceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-403 Comprar ação de mercado diferente da carteira é recusado")
-    void deveRejeitarCompraDeAcaoMercadoDiferente() {
+    @DisplayName("@spec:AC-403 @spec:AC-497 Comprar ação de mercado diferente da carteira é permitido (Q-MAP-09)")
+    void devePermitirCompraDeAcaoMercadoDiferente() {
+        // Q-MAP-09/AC-497 (SPEC-08): carteira aceita ações BR e US juntas — este AC (antigo "recusa")
+        // agora prova o oposto, mesma técnica já usada em AC-432 (SPEC-01) quando o comportamento muda.
         when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
         when(acaoRepository.findByTickerAndAtivoTrue("AAPL")).thenReturn(Optional.of(acaoUS));
+        when(cotacaoCacheService.obter(acaoUS, false)).thenReturn(new CotacaoResultado(new BigDecimal("150"), LocalDateTime.now()));
+        when(cambioCacheService.obterTaxaAtual()).thenReturn(new CambioCacheService.CambioObtido(
+                new com.apiexternabackend.infra.facade.CambioResultado(new BigDecimal("5"), LocalDateTime.now()), false));
+        when(operacaoRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(mapper.toResponse(any())).thenReturn(responseDTO);
 
-        assertThatThrownBy(() -> service.comprar(new OperacaoRequestDTO(1L, "AAPL", 10, null), INVESTIDOR_ID))
-                .isInstanceOf(RegraVioladaException.class)
-                .hasMessageContaining("mercado");
+        assertThat(service.comprar(new OperacaoRequestDTO(1L, "AAPL", 10, null), INVESTIDOR_ID)).isNotNull();
     }
 
     @Test
-    @DisplayName("@spec:AC-305 Operação com ação de mercado diferente da carteira (spec carteira) é recusada")
-    void deveRejeitarOperacaoMercadoIncompativel() {
+    @DisplayName("@spec:AC-305 @spec:AC-497 Operação com ação de mercado diferente da carteira é permitida (Q-MAP-09)")
+    void devePermitirOperacaoMercadoDiferente() {
         when(carteiraService.buscarAtiva(2L, INVESTIDOR_ID)).thenReturn(carteiraUS);
         when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
+        when(cotacaoCacheService.obter(acaoBR, false)).thenReturn(new CotacaoResultado(new BigDecimal("38"), LocalDateTime.now()));
+        when(operacaoRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(mapper.toResponse(any())).thenReturn(responseDTO);
 
-        assertThatThrownBy(() -> service.comprar(new OperacaoRequestDTO(2L, "PETR4", 10, null), INVESTIDOR_ID))
-                .isInstanceOf(RegraVioladaException.class)
-                .hasMessageContaining("mercado");
+        assertThat(service.comprar(new OperacaoRequestDTO(2L, "PETR4", 10, null), INVESTIDOR_ID)).isNotNull();
     }
 
     @Test
     @DisplayName("@spec:AC-404 Não é possível vender mais que a posição atual")
     void deveRejeitarVendaAcimaDataPosicao() {
-        CarteiraAcao posicao = new CarteiraAcao(1L, carteiraBR, acaoBR, 50, new BigDecimal("38"));
+        CarteiraAcao posicao = new CarteiraAcao(1L, carteiraBR, acaoBR, 50, new BigDecimal("38"), BigDecimal.ZERO);
         when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
         when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
         when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L)).thenReturn(Optional.of(posicao));
@@ -288,6 +295,44 @@ class OperacaoServiceTest {
     }
 
     @Test
+    @DisplayName("@spec:AC-486 Compra em ação USD grava a taxa de câmbio do momento")
+    void deveGravarTaxaDeCambioNaCompraDeAcaoUsd() {
+        CotacaoResultado cotacao = new CotacaoResultado(new BigDecimal("150"), LocalDateTime.now());
+        when(carteiraService.buscarAtiva(2L, INVESTIDOR_ID)).thenReturn(carteiraUS);
+        when(acaoRepository.findByTickerAndAtivoTrue("AAPL")).thenReturn(Optional.of(acaoUS));
+        when(cotacaoCacheService.obter(acaoUS, false)).thenReturn(cotacao);
+        when(cambioCacheService.obterTaxaAtual()).thenReturn(
+                new CambioCacheService.CambioObtido(new com.apiexternabackend.infra.facade.CambioResultado(new BigDecimal("5.30"), LocalDateTime.now()), false));
+        when(operacaoRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(mapper.toResponse(any())).thenReturn(responseDTO);
+
+        service.comprar(new OperacaoRequestDTO(2L, "AAPL", 10, null), INVESTIDOR_ID);
+
+        org.mockito.ArgumentCaptor<Operacao> captor = org.mockito.ArgumentCaptor.forClass(Operacao.class);
+        verify(operacaoRepository).save(captor.capture());
+        assertThat(captor.getValue().getTaxaCambioNaOperacao()).isEqualByComparingTo("5.30");
+        assertThat(captor.getValue().getDataHoraTaxaCambio()).isNotNull();
+    }
+
+    @Test
+    @DisplayName("@spec:AC-487 Compra em ação BRL grava taxa de câmbio 1, sem chamar fonte de câmbio")
+    void deveGravarTaxaUmNaCompraDeAcaoBrl() {
+        CotacaoResultado cotacao = new CotacaoResultado(new BigDecimal("38.50"), LocalDateTime.now());
+        when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
+        when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
+        when(cotacaoCacheService.obter(acaoBR, false)).thenReturn(cotacao);
+        when(operacaoRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(mapper.toResponse(any())).thenReturn(responseDTO);
+
+        service.comprar(new OperacaoRequestDTO(1L, "PETR4", 100, null), INVESTIDOR_ID);
+
+        org.mockito.ArgumentCaptor<Operacao> captor = org.mockito.ArgumentCaptor.forClass(Operacao.class);
+        verify(operacaoRepository).save(captor.capture());
+        assertThat(captor.getValue().getTaxaCambioNaOperacao()).isEqualByComparingTo("1");
+        verify(cambioCacheService, org.mockito.Mockito.never()).obterTaxaAtual();
+    }
+
+    @Test
     @DisplayName("@spec:AC-482 Cota estourada em compra prossegue com aviso usando a última cotação conhecida")
     void deveComprarComAvisoQuandoCotaEstourada() {
         when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
@@ -308,7 +353,7 @@ class OperacaoServiceTest {
     @Test
     @DisplayName("@spec:AC-483 Fonte indisponível em venda prossegue com aviso usando a última cotação conhecida")
     void deveVenderComAvisoQuandoFonteIndisponivel() {
-        CarteiraAcao posicao = new CarteiraAcao(1L, carteiraBR, acaoBR, 100, new BigDecimal("30"));
+        CarteiraAcao posicao = new CarteiraAcao(1L, carteiraBR, acaoBR, 100, new BigDecimal("30"), BigDecimal.ZERO);
         when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
         when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
         when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L)).thenReturn(Optional.of(posicao));

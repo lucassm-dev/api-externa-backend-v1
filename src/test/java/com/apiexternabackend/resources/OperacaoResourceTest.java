@@ -70,7 +70,7 @@ class OperacaoResourceTest {
 
     private OperacaoResponseDTO buildResponse(TipoOperacao tipo) {
         return new OperacaoResponseDTO(1L, 1L, "PETR4", tipo, 100,
-                new BigDecimal("38"), new BigDecimal("3800"), LocalDateTime.now(), "BRL", List.of(), null, null);
+                new BigDecimal("38"), new BigDecimal("3800"), LocalDateTime.now(), "BRL", List.of(), null, null, null);
     }
 
     @Test
@@ -189,7 +189,7 @@ class OperacaoResourceTest {
         OperacaoResponseDTO comAviso = new OperacaoResponseDTO(1L, 1L, "PETR4", TipoOperacao.COMPRA, 100,
                 new BigDecimal("4750.00"), new BigDecimal("475000.00"), LocalDateTime.now(), "BRL",
                 List.of("O preço informado (4750.00) está 100x acima da cotação atual (47.50). Confirme se está correto."),
-                null, null);
+                null, null, null);
         when(operacaoService.comprar(any(), eq(INVESTIDOR_ID))).thenReturn(comAviso);
 
         mockMvc.perform(post("/operacoes/compra")
@@ -246,7 +246,7 @@ class OperacaoResourceTest {
         OperacaoResponseDTO comAviso = new OperacaoResponseDTO(1L, 1L, "PETR4", TipoOperacao.COMPRA, 100,
                 new BigDecimal("38.00"), new BigDecimal("3800.00"), LocalDateTime.now(), "BRL",
                 List.of("Cotação pode estar desatualizada — fonte externa indisponível ou com cota excedida no momento da operação; usando último valor conhecido de 2026-09-05T00:00."),
-                null, null);
+                null, null, null);
         when(operacaoService.comprar(any(), eq(INVESTIDOR_ID))).thenReturn(comAviso);
 
         mockMvc.perform(post("/operacoes/compra")
@@ -255,5 +255,39 @@ class OperacaoResourceTest {
                                 new OperacaoRequestDTO(1L, "PETR4", 100, null))))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.avisos[0]").value(org.hamcrest.Matchers.containsString("desatualizada")));
+    }
+
+    @Test
+    @DisplayName("@spec:AC-486 Resposta de compra expõe a taxa de câmbio da operação")
+    void deveExporTaxaDeCambioNaResposta() throws Exception {
+        OperacaoResponseDTO comTaxa = new OperacaoResponseDTO(1L, 1L, "AAPL", TipoOperacao.COMPRA, 10,
+                new BigDecimal("150.00"), new BigDecimal("1500.00"), LocalDateTime.now(), "USD",
+                List.of(), null, null, new BigDecimal("5.30"));
+        when(operacaoService.comprar(any(), eq(INVESTIDOR_ID))).thenReturn(comTaxa);
+
+        mockMvc.perform(post("/operacoes/compra")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new OperacaoRequestDTO(1L, "AAPL", 10, null))))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.taxaCambioNaOperacao").value(5.30));
+    }
+
+    @Test
+    @DisplayName("@spec:AC-493 @spec:AC-494 GET /carteiras/{id}/consolidado retorna valores em BRL e a taxa usada")
+    void deveRetornarConsolidadoDaCarteira() throws Exception {
+        com.apiexternabackend.domains.dtos.CarteiraConsolidadaResponseDTO consolidado =
+                new com.apiexternabackend.domains.dtos.CarteiraConsolidadaResponseDTO(
+                        new BigDecimal("13000"), new BigDecimal("44000"), new BigDecimal("31000"),
+                        new BigDecimal("5.30"), LocalDateTime.now(), List.of());
+        when(consultaService.consolidado(1L, INVESTIDOR_ID)).thenReturn(consolidado);
+
+        mockMvc.perform(get("/carteiras/1/consolidado"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.valorInvestido").value(13000))
+                .andExpect(jsonPath("$.valorDeMercado").value(44000))
+                .andExpect(jsonPath("$.lucroNaoRealizado").value(31000))
+                .andExpect(jsonPath("$.taxaCambioAtual").value(5.30))
+                .andExpect(jsonPath("$.dataHoraTaxaCambio").isNotEmpty());
     }
 }

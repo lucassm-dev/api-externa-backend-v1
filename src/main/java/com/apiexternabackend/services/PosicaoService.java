@@ -38,26 +38,36 @@ public class PosicaoService {
 
         int quantidade = 0;
         BigDecimal custoTotal = BigDecimal.ZERO;
+        BigDecimal custoTotalBrl = BigDecimal.ZERO;
 
         for (Operacao op : historico) {
             if (op.getTipo() == TipoOperacao.COMPRA) {
                 // Preço médio ponderado: soma os custos (RN-P02)
-                custoTotal = custoTotal.add(op.getPrecoUnitario().multiply(BigDecimal.valueOf(op.getQuantidade())));
+                BigDecimal custoOperacao = op.getPrecoUnitario().multiply(BigDecimal.valueOf(op.getQuantidade()));
+                custoTotal = custoTotal.add(custoOperacao);
+                custoTotalBrl = custoTotalBrl.add(custoOperacao.multiply(op.getTaxaCambioNaOperacao())); // AC-493/AC-495 (Q-MAP-10)
                 quantidade += op.getQuantidade();
             } else {
                 // Venda — reduz pela quantidade vendida (custo proporcional ao PM atual)
                 BigDecimal custoUnitario = quantidade > 0
                         ? custoTotal.divide(BigDecimal.valueOf(quantidade), 10, RoundingMode.HALF_UP)
                         : BigDecimal.ZERO;
+                BigDecimal custoUnitarioBrl = quantidade > 0
+                        ? custoTotalBrl.divide(BigDecimal.valueOf(quantidade), 10, RoundingMode.HALF_UP)
+                        : BigDecimal.ZERO;
 
                 // AC-469/AC-474/AC-475/AC-476: lucro realizado é regravado a cada recálculo,
                 // usando o preço médio de compra vigente NESTE ponto da série ativa (ASM-423)
                 op.setPrecoMedioCompraNoMomento(custoUnitario.setScale(4, RoundingMode.HALF_UP));
-                op.setLucroRealizado(op.getPrecoUnitario().subtract(custoUnitario)
-                        .multiply(BigDecimal.valueOf(op.getQuantidade())).setScale(4, RoundingMode.HALF_UP));
+                BigDecimal lucroRealizado = op.getPrecoUnitario().subtract(custoUnitario)
+                        .multiply(BigDecimal.valueOf(op.getQuantidade())).setScale(4, RoundingMode.HALF_UP);
+                op.setLucroRealizado(lucroRealizado);
+                // AC-496 (Q-MAP-10/ASM-433): expresso em BRL usando a taxa da própria venda
+                op.setLucroRealizadoBrl(lucroRealizado.multiply(op.getTaxaCambioNaOperacao()).setScale(4, RoundingMode.HALF_UP));
                 operacaoRepository.save(op);
 
                 custoTotal = custoTotal.subtract(custoUnitario.multiply(BigDecimal.valueOf(op.getQuantidade())));
+                custoTotalBrl = custoTotalBrl.subtract(custoUnitarioBrl.multiply(BigDecimal.valueOf(op.getQuantidade())));
                 quantidade -= op.getQuantidade();
             }
         }
@@ -84,6 +94,7 @@ public class PosicaoService {
 
         posicao.setQuantidade(quantidade);
         posicao.setPrecoMedio(precoMedio);
+        posicao.setCustoTotalBrl(custoTotalBrl.setScale(4, RoundingMode.HALF_UP)); // AC-493
         carteiraAcaoRepository.save(posicao);
     }
 }

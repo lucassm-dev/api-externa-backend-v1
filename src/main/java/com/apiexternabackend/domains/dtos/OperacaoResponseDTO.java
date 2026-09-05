@@ -29,4 +29,5 @@ public class OperacaoResponseDTO {
     private List<String> avisos = new ArrayList<>();
     private BigDecimal precoMedioCompraNoMomento;
     private BigDecimal lucroRealizado;
+    private BigDecimal taxaCambioNaOperacao;
 }

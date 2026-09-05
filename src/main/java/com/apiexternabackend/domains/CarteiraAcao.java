@@ -45,4 +45,7 @@ public class CarteiraAcao {
 
     @Column(nullable = false, precision = 18, scale = 4)
     private BigDecimal precoMedio;
+
+    @Column(name = "custo_total_brl", nullable = false, precision = 18, scale = 4)
+    private BigDecimal custoTotalBrl = BigDecimal.ZERO;
 }

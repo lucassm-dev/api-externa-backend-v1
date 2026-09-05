@@ -67,11 +67,14 @@ Implementação: `src/main/java/com/apiexternabackend/resources/exceptions/`.
 > Desde a SPEC-06, `DELETE /operacoes/{id}` é soft delete (marca `ativo=false`,
 > não apaga a linha). Uma operação já excluída passa a responder OPE-001 —
 > mesma semântica de "não existe" — tanto em `PUT` quanto em `DELETE`.
+>
+> `OPE-002` foi **removido na SPEC-08** (Q-MAP-09): a carteira aceita ações
+> BR e US juntas, sem checagem de mercado entre carteira e ação.
 
 | Código | Situação | Status HTTP | Exceção |
 |---|---|---|---|
 | OPE-001 | Operação não encontrada (ou já excluída — soft delete, SPEC-06) | 404 | RecursoNaoEncontradoException |
-| OPE-002 | Incompatibilidade de mercado entre carteira e ação | 422 | RegraVioladaException |
+| ~~OPE-002~~ | ~~Incompatibilidade de mercado entre carteira e ação~~ — removido na SPEC-08 (Q-MAP-09) | — | — |
 | OPE-003 | Sem posição na ação para vender | 422 | RegraVioladaException |
 | OPE-004 | Quantidade de venda excede a posição atual | 422 | RegraVioladaException |
 | OPE-005 | Preço unitário com mais de 2 casas decimais (BRL/USD usam 2 casas de subunidade) | 422 | RegraVioladaException |
@@ -103,6 +106,7 @@ Implementação: `src/main/java/com/apiexternabackend/resources/exceptions/`.
 | EXT-008 | Ticker não encontrado na fonte de cotação (brapi/Twelve Data) | 422 | RegraVioladaException |
 | EXT-009 | Limite de requisições da fonte de cotação excedido — em `PUT /acoes/{id}/atualizar-cotacao` continua 429 explícito; em compra/venda, desde a SPEC-07 (Q-MAP-06), não derruba mais a operação | 429 (atualizar-cotacao) / prossegue com aviso (compra/venda) | IntegracaoExternaException (limiteExcedido=true) |
 | EXT-010 | Fonte de cotação indisponível (não é limite de cota) — mesmo tratamento: 503/fallback em atualizar-cotacao, prossegue com aviso em compra/venda | 503 (atualizar-cotacao) / prossegue com aviso (compra/venda) | IntegracaoExternaException (limiteExcedido=false) |
+| EXT-011 | Câmbio USD-BRL indisponível — AwesomeAPI (primária) e PTAX BCB (fallback) falharam. Em compra/venda ou consolidado, prossegue com a última taxa em cache (com aviso); sem taxa em cache alguma vez, a operação é recusada | prossegue com aviso, ou recusa se nunca houve taxa em cache | IntegracaoExternaException (limiteExcedido=false) |
 
 ## VAL — Validação de payload
 
@@ -134,3 +138,10 @@ Implementação: `src/main/java/com/apiexternabackend/resources/exceptions/`.
   TTL (`cotacao.cache-ttl-minutos`, padrão 15min): dentro do TTL, comprar,
   vender e atualizar cotação reaproveitam o valor salvo sem chamar a fonte
   externa. `PUT /acoes/{id}/atualizar-cotacao?forcar=true` ignora o cache.
+- Desde a SPEC-08, câmbio USD-BRL segue o mesmo padrão de cache com TTL
+  (`cambio.cache-ttl-minutos`, padrão 15min, cache global — não por ação) e
+  o mesmo padrão de fallback: AwesomeAPI (campo `ask`) é a fonte primária,
+  PTAX BCB é o fallback; se as duas falharem, prossegue com a última taxa
+  conhecida (aviso), recusando só se nunca houve taxa em cache (`EXT-011`).
+- Desde a SPEC-08, `OPE-002` (incompatibilidade de mercado) foi removido —
+  carteira aceita ações BR e US juntas (Q-MAP-09).

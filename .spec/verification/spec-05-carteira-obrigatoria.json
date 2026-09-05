@@ -1,7 +1,7 @@
 {
   "feature": "spec-05-carteira-obrigatoria",
-  "timestamp": "2026-09-05T04:25:19.023Z",
-  "gitRev": "dff08fa",
+  "timestamp": "2026-09-05T13:25:17.099Z",
+  "gitRev": "ee787f3",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

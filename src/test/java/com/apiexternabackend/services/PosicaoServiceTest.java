@@ -86,7 +86,7 @@ class PosicaoServiceTest {
     @Test
     @DisplayName("@spec:AC-405 Venda que zera a posição remove a posição")
     void deveRemoverPosicaoQuandoZerada() {
-        CarteiraAcao posicao = new CarteiraAcao(1L, carteira, acao, 100, new BigDecimal("38"));
+        CarteiraAcao posicao = new CarteiraAcao(1L, carteira, acao, 100, new BigDecimal("38"), BigDecimal.ZERO);
         when(operacaoRepository.findByCarteiraIdAndAcaoIdAndAtivoTrueOrderByDataHoraAsc(1L, 1L))
                 .thenReturn(List.of(compra(100, "38"), venda(100, "42")));
         when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L))
@@ -138,7 +138,7 @@ class PosicaoServiceTest {
     @Test
     @DisplayName("@spec:AC-413 Excluir lançamento recalcula posição; sem quantidade = posição removida")
     void deveRemoverPosicaoAoExcluirUnicoLancamento() {
-        CarteiraAcao posicao = new CarteiraAcao(1L, carteira, acao, 100, new BigDecimal("38"));
+        CarteiraAcao posicao = new CarteiraAcao(1L, carteira, acao, 100, new BigDecimal("38"), BigDecimal.ZERO);
         when(operacaoRepository.findByCarteiraIdAndAcaoIdAndAtivoTrueOrderByDataHoraAsc(1L, 1L))
                 .thenReturn(List.of());  // histórico vazio após exclusão
         when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L))
@@ -217,5 +217,40 @@ class PosicaoServiceTest {
         compraEditavel.setPrecoUnitario(new BigDecimal("20")); // simula edição do preço da compra
         service.recalcular(carteira, acao);
         assertThat(venda.getLucroRealizado()).isEqualByComparingTo("1500.0000"); // (50-20)*50
+    }
+
+    @Test
+    @DisplayName("@spec:AC-493 @spec:AC-495 Custo total em BRL usa a taxa de câmbio de cada compra (BRL = taxa 1)")
+    void deveAcumularCustoTotalBrlUsandoTaxaDeCadaCompra() {
+        Operacao compraBrl = compra(100, "30"); // taxaCambioNaOperacao default = 1 (ação BRL)
+        Operacao compraUsd = compra(50, "40");
+        compraUsd.setTaxaCambioNaOperacao(new BigDecimal("5"));
+        when(operacaoRepository.findByCarteiraIdAndAcaoIdAndAtivoTrueOrderByDataHoraAsc(1L, 1L))
+                .thenReturn(List.of(compraBrl, compraUsd));
+        when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L)).thenReturn(Optional.empty());
+
+        service.recalcular(carteira, acao);
+
+        // custoTotalBrl = 100*30*1 + 50*40*5 = 3000 + 10000 = 13000
+        ArgumentCaptor<CarteiraAcao> captor = ArgumentCaptor.forClass(CarteiraAcao.class);
+        verify(carteiraAcaoRepository).save(captor.capture());
+        assertThat(captor.getValue().getCustoTotalBrl()).isEqualByComparingTo("13000.0000");
+    }
+
+    @Test
+    @DisplayName("@spec:AC-496 Lucro realizado em BRL usa a taxa de câmbio da própria venda")
+    void deveGravarLucroRealizadoBrlUsandoTaxaDaPropriaVenda() {
+        Operacao compraUsd = compra(100, "30");
+        Operacao vendaUsd = venda(40, "50");
+        vendaUsd.setTaxaCambioNaOperacao(new BigDecimal("5"));
+        when(operacaoRepository.findByCarteiraIdAndAcaoIdAndAtivoTrueOrderByDataHoraAsc(1L, 1L))
+                .thenReturn(List.of(compraUsd, vendaUsd));
+        when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L)).thenReturn(Optional.empty());
+
+        service.recalcular(carteira, acao);
+
+        // lucroRealizado = (50-30)*40 = 800 (USD); lucroRealizadoBrl = 800*5 = 4000
+        assertThat(vendaUsd.getLucroRealizado()).isEqualByComparingTo("800.0000");
+        assertThat(vendaUsd.getLucroRealizadoBrl()).isEqualByComparingTo("4000.0000");
     }
 }
