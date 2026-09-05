@@ -288,6 +288,56 @@ class OperacaoServiceTest {
     }
 
     @Test
+    @DisplayName("@spec:AC-482 Cota estourada em compra prossegue com aviso usando a última cotação conhecida")
+    void deveComprarComAvisoQuandoCotaEstourada() {
+        when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
+        when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
+        when(cotacaoCacheService.obter(acaoBR, false))
+                .thenThrow(new IntegracaoExternaException("EXT-009", "Limite de requisições da fonte BR excedido", true));
+        when(operacaoRepository.save(any())).thenReturn(operacao);
+        when(mapper.toResponse(operacao)).thenReturn(responseDTO);
+
+        OperacaoResponseDTO result = service.comprar(new OperacaoRequestDTO(1L, "PETR4", 100, null), INVESTIDOR_ID);
+
+        assertThat(result.getAvisos()).anyMatch(a -> a.contains("desatualizada"));
+        org.mockito.ArgumentCaptor<Operacao> captor = org.mockito.ArgumentCaptor.forClass(Operacao.class);
+        verify(operacaoRepository).save(captor.capture());
+        assertThat(captor.getValue().getPrecoUnitario()).isEqualByComparingTo(acaoBR.getCotacaoAtual());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-483 Fonte indisponível em venda prossegue com aviso usando a última cotação conhecida")
+    void deveVenderComAvisoQuandoFonteIndisponivel() {
+        CarteiraAcao posicao = new CarteiraAcao(1L, carteiraBR, acaoBR, 100, new BigDecimal("30"));
+        when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
+        when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
+        when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L)).thenReturn(Optional.of(posicao));
+        when(cotacaoCacheService.obter(acaoBR, false))
+                .thenThrow(new IntegracaoExternaException("EXT-010", "Fonte BR indisponível", false));
+        when(operacaoRepository.save(any())).thenReturn(operacao);
+        when(mapper.toResponse(operacao)).thenReturn(responseDTO);
+
+        OperacaoResponseDTO result = service.vender(new OperacaoRequestDTO(1L, "PETR4", 50, null), INVESTIDOR_ID);
+
+        assertThat(result.getAvisos()).anyMatch(a -> a.contains("desatualizada"));
+    }
+
+    @Test
+    @DisplayName("@spec:AC-484 Sem cotação salva e fonte falhando, a compra é recusada")
+    void deveRecusarCompraSemFallbackQuandoNuncaTeveCotacao() {
+        Acao acaoSemCotacao = new Acao(3L, "NOVA3", "Nova", Mercado.BR, "BRL", null, null, true);
+        when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
+        when(acaoRepository.findByTickerAndAtivoTrue("NOVA3")).thenReturn(Optional.of(acaoSemCotacao));
+        when(cotacaoCacheService.obter(acaoSemCotacao, false))
+                .thenThrow(new IntegracaoExternaException("EXT-010", "Fonte BR indisponível", false));
+
+        assertThatThrownBy(() -> service.comprar(new OperacaoRequestDTO(1L, "NOVA3", 10, null), INVESTIDOR_ID))
+                .isInstanceOf(IntegracaoExternaException.class);
+
+        verify(operacaoRepository, org.mockito.Mockito.never()).save(any());
+    }
+
+    @Test
     @DisplayName("@spec:AC-473 Operação já excluída não pode ser editada nem excluída de novo")
     void deveRetornar404AoOperarSobreOperacaoJaExcluida() {
         when(operacaoRepository.findByIdAndAtivoTrue(1L)).thenReturn(Optional.empty());
