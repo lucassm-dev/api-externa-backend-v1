@@ -51,14 +51,16 @@ public class ConsultaOperacaoService {
 
         List<Operacao> vendas = operacaoRepository.findByCarteiraIdAndTipoAndAtivoTrue(carteiraId, TipoOperacao.VENDA);
 
+        // AC-496 (Q-MAP-09+Q-MAP-10): soma em BRL — a carteira pode ter vendas em BRL e USD juntas,
+        // somar o valor bruto misturaria moedas
         BigDecimal total = vendas.stream()
-                .map(Operacao::getLucroRealizado)
+                .map(Operacao::getLucroRealizadoBrl)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         Map<String, BigDecimal> porTicker = vendas.stream()
                 .collect(Collectors.groupingBy(
                         op -> op.getAcao().getTicker(),
-                        Collectors.reducing(BigDecimal.ZERO, Operacao::getLucroRealizado, BigDecimal::add)));
+                        Collectors.reducing(BigDecimal.ZERO, Operacao::getLucroRealizadoBrl, BigDecimal::add)));
 
         return new LucroRealizadoResponseDTO(total, porTicker);
     }

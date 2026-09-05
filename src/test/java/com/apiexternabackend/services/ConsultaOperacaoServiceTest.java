@@ -41,6 +41,7 @@ class ConsultaOperacaoServiceTest {
         op.setAcao(acao);
         op.setTipo(TipoOperacao.VENDA);
         op.setLucroRealizado(new BigDecimal(lucro));
+        op.setLucroRealizadoBrl(new BigDecimal(lucro)); // ação BRL: taxa 1, lucro em BRL == lucro nativo
         op.setDataHora(LocalDateTime.now());
         return op;
     }
@@ -66,5 +67,20 @@ class ConsultaOperacaoServiceTest {
 
         assertThat(resposta.getPorTicker().get("PETR4")).isEqualByComparingTo("120");
         assertThat(resposta.getPorTicker().get("VALE3")).isEqualByComparingTo("50");
+    }
+
+    @Test
+    @DisplayName("@spec:AC-496 Soma vendas de ações BRL e USD já convertidas, não os valores brutos")
+    void deveSomarLucroRealizadoConvertidoEmCarteiraMultiMoeda() {
+        Operacao vendaBrl = vendaCom("PETR4", "100"); // BRL: lucroRealizadoBrl == lucroRealizado
+        Operacao vendaUsd = vendaCom("AAPL", "10"); // lucroRealizado nativo (USD) = 10
+        vendaUsd.setLucroRealizadoBrl(new BigDecimal("50")); // convertido (taxa 5, por exemplo)
+        when(operacaoRepository.findByCarteiraIdAndTipoAndAtivoTrue(1L, TipoOperacao.VENDA))
+                .thenReturn(List.of(vendaBrl, vendaUsd));
+
+        LucroRealizadoResponseDTO resposta = service.lucroRealizado(1L, 10L);
+
+        // 100 (BRL) + 50 (USD convertido) = 150 — nunca 100 + 10 (misturaria moedas)
+        assertThat(resposta.getTotal()).isEqualByComparingTo("150");
     }
 }
