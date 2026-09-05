@@ -145,3 +145,8 @@ Implementação: `src/main/java/com/apiexternabackend/resources/exceptions/`.
   conhecida (aviso), recusando só se nunca houve taxa em cache (`EXT-011`).
 - Desde a SPEC-08, `OPE-002` (incompatibilidade de mercado) foi removido —
   carteira aceita ações BR e US juntas (Q-MAP-09).
+- `GET /mercado/barra-cotacoes` (SPEC-09) não tem código de erro próprio —
+  agrega brapi, AwesomeAPI e CoinGecko, e cada fonte que falhar simplesmente
+  não aparece no resultado, com um aviso em `avisos[]`. Nunca retorna
+  4xx/5xx por causa de uma fonte externa fora do ar; a resposta é sempre
+  200, com o que deu certo. Cache com TTL de 15min (`mercado.barra-cache-ttl-minutos`).

@@ -842,10 +842,10 @@
       "codigo": "STATUS_INVALIDO",
       "feature": "autenticacao-investidor",
       "ref": ".spec/features/autenticacao-investidor/spec.md",
-      "ocorrencias": 20,
+      "ocorrencias": 22,
       "primeiraVez": "2026-08-22T18:37:32.070Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "AC_SEM_TASK::investidor::AC-051": {
       "codigo": "AC_SEM_TASK",
@@ -1103,10 +1103,10 @@
       "codigo": "ARQUIVO_INEXISTENTE",
       "feature": "cadastro-corretora",
       "ref": "T-105",
-      "ocorrencias": 144,
+      "ocorrencias": 152,
       "primeiraVez": "2026-08-22T23:18:54.083Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "ARQUIVO_INEXISTENTE::cadastro-corretora::T-106": {
       "codigo": "ARQUIVO_INEXISTENTE",
@@ -1427,19 +1427,19 @@
       "codigo": "PROVA_FRACA",
       "feature": "investidor",
       "ref": "AC-054",
-      "ocorrencias": 33,
+      "ocorrencias": 35,
       "primeiraVez": "2026-08-23T17:16:05.673Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::investidor::AC-055": {
       "codigo": "PROVA_FRACA",
       "feature": "investidor",
       "ref": "AC-055",
-      "ocorrencias": 33,
+      "ocorrencias": 35,
       "primeiraVez": "2026-08-23T17:16:05.673Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "ARQUIVO_INEXISTENTE::autenticacao-investidor::T-001": {
       "codigo": "ARQUIVO_INEXISTENTE",
@@ -1490,496 +1490,496 @@
       "codigo": "PROVA_FRACA",
       "feature": "autenticacao-investidor",
       "ref": "AC-001",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::autenticacao-investidor::AC-002": {
       "codigo": "PROVA_FRACA",
       "feature": "autenticacao-investidor",
       "ref": "AC-002",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::autenticacao-investidor::AC-003": {
       "codigo": "PROVA_FRACA",
       "feature": "autenticacao-investidor",
       "ref": "AC-003",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::autenticacao-investidor::AC-004": {
       "codigo": "PROVA_FRACA",
       "feature": "autenticacao-investidor",
       "ref": "AC-004",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::autenticacao-investidor::AC-005": {
       "codigo": "PROVA_FRACA",
       "feature": "autenticacao-investidor",
       "ref": "AC-005",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::autenticacao-investidor::AC-006": {
       "codigo": "PROVA_FRACA",
       "feature": "autenticacao-investidor",
       "ref": "AC-006",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::autenticacao-investidor::AC-007": {
       "codigo": "PROVA_FRACA",
       "feature": "autenticacao-investidor",
       "ref": "AC-007",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "VERIFY_OBSOLETO::autenticacao-investidor::—": {
       "codigo": "VERIFY_OBSOLETO",
       "feature": "autenticacao-investidor",
       "ref": "—",
-      "ocorrencias": 18,
+      "ocorrencias": 19,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:23:24.986Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:38:56.954Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::cadastro-corretora::AC-101": {
       "codigo": "PROVA_FRACA",
       "feature": "cadastro-corretora",
       "ref": "AC-101",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::cadastro-corretora::AC-102": {
       "codigo": "PROVA_FRACA",
       "feature": "cadastro-corretora",
       "ref": "AC-102",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::cadastro-corretora::AC-103": {
       "codigo": "PROVA_FRACA",
       "feature": "cadastro-corretora",
       "ref": "AC-103",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::cadastro-corretora::AC-104": {
       "codigo": "PROVA_FRACA",
       "feature": "cadastro-corretora",
       "ref": "AC-104",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::cadastro-corretora::AC-105": {
       "codigo": "PROVA_FRACA",
       "feature": "cadastro-corretora",
       "ref": "AC-105",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::cadastro-corretora::AC-106": {
       "codigo": "PROVA_FRACA",
       "feature": "cadastro-corretora",
       "ref": "AC-106",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::cadastro-corretora::AC-107": {
       "codigo": "PROVA_FRACA",
       "feature": "cadastro-corretora",
       "ref": "AC-107",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::cadastro-corretora::AC-108": {
       "codigo": "PROVA_FRACA",
       "feature": "cadastro-corretora",
       "ref": "AC-108",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::cadastro-corretora::AC-109": {
       "codigo": "PROVA_FRACA",
       "feature": "cadastro-corretora",
       "ref": "AC-109",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::cadastro-corretora::AC-110": {
       "codigo": "PROVA_FRACA",
       "feature": "cadastro-corretora",
       "ref": "AC-110",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::cadastro-corretora::AC-111": {
       "codigo": "PROVA_FRACA",
       "feature": "cadastro-corretora",
       "ref": "AC-111",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "VERIFY_OBSOLETO::cadastro-corretora::—": {
       "codigo": "VERIFY_OBSOLETO",
       "feature": "cadastro-corretora",
       "ref": "—",
-      "ocorrencias": 21,
+      "ocorrencias": 22,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:23:24.986Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:38:56.954Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::carteira::AC-301": {
       "codigo": "PROVA_FRACA",
       "feature": "carteira",
       "ref": "AC-301",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::carteira::AC-302": {
       "codigo": "PROVA_FRACA",
       "feature": "carteira",
       "ref": "AC-302",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::carteira::AC-303": {
       "codigo": "PROVA_FRACA",
       "feature": "carteira",
       "ref": "AC-303",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::carteira::AC-304": {
       "codigo": "PROVA_FRACA",
       "feature": "carteira",
       "ref": "AC-304",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::carteira::AC-305": {
       "codigo": "PROVA_FRACA",
       "feature": "carteira",
       "ref": "AC-305",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::carteira::AC-306": {
       "codigo": "PROVA_FRACA",
       "feature": "carteira",
       "ref": "AC-306",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::carteira::AC-307": {
       "codigo": "PROVA_FRACA",
       "feature": "carteira",
       "ref": "AC-307",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::carteira::AC-308": {
       "codigo": "PROVA_FRACA",
       "feature": "carteira",
       "ref": "AC-308",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::carteira::AC-309": {
       "codigo": "PROVA_FRACA",
       "feature": "carteira",
       "ref": "AC-309",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::carteira::AC-310": {
       "codigo": "PROVA_FRACA",
       "feature": "carteira",
       "ref": "AC-310",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::catalogo-acao::AC-201": {
       "codigo": "PROVA_FRACA",
       "feature": "catalogo-acao",
       "ref": "AC-201",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::catalogo-acao::AC-202": {
       "codigo": "PROVA_FRACA",
       "feature": "catalogo-acao",
       "ref": "AC-202",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::catalogo-acao::AC-203": {
       "codigo": "PROVA_FRACA",
       "feature": "catalogo-acao",
       "ref": "AC-203",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::catalogo-acao::AC-204": {
       "codigo": "PROVA_FRACA",
       "feature": "catalogo-acao",
       "ref": "AC-204",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::catalogo-acao::AC-205": {
       "codigo": "PROVA_FRACA",
       "feature": "catalogo-acao",
       "ref": "AC-205",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::catalogo-acao::AC-206": {
       "codigo": "PROVA_FRACA",
       "feature": "catalogo-acao",
       "ref": "AC-206",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::catalogo-acao::AC-207": {
       "codigo": "PROVA_FRACA",
       "feature": "catalogo-acao",
       "ref": "AC-207",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::catalogo-acao::AC-208": {
       "codigo": "PROVA_FRACA",
       "feature": "catalogo-acao",
       "ref": "AC-208",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::catalogo-acao::AC-209": {
       "codigo": "PROVA_FRACA",
       "feature": "catalogo-acao",
       "ref": "AC-209",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::catalogo-acao::AC-210": {
       "codigo": "PROVA_FRACA",
       "feature": "catalogo-acao",
       "ref": "AC-210",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::catalogo-acao::AC-211": {
       "codigo": "PROVA_FRACA",
       "feature": "catalogo-acao",
       "ref": "AC-211",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "VERIFY_OBSOLETO::catalogo-acao::—": {
       "codigo": "VERIFY_OBSOLETO",
       "feature": "catalogo-acao",
       "ref": "—",
-      "ocorrencias": 21,
+      "ocorrencias": 22,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:23:24.986Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:38:56.954Z",
+      "gitRev": "87568d5"
     },
     "VERIFY_OBSOLETO::investidor::—": {
       "codigo": "VERIFY_OBSOLETO",
       "feature": "investidor",
       "ref": "—",
-      "ocorrencias": 19,
+      "ocorrencias": 20,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:23:24.986Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:38:56.955Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::operacao-movimentacao::AC-401": {
       "codigo": "PROVA_FRACA",
       "feature": "operacao-movimentacao",
       "ref": "AC-401",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::operacao-movimentacao::AC-402": {
       "codigo": "PROVA_FRACA",
       "feature": "operacao-movimentacao",
       "ref": "AC-402",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::operacao-movimentacao::AC-403": {
       "codigo": "PROVA_FRACA",
       "feature": "operacao-movimentacao",
       "ref": "AC-403",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::operacao-movimentacao::AC-404": {
       "codigo": "PROVA_FRACA",
       "feature": "operacao-movimentacao",
       "ref": "AC-404",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::operacao-movimentacao::AC-405": {
       "codigo": "PROVA_FRACA",
       "feature": "operacao-movimentacao",
       "ref": "AC-405",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::operacao-movimentacao::AC-406": {
       "codigo": "PROVA_FRACA",
       "feature": "operacao-movimentacao",
       "ref": "AC-406",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::operacao-movimentacao::AC-407": {
       "codigo": "PROVA_FRACA",
       "feature": "operacao-movimentacao",
       "ref": "AC-407",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::operacao-movimentacao::AC-409": {
       "codigo": "PROVA_FRACA",
       "feature": "operacao-movimentacao",
       "ref": "AC-409",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::operacao-movimentacao::AC-412": {
       "codigo": "PROVA_FRACA",
       "feature": "operacao-movimentacao",
       "ref": "AC-412",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::operacao-movimentacao::AC-413": {
       "codigo": "PROVA_FRACA",
       "feature": "operacao-movimentacao",
       "ref": "AC-413",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::operacao-movimentacao::AC-410": {
       "codigo": "PROVA_FRACA",
       "feature": "operacao-movimentacao",
       "ref": "AC-410",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::operacao-movimentacao::AC-411": {
       "codigo": "PROVA_FRACA",
       "feature": "operacao-movimentacao",
       "ref": "AC-411",
-      "ocorrencias": 32,
+      "ocorrencias": 34,
       "primeiraVez": "2026-08-23T18:05:41.241Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "ARQUIVO_ORFAO::—::src/main/java/com/apiexternabackend/domains/dtos/CarteiraRenomearDTO.java": {
       "codigo": "ARQUIVO_ORFAO",
@@ -2039,19 +2039,19 @@
       "codigo": "VERIFY_OBSOLETO",
       "feature": "carteira",
       "ref": "—",
-      "ocorrencias": 19,
+      "ocorrencias": 20,
       "primeiraVez": "2026-08-27T00:55:59.580Z",
-      "ultimaVez": "2026-09-05T13:23:24.986Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:38:56.954Z",
+      "gitRev": "87568d5"
     },
     "VERIFY_OBSOLETO::operacao-movimentacao::—": {
       "codigo": "VERIFY_OBSOLETO",
       "feature": "operacao-movimentacao",
       "ref": "—",
-      "ocorrencias": 18,
+      "ocorrencias": 19,
       "primeiraVez": "2026-08-27T00:55:59.580Z",
-      "ultimaVez": "2026-09-05T13:23:24.986Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:38:56.955Z",
+      "gitRev": "87568d5"
     },
     "ARQUIVO_INEXISTENTE::refactor-cnpj-delete::T-002": {
       "codigo": "ARQUIVO_INEXISTENTE",
@@ -2075,64 +2075,64 @@
       "codigo": "PROVA_FRACA",
       "feature": "refactor-cnpj-delete",
       "ref": "AC-415",
-      "ocorrencias": 29,
+      "ocorrencias": 31,
       "primeiraVez": "2026-08-27T00:55:59.580Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::refactor-cnpj-delete::AC-416": {
       "codigo": "PROVA_FRACA",
       "feature": "refactor-cnpj-delete",
       "ref": "AC-416",
-      "ocorrencias": 29,
+      "ocorrencias": 31,
       "primeiraVez": "2026-08-27T00:55:59.580Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::refactor-cnpj-delete::AC-417": {
       "codigo": "PROVA_FRACA",
       "feature": "refactor-cnpj-delete",
       "ref": "AC-417",
-      "ocorrencias": 29,
+      "ocorrencias": 31,
       "primeiraVez": "2026-08-27T00:55:59.580Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::refactor-cnpj-delete::AC-418": {
       "codigo": "PROVA_FRACA",
       "feature": "refactor-cnpj-delete",
       "ref": "AC-418",
-      "ocorrencias": 29,
+      "ocorrencias": 31,
       "primeiraVez": "2026-08-27T00:55:59.580Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::refactor-cnpj-delete::AC-419": {
       "codigo": "PROVA_FRACA",
       "feature": "refactor-cnpj-delete",
       "ref": "AC-419",
-      "ocorrencias": 29,
+      "ocorrencias": 31,
       "primeiraVez": "2026-08-27T00:55:59.580Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::refactor-cnpj-delete::AC-420": {
       "codigo": "PROVA_FRACA",
       "feature": "refactor-cnpj-delete",
       "ref": "AC-420",
-      "ocorrencias": 29,
+      "ocorrencias": 31,
       "primeiraVez": "2026-08-27T00:55:59.580Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::refactor-cnpj-delete::AC-421": {
       "codigo": "PROVA_FRACA",
       "feature": "refactor-cnpj-delete",
       "ref": "AC-421",
-      "ocorrencias": 29,
+      "ocorrencias": 31,
       "primeiraVez": "2026-08-27T00:55:59.580Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "AC_SEM_TESTE::refactor-cnpj-delete::AC-422": {
       "codigo": "AC_SEM_TESTE",
@@ -2255,10 +2255,10 @@
       "codigo": "VERIFY_OBSOLETO",
       "feature": "refactor-cnpj-delete",
       "ref": "—",
-      "ocorrencias": 17,
+      "ocorrencias": 18,
       "primeiraVez": "2026-09-04T17:40:18.746Z",
-      "ultimaVez": "2026-09-05T13:23:24.986Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:38:56.955Z",
+      "gitRev": "87568d5"
     },
     "ARQUIVO_INEXISTENTE::spec-01-padronizacao-erros::T-001": {
       "codigo": "ARQUIVO_INEXISTENTE",
@@ -2561,118 +2561,118 @@
       "codigo": "PROVA_FRACA",
       "feature": "spec-01-padronizacao-erros",
       "ref": "AC-429",
-      "ocorrencias": 24,
+      "ocorrencias": 26,
       "primeiraVez": "2026-09-04T22:57:24.625Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-01-padronizacao-erros::AC-430": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-01-padronizacao-erros",
       "ref": "AC-430",
-      "ocorrencias": 24,
+      "ocorrencias": 26,
       "primeiraVez": "2026-09-04T22:57:24.625Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-01-padronizacao-erros::AC-431": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-01-padronizacao-erros",
       "ref": "AC-431",
-      "ocorrencias": 24,
+      "ocorrencias": 26,
       "primeiraVez": "2026-09-04T22:57:24.625Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-01-padronizacao-erros::AC-432": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-01-padronizacao-erros",
       "ref": "AC-432",
-      "ocorrencias": 24,
+      "ocorrencias": 26,
       "primeiraVez": "2026-09-04T22:57:24.625Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-01-padronizacao-erros::AC-433": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-01-padronizacao-erros",
       "ref": "AC-433",
-      "ocorrencias": 24,
+      "ocorrencias": 26,
       "primeiraVez": "2026-09-04T22:57:24.625Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-01-padronizacao-erros::AC-434": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-01-padronizacao-erros",
       "ref": "AC-434",
-      "ocorrencias": 24,
+      "ocorrencias": 26,
       "primeiraVez": "2026-09-04T22:57:24.625Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-01-padronizacao-erros::AC-426": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-01-padronizacao-erros",
       "ref": "AC-426",
-      "ocorrencias": 23,
+      "ocorrencias": 25,
       "primeiraVez": "2026-09-04T23:00:00.824Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-01-padronizacao-erros::AC-427": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-01-padronizacao-erros",
       "ref": "AC-427",
-      "ocorrencias": 23,
+      "ocorrencias": 25,
       "primeiraVez": "2026-09-04T23:00:00.824Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-01-padronizacao-erros::AC-428": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-01-padronizacao-erros",
       "ref": "AC-428",
-      "ocorrencias": 23,
+      "ocorrencias": 25,
       "primeiraVez": "2026-09-04T23:00:00.824Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::refactor-cnpj-delete::AC-422": {
       "codigo": "PROVA_FRACA",
       "feature": "refactor-cnpj-delete",
       "ref": "AC-422",
-      "ocorrencias": 21,
+      "ocorrencias": 23,
       "primeiraVez": "2026-09-04T23:00:52.360Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::refactor-cnpj-delete::AC-423": {
       "codigo": "PROVA_FRACA",
       "feature": "refactor-cnpj-delete",
       "ref": "AC-423",
-      "ocorrencias": 21,
+      "ocorrencias": 23,
       "primeiraVez": "2026-09-04T23:00:52.360Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::refactor-cnpj-delete::AC-424": {
       "codigo": "PROVA_FRACA",
       "feature": "refactor-cnpj-delete",
       "ref": "AC-424",
-      "ocorrencias": 21,
+      "ocorrencias": 23,
       "primeiraVez": "2026-09-04T23:00:52.360Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::refactor-cnpj-delete::AC-425": {
       "codigo": "PROVA_FRACA",
       "feature": "refactor-cnpj-delete",
       "ref": "AC-425",
-      "ocorrencias": 21,
+      "ocorrencias": 23,
       "primeiraVez": "2026-09-04T23:00:52.360Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "ARQUIVO_INEXISTENTE::autenticacao-investidor::T-417": {
       "codigo": "ARQUIVO_INEXISTENTE",
@@ -2687,91 +2687,91 @@
       "codigo": "PROVA_FRACA",
       "feature": "autenticacao-investidor",
       "ref": "AC-435",
-      "ocorrencias": 19,
+      "ocorrencias": 21,
       "primeiraVez": "2026-09-05T00:21:10.786Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::autenticacao-investidor::AC-436": {
       "codigo": "PROVA_FRACA",
       "feature": "autenticacao-investidor",
       "ref": "AC-436",
-      "ocorrencias": 19,
+      "ocorrencias": 21,
       "primeiraVez": "2026-09-05T00:21:10.786Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::autenticacao-investidor::AC-443": {
       "codigo": "PROVA_FRACA",
       "feature": "autenticacao-investidor",
       "ref": "AC-443",
-      "ocorrencias": 19,
+      "ocorrencias": 21,
       "primeiraVez": "2026-09-05T00:21:10.786Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::autenticacao-investidor::AC-437": {
       "codigo": "PROVA_FRACA",
       "feature": "autenticacao-investidor",
       "ref": "AC-437",
-      "ocorrencias": 19,
+      "ocorrencias": 21,
       "primeiraVez": "2026-09-05T00:21:10.786Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::autenticacao-investidor::AC-438": {
       "codigo": "PROVA_FRACA",
       "feature": "autenticacao-investidor",
       "ref": "AC-438",
-      "ocorrencias": 19,
+      "ocorrencias": 21,
       "primeiraVez": "2026-09-05T00:21:10.786Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::autenticacao-investidor::AC-439": {
       "codigo": "PROVA_FRACA",
       "feature": "autenticacao-investidor",
       "ref": "AC-439",
-      "ocorrencias": 19,
+      "ocorrencias": 21,
       "primeiraVez": "2026-09-05T00:21:10.786Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::autenticacao-investidor::AC-440": {
       "codigo": "PROVA_FRACA",
       "feature": "autenticacao-investidor",
       "ref": "AC-440",
-      "ocorrencias": 19,
+      "ocorrencias": 21,
       "primeiraVez": "2026-09-05T00:21:10.786Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::autenticacao-investidor::AC-441": {
       "codigo": "PROVA_FRACA",
       "feature": "autenticacao-investidor",
       "ref": "AC-441",
-      "ocorrencias": 19,
+      "ocorrencias": 21,
       "primeiraVez": "2026-09-05T00:21:10.786Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::autenticacao-investidor::AC-442": {
       "codigo": "PROVA_FRACA",
       "feature": "autenticacao-investidor",
       "ref": "AC-442",
-      "ocorrencias": 19,
+      "ocorrencias": 21,
       "primeiraVez": "2026-09-05T00:21:10.786Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "STATUS_INVALIDO::investidor::.spec/features/investidor/spec.md": {
       "codigo": "STATUS_INVALIDO",
       "feature": "investidor",
       "ref": ".spec/features/investidor/spec.md",
-      "ocorrencias": 19,
+      "ocorrencias": 21,
       "primeiraVez": "2026-09-05T00:21:10.786Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "REF_QUEBRADA::investidor::T-050": {
       "codigo": "REF_QUEBRADA",
@@ -2831,280 +2831,280 @@
       "codigo": "VERIFY_OBSOLETO",
       "feature": "spec-01-padronizacao-erros",
       "ref": "—",
-      "ocorrencias": 10,
+      "ocorrencias": 11,
       "primeiraVez": "2026-09-05T00:21:10.786Z",
-      "ultimaVez": "2026-09-05T13:23:24.986Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:38:56.955Z",
+      "gitRev": "87568d5"
     },
     "STATUS_INVALIDO::spec-03-recadastro-exclusao::.spec/features/spec-03-recadastro-exclusao/spec.md": {
       "codigo": "STATUS_INVALIDO",
       "feature": "spec-03-recadastro-exclusao",
       "ref": ".spec/features/spec-03-recadastro-exclusao/spec.md",
-      "ocorrencias": 17,
+      "ocorrencias": 19,
       "primeiraVez": "2026-09-05T00:53:52.212Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-03-recadastro-exclusao::AC-444": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-03-recadastro-exclusao",
       "ref": "AC-444",
-      "ocorrencias": 17,
+      "ocorrencias": 19,
       "primeiraVez": "2026-09-05T00:53:52.212Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-03-recadastro-exclusao::AC-445": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-03-recadastro-exclusao",
       "ref": "AC-445",
-      "ocorrencias": 17,
+      "ocorrencias": 19,
       "primeiraVez": "2026-09-05T00:53:52.212Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-03-recadastro-exclusao::AC-446": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-03-recadastro-exclusao",
       "ref": "AC-446",
-      "ocorrencias": 17,
+      "ocorrencias": 19,
       "primeiraVez": "2026-09-05T00:53:52.212Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-03-recadastro-exclusao::AC-447": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-03-recadastro-exclusao",
       "ref": "AC-447",
-      "ocorrencias": 17,
+      "ocorrencias": 19,
       "primeiraVez": "2026-09-05T00:53:52.212Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-03-recadastro-exclusao::AC-448": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-03-recadastro-exclusao",
       "ref": "AC-448",
-      "ocorrencias": 17,
+      "ocorrencias": 19,
       "primeiraVez": "2026-09-05T00:53:52.212Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-03-recadastro-exclusao::AC-449": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-03-recadastro-exclusao",
       "ref": "AC-449",
-      "ocorrencias": 17,
+      "ocorrencias": 19,
       "primeiraVez": "2026-09-05T00:53:52.212Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-03-recadastro-exclusao::AC-450": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-03-recadastro-exclusao",
       "ref": "AC-450",
-      "ocorrencias": 17,
+      "ocorrencias": 19,
       "primeiraVez": "2026-09-05T00:53:52.212Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-03-recadastro-exclusao::AC-451": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-03-recadastro-exclusao",
       "ref": "AC-451",
-      "ocorrencias": 17,
+      "ocorrencias": 19,
       "primeiraVez": "2026-09-05T00:53:52.212Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-03-recadastro-exclusao::AC-452": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-03-recadastro-exclusao",
       "ref": "AC-452",
-      "ocorrencias": 17,
+      "ocorrencias": 19,
       "primeiraVez": "2026-09-05T00:53:52.212Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-03-recadastro-exclusao::AC-453": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-03-recadastro-exclusao",
       "ref": "AC-453",
-      "ocorrencias": 17,
+      "ocorrencias": 19,
       "primeiraVez": "2026-09-05T00:53:52.212Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-03-recadastro-exclusao::AC-454": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-03-recadastro-exclusao",
       "ref": "AC-454",
-      "ocorrencias": 17,
+      "ocorrencias": 19,
       "primeiraVez": "2026-09-05T00:53:52.212Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-03-recadastro-exclusao::AC-455": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-03-recadastro-exclusao",
       "ref": "AC-455",
-      "ocorrencias": 17,
+      "ocorrencias": 19,
       "primeiraVez": "2026-09-05T00:53:52.212Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "VERIFY_OBSOLETO::spec-03-recadastro-exclusao::—": {
       "codigo": "VERIFY_OBSOLETO",
       "feature": "spec-03-recadastro-exclusao",
       "ref": "—",
-      "ocorrencias": 8,
+      "ocorrencias": 9,
       "primeiraVez": "2026-09-05T02:18:20.061Z",
-      "ultimaVez": "2026-09-05T13:23:24.986Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:38:56.955Z",
+      "gitRev": "87568d5"
     },
     "STATUS_INVALIDO::spec-04-preco-editavel::.spec/features/spec-04-preco-editavel/spec.md": {
       "codigo": "STATUS_INVALIDO",
       "feature": "spec-04-preco-editavel",
       "ref": ".spec/features/spec-04-preco-editavel/spec.md",
-      "ocorrencias": 15,
+      "ocorrencias": 17,
       "primeiraVez": "2026-09-05T02:18:20.061Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-04-preco-editavel::AC-456": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-04-preco-editavel",
       "ref": "AC-456",
-      "ocorrencias": 15,
+      "ocorrencias": 17,
       "primeiraVez": "2026-09-05T02:18:20.061Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-04-preco-editavel::AC-457": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-04-preco-editavel",
       "ref": "AC-457",
-      "ocorrencias": 15,
+      "ocorrencias": 17,
       "primeiraVez": "2026-09-05T02:18:20.061Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-04-preco-editavel::AC-458": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-04-preco-editavel",
       "ref": "AC-458",
-      "ocorrencias": 15,
+      "ocorrencias": 17,
       "primeiraVez": "2026-09-05T02:18:20.061Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-04-preco-editavel::AC-459": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-04-preco-editavel",
       "ref": "AC-459",
-      "ocorrencias": 15,
+      "ocorrencias": 17,
       "primeiraVez": "2026-09-05T02:18:20.061Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-04-preco-editavel::AC-460": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-04-preco-editavel",
       "ref": "AC-460",
-      "ocorrencias": 15,
+      "ocorrencias": 17,
       "primeiraVez": "2026-09-05T02:18:20.061Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-04-preco-editavel::AC-461": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-04-preco-editavel",
       "ref": "AC-461",
-      "ocorrencias": 15,
+      "ocorrencias": 17,
       "primeiraVez": "2026-09-05T02:18:20.061Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-04-preco-editavel::AC-462": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-04-preco-editavel",
       "ref": "AC-462",
-      "ocorrencias": 15,
+      "ocorrencias": 17,
       "primeiraVez": "2026-09-05T02:18:20.061Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-04-preco-editavel::AC-463": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-04-preco-editavel",
       "ref": "AC-463",
-      "ocorrencias": 15,
+      "ocorrencias": 17,
       "primeiraVez": "2026-09-05T02:18:20.061Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-04-preco-editavel::AC-464": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-04-preco-editavel",
       "ref": "AC-464",
-      "ocorrencias": 15,
+      "ocorrencias": 17,
       "primeiraVez": "2026-09-05T02:18:20.061Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-04-preco-editavel::AC-465": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-04-preco-editavel",
       "ref": "AC-465",
-      "ocorrencias": 15,
+      "ocorrencias": 17,
       "primeiraVez": "2026-09-05T02:18:20.061Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "VERIFY_OBSOLETO::spec-04-preco-editavel::—": {
       "codigo": "VERIFY_OBSOLETO",
       "feature": "spec-04-preco-editavel",
       "ref": "—",
-      "ocorrencias": 7,
+      "ocorrencias": 8,
       "primeiraVez": "2026-09-05T02:43:48.197Z",
-      "ultimaVez": "2026-09-05T13:23:24.986Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:38:56.955Z",
+      "gitRev": "87568d5"
     },
     "STATUS_INVALIDO::spec-05-carteira-obrigatoria::.spec/features/spec-05-carteira-obrigatoria/spec.md": {
       "codigo": "STATUS_INVALIDO",
       "feature": "spec-05-carteira-obrigatoria",
       "ref": ".spec/features/spec-05-carteira-obrigatoria/spec.md",
-      "ocorrencias": 13,
+      "ocorrencias": 15,
       "primeiraVez": "2026-09-05T02:43:48.197Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-05-carteira-obrigatoria::AC-466": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-05-carteira-obrigatoria",
       "ref": "AC-466",
-      "ocorrencias": 13,
+      "ocorrencias": 15,
       "primeiraVez": "2026-09-05T02:43:48.198Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-05-carteira-obrigatoria::AC-467": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-05-carteira-obrigatoria",
       "ref": "AC-467",
-      "ocorrencias": 13,
+      "ocorrencias": 15,
       "primeiraVez": "2026-09-05T02:43:48.198Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-05-carteira-obrigatoria::AC-468": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-05-carteira-obrigatoria",
       "ref": "AC-468",
-      "ocorrencias": 13,
+      "ocorrencias": 15,
       "primeiraVez": "2026-09-05T02:43:48.198Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "ARQUIVO_ORFAO::—::src/main/java/com/apiexternabackend/resources/exceptions/PreRequisitoNaoAtendidoException.java": {
       "codigo": "ARQUIVO_ORFAO",
@@ -3119,10 +3119,10 @@
       "codigo": "VERIFY_OBSOLETO",
       "feature": "spec-05-carteira-obrigatoria",
       "ref": "—",
-      "ocorrencias": 6,
+      "ocorrencias": 7,
       "primeiraVez": "2026-09-05T03:10:53.707Z",
-      "ultimaVez": "2026-09-05T13:23:24.986Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:38:56.955Z",
+      "gitRev": "87568d5"
     },
     "ARQUIVO_INEXISTENTE::spec-06-lucro-realizado::T-429": {
       "codigo": "ARQUIVO_INEXISTENTE",
@@ -3227,82 +3227,82 @@
       "codigo": "PROVA_FRACA",
       "feature": "spec-06-lucro-realizado",
       "ref": "AC-469",
-      "ocorrencias": 10,
+      "ocorrencias": 12,
       "primeiraVez": "2026-09-05T03:38:42.766Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-06-lucro-realizado::AC-470": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-06-lucro-realizado",
       "ref": "AC-470",
-      "ocorrencias": 10,
+      "ocorrencias": 12,
       "primeiraVez": "2026-09-05T03:38:42.766Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-06-lucro-realizado::AC-471": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-06-lucro-realizado",
       "ref": "AC-471",
-      "ocorrencias": 10,
+      "ocorrencias": 12,
       "primeiraVez": "2026-09-05T03:38:42.766Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-06-lucro-realizado::AC-472": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-06-lucro-realizado",
       "ref": "AC-472",
-      "ocorrencias": 10,
+      "ocorrencias": 12,
       "primeiraVez": "2026-09-05T03:38:42.766Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-06-lucro-realizado::AC-473": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-06-lucro-realizado",
       "ref": "AC-473",
-      "ocorrencias": 10,
+      "ocorrencias": 12,
       "primeiraVez": "2026-09-05T03:38:42.766Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-06-lucro-realizado::AC-474": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-06-lucro-realizado",
       "ref": "AC-474",
-      "ocorrencias": 10,
+      "ocorrencias": 12,
       "primeiraVez": "2026-09-05T03:38:42.766Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-06-lucro-realizado::AC-475": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-06-lucro-realizado",
       "ref": "AC-475",
-      "ocorrencias": 10,
+      "ocorrencias": 12,
       "primeiraVez": "2026-09-05T03:38:42.766Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-06-lucro-realizado::AC-476": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-06-lucro-realizado",
       "ref": "AC-476",
-      "ocorrencias": 10,
+      "ocorrencias": 12,
       "primeiraVez": "2026-09-05T03:38:42.766Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "VERIFY_OBSOLETO::spec-06-lucro-realizado::—": {
       "codigo": "VERIFY_OBSOLETO",
       "feature": "spec-06-lucro-realizado",
       "ref": "—",
-      "ocorrencias": 4,
+      "ocorrencias": 5,
       "primeiraVez": "2026-09-05T03:54:18.261Z",
-      "ultimaVez": "2026-09-05T13:23:24.986Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:38:56.955Z",
+      "gitRev": "87568d5"
     },
     "ARQUIVO_INEXISTENTE::spec-07-cache-cotacao::T-440": {
       "codigo": "ARQUIVO_INEXISTENTE",
@@ -3407,91 +3407,91 @@
       "codigo": "PROVA_FRACA",
       "feature": "spec-07-cache-cotacao",
       "ref": "AC-477",
-      "ocorrencias": 5,
+      "ocorrencias": 7,
       "primeiraVez": "2026-09-05T04:23:04.271Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-07-cache-cotacao::AC-478": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-07-cache-cotacao",
       "ref": "AC-478",
-      "ocorrencias": 5,
+      "ocorrencias": 7,
       "primeiraVez": "2026-09-05T04:23:04.271Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-07-cache-cotacao::AC-479": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-07-cache-cotacao",
       "ref": "AC-479",
-      "ocorrencias": 5,
+      "ocorrencias": 7,
       "primeiraVez": "2026-09-05T04:23:04.271Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-07-cache-cotacao::AC-480": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-07-cache-cotacao",
       "ref": "AC-480",
-      "ocorrencias": 5,
+      "ocorrencias": 7,
       "primeiraVez": "2026-09-05T04:23:04.271Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-07-cache-cotacao::AC-481": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-07-cache-cotacao",
       "ref": "AC-481",
-      "ocorrencias": 5,
+      "ocorrencias": 7,
       "primeiraVez": "2026-09-05T04:23:04.271Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-07-cache-cotacao::AC-482": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-07-cache-cotacao",
       "ref": "AC-482",
-      "ocorrencias": 5,
+      "ocorrencias": 7,
       "primeiraVez": "2026-09-05T04:23:04.271Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-07-cache-cotacao::AC-483": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-07-cache-cotacao",
       "ref": "AC-483",
-      "ocorrencias": 5,
+      "ocorrencias": 7,
       "primeiraVez": "2026-09-05T04:23:04.271Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-07-cache-cotacao::AC-484": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-07-cache-cotacao",
       "ref": "AC-484",
-      "ocorrencias": 5,
+      "ocorrencias": 7,
       "primeiraVez": "2026-09-05T04:23:04.271Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-07-cache-cotacao::AC-485": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-07-cache-cotacao",
       "ref": "AC-485",
-      "ocorrencias": 5,
+      "ocorrencias": 7,
       "primeiraVez": "2026-09-05T04:23:04.271Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "VERIFY_OBSOLETO::spec-07-cache-cotacao::—": {
       "codigo": "VERIFY_OBSOLETO",
       "feature": "spec-07-cache-cotacao",
       "ref": "—",
-      "ocorrencias": 2,
+      "ocorrencias": 3,
       "primeiraVez": "2026-09-05T12:51:26.181Z",
-      "ultimaVez": "2026-09-05T13:23:24.986Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:38:56.955Z",
+      "gitRev": "87568d5"
     },
     "ARQUIVO_INEXISTENTE::spec-08-conversao-cambio::T-448": {
       "codigo": "ARQUIVO_INEXISTENTE",
@@ -3659,109 +3659,109 @@
       "codigo": "PROVA_FRACA",
       "feature": "spec-08-conversao-cambio",
       "ref": "AC-486",
-      "ocorrencias": 2,
+      "ocorrencias": 4,
       "primeiraVez": "2026-09-05T13:23:24.986Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-08-conversao-cambio::AC-487": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-08-conversao-cambio",
       "ref": "AC-487",
-      "ocorrencias": 2,
+      "ocorrencias": 4,
       "primeiraVez": "2026-09-05T13:23:24.986Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-08-conversao-cambio::AC-488": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-08-conversao-cambio",
       "ref": "AC-488",
-      "ocorrencias": 2,
+      "ocorrencias": 4,
       "primeiraVez": "2026-09-05T13:23:24.986Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-08-conversao-cambio::AC-489": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-08-conversao-cambio",
       "ref": "AC-489",
-      "ocorrencias": 2,
+      "ocorrencias": 4,
       "primeiraVez": "2026-09-05T13:23:24.986Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-08-conversao-cambio::AC-490": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-08-conversao-cambio",
       "ref": "AC-490",
-      "ocorrencias": 2,
+      "ocorrencias": 4,
       "primeiraVez": "2026-09-05T13:23:24.986Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-08-conversao-cambio::AC-491": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-08-conversao-cambio",
       "ref": "AC-491",
-      "ocorrencias": 2,
+      "ocorrencias": 4,
       "primeiraVez": "2026-09-05T13:23:24.986Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-08-conversao-cambio::AC-492": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-08-conversao-cambio",
       "ref": "AC-492",
-      "ocorrencias": 2,
+      "ocorrencias": 4,
       "primeiraVez": "2026-09-05T13:23:24.986Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-08-conversao-cambio::AC-493": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-08-conversao-cambio",
       "ref": "AC-493",
-      "ocorrencias": 2,
+      "ocorrencias": 4,
       "primeiraVez": "2026-09-05T13:23:24.986Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-08-conversao-cambio::AC-494": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-08-conversao-cambio",
       "ref": "AC-494",
-      "ocorrencias": 2,
+      "ocorrencias": 4,
       "primeiraVez": "2026-09-05T13:23:24.986Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-08-conversao-cambio::AC-495": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-08-conversao-cambio",
       "ref": "AC-495",
-      "ocorrencias": 2,
+      "ocorrencias": 4,
       "primeiraVez": "2026-09-05T13:23:24.986Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-08-conversao-cambio::AC-496": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-08-conversao-cambio",
       "ref": "AC-496",
-      "ocorrencias": 2,
+      "ocorrencias": 4,
       "primeiraVez": "2026-09-05T13:23:24.986Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "PROVA_FRACA::spec-08-conversao-cambio::AC-497": {
       "codigo": "PROVA_FRACA",
       "feature": "spec-08-conversao-cambio",
       "ref": "AC-497",
-      "ocorrencias": 2,
+      "ocorrencias": 4,
       "primeiraVez": "2026-09-05T13:23:24.986Z",
-      "ultimaVez": "2026-09-05T13:25:41.709Z",
-      "gitRev": "ee787f3"
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     },
     "ARQUIVO_ORFAO::—::src/main/java/com/apiexternabackend/infra/facade/CambioResultado.java": {
       "codigo": "ARQUIVO_ORFAO",
@@ -3771,6 +3771,60 @@
       "primeiraVez": "2026-09-05T13:23:24.986Z",
       "ultimaVez": "2026-09-05T13:23:24.986Z",
       "gitRev": "ee787f3"
+    },
+    "VERIFY_OBSOLETO::spec-08-conversao-cambio::—": {
+      "codigo": "VERIFY_OBSOLETO",
+      "feature": "spec-08-conversao-cambio",
+      "ref": "—",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-09-05T13:38:56.955Z",
+      "ultimaVez": "2026-09-05T13:38:56.955Z",
+      "gitRev": "87568d5"
+    },
+    "PROVA_FRACA::spec-09-barra-cotacoes::AC-498": {
+      "codigo": "PROVA_FRACA",
+      "feature": "spec-09-barra-cotacoes",
+      "ref": "AC-498",
+      "ocorrencias": 2,
+      "primeiraVez": "2026-09-05T13:38:56.955Z",
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
+    },
+    "PROVA_FRACA::spec-09-barra-cotacoes::AC-499": {
+      "codigo": "PROVA_FRACA",
+      "feature": "spec-09-barra-cotacoes",
+      "ref": "AC-499",
+      "ocorrencias": 2,
+      "primeiraVez": "2026-09-05T13:38:56.955Z",
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
+    },
+    "PROVA_FRACA::spec-09-barra-cotacoes::AC-500": {
+      "codigo": "PROVA_FRACA",
+      "feature": "spec-09-barra-cotacoes",
+      "ref": "AC-500",
+      "ocorrencias": 2,
+      "primeiraVez": "2026-09-05T13:38:56.955Z",
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
+    },
+    "PROVA_FRACA::spec-09-barra-cotacoes::AC-501": {
+      "codigo": "PROVA_FRACA",
+      "feature": "spec-09-barra-cotacoes",
+      "ref": "AC-501",
+      "ocorrencias": 2,
+      "primeiraVez": "2026-09-05T13:38:56.955Z",
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
+    },
+    "PROVA_FRACA::spec-09-barra-cotacoes::AC-502": {
+      "codigo": "PROVA_FRACA",
+      "feature": "spec-09-barra-cotacoes",
+      "ref": "AC-502",
+      "ocorrencias": 2,
+      "primeiraVez": "2026-09-05T13:38:56.955Z",
+      "ultimaVez": "2026-09-05T13:41:45.803Z",
+      "gitRev": "87568d5"
     }
   }
 }
