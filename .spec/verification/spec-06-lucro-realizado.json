@@ -1,58 +1,48 @@
 {
-  "feature": "carteira",
-  "timestamp": "2026-09-05T03:45:30.215Z",
+  "feature": "spec-06-lucro-realizado",
+  "timestamp": "2026-09-05T03:38:38.613Z",
   "gitRev": "81872f6",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
   "testsParsed": 0,
   "results": {
-    "AC-301": {
+    "AC-469": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-302": {
+    "AC-470": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-303": {
+    "AC-471": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-304": {
+    "AC-472": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-305": {
+    "AC-473": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-306": {
+    "AC-474": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-307": {
+    "AC-475": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-308": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
-    "AC-309": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
-    "AC-310": {
+    "AC-476": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
