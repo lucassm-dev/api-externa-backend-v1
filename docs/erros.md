@@ -64,9 +64,13 @@ Implementação: `src/main/java/com/apiexternabackend/resources/exceptions/`.
 
 ## OPE — Operação
 
+> Desde a SPEC-06, `DELETE /operacoes/{id}` é soft delete (marca `ativo=false`,
+> não apaga a linha). Uma operação já excluída passa a responder OPE-001 —
+> mesma semântica de "não existe" — tanto em `PUT` quanto em `DELETE`.
+
 | Código | Situação | Status HTTP | Exceção |
 |---|---|---|---|
-| OPE-001 | Operação não encontrada | 404 | RecursoNaoEncontradoException |
+| OPE-001 | Operação não encontrada (ou já excluída — soft delete, SPEC-06) | 404 | RecursoNaoEncontradoException |
 | OPE-002 | Incompatibilidade de mercado entre carteira e ação | 422 | RegraVioladaException |
 | OPE-003 | Sem posição na ação para vender | 422 | RegraVioladaException |
 | OPE-004 | Quantidade de venda excede a posição atual | 422 | RegraVioladaException |
