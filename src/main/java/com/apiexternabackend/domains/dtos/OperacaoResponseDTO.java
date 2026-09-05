@@ -27,4 +27,6 @@ public class OperacaoResponseDTO {
     private LocalDateTime dataHora;
     private String moeda;
     private List<String> avisos = new ArrayList<>();
+    private BigDecimal precoMedioCompraNoMomento;
+    private BigDecimal lucroRealizado;
 }

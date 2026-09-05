@@ -68,7 +68,7 @@ class OperacaoResourceTest {
 
     private OperacaoResponseDTO buildResponse(TipoOperacao tipo) {
         return new OperacaoResponseDTO(1L, 1L, "PETR4", tipo, 100,
-                new BigDecimal("38"), new BigDecimal("3800"), LocalDateTime.now(), "BRL", List.of());
+                new BigDecimal("38"), new BigDecimal("3800"), LocalDateTime.now(), "BRL", List.of(), null, null);
     }
 
     @Test
@@ -186,7 +186,8 @@ class OperacaoResourceTest {
     void deveTrazerAvisoDeDesvioNoCorpo() throws Exception {
         OperacaoResponseDTO comAviso = new OperacaoResponseDTO(1L, 1L, "PETR4", TipoOperacao.COMPRA, 100,
                 new BigDecimal("4750.00"), new BigDecimal("475000.00"), LocalDateTime.now(), "BRL",
-                List.of("O preço informado (4750.00) está 100x acima da cotação atual (47.50). Confirme se está correto."));
+                List.of("O preço informado (4750.00) está 100x acima da cotação atual (47.50). Confirme se está correto."),
+                null, null);
         when(operacaoService.comprar(any(), eq(INVESTIDOR_ID))).thenReturn(comAviso);
 
         mockMvc.perform(post("/operacoes/compra")
