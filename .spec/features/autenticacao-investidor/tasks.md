@@ -19,11 +19,10 @@
 
 ## T-417 — Remove cadastro de Investidor sem senha; AutenticacaoServiceTest real [concluida]
 - Refs: AC-001, AC-002, AC-003, AC-004, AC-005, AC-435, AC-436, AC-437
-- Arquivos: src/main/java/com/apiexternabackend/services/InvestidorService.java, src/main/java/com/apiexternabackend/resources/InvestidorResource.java, src/main/java/com/apiexternabackend/domains/dtos/InvestidorRequestDTO.java (remover), src/test/java/com/apiexternabackend/services/InvestidorServiceTest.java, src/test/java/com/apiexternabackend/resources/InvestidorResourceTest.java, src/test/java/com/apiexternabackend/services/AutenticacaoServiceTest.java, src/test/java/com/apiexternabackend/resources/AuthResourceTest.java
-- Notas: remove `POST /investidores`/`InvestidorService.cadastrar` e os testes @spec:AC-051/052/053 (retirados da spec `investidor`). Reescreve `AutenticacaoServiceTest` (hoje `@Disabled`, todos os métodos vazios) com asserts reais; cria `AuthResourceTest` novo.
+- Arquivos: src/main/java/com/apiexternabackend/services/InvestidorService.java, src/main/java/com/apiexternabackend/resources/InvestidorResource.java, src/test/java/com/apiexternabackend/services/InvestidorServiceTest.java, src/test/java/com/apiexternabackend/resources/InvestidorResourceTest.java, src/test/java/com/apiexternabackend/services/AutenticacaoServiceTest.java, src/test/java/com/apiexternabackend/resources/AuthResourceTest.java
+- Notas: remove `POST /investidores`/`InvestidorService.cadastrar` e os testes @spec:AC-051/052/053 (retirados da spec `investidor`) — inclui apagar `src/main/java/com/apiexternabackend/domains/dtos/InvestidorRequestDTO.java`, que por isso não existe mais e não está listado acima. Reescreve `AutenticacaoServiceTest` (hoje `@Disabled`, todos os métodos vazios) com asserts reais; cria `AuthResourceTest` novo.
 
-## T-418 — Testes de segurança fim a fim + catálogo + mapeamento [pendente]
-
+## T-418 — Testes de segurança fim a fim + catálogo + mapeamento [concluida]
 - Refs: AC-006, AC-007, AC-438, AC-439, AC-440, AC-441, AC-442
 - Arquivos: src/test/java/com/apiexternabackend/config/SecurityIntegrationTest.java, docs/erros.md, docs/mapeamento-atual.html
 - Notas: depende de T-414..T-417 concluídas. `@SpringBootTest` + `@AutoConfigureMockMvc` real (não `@WebMvcTest`) para exercitar o `SecurityFilterChain` de verdade: 401 sem token, 200 com token válido, 401 token expirado (gerar token com `exp` no passado), isolamento entre dois investidores de verdade (não mock).

@@ -1,7 +1,7 @@
 {
   "feature": "autenticacao-investidor",
-  "timestamp": "2026-09-05T00:13:23.185Z",
-  "gitRev": "8214940",
+  "timestamp": "2026-09-05T00:22:58.799Z",
+  "gitRev": "c1fc546",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
@@ -47,12 +47,42 @@
       "testName": null,
       "method": "exitcode"
     },
+    "AC-007": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
     "AC-443": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
     "AC-437": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-438": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-439": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-440": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-441": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-442": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
