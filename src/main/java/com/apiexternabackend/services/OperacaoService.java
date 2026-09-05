@@ -37,6 +37,7 @@ public class OperacaoService {
     private final PosicaoService posicaoService;
     private final OperacaoMapper mapper;
     private final CotacaoCacheService cotacaoCacheService;
+    private final CambioCacheService cambioCacheService;
 
     @Transactional
     public OperacaoResponseDTO comprar(OperacaoRequestDTO dto, Long investidorId) {
@@ -60,11 +61,13 @@ public class OperacaoService {
         operacao.setPrecoManual(precoManual);
         operacao.setCotacaoNoMomento(cotacao.preco()); // AC-461
         operacao.setDataHora(LocalDateTime.now());
+        CambioCacheService.CambioObtido cambioObtido = aplicarTaxaCambio(operacao, acao); // AC-486/AC-487
 
         operacao = operacaoRepository.save(operacao); // AC-407
         posicaoService.recalcular(carteira, acao);    // AC-402
 
-        return comAvisoDeCotacaoDesatualizada(mapper.toResponse(operacao), obtida);
+        OperacaoResponseDTO response = comAvisoDeCotacaoDesatualizada(mapper.toResponse(operacao), obtida);
+        return comAvisoDeCambioDesatualizado(response, cambioObtido);
     }
 
     @Transactional
@@ -100,11 +103,13 @@ public class OperacaoService {
         operacao.setPrecoManual(precoManual);
         operacao.setCotacaoNoMomento(cotacao.preco()); // AC-461
         operacao.setDataHora(LocalDateTime.now());
+        CambioCacheService.CambioObtido cambioObtido = aplicarTaxaCambio(operacao, acao); // AC-486/AC-487
 
         operacao = operacaoRepository.save(operacao); // AC-407
         posicaoService.recalcular(carteira, acao);    // AC-405 (zera posição se necessário)
 
-        return comAvisoDeCotacaoDesatualizada(mapper.toResponse(operacao), obtida);
+        OperacaoResponseDTO response = comAvisoDeCotacaoDesatualizada(mapper.toResponse(operacao), obtida);
+        return comAvisoDeCambioDesatualizado(response, cambioObtido);
     }
 
     @Transactional
@@ -196,5 +201,33 @@ public class OperacaoService {
     }
 
     private record CotacaoObtida(CotacaoResultado resultado, boolean desatualizada) {
+    }
+
+    /**
+     * Q-MAP-10: grava a taxa de câmbio do momento em operações de ativo USD;
+     * ativos BRL usam taxa 1 — cálculo uniforme, sem caminho especial (AC-487).
+     * Retorna null quando não houve busca de câmbio (ativo BRL, sem aviso possível).
+     */
+    private CambioCacheService.CambioObtido aplicarTaxaCambio(Operacao operacao, Acao acao) {
+        if (!"USD".equals(acao.getMoeda())) {
+            operacao.setTaxaCambioNaOperacao(BigDecimal.ONE);
+            operacao.setDataHoraTaxaCambio(operacao.getDataHora());
+            return null;
+        }
+        CambioCacheService.CambioObtido obtido = cambioCacheService.obterTaxaAtual(); // AC-486/AC-488/AC-489/AC-490
+        operacao.setTaxaCambioNaOperacao(obtido.resultado().taxa());
+        operacao.setDataHoraTaxaCambio(obtido.resultado().dataHora());
+        return obtido;
+    }
+
+    private OperacaoResponseDTO comAvisoDeCambioDesatualizado(OperacaoResponseDTO response, CambioCacheService.CambioObtido obtido) {
+        if (obtido == null || !obtido.desatualizado()) {
+            return response;
+        }
+        List<String> avisos = new ArrayList<>(response.getAvisos());
+        avisos.add("Taxa de câmbio USD-BRL pode estar desatualizada — fontes externas indisponíveis no momento da operação; usando última taxa conhecida de "
+                + obtido.resultado().dataHora() + ".");
+        response.setAvisos(avisos);
+        return response;
     }
 }

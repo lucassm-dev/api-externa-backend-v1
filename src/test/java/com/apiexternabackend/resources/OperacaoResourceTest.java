@@ -70,7 +70,7 @@ class OperacaoResourceTest {
 
     private OperacaoResponseDTO buildResponse(TipoOperacao tipo) {
         return new OperacaoResponseDTO(1L, 1L, "PETR4", tipo, 100,
-                new BigDecimal("38"), new BigDecimal("3800"), LocalDateTime.now(), "BRL", List.of(), null, null);
+                new BigDecimal("38"), new BigDecimal("3800"), LocalDateTime.now(), "BRL", List.of(), null, null, null);
     }
 
     @Test
@@ -189,7 +189,7 @@ class OperacaoResourceTest {
         OperacaoResponseDTO comAviso = new OperacaoResponseDTO(1L, 1L, "PETR4", TipoOperacao.COMPRA, 100,
                 new BigDecimal("4750.00"), new BigDecimal("475000.00"), LocalDateTime.now(), "BRL",
                 List.of("O preço informado (4750.00) está 100x acima da cotação atual (47.50). Confirme se está correto."),
-                null, null);
+                null, null, null);
         when(operacaoService.comprar(any(), eq(INVESTIDOR_ID))).thenReturn(comAviso);
 
         mockMvc.perform(post("/operacoes/compra")
@@ -246,7 +246,7 @@ class OperacaoResourceTest {
         OperacaoResponseDTO comAviso = new OperacaoResponseDTO(1L, 1L, "PETR4", TipoOperacao.COMPRA, 100,
                 new BigDecimal("38.00"), new BigDecimal("3800.00"), LocalDateTime.now(), "BRL",
                 List.of("Cotação pode estar desatualizada — fonte externa indisponível ou com cota excedida no momento da operação; usando último valor conhecido de 2026-09-05T00:00."),
-                null, null);
+                null, null, null);
         when(operacaoService.comprar(any(), eq(INVESTIDOR_ID))).thenReturn(comAviso);
 
         mockMvc.perform(post("/operacoes/compra")
