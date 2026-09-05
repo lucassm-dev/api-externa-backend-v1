@@ -101,8 +101,8 @@ Implementação: `src/main/java/com/apiexternabackend/resources/exceptions/`.
 |---|---|---|---|
 | EXT-007 | Falha de infraestrutura ao consultar fonte externa durante o cadastro de corretora (CNPJ/Receita, CEP/ViaCEP ou CVM indisponíveis — a fonte não respondeu, diferente de COR-003 onde ela respondeu e disse "não autorizada") | 503 | IntegracaoExternaException (limiteExcedido=false) |
 | EXT-008 | Ticker não encontrado na fonte de cotação (brapi/Twelve Data) | 422 | RegraVioladaException |
-| EXT-009 | Limite de requisições da fonte de cotação excedido | 429 | IntegracaoExternaException (limiteExcedido=true) |
-| EXT-010 | Fonte de cotação indisponível (não é limite de cota) | 503 | IntegracaoExternaException (limiteExcedido=false) |
+| EXT-009 | Limite de requisições da fonte de cotação excedido — em `PUT /acoes/{id}/atualizar-cotacao` continua 429 explícito; em compra/venda, desde a SPEC-07 (Q-MAP-06), não derruba mais a operação | 429 (atualizar-cotacao) / prossegue com aviso (compra/venda) | IntegracaoExternaException (limiteExcedido=true) |
+| EXT-010 | Fonte de cotação indisponível (não é limite de cota) — mesmo tratamento: 503/fallback em atualizar-cotacao, prossegue com aviso em compra/venda | 503 (atualizar-cotacao) / prossegue com aviso (compra/venda) | IntegracaoExternaException (limiteExcedido=false) |
 
 ## VAL — Validação de payload
 
@@ -124,6 +124,13 @@ Implementação: `src/main/java/com/apiexternabackend/resources/exceptions/`.
   infraestrutura externa, tente de novo". Se algum consumidor precisar
   distinguir qual das três falhou, isso vira um código mais granular depois —
   não foi necessário até aqui.
-- Cota de API externa estourada (`EXT-009`) nunca derruba compra/venda hoje —
-  ver Fora de escopo da SPEC-01: esse fallback é da SPEC-07 (cache de
-  cotação), junto da decisão Q-MAP-06.
+- Cota de API externa estourada (`EXT-009`) ou fonte indisponível (`EXT-010`)
+  não derrubam mais compra/venda desde a SPEC-07 (Q-MAP-06): a operação
+  prossegue com a última cotação conhecida (`Acao.cotacaoAtual`), com um
+  aviso em `avisos[]` sobre a idade do dado. Só quando a ação nunca teve
+  cotação salva (nunca foi buscada com sucesso) é que a operação é recusada
+  — sem fallback possível.
+- Desde a SPEC-07, `cotacaoAtual`/`dataHoraCotacao` funcionam como cache com
+  TTL (`cotacao.cache-ttl-minutos`, padrão 15min): dentro do TTL, comprar,
+  vender e atualizar cotação reaproveitam o valor salvo sem chamar a fonte
+  externa. `PUT /acoes/{id}/atualizar-cotacao?forcar=true` ignora o cache.
