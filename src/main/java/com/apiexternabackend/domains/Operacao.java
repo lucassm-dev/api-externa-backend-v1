@@ -67,4 +67,13 @@ public class Operacao {
 
     @Column(name = "lucro_realizado", precision = 18, scale = 4)
     private BigDecimal lucroRealizado;
+
+    @Column(name = "taxa_cambio_na_operacao", nullable = false, precision = 18, scale = 6)
+    private BigDecimal taxaCambioNaOperacao = BigDecimal.ONE;
+
+    @Column(name = "data_hora_taxa_cambio")
+    private LocalDateTime dataHoraTaxaCambio;
+
+    @Column(name = "lucro_realizado_brl", precision = 18, scale = 4)
+    private BigDecimal lucroRealizadoBrl;
 }

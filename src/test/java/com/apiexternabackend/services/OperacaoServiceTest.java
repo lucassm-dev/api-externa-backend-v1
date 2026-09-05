@@ -73,7 +73,7 @@ class OperacaoServiceTest {
         acaoBR = new Acao(1L, "PETR4", "Petrobras", Mercado.BR, "BRL", new BigDecimal("38"), LocalDateTime.now(), true);
         acaoUS = new Acao(2L, "AAPL", "Apple", Mercado.US, "USD", new BigDecimal("150"), LocalDateTime.now(), true);
 
-        operacao = new Operacao(1L, carteiraBR, acaoBR, TipoOperacao.COMPRA, 100, new BigDecimal("38"), LocalDateTime.now(), false, new BigDecimal("38"), true, null, null);
+        operacao = new Operacao(1L, carteiraBR, acaoBR, TipoOperacao.COMPRA, 100, new BigDecimal("38"), LocalDateTime.now(), false, new BigDecimal("38"), true, null, null, BigDecimal.ONE, null, null);
 
         responseDTO = new OperacaoResponseDTO(1L, 1L, "PETR4", TipoOperacao.COMPRA, 100,
                 new BigDecimal("38"), new BigDecimal("3800"), LocalDateTime.now(), "BRL", java.util.List.of(), null, null);
@@ -119,7 +119,7 @@ class OperacaoServiceTest {
     @Test
     @DisplayName("@spec:AC-404 Não é possível vender mais que a posição atual")
     void deveRejeitarVendaAcimaDataPosicao() {
-        CarteiraAcao posicao = new CarteiraAcao(1L, carteiraBR, acaoBR, 50, new BigDecimal("38"));
+        CarteiraAcao posicao = new CarteiraAcao(1L, carteiraBR, acaoBR, 50, new BigDecimal("38"), BigDecimal.ZERO);
         when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
         when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
         when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L)).thenReturn(Optional.of(posicao));
@@ -308,7 +308,7 @@ class OperacaoServiceTest {
     @Test
     @DisplayName("@spec:AC-483 Fonte indisponível em venda prossegue com aviso usando a última cotação conhecida")
     void deveVenderComAvisoQuandoFonteIndisponivel() {
-        CarteiraAcao posicao = new CarteiraAcao(1L, carteiraBR, acaoBR, 100, new BigDecimal("30"));
+        CarteiraAcao posicao = new CarteiraAcao(1L, carteiraBR, acaoBR, 100, new BigDecimal("30"), BigDecimal.ZERO);
         when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
         when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
         when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L)).thenReturn(Optional.of(posicao));

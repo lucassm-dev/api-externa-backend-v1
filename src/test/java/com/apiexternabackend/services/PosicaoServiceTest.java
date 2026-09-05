@@ -86,7 +86,7 @@ class PosicaoServiceTest {
     @Test
     @DisplayName("@spec:AC-405 Venda que zera a posição remove a posição")
     void deveRemoverPosicaoQuandoZerada() {
-        CarteiraAcao posicao = new CarteiraAcao(1L, carteira, acao, 100, new BigDecimal("38"));
+        CarteiraAcao posicao = new CarteiraAcao(1L, carteira, acao, 100, new BigDecimal("38"), BigDecimal.ZERO);
         when(operacaoRepository.findByCarteiraIdAndAcaoIdAndAtivoTrueOrderByDataHoraAsc(1L, 1L))
                 .thenReturn(List.of(compra(100, "38"), venda(100, "42")));
         when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L))
@@ -138,7 +138,7 @@ class PosicaoServiceTest {
     @Test
     @DisplayName("@spec:AC-413 Excluir lançamento recalcula posição; sem quantidade = posição removida")
     void deveRemoverPosicaoAoExcluirUnicoLancamento() {
-        CarteiraAcao posicao = new CarteiraAcao(1L, carteira, acao, 100, new BigDecimal("38"));
+        CarteiraAcao posicao = new CarteiraAcao(1L, carteira, acao, 100, new BigDecimal("38"), BigDecimal.ZERO);
         when(operacaoRepository.findByCarteiraIdAndAcaoIdAndAtivoTrueOrderByDataHoraAsc(1L, 1L))
                 .thenReturn(List.of());  // histórico vazio após exclusão
         when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L))
