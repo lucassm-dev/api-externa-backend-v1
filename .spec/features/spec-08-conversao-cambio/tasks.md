@@ -16,7 +16,7 @@
 
 ## T-451 — CambioFacade: AwesomeAPI primário, PTAX fallback [concluida]
 - Refs: AC-488
-- Arquivos: src/main/java/com/apiexternabackend/infra/facade/CambioFacade.java
+- Arquivos: src/main/java/com/apiexternabackend/infra/facade/CambioFacade.java, src/main/java/com/apiexternabackend/infra/facade/CambioResultado.java
 
 ## T-452 — CambioCacheService: TTL global + fallback última taxa conhecida [concluida]
 - Refs: AC-489, AC-490, AC-491, AC-492
@@ -50,13 +50,11 @@
 - Refs: AC-486, AC-493, AC-494
 - Arquivos: src/test/java/com/apiexternabackend/resources/OperacaoResourceTest.java
 
-## T-460 — Remove bloqueio de mercado entre carteira e ação (Q-MAP-09) [pendente]
-
+## T-460 — Remove bloqueio de mercado entre carteira e ação (Q-MAP-09) [concluida]
 - Refs: AC-497
 - Arquivos: src/main/java/com/apiexternabackend/services/OperacaoService.java, src/test/java/com/apiexternabackend/services/OperacaoServiceTest.java
 - Notas: remove `validarMercado`/OPE-002; testes AC-403/AC-305 (specs `operacao-movimentacao`/`carteira`) passam a provar o comportamento novo (permitido), mantendo a tag original — mesma técnica já usada em AC-432 (SPEC-01) para preservar um AC quando o comportamento por trás dele muda.
 
-## T-461 — Atualizar catálogo de erros e mapeamento vivo [pendente]
-
+## T-461 — Atualizar catálogo de erros e mapeamento vivo [concluida]
 - Refs: AC-486, AC-487, AC-488, AC-489, AC-490, AC-491, AC-492, AC-493, AC-494, AC-495, AC-496, AC-497
 - Arquivos: docs/erros.md, docs/mapeamento-atual.html
