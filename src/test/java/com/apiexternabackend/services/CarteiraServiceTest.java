@@ -38,6 +38,7 @@ class CarteiraServiceTest {
     @Mock private CarteiraRepository carteiraRepository;
     @Mock private InvestidorRepository investidorRepository;
     @Mock private CorretoraRepository corretoraRepository;
+    @Mock private com.apiexternabackend.repositories.CarteiraAcaoRepository carteiraAcaoRepository;
     @Mock private CarteiraMapper mapper;
 
     @InjectMocks
@@ -151,14 +152,27 @@ class CarteiraServiceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-308 Excluir carteira marca como inativa — exclusão lógica")
+    @DisplayName("@spec:AC-308 @spec:AC-453 Excluir carteira sem posição ativa marca como inativa — exclusão lógica")
     void deveExcluirLogicamenteCarteira() {
         when(carteiraRepository.findById(1L)).thenReturn(Optional.of(carteiraBR));
+        when(carteiraAcaoRepository.countByCarteiraIdAndQuantidadeGreaterThan(1L, 0)).thenReturn(0L);
 
         service.excluir(1L, INVESTIDOR_ID);
 
         assertThat(carteiraBR.getAtiva()).isFalse();
         verify(carteiraRepository).save(carteiraBR);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-452 Excluir carteira com posição ativa é bloqueado")
+    void deveBloquearExclusaoDeCarteiraComPosicaoAtiva() {
+        when(carteiraRepository.findById(1L)).thenReturn(Optional.of(carteiraBR));
+        when(carteiraAcaoRepository.countByCarteiraIdAndQuantidadeGreaterThan(1L, 0)).thenReturn(3L);
+
+        assertThatThrownBy(() -> service.excluir(1L, INVESTIDOR_ID))
+                .isInstanceOf(com.apiexternabackend.resources.exceptions.RegraVioladaException.class);
+
+        verify(carteiraRepository, org.mockito.Mockito.never()).save(any());
     }
 
     @Test

@@ -119,11 +119,11 @@ para que ela deixe de aparecer no catálogo sem perder o histórico.
 | ID | Suposição | Status | Resolução |
 |---|---|---|---|
 | ASM-405 | Exclusão lógica usa campo `ativo BOOLEAN DEFAULT TRUE` adicionado via migration | confirmada | Usuário confirmou padrão de exclusão lógica |
-| ASM-406 | `GET /corretoras`, `GET /investidores` e `GET /acoes` filtram apenas registros ativos | aberta | — |
-| ASM-407 | `DELETE /acoes/{ticker}` usa o ticker como identificador (não ID numérico) | aberta | — |
+| ASM-406 | `GET /corretoras`, `GET /investidores` e `GET /acoes` filtram apenas registros ativos | confirmada | Confirmado na investigação da SPEC-03: as três já filtravam (`findAllByAtivoTrue`) desde que este documento foi escrito |
+| ASM-407 | `DELETE /acoes/{ticker}` usa o ticker como identificador (não ID numérico) | confirmada | Confirmado — é assim desde a implementação original |
 
 ## Perguntas em aberto
 
 | ID | Pergunta | Status | Resposta |
 |---|---|---|---|
-| Q-404 | As listagens (`GET`) já filtram por `ativo = true` ou precisamos adicionar esse filtro? | aberta | — |
+| Q-404 | As listagens (`GET`) já filtram por `ativo = true` ou precisamos adicionar esse filtro? | respondida | Sim, já filtravam (`GET /acoes`, `GET /corretoras`, `GET /investidores`). O gap real era a **busca individual** por ticker (`GET /acoes/ticker/{ticker}`), corrigido na SPEC-03 (ver `spec-03-recadastro-exclusao`) |

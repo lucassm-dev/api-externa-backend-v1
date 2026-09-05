@@ -44,6 +44,7 @@ class CorretoraServiceTest {
     private static final String CNPJ_INVALIDO_DIGITO = "12345678000100";
 
     @Mock private CorretoraRepository repository;
+    @Mock private com.apiexternabackend.repositories.CarteiraRepository carteiraRepository;
     @Mock private CorretoraMapper mapper;
     @Mock private CnpjFacade cnpjFacade;
     @Mock private CepFacade cepFacade;
@@ -107,7 +108,7 @@ class CorretoraServiceTest {
     @Test
     @DisplayName("@spec:AC-419 CorretoraService delega validação ao CnpjFacade sem reimplementar")
     void deveDelegarValidacaoAoCnpjFacade() {
-        when(repository.existsByCnpj(any())).thenReturn(false);
+        when(repository.existsByCnpjAndAtivoTrue(any())).thenReturn(false);
         when(cnpjFacade.buscar(any())).thenReturn(cnpjResponse);
         when(cvmFacade.verificar(any())).thenReturn(ResultadoVerificacaoCvm.autorizada(LocalDate.now()));
         when(repository.save(any())).thenReturn(corretora);
@@ -126,6 +127,7 @@ class CorretoraServiceTest {
         ativa.setId(1L);
         ativa.setAtivo(true);
         when(repository.findByIdAndAtivoTrue(1L)).thenReturn(java.util.Optional.of(ativa));
+        when(carteiraRepository.countByCorretoraIdAndAtivaTrue(1L)).thenReturn(0L);
 
         service.excluir(1L);
 
@@ -143,6 +145,49 @@ class CorretoraServiceTest {
     }
 
     @Test
+    @DisplayName("@spec:AC-454 Excluir corretora com carteira ativa vinculada é bloqueado")
+    void deveBloquearExclusaoComCarteiraAtivaVinculada() {
+        Corretora ativa = new Corretora();
+        ativa.setId(1L);
+        ativa.setAtivo(true);
+        when(repository.findByIdAndAtivoTrue(1L)).thenReturn(java.util.Optional.of(ativa));
+        when(carteiraRepository.countByCorretoraIdAndAtivaTrue(1L)).thenReturn(1L);
+
+        assertThatThrownBy(() -> service.excluir(1L))
+                .isInstanceOf(com.apiexternabackend.resources.exceptions.RegraVioladaException.class);
+
+        verify(repository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-455 Excluir corretora sem carteira ativa vinculada é permitido")
+    void devePermitirExclusaoSemCarteiraVinculada() {
+        Corretora ativa = new Corretora();
+        ativa.setId(1L);
+        ativa.setAtivo(true);
+        when(repository.findByIdAndAtivoTrue(1L)).thenReturn(java.util.Optional.of(ativa));
+        when(carteiraRepository.countByCorretoraIdAndAtivaTrue(1L)).thenReturn(0L);
+
+        service.excluir(1L);
+
+        verify(repository).save(ativa);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-445 Recadastrar CNPJ de corretora excluída funciona (verificação de duplicidade só considera ativas)")
+    void deveRecadastrarCnpjDeCorretoraExcluida() {
+        when(repository.existsByCnpjAndAtivoTrue(CNPJ_VALIDO)).thenReturn(false);
+        when(cnpjFacade.buscar(any())).thenReturn(cnpjResponse);
+        when(cvmFacade.verificar(any())).thenReturn(ResultadoVerificacaoCvm.autorizada(LocalDate.now()));
+        when(repository.save(any())).thenReturn(corretora);
+        when(mapper.toResponse(corretora)).thenReturn(responseDTO);
+
+        service.cadastrar(new CorretoraRequestDTO(CNPJ_VALIDO));
+
+        verify(repository).existsByCnpjAndAtivoTrue(CNPJ_VALIDO);
+    }
+
+    @Test
     @DisplayName("@spec:AC-433 Corretora não encontrada traz o código COR-001 do catálogo")
     void deveTrazerCodigoCor001AoNaoEncontrarCorretora() {
         when(repository.findById(99L)).thenReturn(java.util.Optional.empty());
@@ -156,7 +201,7 @@ class CorretoraServiceTest {
     @Test
     @DisplayName("@spec:AC-102 CNPJ válido busca dados cadastrais e endereço e persiste a corretora")
     void deveBuscarDadosEPersistirCorretoraValida() {
-        when(repository.existsByCnpj(CNPJ_VALIDO)).thenReturn(false);
+        when(repository.existsByCnpjAndAtivoTrue(CNPJ_VALIDO)).thenReturn(false);
         when(cnpjFacade.buscar(CNPJ_VALIDO)).thenReturn(cnpjResponse);
         when(cvmFacade.verificar(CNPJ_VALIDO)).thenReturn(ResultadoVerificacaoCvm.autorizada(LocalDate.now()));
         when(repository.save(any())).thenReturn(corretora);
@@ -171,7 +216,7 @@ class CorretoraServiceTest {
     @Test
     @DisplayName("@spec:AC-103 CNPJ não encontrado na Receita impede o cadastro")
     void deveRejeitarCnpjNaoEncontradoNaReceita() {
-        when(repository.existsByCnpj(CNPJ_VALIDO)).thenReturn(false);
+        when(repository.existsByCnpjAndAtivoTrue(CNPJ_VALIDO)).thenReturn(false);
         when(cnpjFacade.buscar(CNPJ_VALIDO))
                 .thenThrow(new RegraVioladaException("COR-003", "CNPJ não encontrado na base da Receita"));
 
@@ -181,9 +226,9 @@ class CorretoraServiceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-104 CNPJ duplicado é impedido")
+    @DisplayName("@spec:AC-104 @spec:AC-446 CNPJ duplicado entre ativos é impedido")
     void deveRejeitarCnpjDuplicado() {
-        when(repository.existsByCnpj(CNPJ_VALIDO)).thenReturn(true);
+        when(repository.existsByCnpjAndAtivoTrue(CNPJ_VALIDO)).thenReturn(true);
 
         assertThatThrownBy(() -> service.cadastrar(new CorretoraRequestDTO(CNPJ_VALIDO)))
                 .isInstanceOf(RecursoDuplicadoException.class);
@@ -192,7 +237,7 @@ class CorretoraServiceTest {
     @Test
     @DisplayName("@spec:AC-433 CNPJ duplicado traz o código COR-002 do catálogo")
     void deveTrazerCodigoCor002AoDuplicarCnpj() {
-        when(repository.existsByCnpj(CNPJ_VALIDO)).thenReturn(true);
+        when(repository.existsByCnpjAndAtivoTrue(CNPJ_VALIDO)).thenReturn(true);
 
         assertThatThrownBy(() -> service.cadastrar(new CorretoraRequestDTO(CNPJ_VALIDO)))
                 .isInstanceOf(RecursoDuplicadoException.class)
@@ -203,7 +248,7 @@ class CorretoraServiceTest {
     @Test
     @DisplayName("@spec:AC-105 Corretora não autorizada na CVM não é cadastrada")
     void deveRejeitarCorretoraInautorizada() {
-        when(repository.existsByCnpj(CNPJ_VALIDO)).thenReturn(false);
+        when(repository.existsByCnpjAndAtivoTrue(CNPJ_VALIDO)).thenReturn(false);
         when(cnpjFacade.buscar(CNPJ_VALIDO)).thenReturn(cnpjResponse);
         when(cvmFacade.verificar(CNPJ_VALIDO))
                 .thenReturn(ResultadoVerificacaoCvm.naoAutorizada(LocalDate.now(), "Corretora não autorizada na CVM"));
@@ -216,7 +261,7 @@ class CorretoraServiceTest {
     @Test
     @DisplayName("@spec:AC-433 Corretora não autorizada na CVM traz o código COR-003 do catálogo")
     void deveTrazerCodigoCor003AoNaoAutorizar() {
-        when(repository.existsByCnpj(CNPJ_VALIDO)).thenReturn(false);
+        when(repository.existsByCnpjAndAtivoTrue(CNPJ_VALIDO)).thenReturn(false);
         when(cnpjFacade.buscar(CNPJ_VALIDO)).thenReturn(cnpjResponse);
         when(cvmFacade.verificar(CNPJ_VALIDO))
                 .thenReturn(ResultadoVerificacaoCvm.naoAutorizada(LocalDate.now(), "Corretora não autorizada na CVM"));
@@ -230,7 +275,7 @@ class CorretoraServiceTest {
     @Test
     @DisplayName("@spec:AC-106 Falha ao verificar CVM retorna mensagem de falha, não de reprovada")
     void deveMensagemDeFalhaQuandoCvmIndisponivel() {
-        when(repository.existsByCnpj(CNPJ_VALIDO)).thenReturn(false);
+        when(repository.existsByCnpjAndAtivoTrue(CNPJ_VALIDO)).thenReturn(false);
         when(cnpjFacade.buscar(CNPJ_VALIDO)).thenReturn(cnpjResponse);
         when(cvmFacade.verificar(CNPJ_VALIDO))
                 .thenReturn(ResultadoVerificacaoCvm.falhaVerificacao(null,
@@ -245,7 +290,7 @@ class CorretoraServiceTest {
     @Test
     @DisplayName("@spec:AC-434 Falha de infraestrutura ao verificar CVM retorna EXT-007 (503), distinto de COR-003 (422)")
     void deveRetornarExt007QuandoCvmIndisponivel() {
-        when(repository.existsByCnpj(CNPJ_VALIDO)).thenReturn(false);
+        when(repository.existsByCnpjAndAtivoTrue(CNPJ_VALIDO)).thenReturn(false);
         when(cnpjFacade.buscar(CNPJ_VALIDO)).thenReturn(cnpjResponse);
         when(cvmFacade.verificar(CNPJ_VALIDO))
                 .thenReturn(ResultadoVerificacaoCvm.falhaVerificacao(null,
@@ -261,7 +306,7 @@ class CorretoraServiceTest {
     @DisplayName("@spec:AC-107 Resposta informa a data da base CVM usada na verificação")
     void deveRetornarDataDaBaseCvmNaResposta() {
         LocalDate dataBase = LocalDate.now();
-        when(repository.existsByCnpj(CNPJ_VALIDO)).thenReturn(false);
+        when(repository.existsByCnpjAndAtivoTrue(CNPJ_VALIDO)).thenReturn(false);
         when(cnpjFacade.buscar(CNPJ_VALIDO)).thenReturn(cnpjResponse);
         when(cvmFacade.verificar(CNPJ_VALIDO)).thenReturn(ResultadoVerificacaoCvm.autorizada(dataBase));
         when(repository.save(any())).thenReturn(corretora);

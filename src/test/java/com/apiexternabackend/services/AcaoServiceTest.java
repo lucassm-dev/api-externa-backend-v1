@@ -41,6 +41,7 @@ import static org.mockito.Mockito.when;
 class AcaoServiceTest {
 
     @Mock private AcaoRepository repository;
+    @Mock private com.apiexternabackend.repositories.CarteiraAcaoRepository carteiraAcaoRepository;
     @Mock private AcaoMapper mapper;
     @Mock private BrapiAdapter brapiAdapter;
     @Mock private TwelveDataAdapter twelveDataAdapter;
@@ -71,7 +72,7 @@ class AcaoServiceTest {
     @Test
     @DisplayName("@spec:AC-201 Ticker brasileiro válido é cadastrado com cotação BR e moeda BRL")
     void deveCadastrarAcaoBrasileira() {
-        when(repository.existsByTicker("PETR4")).thenReturn(false);
+        when(repository.existsByTickerAndAtivoTrue("PETR4")).thenReturn(false);
         when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(cotacaoBR);
         when(repository.save(any())).thenReturn(acaoBR);
         when(mapper.toResponse(acaoBR)).thenReturn(responseBR);
@@ -87,7 +88,7 @@ class AcaoServiceTest {
     @Test
     @DisplayName("@spec:AC-202 Ticker americano usa a fonte US (Twelve Data) e moeda USD")
     void deveCadastrarAcaoAmericana() {
-        when(repository.existsByTicker("AAPL")).thenReturn(false);
+        when(repository.existsByTickerAndAtivoTrue("AAPL")).thenReturn(false);
         when(twelveDataAdapter.buscarCotacao("AAPL")).thenReturn(cotacaoUS);
         when(repository.save(any())).thenReturn(acaoUS);
         when(mapper.toResponse(acaoUS)).thenReturn(responseUS);
@@ -103,7 +104,7 @@ class AcaoServiceTest {
     @Test
     @DisplayName("@spec:AC-203 Ticker inexistente na fonte impede o cadastro")
     void deveRejeitarTickerInexistente() {
-        when(repository.existsByTicker("XXXX3")).thenReturn(false);
+        when(repository.existsByTickerAndAtivoTrue("XXXX3")).thenReturn(false);
         when(brapiAdapter.buscarCotacao("XXXX3"))
                 .thenThrow(new RegraVioladaException("EXT-008", "Ticker não encontrado na fonte BR: XXXX3"));
 
@@ -113,9 +114,9 @@ class AcaoServiceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-204 Ticker duplicado é impedido")
+    @DisplayName("@spec:AC-204 @spec:AC-446 Ticker duplicado entre ativos é impedido")
     void deveRejeitarTickerDuplicado() {
-        when(repository.existsByTicker("PETR4")).thenReturn(true);
+        when(repository.existsByTickerAndAtivoTrue("PETR4")).thenReturn(true);
 
         assertThatThrownBy(() -> service.cadastrar(new AcaoRequestDTO("PETR4", Mercado.BR)))
                 .isInstanceOf(RecursoDuplicadoException.class);
@@ -124,7 +125,7 @@ class AcaoServiceTest {
     @Test
     @DisplayName("@spec:AC-205 Mercado BR usa fonte BR, mercado US usa fonte US — nunca a fonte errada")
     void deveRotearParaFonteCorretaConforme() {
-        when(repository.existsByTicker("PETR4")).thenReturn(false);
+        when(repository.existsByTickerAndAtivoTrue("PETR4")).thenReturn(false);
         when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(cotacaoBR);
         when(repository.save(any())).thenReturn(acaoBR);
         when(mapper.toResponse(acaoBR)).thenReturn(responseBR);
@@ -148,7 +149,7 @@ class AcaoServiceTest {
     @Test
     @DisplayName("@spec:AC-207 Buscar por ticker existente retorna dados")
     void deveBuscarPorTickerExistente() {
-        when(repository.findByTicker("PETR4")).thenReturn(Optional.of(acaoBR));
+        when(repository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
         when(mapper.toResponse(acaoBR)).thenReturn(responseBR);
 
         AcaoResponseDTO result = service.buscarPorTicker("PETR4");
@@ -157,9 +158,9 @@ class AcaoServiceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-207 Buscar por ticker inexistente lança não encontrado")
+    @DisplayName("@spec:AC-207 @spec:AC-448 Buscar por ticker inexistente ou inativo lança não encontrado")
     void deveLancarNotFoundParaTickerInexistente() {
-        when(repository.findByTicker("XXXX3")).thenReturn(Optional.empty());
+        when(repository.findByTickerAndAtivoTrue("XXXX3")).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.buscarPorTicker("XXXX3"))
                 .isInstanceOf(RecursoNaoEncontradoException.class);
@@ -183,7 +184,7 @@ class AcaoServiceTest {
     @Test
     @DisplayName("@spec:AC-209 Cotação sempre acompanha data/hora de obtenção")
     void deveCotacaoAcompanharDataHora() {
-        when(repository.existsByTicker("PETR4")).thenReturn(false);
+        when(repository.existsByTickerAndAtivoTrue("PETR4")).thenReturn(false);
         when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(cotacaoBR);
         when(repository.save(any())).thenReturn(acaoBR);
         when(mapper.toResponse(acaoBR)).thenReturn(responseBR);
@@ -211,7 +212,7 @@ class AcaoServiceTest {
     @Test
     @DisplayName("@spec:AC-211 @spec:AC-429 Cota excedida resulta em exceção mapeada para 429 com mensagem de limite")
     void deveMensagemEspecificaParaLimiteExcedido() {
-        when(repository.existsByTicker("PETR4")).thenReturn(false);
+        when(repository.existsByTickerAndAtivoTrue("PETR4")).thenReturn(false);
         when(brapiAdapter.buscarCotacao("PETR4"))
                 .thenThrow(new IntegracaoExternaException("EXT-009", "Limite de requisições da fonte BR excedido", true));
 
@@ -240,13 +241,13 @@ class AcaoServiceTest {
     @Test
     @DisplayName("@spec:AC-433 Exceções de Ação carregam código do catálogo (ACA-001/ACA-002)")
     void deveExcecoesDeAcaoCarregaremCodigoDoCatalogo() {
-        when(repository.existsByTicker("PETR4")).thenReturn(true);
+        when(repository.existsByTickerAndAtivoTrue("PETR4")).thenReturn(true);
         assertThatThrownBy(() -> service.cadastrar(new AcaoRequestDTO("PETR4", Mercado.BR)))
                 .isInstanceOf(RecursoDuplicadoException.class)
                 .extracting(e -> ((RecursoDuplicadoException) e).getCodigo())
                 .isEqualTo("ACA-002");
 
-        when(repository.findByTicker("XXXX3")).thenReturn(Optional.empty());
+        when(repository.findByTickerAndAtivoTrue("XXXX3")).thenReturn(Optional.empty());
         assertThatThrownBy(() -> service.buscarPorTicker("XXXX3"))
                 .isInstanceOf(RecursoNaoEncontradoException.class)
                 .extracting(e -> ((RecursoNaoEncontradoException) e).getCodigo())
@@ -257,6 +258,7 @@ class AcaoServiceTest {
     @DisplayName("@spec:AC-424 Ação ativa é desativada ao excluir pelo ticker")
     void deveDesativarAcaoAoExcluir() {
         when(repository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
+        when(carteiraAcaoRepository.countByAcaoIdAndQuantidadeGreaterThan(acaoBR.getId(), 0)).thenReturn(0L);
 
         service.excluir("PETR4");
 
@@ -271,5 +273,59 @@ class AcaoServiceTest {
 
         assertThatThrownBy(() -> service.excluir("XXXX3"))
                 .isInstanceOf(RecursoNaoEncontradoException.class);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-444 Recadastrar ticker de ação excluída funciona (verificação de duplicidade só considera ativas)")
+    void deveRecadastrarTickerDeAcaoExcluida() {
+        when(repository.existsByTickerAndAtivoTrue("PETR4")).thenReturn(false);
+        when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(cotacaoBR);
+        when(repository.save(any())).thenReturn(acaoBR);
+        when(mapper.toResponse(acaoBR)).thenReturn(responseBR);
+
+        AcaoResponseDTO result = service.cadastrar(new AcaoRequestDTO("PETR4", Mercado.BR));
+
+        assertThat(result).isNotNull();
+        verify(repository).existsByTickerAndAtivoTrue("PETR4");
+    }
+
+    @Test
+    @DisplayName("@spec:AC-447 Recadastro cria linha nova — nunca reativa/reaproveita a linha antiga (histórico não é ressuscitado)")
+    void deveRecadastroSempreCriarLinhaNovaNuncaReativarAntiga() {
+        when(repository.existsByTickerAndAtivoTrue("PETR4")).thenReturn(false);
+        when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(cotacaoBR);
+        when(repository.save(any())).thenReturn(acaoBR);
+        when(mapper.toResponse(acaoBR)).thenReturn(responseBR);
+
+        service.cadastrar(new AcaoRequestDTO("PETR4", Mercado.BR));
+
+        org.mockito.ArgumentCaptor<Acao> captor = org.mockito.ArgumentCaptor.forClass(Acao.class);
+        verify(repository).save(captor.capture());
+        assertThat(captor.getValue().getId()).isNull();
+    }
+
+    @Test
+    @DisplayName("@spec:AC-450 Excluir ação com posição ativa (quantidade > 0) é bloqueado")
+    void deveBloquearExclusaoComPosicaoAtiva() {
+        when(repository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
+        when(carteiraAcaoRepository.countByAcaoIdAndQuantidadeGreaterThan(acaoBR.getId(), 0)).thenReturn(2L);
+
+        assertThatThrownBy(() -> service.excluir("PETR4"))
+                .isInstanceOf(com.apiexternabackend.resources.exceptions.RegraVioladaException.class)
+                .hasMessageContaining("2");
+
+        verify(repository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-451 Excluir ação com posições zeradas é permitido")
+    void devePermitirExclusaoComPosicoesZeradas() {
+        when(repository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
+        when(carteiraAcaoRepository.countByAcaoIdAndQuantidadeGreaterThan(acaoBR.getId(), 0)).thenReturn(0L);
+
+        service.excluir("PETR4");
+
+        verify(repository).save(acaoBR);
+        assertThat(acaoBR.getAtivo()).isFalse();
     }
 }
