@@ -46,6 +46,7 @@ class OperacaoServiceTest {
     @Mock private PosicaoService posicaoService;
     @Mock private OperacaoMapper mapper;
     @Mock private CotacaoCacheService cotacaoCacheService;
+    @Mock private CambioCacheService cambioCacheService;
 
     @InjectMocks
     private OperacaoService service;
@@ -285,6 +286,44 @@ class OperacaoServiceTest {
         assertThat(captor.getValue().getAtivo()).isFalse();
         verify(operacaoRepository, org.mockito.Mockito.never()).delete(any());
         verify(posicaoService).recalcular(carteiraBR, acaoBR);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-486 Compra em ação USD grava a taxa de câmbio do momento")
+    void deveGravarTaxaDeCambioNaCompraDeAcaoUsd() {
+        CotacaoResultado cotacao = new CotacaoResultado(new BigDecimal("150"), LocalDateTime.now());
+        when(carteiraService.buscarAtiva(2L, INVESTIDOR_ID)).thenReturn(carteiraUS);
+        when(acaoRepository.findByTickerAndAtivoTrue("AAPL")).thenReturn(Optional.of(acaoUS));
+        when(cotacaoCacheService.obter(acaoUS, false)).thenReturn(cotacao);
+        when(cambioCacheService.obterTaxaAtual()).thenReturn(
+                new CambioCacheService.CambioObtido(new com.apiexternabackend.infra.facade.CambioResultado(new BigDecimal("5.30"), LocalDateTime.now()), false));
+        when(operacaoRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(mapper.toResponse(any())).thenReturn(responseDTO);
+
+        service.comprar(new OperacaoRequestDTO(2L, "AAPL", 10, null), INVESTIDOR_ID);
+
+        org.mockito.ArgumentCaptor<Operacao> captor = org.mockito.ArgumentCaptor.forClass(Operacao.class);
+        verify(operacaoRepository).save(captor.capture());
+        assertThat(captor.getValue().getTaxaCambioNaOperacao()).isEqualByComparingTo("5.30");
+        assertThat(captor.getValue().getDataHoraTaxaCambio()).isNotNull();
+    }
+
+    @Test
+    @DisplayName("@spec:AC-487 Compra em ação BRL grava taxa de câmbio 1, sem chamar fonte de câmbio")
+    void deveGravarTaxaUmNaCompraDeAcaoBrl() {
+        CotacaoResultado cotacao = new CotacaoResultado(new BigDecimal("38.50"), LocalDateTime.now());
+        when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
+        when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
+        when(cotacaoCacheService.obter(acaoBR, false)).thenReturn(cotacao);
+        when(operacaoRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(mapper.toResponse(any())).thenReturn(responseDTO);
+
+        service.comprar(new OperacaoRequestDTO(1L, "PETR4", 100, null), INVESTIDOR_ID);
+
+        org.mockito.ArgumentCaptor<Operacao> captor = org.mockito.ArgumentCaptor.forClass(Operacao.class);
+        verify(operacaoRepository).save(captor.capture());
+        assertThat(captor.getValue().getTaxaCambioNaOperacao()).isEqualByComparingTo("1");
+        verify(cambioCacheService, org.mockito.Mockito.never()).obterTaxaAtual();
     }
 
     @Test

@@ -1,10 +1,13 @@
 package com.apiexternabackend.services;
 
 import com.apiexternabackend.domains.Acao;
+import com.apiexternabackend.domains.CarteiraAcao;
 import com.apiexternabackend.domains.Operacao;
+import com.apiexternabackend.domains.dtos.CarteiraConsolidadaResponseDTO;
 import com.apiexternabackend.domains.dtos.LucroRealizadoResponseDTO;
 import com.apiexternabackend.domains.enums.Mercado;
 import com.apiexternabackend.domains.enums.TipoOperacao;
+import com.apiexternabackend.infra.facade.CambioResultado;
 import com.apiexternabackend.mappers.CarteiraAcaoMapper;
 import com.apiexternabackend.mappers.OperacaoMapper;
 import com.apiexternabackend.repositories.CarteiraAcaoRepository;
@@ -31,6 +34,7 @@ class ConsultaOperacaoServiceTest {
     @Mock private OperacaoMapper operacaoMapper;
     @Mock private CarteiraAcaoMapper carteiraAcaoMapper;
     @Mock private CarteiraService carteiraService;
+    @Mock private CambioCacheService cambioCacheService;
 
     @InjectMocks
     private ConsultaOperacaoService service;
@@ -82,5 +86,60 @@ class ConsultaOperacaoServiceTest {
 
         // 100 (BRL) + 50 (USD convertido) = 150 — nunca 100 + 10 (misturaria moedas)
         assertThat(resposta.getTotal()).isEqualByComparingTo("150");
+    }
+
+    private CarteiraAcao posicao(String moeda, int quantidade, BigDecimal cotacaoAtual, BigDecimal custoTotalBrl) {
+        Acao acao = new Acao(1L, moeda.equals("USD") ? "AAPL" : "PETR4", "Empresa",
+                moeda.equals("USD") ? Mercado.US : Mercado.BR, moeda, cotacaoAtual, LocalDateTime.now(), true);
+        CarteiraAcao pos = new CarteiraAcao();
+        pos.setAcao(acao);
+        pos.setQuantidade(quantidade);
+        pos.setCustoTotalBrl(custoTotalBrl);
+        return pos;
+    }
+
+    @Test
+    @DisplayName("@spec:AC-493 @spec:AC-495 Consolidado soma valor investido e calcula valor de mercado com câmbio atual (BRL = taxa 1)")
+    void deveCalcularConsolidadoComCarteiraMultiMoeda() {
+        CarteiraAcao posicaoBrl = posicao("BRL", 100, new BigDecimal("40"), new BigDecimal("3000")); // investido 3000, mercado 100*40=4000
+        CarteiraAcao posicaoUsd = posicao("USD", 50, new BigDecimal("160"), new BigDecimal("10000")); // investido 10000 BRL, mercado 50*160*taxa
+        when(carteiraAcaoRepository.findByCarteiraId(1L)).thenReturn(List.of(posicaoBrl, posicaoUsd));
+        when(cambioCacheService.obterTaxaAtual()).thenReturn(
+                new CambioCacheService.CambioObtido(new CambioResultado(new BigDecimal("5"), LocalDateTime.now()), false));
+
+        CarteiraConsolidadaResponseDTO resposta = service.consolidado(1L, 10L);
+
+        // investido = 3000 + 10000 = 13000
+        assertThat(resposta.getValorInvestido()).isEqualByComparingTo("13000");
+        // mercado = (100*40*1) + (50*160*5) = 4000 + 40000 = 44000
+        assertThat(resposta.getValorDeMercado()).isEqualByComparingTo("44000");
+        assertThat(resposta.getLucroNaoRealizado()).isEqualByComparingTo("31000");
+    }
+
+    @Test
+    @DisplayName("@spec:AC-494 Consolidado exibe a taxa de câmbio atual usada e o horário")
+    void deveExibirTaxaEHorarioNoConsolidado() {
+        CarteiraAcao posicaoUsd = posicao("USD", 10, new BigDecimal("100"), new BigDecimal("1000"));
+        when(carteiraAcaoRepository.findByCarteiraId(1L)).thenReturn(List.of(posicaoUsd));
+        LocalDateTime agora = LocalDateTime.now();
+        when(cambioCacheService.obterTaxaAtual()).thenReturn(
+                new CambioCacheService.CambioObtido(new CambioResultado(new BigDecimal("5.25"), agora), false));
+
+        CarteiraConsolidadaResponseDTO resposta = service.consolidado(1L, 10L);
+
+        assertThat(resposta.getTaxaCambioAtual()).isEqualByComparingTo("5.25");
+        assertThat(resposta.getDataHoraTaxaCambio()).isEqualTo(agora);
+    }
+
+    @Test
+    @DisplayName("Consolidado de carteira 100% BRL não chama a fonte de câmbio")
+    void naoDeveChamarCambioParaCarteira100PorCentoBrl() {
+        CarteiraAcao posicaoBrl = posicao("BRL", 100, new BigDecimal("40"), new BigDecimal("3000"));
+        when(carteiraAcaoRepository.findByCarteiraId(1L)).thenReturn(List.of(posicaoBrl));
+
+        CarteiraConsolidadaResponseDTO resposta = service.consolidado(1L, 10L);
+
+        assertThat(resposta.getTaxaCambioAtual()).isEqualByComparingTo("1");
+        org.mockito.Mockito.verify(cambioCacheService, org.mockito.Mockito.never()).obterTaxaAtual();
     }
 }
