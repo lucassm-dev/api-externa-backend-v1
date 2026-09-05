@@ -10,13 +10,12 @@ import com.apiexternabackend.domains.dtos.OperacaoRequestDTO;
 import com.apiexternabackend.domains.dtos.OperacaoResponseDTO;
 import com.apiexternabackend.domains.enums.Mercado;
 import com.apiexternabackend.domains.enums.TipoOperacao;
-import com.apiexternabackend.infra.adapter.BrapiAdapter;
 import com.apiexternabackend.infra.adapter.CotacaoResultado;
-import com.apiexternabackend.infra.adapter.TwelveDataAdapter;
 import com.apiexternabackend.mappers.OperacaoMapper;
 import com.apiexternabackend.repositories.AcaoRepository;
 import com.apiexternabackend.repositories.CarteiraAcaoRepository;
 import com.apiexternabackend.repositories.OperacaoRepository;
+import com.apiexternabackend.resources.exceptions.IntegracaoExternaException;
 import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
 import com.apiexternabackend.resources.exceptions.RegraVioladaException;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,8 +45,7 @@ class OperacaoServiceTest {
     @Mock private CarteiraService carteiraService;
     @Mock private PosicaoService posicaoService;
     @Mock private OperacaoMapper mapper;
-    @Mock private BrapiAdapter brapiAdapter;
-    @Mock private TwelveDataAdapter twelveDataAdapter;
+    @Mock private CotacaoCacheService cotacaoCacheService;
 
     @InjectMocks
     private OperacaoService service;
@@ -87,13 +85,13 @@ class OperacaoServiceTest {
         CotacaoResultado cotacao = new CotacaoResultado(new BigDecimal("38.50"), LocalDateTime.now());
         when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
         when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
-        when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(cotacao);
+        when(cotacaoCacheService.obter(acaoBR, false)).thenReturn(cotacao);
         when(operacaoRepository.save(any())).thenReturn(operacao);
         when(mapper.toResponse(operacao)).thenReturn(responseDTO);
 
         service.comprar(new OperacaoRequestDTO(1L, "PETR4", 100, null), INVESTIDOR_ID);
 
-        verify(brapiAdapter).buscarCotacao("PETR4");
+        verify(cotacaoCacheService).obter(acaoBR, false);
     }
 
     @Test
@@ -137,7 +135,7 @@ class OperacaoServiceTest {
         CotacaoResultado cotacao = new CotacaoResultado(new BigDecimal("38"), LocalDateTime.now());
         when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
         when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
-        when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(cotacao);
+        when(cotacaoCacheService.obter(acaoBR, false)).thenReturn(cotacao);
         when(operacaoRepository.save(any())).thenReturn(operacao);
         when(mapper.toResponse(operacao)).thenReturn(responseDTO);
 
@@ -173,7 +171,7 @@ class OperacaoServiceTest {
         CotacaoResultado cotacao = new CotacaoResultado(new BigDecimal("9999999"), LocalDateTime.now());
         when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
         when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
-        when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(cotacao);
+        when(cotacaoCacheService.obter(acaoBR, false)).thenReturn(cotacao);
         when(operacaoRepository.save(any())).thenReturn(operacao);
         when(mapper.toResponse(operacao)).thenReturn(responseDTO);
 
@@ -198,7 +196,7 @@ class OperacaoServiceTest {
         CotacaoResultado cotacao = new CotacaoResultado(new BigDecimal("38.50"), LocalDateTime.now());
         when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
         when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
-        when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(cotacao);
+        when(cotacaoCacheService.obter(acaoBR, false)).thenReturn(cotacao);
         when(operacaoRepository.save(any())).thenReturn(operacao);
         when(mapper.toResponse(operacao)).thenReturn(responseDTO);
 
@@ -217,7 +215,7 @@ class OperacaoServiceTest {
         CotacaoResultado cotacao = new CotacaoResultado(new BigDecimal("38.50"), LocalDateTime.now());
         when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
         when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
-        when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(cotacao);
+        when(cotacaoCacheService.obter(acaoBR, false)).thenReturn(cotacao);
         when(operacaoRepository.save(any())).thenReturn(operacao);
         when(mapper.toResponse(operacao)).thenReturn(responseDTO);
 
@@ -236,7 +234,7 @@ class OperacaoServiceTest {
         CotacaoResultado cotacao = new CotacaoResultado(new BigDecimal("38.50"), LocalDateTime.now());
         when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
         when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
-        when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(cotacao);
+        when(cotacaoCacheService.obter(acaoBR, false)).thenReturn(cotacao);
 
         assertThatThrownBy(() -> service.comprar(
                 new OperacaoRequestDTO(1L, "PETR4", 100, new BigDecimal("40.123")), INVESTIDOR_ID))
