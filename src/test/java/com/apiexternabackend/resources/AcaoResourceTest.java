@@ -176,7 +176,7 @@ class AcaoResourceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-431 @spec:AC-433 PUT /acoes/{id}/atualizar-cotacao com cota estourada retorna 429 explícito com código EXT-009")
+    @DisplayName("@spec:AC-431 @spec:AC-433 @spec:AC-485 PUT /acoes/{id}/atualizar-cotacao com cota estourada retorna 429 explícito com código EXT-009")
     void deveRetornar429ParaAtualizarCotacaoComCotaEstourada() throws Exception {
         when(service.atualizarCotacao(1L, false))
                 .thenThrow(new IntegracaoExternaException("EXT-009", "Limite de requisições da fonte BR excedido. Tente mais tarde.", true));
