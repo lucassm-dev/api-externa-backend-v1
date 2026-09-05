@@ -43,19 +43,22 @@ Implementação: `src/main/java/com/apiexternabackend/resources/exceptions/`.
 | COR-001 | Corretora não encontrada | 404 | RecursoNaoEncontradoException |
 | COR-002 | Corretora já cadastrada (CNPJ duplicado) | 409 | RecursoDuplicadoException |
 | COR-003 | Regra de cadastro violada: CNPJ com formato/dígitos inválidos, CNPJ não encontrado na Receita, CEP não encontrado, ou corretora não autorizada na CVM (a fonte respondeu e disse que não está OK) | 422 | RegraVioladaException |
+| COR-004 | Exclusão bloqueada: existe carteira ativa vinculada à corretora | 422 | RegraVioladaException |
 
 ## ACA — Ação
 
 | Código | Situação | Status HTTP | Exceção |
 |---|---|---|---|
-| ACA-001 | Ação não encontrada | 404 | RecursoNaoEncontradoException |
-| ACA-002 | Ação já cadastrada (ticker duplicado) | 409 | RecursoDuplicadoException |
+| ACA-001 | Ação não encontrada (inclui ação existente porém inativa — busca individual e operação nunca enxergam ação excluída) | 404 | RecursoNaoEncontradoException |
+| ACA-002 | Ação já cadastrada (ticker duplicado **entre ativas** — ticker de ação excluída pode ser reutilizado) | 409 | RecursoDuplicadoException |
+| ACA-003 | Exclusão bloqueada: ação tem posição ativa (quantidade > 0) em pelo menos uma carteira | 422 | RegraVioladaException |
 
 ## CAR — Carteira
 
 | Código | Situação | Status HTTP | Exceção |
 |---|---|---|---|
-| CAR-001 | Carteira não encontrada (ou inativa) | 404 | RecursoNaoEncontradoException |
+| CAR-001 | Carteira não encontrada (ou inativa, ou de outro investidor — SPEC-02) | 404 | RecursoNaoEncontradoException |
+| CAR-002 | Exclusão bloqueada: carteira tem posição ativa (quantidade > 0) em pelo menos uma ação | 422 | RegraVioladaException |
 
 ## OPE — Operação
 

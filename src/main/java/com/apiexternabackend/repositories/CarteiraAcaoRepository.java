@@ -11,4 +11,8 @@ public interface CarteiraAcaoRepository extends JpaRepository<CarteiraAcao, Long
     Optional<CarteiraAcao> findByCarteiraIdAndAcaoId(Long carteiraId, Long acaoId);
 
     List<CarteiraAcao> findByCarteiraId(Long carteiraId);
+
+    long countByAcaoIdAndQuantidadeGreaterThan(Long acaoId, Integer quantidade);
+
+    long countByCarteiraIdAndQuantidadeGreaterThan(Long carteiraId, Integer quantidade);
 }

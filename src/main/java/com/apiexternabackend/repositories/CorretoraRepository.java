@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface CorretoraRepository extends JpaRepository<Corretora, Long> {
 
-    boolean existsByCnpj(String cnpj);
+    boolean existsByCnpjAndAtivoTrue(String cnpj);
 
     Optional<Corretora> findByCnpj(String cnpj);
 
