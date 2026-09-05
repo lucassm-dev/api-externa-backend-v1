@@ -9,6 +9,8 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AwesomeApiCotacaoDTO {
 
+    private String name;
     private String ask;
+    private String pctChange;
     private String timestamp;
 }

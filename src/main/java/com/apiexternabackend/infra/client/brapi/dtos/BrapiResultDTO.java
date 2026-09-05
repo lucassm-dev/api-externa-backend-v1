@@ -19,8 +19,12 @@ public class BrapiResultDTO {
     @JsonProperty("regularMarketPrice")
     private BigDecimal regularMarketPrice;
 
+    @JsonProperty("regularMarketChangePercent")
+    private BigDecimal regularMarketChangePercent;
+
     @JsonProperty("regularMarketTime")
     private String regularMarketTime;
 
     private String currency;
+    private String logourl;
 }
