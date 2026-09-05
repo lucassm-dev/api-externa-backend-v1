@@ -10,6 +10,7 @@ import com.apiexternabackend.infra.facade.CepFacade;
 import com.apiexternabackend.infra.facade.CvmFacade;
 import com.apiexternabackend.infra.facade.CvmFacade.ResultadoVerificacaoCvm;
 import com.apiexternabackend.mappers.CorretoraMapper;
+import com.apiexternabackend.repositories.CarteiraRepository;
 import com.apiexternabackend.repositories.CorretoraRepository;
 import com.apiexternabackend.resources.exceptions.IntegracaoExternaException;
 import com.apiexternabackend.resources.exceptions.RecursoDuplicadoException;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 public class CorretoraService {
 
     private final CorretoraRepository repository;
+    private final CarteiraRepository carteiraRepository;
     private final CorretoraMapper mapper;
     private final CnpjFacade cnpjFacade;
     private final CepFacade cepFacade;
@@ -35,7 +37,7 @@ public class CorretoraService {
 
         cnpjFacade.validar(cnpj);
 
-        if (repository.existsByCnpj(cnpj)) {
+        if (repository.existsByCnpjAndAtivoTrue(cnpj)) {
             throw new RecursoDuplicadoException("COR-002", "Corretora já cadastrada com o CNPJ: " + cnpj);
         }
 
@@ -70,6 +72,13 @@ public class CorretoraService {
     public void excluir(Long id) {
         Corretora corretora = repository.findByIdAndAtivoTrue(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("COR-001", "Corretora não encontrada: " + id));
+
+        long carteirasAtivas = carteiraRepository.countByCorretoraIdAndAtivaTrue(corretora.getId());
+        if (carteirasAtivas > 0) {
+            throw new RegraVioladaException("COR-004",
+                    "Corretora possui " + carteirasAtivas + " carteira(s) ativa(s) vinculada(s) — exclusão bloqueada");
+        }
+
         corretora.setAtivo(false);
         repository.save(corretora);
     }

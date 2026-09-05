@@ -86,7 +86,7 @@ class OperacaoServiceTest {
     void deveComprarUsandoCotacaoDaFonte() {
         CotacaoResultado cotacao = new CotacaoResultado(new BigDecimal("38.50"), LocalDateTime.now());
         when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
-        when(acaoRepository.findByTicker("PETR4")).thenReturn(Optional.of(acaoBR));
+        when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
         when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(cotacao);
         when(operacaoRepository.save(any())).thenReturn(operacao);
         when(mapper.toResponse(operacao)).thenReturn(responseDTO);
@@ -100,7 +100,7 @@ class OperacaoServiceTest {
     @DisplayName("@spec:AC-403 Comprar ação de mercado diferente da carteira é recusado")
     void deveRejeitarCompraDeAcaoMercadoDiferente() {
         when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
-        when(acaoRepository.findByTicker("AAPL")).thenReturn(Optional.of(acaoUS));
+        when(acaoRepository.findByTickerAndAtivoTrue("AAPL")).thenReturn(Optional.of(acaoUS));
 
         assertThatThrownBy(() -> service.comprar(new OperacaoRequestDTO(1L, "AAPL", 10), INVESTIDOR_ID))
                 .isInstanceOf(RegraVioladaException.class)
@@ -111,7 +111,7 @@ class OperacaoServiceTest {
     @DisplayName("@spec:AC-305 Operação com ação de mercado diferente da carteira (spec carteira) é recusada")
     void deveRejeitarOperacaoMercadoIncompativel() {
         when(carteiraService.buscarAtiva(2L, INVESTIDOR_ID)).thenReturn(carteiraUS);
-        when(acaoRepository.findByTicker("PETR4")).thenReturn(Optional.of(acaoBR));
+        when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
 
         assertThatThrownBy(() -> service.comprar(new OperacaoRequestDTO(2L, "PETR4", 10), INVESTIDOR_ID))
                 .isInstanceOf(RegraVioladaException.class)
@@ -123,7 +123,7 @@ class OperacaoServiceTest {
     void deveRejeitarVendaAcimaDataPosicao() {
         CarteiraAcao posicao = new CarteiraAcao(1L, carteiraBR, acaoBR, 50, new BigDecimal("38"));
         when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
-        when(acaoRepository.findByTicker("PETR4")).thenReturn(Optional.of(acaoBR));
+        when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
         when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L)).thenReturn(Optional.of(posicao));
 
         assertThatThrownBy(() -> service.vender(new OperacaoRequestDTO(1L, "PETR4", 100), INVESTIDOR_ID))
@@ -136,7 +136,7 @@ class OperacaoServiceTest {
     void deveGerarUmaMovimentacaoPorOperacao() {
         CotacaoResultado cotacao = new CotacaoResultado(new BigDecimal("38"), LocalDateTime.now());
         when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
-        when(acaoRepository.findByTicker("PETR4")).thenReturn(Optional.of(acaoBR));
+        when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
         when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(cotacao);
         when(operacaoRepository.save(any())).thenReturn(operacao);
         when(mapper.toResponse(operacao)).thenReturn(responseDTO);
@@ -172,7 +172,7 @@ class OperacaoServiceTest {
     void naoDeveRejeitarPorSaldoInsuficiente() {
         CotacaoResultado cotacao = new CotacaoResultado(new BigDecimal("9999999"), LocalDateTime.now());
         when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
-        when(acaoRepository.findByTicker("PETR4")).thenReturn(Optional.of(acaoBR));
+        when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
         when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(cotacao);
         when(operacaoRepository.save(any())).thenReturn(operacao);
         when(mapper.toResponse(operacao)).thenReturn(responseDTO);
@@ -180,5 +180,15 @@ class OperacaoServiceTest {
         // compra de valor altíssimo não deve lançar exceção de saldo
         OperacaoResponseDTO result = service.comprar(new OperacaoRequestDTO(1L, "PETR4", 999999), INVESTIDOR_ID);
         assertThat(result).isNotNull();
+    }
+
+    @Test
+    @DisplayName("@spec:AC-449 Comprar ação excluída (inativa) é bloqueado")
+    void deveRejeitarCompraDeAcaoInativa() {
+        when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
+        when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.comprar(new OperacaoRequestDTO(1L, "PETR4", 10), INVESTIDOR_ID))
+                .isInstanceOf(RecursoNaoEncontradoException.class);
     }
 }

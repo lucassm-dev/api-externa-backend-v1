@@ -10,9 +10,11 @@ import com.apiexternabackend.infra.adapter.CotacaoResultado;
 import com.apiexternabackend.infra.adapter.TwelveDataAdapter;
 import com.apiexternabackend.mappers.AcaoMapper;
 import com.apiexternabackend.repositories.AcaoRepository;
+import com.apiexternabackend.repositories.CarteiraAcaoRepository;
 import com.apiexternabackend.resources.exceptions.IntegracaoExternaException;
 import com.apiexternabackend.resources.exceptions.RecursoDuplicadoException;
 import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
+import com.apiexternabackend.resources.exceptions.RegraVioladaException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -27,6 +29,7 @@ import java.time.LocalDateTime;
 public class AcaoService {
 
     private final AcaoRepository repository;
+    private final CarteiraAcaoRepository carteiraAcaoRepository;
     private final AcaoMapper mapper;
     private final BrapiAdapter brapiAdapter;
     private final TwelveDataAdapter twelveDataAdapter;
@@ -34,7 +37,7 @@ public class AcaoService {
     public AcaoResponseDTO cadastrar(AcaoRequestDTO dto) {
         String ticker = dto.getTicker().toUpperCase().trim();
 
-        if (repository.existsByTicker(ticker)) {
+        if (repository.existsByTickerAndAtivoTrue(ticker)) {
             throw new RecursoDuplicadoException("ACA-002", "Ação já cadastrada com o ticker: " + ticker);
         }
 
@@ -56,7 +59,7 @@ public class AcaoService {
     }
 
     public AcaoResponseDTO buscarPorTicker(String ticker) {
-        return repository.findByTicker(ticker.toUpperCase().trim())
+        return repository.findByTickerAndAtivoTrue(ticker.toUpperCase().trim())
                 .map(mapper::toResponse)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("ACA-001", "Ação não encontrada: " + ticker));
     }
@@ -64,6 +67,13 @@ public class AcaoService {
     public void excluir(String ticker) {
         Acao acao = repository.findByTickerAndAtivoTrue(ticker.toUpperCase().trim())
                 .orElseThrow(() -> new RecursoNaoEncontradoException("ACA-001", "Ação não encontrada: " + ticker));
+
+        long vinculos = carteiraAcaoRepository.countByAcaoIdAndQuantidadeGreaterThan(acao.getId(), 0);
+        if (vinculos > 0) {
+            throw new RegraVioladaException("ACA-003",
+                    "Ação possui posição ativa em " + vinculos + " carteira(s) — exclusão bloqueada");
+        }
+
         acao.setAtivo(false);
         repository.save(acao);
     }

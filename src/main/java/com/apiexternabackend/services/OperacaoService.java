@@ -128,7 +128,7 @@ public class OperacaoService {
     }
 
     private Acao buscarAcao(String ticker) {
-        return acaoRepository.findByTicker(ticker.toUpperCase().trim())
+        return acaoRepository.findByTickerAndAtivoTrue(ticker.toUpperCase().trim())
                 .orElseThrow(() -> new RecursoNaoEncontradoException("ACA-001", "Ação não encontrada: " + ticker));
     }
 

@@ -6,10 +6,12 @@ import com.apiexternabackend.domains.Investidor;
 import com.apiexternabackend.domains.dtos.CarteiraRequestDTO;
 import com.apiexternabackend.domains.dtos.CarteiraResponseDTO;
 import com.apiexternabackend.mappers.CarteiraMapper;
+import com.apiexternabackend.repositories.CarteiraAcaoRepository;
 import com.apiexternabackend.repositories.CarteiraRepository;
 import com.apiexternabackend.repositories.CorretoraRepository;
 import com.apiexternabackend.repositories.InvestidorRepository;
 import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
+import com.apiexternabackend.resources.exceptions.RegraVioladaException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +24,7 @@ public class CarteiraService {
     private final CarteiraRepository carteiraRepository;
     private final InvestidorRepository investidorRepository;
     private final CorretoraRepository corretoraRepository;
+    private final CarteiraAcaoRepository carteiraAcaoRepository;
     private final CarteiraMapper mapper;
 
     public CarteiraResponseDTO criar(CarteiraRequestDTO dto, Long investidorId) {
@@ -54,6 +57,13 @@ public class CarteiraService {
 
     public void excluir(Long id, Long investidorId) {
         Carteira carteira = buscarAtiva(id, investidorId);
+
+        long posicoesAtivas = carteiraAcaoRepository.countByCarteiraIdAndQuantidadeGreaterThan(carteira.getId(), 0);
+        if (posicoesAtivas > 0) {
+            throw new RegraVioladaException("CAR-002",
+                    "Carteira possui " + posicoesAtivas + " posição(ões) ativa(s) — exclusão bloqueada");
+        }
+
         carteira.setAtiva(false);
         carteiraRepository.save(carteira);
     }
