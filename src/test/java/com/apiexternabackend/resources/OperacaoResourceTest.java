@@ -2,10 +2,12 @@ package com.apiexternabackend.resources;
 
 import com.apiexternabackend.config.InvestidorPrincipal;
 import com.apiexternabackend.domains.dtos.CarteiraAcaoResponseDTO;
+import com.apiexternabackend.domains.dtos.LucroRealizadoResponseDTO;
 import com.apiexternabackend.domains.dtos.OperacaoEditarDTO;
 import com.apiexternabackend.domains.dtos.OperacaoRequestDTO;
 import com.apiexternabackend.domains.dtos.OperacaoResponseDTO;
 import com.apiexternabackend.domains.enums.TipoOperacao;
+import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
 import com.apiexternabackend.resources.exceptions.RegraVioladaException;
 import com.apiexternabackend.resources.exceptions.GlobalExceptionHandler;
 import com.apiexternabackend.services.ConsultaOperacaoService;
@@ -209,5 +211,32 @@ class OperacaoResourceTest {
                                 new OperacaoRequestDTO(1L, "PETR4", 100, null))))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.moeda").value("BRL"));
+    }
+
+    @Test
+    @DisplayName("@spec:AC-470 @spec:AC-471 GET /carteiras/{id}/lucro-realizado retorna total e detalhamento por ticker")
+    void deveRetornarLucroRealizadoDaCarteira() throws Exception {
+        java.util.Map<String, BigDecimal> porTicker = new java.util.LinkedHashMap<>();
+        porTicker.put("PETR4", new BigDecimal("120"));
+        porTicker.put("VALE3", new BigDecimal("50"));
+        when(consultaService.lucroRealizado(1L, INVESTIDOR_ID))
+                .thenReturn(new LucroRealizadoResponseDTO(new BigDecimal("170"), porTicker));
+
+        mockMvc.perform(get("/carteiras/1/lucro-realizado"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.total").value(170))
+                .andExpect(jsonPath("$.porTicker.PETR4").value(120))
+                .andExpect(jsonPath("$.porTicker.VALE3").value(50));
+    }
+
+    @Test
+    @DisplayName("@spec:AC-473 DELETE /operacoes/{id} em operação já excluída retorna 404")
+    void deveRetornar404AoExcluirOperacaoJaExcluida() throws Exception {
+        org.mockito.Mockito.doThrow(new RecursoNaoEncontradoException("OPE-001", "Operação não encontrada: 1"))
+                .when(operacaoService).excluir(1L, INVESTIDOR_ID);
+
+        mockMvc.perform(delete("/operacoes/1"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.codigo").value("OPE-001"));
     }
 }
