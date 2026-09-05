@@ -1,63 +1,58 @@
 {
-  "feature": "cadastro-corretora",
-  "timestamp": "2026-09-05T02:18:45.663Z",
+  "feature": "spec-04-preco-editavel",
+  "timestamp": "2026-09-05T01:12:51.085Z",
   "gitRev": "ea634fd",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
   "testsParsed": 0,
   "results": {
-    "AC-101": {
+    "AC-456": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-102": {
+    "AC-457": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-103": {
+    "AC-458": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-104": {
+    "AC-459": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-105": {
+    "AC-460": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-106": {
+    "AC-461": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-107": {
+    "AC-462": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-108": {
+    "AC-463": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-109": {
+    "AC-464": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-110": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
-    "AC-111": {
+    "AC-465": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"

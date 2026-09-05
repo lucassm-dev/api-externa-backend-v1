@@ -113,6 +113,29 @@ class PosicaoServiceTest {
     }
 
     @Test
+    @DisplayName("@spec:AC-463 Preço médio correto misturando compra automática e compra manual (100@38 auto + 100@42 manual = 200@40)")
+    void devecalcularPrecoMedioMisturandoAutomaticaEManual() {
+        Operacao automatica = compra(100, "38");
+        automatica.setPrecoManual(false);
+        automatica.setCotacaoNoMomento(new BigDecimal("38"));
+
+        Operacao manual = compra(100, "42");
+        manual.setPrecoManual(true);
+        manual.setCotacaoNoMomento(new BigDecimal("38.50")); // cotação real no momento, diferente do preço manual informado
+
+        when(operacaoRepository.findByCarteiraIdAndAcaoIdOrderByDataHoraAsc(1L, 1L))
+                .thenReturn(List.of(automatica, manual));
+        when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L)).thenReturn(Optional.empty());
+
+        service.recalcular(carteira, acao);
+
+        ArgumentCaptor<CarteiraAcao> captor = ArgumentCaptor.forClass(CarteiraAcao.class);
+        verify(carteiraAcaoRepository).save(captor.capture());
+        assertThat(captor.getValue().getQuantidade()).isEqualTo(200);
+        assertThat(captor.getValue().getPrecoMedio()).isEqualByComparingTo("40.0000");
+    }
+
+    @Test
     @DisplayName("@spec:AC-413 Excluir lançamento recalcula posição; sem quantidade = posição removida")
     void deveRemoverPosicaoAoExcluirUnicoLancamento() {
         CarteiraAcao posicao = new CarteiraAcao(1L, carteira, acao, 100, new BigDecimal("38"));

@@ -1,0 +1,2 @@
+ALTER TABLE operacao ADD COLUMN preco_manual BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE operacao ADD COLUMN cotacao_no_momento NUMERIC(18,4);

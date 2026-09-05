@@ -52,4 +52,10 @@ public class Operacao {
 
     @Column(nullable = false)
     private LocalDateTime dataHora;
+
+    @Column(name = "preco_manual", nullable = false)
+    private Boolean precoManual = false;
+
+    @Column(name = "cotacao_no_momento", precision = 18, scale = 4)
+    private BigDecimal cotacaoNoMomento;
 }
