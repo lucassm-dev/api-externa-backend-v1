@@ -10,4 +10,6 @@ public interface CarteiraRepository extends JpaRepository<Carteira, Long> {
     Page<Carteira> findByInvestidorIdAndAtivaTrue(Long investidorId, Pageable pageable);
 
     long countByCorretoraIdAndAtivaTrue(Long corretoraId);
+
+    boolean existsByInvestidorIdAndAtivaTrue(Long investidorId);
 }

@@ -1,18 +1,23 @@
 {
-  "feature": "investidor",
-  "timestamp": "2026-09-05T02:44:43.138Z",
+  "feature": "spec-05-carteira-obrigatoria",
+  "timestamp": "2026-09-05T02:43:04.378Z",
   "gitRev": "2cdde96",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
   "testsParsed": 0,
   "results": {
-    "AC-054": {
+    "AC-466": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-055": {
+    "AC-467": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-468": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"

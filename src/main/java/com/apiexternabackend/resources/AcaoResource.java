@@ -1,5 +1,6 @@
 package com.apiexternabackend.resources;
 
+import com.apiexternabackend.config.InvestidorPrincipal;
 import com.apiexternabackend.domains.dtos.AcaoRequestDTO;
 import com.apiexternabackend.domains.dtos.AcaoResponseDTO;
 import com.apiexternabackend.services.AcaoService;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,8 +30,9 @@ public class AcaoResource {
     private final AcaoService service;
 
     @PostMapping
-    public ResponseEntity<AcaoResponseDTO> cadastrar(@RequestBody @Valid AcaoRequestDTO dto) {
-        AcaoResponseDTO response = service.cadastrar(dto);
+    public ResponseEntity<AcaoResponseDTO> cadastrar(
+            @RequestBody @Valid AcaoRequestDTO dto, @AuthenticationPrincipal InvestidorPrincipal principal) {
+        AcaoResponseDTO response = service.cadastrar(dto, principal.id());
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(response.getId()).toUri();
         return ResponseEntity.created(location).body(response);

@@ -11,7 +11,9 @@ import com.apiexternabackend.infra.adapter.TwelveDataAdapter;
 import com.apiexternabackend.mappers.AcaoMapper;
 import com.apiexternabackend.repositories.AcaoRepository;
 import com.apiexternabackend.repositories.CarteiraAcaoRepository;
+import com.apiexternabackend.repositories.CarteiraRepository;
 import com.apiexternabackend.resources.exceptions.IntegracaoExternaException;
+import com.apiexternabackend.resources.exceptions.PreRequisitoNaoAtendidoException;
 import com.apiexternabackend.resources.exceptions.RecursoDuplicadoException;
 import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
 import com.apiexternabackend.resources.exceptions.RegraVioladaException;
@@ -30,11 +32,17 @@ public class AcaoService {
 
     private final AcaoRepository repository;
     private final CarteiraAcaoRepository carteiraAcaoRepository;
+    private final CarteiraRepository carteiraRepository;
     private final AcaoMapper mapper;
     private final BrapiAdapter brapiAdapter;
     private final TwelveDataAdapter twelveDataAdapter;
 
-    public AcaoResponseDTO cadastrar(AcaoRequestDTO dto) {
+    public AcaoResponseDTO cadastrar(AcaoRequestDTO dto, Long investidorId) {
+        if (!carteiraRepository.existsByInvestidorIdAndAtivaTrue(investidorId)) {
+            throw new PreRequisitoNaoAtendidoException("ACA-004",
+                    "Cadastre uma carteira antes de cadastrar ações");
+        }
+
         String ticker = dto.getTicker().toUpperCase().trim();
 
         if (repository.existsByTickerAndAtivoTrue(ticker)) {
