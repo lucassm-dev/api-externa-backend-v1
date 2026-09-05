@@ -24,13 +24,15 @@ public class ConsultaOperacaoService {
     private final CarteiraAcaoRepository carteiraAcaoRepository;
     private final OperacaoMapper operacaoMapper;
     private final CarteiraAcaoMapper carteiraAcaoMapper;
+    private final CarteiraService carteiraService;
 
     public Page<OperacaoResponseDTO> historico(Long investidorId, Pageable pageable) {
         return operacaoRepository.findByInvestidorId(investidorId, pageable)
                 .map(operacaoMapper::toResponse);
     }
 
-    public List<CarteiraAcaoResponseDTO> posicoes(Long carteiraId) {
+    public List<CarteiraAcaoResponseDTO> posicoes(Long carteiraId, Long investidorId) {
+        carteiraService.buscarPorId(carteiraId, investidorId); // valida que a carteira é do investidor logado
         return carteiraAcaoRepository.findByCarteiraId(carteiraId).stream()
                 .map(pos -> {
                     CarteiraAcaoResponseDTO dto = carteiraAcaoMapper.toResponse(pos);

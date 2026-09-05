@@ -24,9 +24,9 @@ public class CarteiraService {
     private final CorretoraRepository corretoraRepository;
     private final CarteiraMapper mapper;
 
-    public CarteiraResponseDTO criar(CarteiraRequestDTO dto) {
-        Investidor investidor = investidorRepository.findById(dto.getInvestidorId())
-                .orElseThrow(() -> new RecursoNaoEncontradoException("AUT-003", "Investidor não encontrado: " + dto.getInvestidorId()));
+    public CarteiraResponseDTO criar(CarteiraRequestDTO dto, Long investidorId) {
+        Investidor investidor = investidorRepository.findById(investidorId)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("AUT-003", "Investidor não encontrado: " + investidorId));
 
         Corretora corretora = corretoraRepository.findById(dto.getCorretoraId())
                 .orElseThrow(() -> new RecursoNaoEncontradoException("COR-001", "Corretora não encontrada: " + dto.getCorretoraId()));
@@ -46,26 +46,39 @@ public class CarteiraService {
                 .map(mapper::toResponse);
     }
 
-    public CarteiraResponseDTO renomear(Long id, String novoNome) {
-        Carteira carteira = buscarAtiva(id);
+    public CarteiraResponseDTO renomear(Long id, String novoNome, Long investidorId) {
+        Carteira carteira = buscarAtiva(id, investidorId);
         carteira.setNome(novoNome);
         return mapper.toResponse(carteiraRepository.save(carteira));
     }
 
-    public void excluir(Long id) {
-        Carteira carteira = buscarAtiva(id);
+    public void excluir(Long id, Long investidorId) {
+        Carteira carteira = buscarAtiva(id, investidorId);
         carteira.setAtiva(false);
         carteiraRepository.save(carteira);
     }
 
-    public Carteira buscarAtiva(Long id) {
-        return carteiraRepository.findById(id)
+    public Carteira buscarAtiva(Long id, Long investidorId) {
+        Carteira carteira = carteiraRepository.findById(id)
                 .filter(Carteira::getAtiva)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("CAR-001", "Carteira não encontrada ou inativa: " + id));
+        return validarDono(carteira, investidorId);
     }
 
-    public Carteira buscarPorId(Long id) {
-        return carteiraRepository.findById(id)
+    public Carteira buscarPorId(Long id, Long investidorId) {
+        Carteira carteira = carteiraRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("CAR-001", "Carteira não encontrada: " + id));
+        return validarDono(carteira, investidorId);
+    }
+
+    /**
+     * Carteira de outro investidor responde como "não encontrada" (mesmo código/mensagem),
+     * não "acesso negado" — evita que B descubra que a carteira de A existe (ASM-411).
+     */
+    private Carteira validarDono(Carteira carteira, Long investidorId) {
+        if (!carteira.getInvestidor().getId().equals(investidorId)) {
+            throw new RecursoNaoEncontradoException("CAR-001", "Carteira não encontrada ou inativa: " + carteira.getId());
+        }
+        return carteira;
     }
 }

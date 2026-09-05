@@ -1,5 +1,6 @@
 package com.apiexternabackend.resources;
 
+import com.apiexternabackend.config.InvestidorPrincipal;
 import com.apiexternabackend.domains.dtos.CarteiraAcaoResponseDTO;
 import com.apiexternabackend.domains.dtos.OperacaoEditarDTO;
 import com.apiexternabackend.domains.dtos.OperacaoRequestDTO;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -33,16 +34,18 @@ public class OperacaoResource {
     private final ConsultaOperacaoService consultaService;
 
     @PostMapping("/operacoes/compra")
-    public ResponseEntity<OperacaoResponseDTO> comprar(@RequestBody @Valid OperacaoRequestDTO dto) {
-        OperacaoResponseDTO response = operacaoService.comprar(dto);
+    public ResponseEntity<OperacaoResponseDTO> comprar(
+            @RequestBody @Valid OperacaoRequestDTO dto, @AuthenticationPrincipal InvestidorPrincipal principal) {
+        OperacaoResponseDTO response = operacaoService.comprar(dto, principal.id());
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/operacoes/{id}").buildAndExpand(response.getId()).toUri();
         return ResponseEntity.created(location).body(response);
     }
 
     @PostMapping("/operacoes/venda")
-    public ResponseEntity<OperacaoResponseDTO> vender(@RequestBody @Valid OperacaoRequestDTO dto) {
-        OperacaoResponseDTO response = operacaoService.vender(dto);
+    public ResponseEntity<OperacaoResponseDTO> vender(
+            @RequestBody @Valid OperacaoRequestDTO dto, @AuthenticationPrincipal InvestidorPrincipal principal) {
+        OperacaoResponseDTO response = operacaoService.vender(dto, principal.id());
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/operacoes/{id}").buildAndExpand(response.getId()).toUri();
         return ResponseEntity.created(location).body(response);
@@ -50,24 +53,26 @@ public class OperacaoResource {
 
     @GetMapping("/operacoes")
     public ResponseEntity<Page<OperacaoResponseDTO>> historico(
-            @RequestParam Long investidorId, Pageable pageable) {
-        return ResponseEntity.ok(consultaService.historico(investidorId, pageable));
+            Pageable pageable, @AuthenticationPrincipal InvestidorPrincipal principal) {
+        return ResponseEntity.ok(consultaService.historico(principal.id(), pageable));
     }
 
     @PutMapping("/operacoes/{id}")
     public ResponseEntity<OperacaoResponseDTO> editar(
-            @PathVariable Long id, @RequestBody @Valid OperacaoEditarDTO dto) {
-        return ResponseEntity.ok(operacaoService.editar(id, dto.getQuantidade(), dto.getPrecoUnitario()));
+            @PathVariable Long id, @RequestBody @Valid OperacaoEditarDTO dto,
+            @AuthenticationPrincipal InvestidorPrincipal principal) {
+        return ResponseEntity.ok(operacaoService.editar(id, dto.getQuantidade(), dto.getPrecoUnitario(), principal.id()));
     }
 
     @DeleteMapping("/operacoes/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable Long id) {
-        operacaoService.excluir(id);
+    public ResponseEntity<Void> excluir(@PathVariable Long id, @AuthenticationPrincipal InvestidorPrincipal principal) {
+        operacaoService.excluir(id, principal.id());
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/carteiras/{id}/posicoes")
-    public ResponseEntity<List<CarteiraAcaoResponseDTO>> posicoes(@PathVariable Long id) {
-        return ResponseEntity.ok(consultaService.posicoes(id));
+    public ResponseEntity<List<CarteiraAcaoResponseDTO>> posicoes(
+            @PathVariable Long id, @AuthenticationPrincipal InvestidorPrincipal principal) {
+        return ResponseEntity.ok(consultaService.posicoes(id, principal.id()));
     }
 }
