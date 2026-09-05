@@ -36,6 +36,7 @@ public class AcaoService {
     private final AcaoMapper mapper;
     private final BrapiAdapter brapiAdapter;
     private final TwelveDataAdapter twelveDataAdapter;
+    private final CotacaoCacheService cotacaoCacheService;
 
     public AcaoResponseDTO cadastrar(AcaoRequestDTO dto, Long investidorId) {
         if (!carteiraRepository.existsByInvestidorIdAndAtivaTrue(investidorId)) {
@@ -86,19 +87,16 @@ public class AcaoService {
         repository.save(acao);
     }
 
-    public AcaoResponseDTO atualizarCotacao(Long id) {
+    public AcaoResponseDTO atualizarCotacao(Long id, boolean forcar) {
         Acao acao = repository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("ACA-001", "Ação não encontrada: " + id));
 
         try {
-            CotacaoAdapter adapter = adapterPara(acao.getMercado());
-            CotacaoResultado cotacao = adapter.buscarCotacao(acao.getTicker());
-            acao.setCotacaoAtual(cotacao.preco());
-            acao.setDataHoraCotacao(cotacao.dataHora());
-            return mapper.toResponse(repository.save(acao));
+            cotacaoCacheService.obter(acao, forcar); // AC-477/AC-478/AC-481: TTL, forçar e persistência
+            return mapper.toResponse(acao);
         } catch (IntegracaoExternaException e) {
             if (e.isLimiteExcedido()) {
-                // AC-431: cota estourada não é silenciada — propaga 429 explícito
+                // AC-431/AC-485: cota estourada não é silenciada — propaga 429 explícito
                 throw e;
             }
             // RN-Q05/AC-210/AC-432: fonte indisponível (não é cota) → retorna última cotação conhecida

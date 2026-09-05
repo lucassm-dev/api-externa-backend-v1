@@ -7,7 +7,6 @@ import com.apiexternabackend.infra.adapter.CotacaoAdapter;
 import com.apiexternabackend.infra.adapter.CotacaoResultado;
 import com.apiexternabackend.infra.adapter.TwelveDataAdapter;
 import com.apiexternabackend.repositories.AcaoRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -18,15 +17,21 @@ import java.time.LocalDateTime;
  * já persistidos em Acao em vez de bater na fonte externa a cada chamada.
  */
 @Service
-@RequiredArgsConstructor
 public class CotacaoCacheService {
 
     private final AcaoRepository acaoRepository;
     private final BrapiAdapter brapiAdapter;
     private final TwelveDataAdapter twelveDataAdapter;
+    private final long ttlMinutos;
 
-    @Value("${cotacao.cache-ttl-minutos}")
-    private long ttlMinutos;
+    public CotacaoCacheService(AcaoRepository acaoRepository, BrapiAdapter brapiAdapter,
+                                TwelveDataAdapter twelveDataAdapter,
+                                @Value("${cotacao.cache-ttl-minutos}") long ttlMinutos) {
+        this.acaoRepository = acaoRepository;
+        this.brapiAdapter = brapiAdapter;
+        this.twelveDataAdapter = twelveDataAdapter;
+        this.ttlMinutos = ttlMinutos;
+    }
 
     /**
      * Retorna a cotação de uma ação já persistida, reaproveitando o cache quando

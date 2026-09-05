@@ -49,6 +49,7 @@ class AcaoServiceTest {
     @Mock private AcaoMapper mapper;
     @Mock private BrapiAdapter brapiAdapter;
     @Mock private TwelveDataAdapter twelveDataAdapter;
+    @Mock private CotacaoCacheService cotacaoCacheService;
 
     @InjectMocks
     private AcaoService service;
@@ -176,14 +177,25 @@ class AcaoServiceTest {
     void deveAtualizarCotacao() {
         CotacaoResultado novaCotacao = new CotacaoResultado(new BigDecimal("42.00"), LocalDateTime.now());
         when(repository.findById(1L)).thenReturn(Optional.of(acaoBR));
-        when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(novaCotacao);
-        when(repository.save(any())).thenReturn(acaoBR);
+        when(cotacaoCacheService.obter(acaoBR, false)).thenReturn(novaCotacao);
         when(mapper.toResponse(acaoBR)).thenReturn(responseBR);
 
-        AcaoResponseDTO result = service.atualizarCotacao(1L);
+        AcaoResponseDTO result = service.atualizarCotacao(1L, false);
 
         assertThat(result).isNotNull();
-        verify(brapiAdapter).buscarCotacao("PETR4");
+        verify(cotacaoCacheService).obter(acaoBR, false);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-481 Forçar atualização ignora o cache mesmo com TTL válido")
+    void deveForcarAtualizacaoIgnorandoCache() {
+        when(repository.findById(1L)).thenReturn(Optional.of(acaoBR));
+        when(cotacaoCacheService.obter(acaoBR, true)).thenReturn(cotacaoBR);
+        when(mapper.toResponse(acaoBR)).thenReturn(responseBR);
+
+        service.atualizarCotacao(1L, true);
+
+        verify(cotacaoCacheService).obter(acaoBR, true);
     }
 
     @Test
@@ -203,12 +215,12 @@ class AcaoServiceTest {
     @DisplayName("@spec:AC-210 @spec:AC-432 Fonte indisponível (não é cota) retorna última cotação conhecida, preserva comportamento atual")
     void deveRetornarUltimaCotacaoQuandoFonteIndisponivel() {
         when(repository.findById(1L)).thenReturn(Optional.of(acaoBR));
-        when(brapiAdapter.buscarCotacao("PETR4"))
+        when(cotacaoCacheService.obter(acaoBR, false))
                 .thenThrow(new IntegracaoExternaException("EXT-010", "Fonte BR indisponível", false));
         when(mapper.toResponse(acaoBR)).thenReturn(responseBR);
 
         // Não deve lançar exceção — retorna a última cotação conhecida
-        AcaoResponseDTO result = service.atualizarCotacao(1L);
+        AcaoResponseDTO result = service.atualizarCotacao(1L, false);
 
         assertThat(result).isNotNull();
         assertThat(result.getCotacaoAtual()).isEqualByComparingTo("38.00");
@@ -229,13 +241,13 @@ class AcaoServiceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-431 Atualizar cotação com cota estourada propaga 429, não silencia devolvendo a cotação antiga")
+    @DisplayName("@spec:AC-431 @spec:AC-485 Atualizar cotação com cota estourada propaga 429, não silencia devolvendo a cotação antiga")
     void deveLancarExcecaoDe429AoAtualizarCotacaoComCotaEstourada() {
         when(repository.findById(1L)).thenReturn(Optional.of(acaoBR));
-        when(brapiAdapter.buscarCotacao("PETR4"))
+        when(cotacaoCacheService.obter(acaoBR, false))
                 .thenThrow(new IntegracaoExternaException("EXT-009", "Limite de requisições da fonte BR excedido", true));
 
-        assertThatThrownBy(() -> service.atualizarCotacao(1L))
+        assertThatThrownBy(() -> service.atualizarCotacao(1L, false))
                 .isInstanceOf(IntegracaoExternaException.class)
                 .extracting(e -> ((IntegracaoExternaException) e).getHttpStatus())
                 .isEqualTo(HttpStatus.TOO_MANY_REQUESTS);
