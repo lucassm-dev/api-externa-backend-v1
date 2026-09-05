@@ -142,7 +142,7 @@ class AcaoResourceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-208 PUT /acoes/{id}/atualizar-cotacao retorna ação com nova cotação")
+    @DisplayName("@spec:AC-208 @spec:AC-479 PUT /acoes/{id}/atualizar-cotacao retorna ação com nova cotação")
     void deveAtualizarCotacao() throws Exception {
         when(service.atualizarCotacao(1L, false)).thenReturn(buildResponse("PETR4", Mercado.BR, "BRL"));
 
