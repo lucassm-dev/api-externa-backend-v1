@@ -1,68 +1,53 @@
 {
-  "feature": "spec-03-recadastro-exclusao",
-  "timestamp": "2026-09-05T04:24:54.016Z",
+  "feature": "spec-07-cache-cotacao",
+  "timestamp": "2026-09-05T04:22:54.244Z",
   "gitRev": "dff08fa",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
   "testsParsed": 0,
   "results": {
-    "AC-444": {
+    "AC-477": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-445": {
+    "AC-478": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-446": {
+    "AC-479": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-447": {
+    "AC-480": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-448": {
+    "AC-481": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-449": {
+    "AC-482": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-450": {
+    "AC-483": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-451": {
+    "AC-484": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-452": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
-    "AC-453": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
-    "AC-454": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
-    "AC-455": {
+    "AC-485": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
