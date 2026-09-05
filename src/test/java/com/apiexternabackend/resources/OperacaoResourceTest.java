@@ -239,4 +239,21 @@ class OperacaoResourceTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.codigo").value("OPE-001"));
     }
+
+    @Test
+    @DisplayName("@spec:AC-482 @spec:AC-483 Resposta de compra/venda traz aviso quando prossegue com cotação desatualizada")
+    void deveTrazerAvisoDeCotacaoDesatualizadaNoCorpo() throws Exception {
+        OperacaoResponseDTO comAviso = new OperacaoResponseDTO(1L, 1L, "PETR4", TipoOperacao.COMPRA, 100,
+                new BigDecimal("38.00"), new BigDecimal("3800.00"), LocalDateTime.now(), "BRL",
+                List.of("Cotação pode estar desatualizada — fonte externa indisponível ou com cota excedida no momento da operação; usando último valor conhecido de 2026-09-05T00:00."),
+                null, null);
+        when(operacaoService.comprar(any(), eq(INVESTIDOR_ID))).thenReturn(comAviso);
+
+        mockMvc.perform(post("/operacoes/compra")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new OperacaoRequestDTO(1L, "PETR4", 100, null))))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.avisos[0]").value(org.hamcrest.Matchers.containsString("desatualizada")));
+    }
 }

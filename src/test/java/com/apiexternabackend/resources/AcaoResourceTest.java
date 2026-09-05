@@ -142,13 +142,24 @@ class AcaoResourceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-208 PUT /acoes/{id}/atualizar-cotacao retorna ação com nova cotação")
+    @DisplayName("@spec:AC-208 @spec:AC-479 PUT /acoes/{id}/atualizar-cotacao retorna ação com nova cotação")
     void deveAtualizarCotacao() throws Exception {
-        when(service.atualizarCotacao(1L)).thenReturn(buildResponse("PETR4", Mercado.BR, "BRL"));
+        when(service.atualizarCotacao(1L, false)).thenReturn(buildResponse("PETR4", Mercado.BR, "BRL"));
 
         mockMvc.perform(put("/acoes/1/atualizar-cotacao"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.dataHoraCotacao").isNotEmpty());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-481 PUT /acoes/{id}/atualizar-cotacao?forcar=true repassa o parâmetro ao service")
+    void deveRepassarParametroForcar() throws Exception {
+        when(service.atualizarCotacao(1L, true)).thenReturn(buildResponse("PETR4", Mercado.BR, "BRL"));
+
+        mockMvc.perform(put("/acoes/1/atualizar-cotacao").param("forcar", "true"))
+                .andExpect(status().isOk());
+
+        org.mockito.Mockito.verify(service).atualizarCotacao(1L, true);
     }
 
     @Test
@@ -165,9 +176,9 @@ class AcaoResourceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-431 @spec:AC-433 PUT /acoes/{id}/atualizar-cotacao com cota estourada retorna 429 explícito com código EXT-009")
+    @DisplayName("@spec:AC-431 @spec:AC-433 @spec:AC-485 PUT /acoes/{id}/atualizar-cotacao com cota estourada retorna 429 explícito com código EXT-009")
     void deveRetornar429ParaAtualizarCotacaoComCotaEstourada() throws Exception {
-        when(service.atualizarCotacao(1L))
+        when(service.atualizarCotacao(1L, false))
                 .thenThrow(new IntegracaoExternaException("EXT-009", "Limite de requisições da fonte BR excedido. Tente mais tarde.", true));
 
         mockMvc.perform(put("/acoes/1/atualizar-cotacao"))
@@ -178,7 +189,7 @@ class AcaoResourceTest {
     @Test
     @DisplayName("@spec:AC-432 PUT /acoes/{id}/atualizar-cotacao com fonte indisponível preserva 200 (AC-210)")
     void deveManterAtualizarCotacaoRetornando200QuandoFonteIndisponivel() throws Exception {
-        when(service.atualizarCotacao(1L)).thenReturn(buildResponse("PETR4", Mercado.BR, "BRL"));
+        when(service.atualizarCotacao(1L, false)).thenReturn(buildResponse("PETR4", Mercado.BR, "BRL"));
 
         mockMvc.perform(put("/acoes/1/atualizar-cotacao"))
                 .andExpect(status().isOk());

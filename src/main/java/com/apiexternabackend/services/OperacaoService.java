@@ -8,23 +8,24 @@ import com.apiexternabackend.domains.dtos.OperacaoRequestDTO;
 import com.apiexternabackend.domains.dtos.OperacaoResponseDTO;
 import com.apiexternabackend.domains.enums.TipoOperacao;
 import com.apiexternabackend.infra.adapter.CotacaoResultado;
-import com.apiexternabackend.infra.adapter.BrapiAdapter;
-import com.apiexternabackend.infra.adapter.TwelveDataAdapter;
-import com.apiexternabackend.infra.adapter.CotacaoAdapter;
-import com.apiexternabackend.domains.enums.Mercado;
 import com.apiexternabackend.mappers.OperacaoMapper;
 import com.apiexternabackend.repositories.AcaoRepository;
 import com.apiexternabackend.repositories.CarteiraAcaoRepository;
 import com.apiexternabackend.repositories.OperacaoRepository;
+import com.apiexternabackend.resources.exceptions.IntegracaoExternaException;
 import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
 import com.apiexternabackend.resources.exceptions.RegraVioladaException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OperacaoService {
@@ -35,8 +36,7 @@ public class OperacaoService {
     private final CarteiraService carteiraService;
     private final PosicaoService posicaoService;
     private final OperacaoMapper mapper;
-    private final BrapiAdapter brapiAdapter;
-    private final TwelveDataAdapter twelveDataAdapter;
+    private final CotacaoCacheService cotacaoCacheService;
 
     @Transactional
     public OperacaoResponseDTO comprar(OperacaoRequestDTO dto, Long investidorId) {
@@ -45,7 +45,8 @@ public class OperacaoService {
 
         validarMercado(carteira, acao); // AC-305/AC-403
 
-        CotacaoResultado cotacao = adapterPara(acao.getMercado()).buscarCotacao(acao.getTicker()); // AC-401, sempre buscada (AC-461)
+        CotacaoObtida obtida = obterCotacaoComFallback(acao); // AC-477/AC-478/AC-482/AC-483/AC-484
+        CotacaoResultado cotacao = obtida.resultado();
         boolean precoManual = dto.getPrecoUnitario() != null; // AC-457
         BigDecimal precoEfetivo = precoManual ? dto.getPrecoUnitario() : cotacao.preco(); // AC-456
         validarEscalaDecimal(precoEfetivo); // AC-459
@@ -63,7 +64,7 @@ public class OperacaoService {
         operacao = operacaoRepository.save(operacao); // AC-407
         posicaoService.recalcular(carteira, acao);    // AC-402
 
-        return mapper.toResponse(operacao);
+        return comAvisoDeCotacaoDesatualizada(mapper.toResponse(operacao), obtida);
     }
 
     @Transactional
@@ -84,7 +85,8 @@ public class OperacaoService {
                     "Quantidade excede a posição atual (" + posicao.getQuantidade() + " unidades)");
         }
 
-        CotacaoResultado cotacao = adapterPara(acao.getMercado()).buscarCotacao(acao.getTicker()); // AC-401 (venda também busca no ato), sempre buscada (AC-461)
+        CotacaoObtida obtida = obterCotacaoComFallback(acao); // AC-477/AC-478/AC-482/AC-483/AC-484
+        CotacaoResultado cotacao = obtida.resultado();
         boolean precoManual = dto.getPrecoUnitario() != null; // AC-457
         BigDecimal precoEfetivo = precoManual ? dto.getPrecoUnitario() : cotacao.preco(); // AC-456
         validarEscalaDecimal(precoEfetivo); // AC-459
@@ -102,7 +104,7 @@ public class OperacaoService {
         operacao = operacaoRepository.save(operacao); // AC-407
         posicaoService.recalcular(carteira, acao);    // AC-405 (zera posição se necessário)
 
-        return mapper.toResponse(operacao);
+        return comAvisoDeCotacaoDesatualizada(mapper.toResponse(operacao), obtida);
     }
 
     @Transactional
@@ -164,7 +166,35 @@ public class OperacaoService {
         }
     }
 
-    private CotacaoAdapter adapterPara(Mercado mercado) {
-        return mercado == Mercado.BR ? brapiAdapter : twelveDataAdapter;
+    /**
+     * Q-MAP-06: cota estourada ou fonte indisponível em compra/venda não bloqueia —
+     * prossegue com a última cotação conhecida (AC-482/AC-483). Sem cotação salva
+     * alguma vez, não há fallback possível (AC-484).
+     */
+    private CotacaoObtida obterCotacaoComFallback(Acao acao) {
+        try {
+            return new CotacaoObtida(cotacaoCacheService.obter(acao, false), false);
+        } catch (IntegracaoExternaException e) {
+            if (acao.getCotacaoAtual() == null || acao.getDataHoraCotacao() == null) {
+                throw e; // AC-484
+            }
+            log.warn("Cotação de {} indisponível/cota excedida ({}). Prosseguindo com última cotação conhecida.",
+                    acao.getTicker(), e.getMessage());
+            return new CotacaoObtida(new CotacaoResultado(acao.getCotacaoAtual(), acao.getDataHoraCotacao()), true);
+        }
+    }
+
+    private OperacaoResponseDTO comAvisoDeCotacaoDesatualizada(OperacaoResponseDTO response, CotacaoObtida obtida) {
+        if (!obtida.desatualizada()) {
+            return response;
+        }
+        List<String> avisos = new ArrayList<>(response.getAvisos());
+        avisos.add("Cotação pode estar desatualizada — fonte externa indisponível ou com cota excedida no momento da operação; usando último valor conhecido de "
+                + obtida.resultado().dataHora() + ".");
+        response.setAvisos(avisos);
+        return response;
+    }
+
+    private record CotacaoObtida(CotacaoResultado resultado, boolean desatualizada) {
     }
 }
