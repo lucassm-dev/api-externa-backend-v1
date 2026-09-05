@@ -1,11 +1,9 @@
 package com.apiexternabackend.services;
 
 import com.apiexternabackend.domains.Investidor;
-import com.apiexternabackend.domains.dtos.InvestidorRequestDTO;
 import com.apiexternabackend.domains.dtos.InvestidorResponseDTO;
 import com.apiexternabackend.mappers.InvestidorMapper;
 import com.apiexternabackend.repositories.InvestidorRepository;
-import com.apiexternabackend.resources.exceptions.RecursoDuplicadoException;
 import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,13 +17,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDateTime;
-
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -41,51 +37,13 @@ class InvestidorServiceTest {
     @InjectMocks
     private InvestidorService service;
 
-    private InvestidorRequestDTO requestDTO;
     private Investidor investidor;
     private InvestidorResponseDTO responseDTO;
 
     @BeforeEach
     void setUp() {
-        requestDTO = new InvestidorRequestDTO("João Silva", "joao@email.com", "12345678901");
         investidor = new Investidor(1L, "João Silva", "joao@email.com", "12345678901", "hash", LocalDateTime.now(), true);
         responseDTO = new InvestidorResponseDTO(1L, "João Silva", "joao@email.com");
-    }
-
-    @Test
-    @DisplayName("@spec:AC-051 Cadastro com nome, e-mail e CPF válidos cria o investidor")
-    void deveCadastrarInvestidorComDadosValidos() {
-        when(repository.existsByEmail(requestDTO.getEmail())).thenReturn(false);
-        when(repository.existsByCpf(requestDTO.getCpf())).thenReturn(false);
-        when(mapper.toEntity(requestDTO)).thenReturn(investidor);
-        when(repository.save(investidor)).thenReturn(investidor);
-        when(mapper.toResponse(investidor)).thenReturn(responseDTO);
-
-        InvestidorResponseDTO result = service.cadastrar(requestDTO);
-
-        assertThat(result.getId()).isEqualTo(1L);
-        assertThat(result.getEmail()).isEqualTo("joao@email.com");
-    }
-
-    @Test
-    @DisplayName("@spec:AC-052 E-mail duplicado é rejeitado com mensagem indicando o campo")
-    void deveRejeitarEmailDuplicado() {
-        when(repository.existsByEmail(requestDTO.getEmail())).thenReturn(true);
-
-        assertThatThrownBy(() -> service.cadastrar(requestDTO))
-                .isInstanceOf(RecursoDuplicadoException.class)
-                .hasMessageContaining("E-mail");
-    }
-
-    @Test
-    @DisplayName("@spec:AC-052 CPF duplicado é rejeitado com mensagem indicando o campo")
-    void deveRejeitarCpfDuplicado() {
-        when(repository.existsByEmail(requestDTO.getEmail())).thenReturn(false);
-        when(repository.existsByCpf(requestDTO.getCpf())).thenReturn(true);
-
-        assertThatThrownBy(() -> service.cadastrar(requestDTO))
-                .isInstanceOf(RecursoDuplicadoException.class)
-                .hasMessageContaining("CPF");
     }
 
     @Test
@@ -125,13 +83,12 @@ class InvestidorServiceTest {
     @Test
     @DisplayName("@spec:AC-422 Investidor ativo é desativado ao excluir")
     void deveDesativarInvestidorAoExcluir() {
-        Investidor ativo = new Investidor(1L, "João", "joao@email.com", "12345678901", "hash", LocalDateTime.now(), true);
-        when(repository.findByIdAndAtivoTrue(1L)).thenReturn(Optional.of(ativo));
+        when(repository.findByIdAndAtivoTrue(1L)).thenReturn(Optional.of(investidor));
 
         service.excluir(1L);
 
-        verify(repository).save(ativo);
-        assertThat(ativo.getAtivo()).isFalse();
+        verify(repository).save(investidor);
+        assertThat(investidor.getAtivo()).isFalse();
     }
 
     @Test

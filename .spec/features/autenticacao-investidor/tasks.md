@@ -17,8 +17,7 @@
 - Arquivos: src/main/java/com/apiexternabackend/services/OperacaoService.java, src/main/java/com/apiexternabackend/services/ConsultaOperacaoService.java, src/main/java/com/apiexternabackend/resources/OperacaoResource.java, src/test/java/com/apiexternabackend/services/OperacaoServiceTest.java, src/test/java/com/apiexternabackend/resources/OperacaoResourceTest.java
 - Notas: `GET /operacoes` e `GET /carteiras/{id}/posicoes` passam a usar o investidor do token (não mais `@RequestParam`/livre). `PUT`/`DELETE /operacoes/{id}` passam a checar que a operação pertence a uma carteira do investidor logado.
 
-## T-417 — Remove cadastro de Investidor sem senha; AutenticacaoServiceTest real [pendente]
-
+## T-417 — Remove cadastro de Investidor sem senha; AutenticacaoServiceTest real [concluida]
 - Refs: AC-001, AC-002, AC-003, AC-004, AC-005, AC-435, AC-436, AC-437
 - Arquivos: src/main/java/com/apiexternabackend/services/InvestidorService.java, src/main/java/com/apiexternabackend/resources/InvestidorResource.java, src/main/java/com/apiexternabackend/domains/dtos/InvestidorRequestDTO.java (remover), src/test/java/com/apiexternabackend/services/InvestidorServiceTest.java, src/test/java/com/apiexternabackend/resources/InvestidorResourceTest.java, src/test/java/com/apiexternabackend/services/AutenticacaoServiceTest.java, src/test/java/com/apiexternabackend/resources/AuthResourceTest.java
 - Notas: remove `POST /investidores`/`InvestidorService.cadastrar` e os testes @spec:AC-051/052/053 (retirados da spec `investidor`). Reescreve `AutenticacaoServiceTest` (hoje `@Disabled`, todos os métodos vazios) com asserts reais; cria `AuthResourceTest` novo.
