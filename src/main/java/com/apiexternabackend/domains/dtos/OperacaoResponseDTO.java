@@ -8,6 +8,8 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,4 +25,6 @@ public class OperacaoResponseDTO {
     private BigDecimal precoUnitario;
     private BigDecimal valorTotal;
     private LocalDateTime dataHora;
+    private String moeda;
+    private List<String> avisos = new ArrayList<>();
 }

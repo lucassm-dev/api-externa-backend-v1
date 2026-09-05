@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Service
@@ -44,14 +45,19 @@ public class OperacaoService {
 
         validarMercado(carteira, acao); // AC-305/AC-403
 
-        CotacaoResultado cotacao = adapterPara(acao.getMercado()).buscarCotacao(acao.getTicker()); // AC-401
+        CotacaoResultado cotacao = adapterPara(acao.getMercado()).buscarCotacao(acao.getTicker()); // AC-401, sempre buscada (AC-461)
+        boolean precoManual = dto.getPrecoUnitario() != null; // AC-457
+        BigDecimal precoEfetivo = precoManual ? dto.getPrecoUnitario() : cotacao.preco(); // AC-456
+        validarEscalaDecimal(precoEfetivo); // AC-459
 
         Operacao operacao = new Operacao();
         operacao.setCarteira(carteira);
         operacao.setAcao(acao);
         operacao.setTipo(TipoOperacao.COMPRA);
         operacao.setQuantidade(dto.getQuantidade());
-        operacao.setPrecoUnitario(cotacao.preco());
+        operacao.setPrecoUnitario(precoEfetivo);
+        operacao.setPrecoManual(precoManual);
+        operacao.setCotacaoNoMomento(cotacao.preco()); // AC-461
         operacao.setDataHora(LocalDateTime.now());
 
         operacao = operacaoRepository.save(operacao); // AC-407
@@ -78,14 +84,19 @@ public class OperacaoService {
                     "Quantidade excede a posição atual (" + posicao.getQuantidade() + " unidades)");
         }
 
-        CotacaoResultado cotacao = adapterPara(acao.getMercado()).buscarCotacao(acao.getTicker()); // AC-401 (venda também busca no ato)
+        CotacaoResultado cotacao = adapterPara(acao.getMercado()).buscarCotacao(acao.getTicker()); // AC-401 (venda também busca no ato), sempre buscada (AC-461)
+        boolean precoManual = dto.getPrecoUnitario() != null; // AC-457
+        BigDecimal precoEfetivo = precoManual ? dto.getPrecoUnitario() : cotacao.preco(); // AC-456
+        validarEscalaDecimal(precoEfetivo); // AC-459
 
         Operacao operacao = new Operacao();
         operacao.setCarteira(carteira);
         operacao.setAcao(acao);
         operacao.setTipo(TipoOperacao.VENDA);
         operacao.setQuantidade(dto.getQuantidade());
-        operacao.setPrecoUnitario(cotacao.preco());
+        operacao.setPrecoUnitario(precoEfetivo);
+        operacao.setPrecoManual(precoManual);
+        operacao.setCotacaoNoMomento(cotacao.preco()); // AC-461
         operacao.setDataHora(LocalDateTime.now());
 
         operacao = operacaoRepository.save(operacao); // AC-407
@@ -99,7 +110,12 @@ public class OperacaoService {
         Operacao operacao = buscarOperacao(id, investidorId);
 
         if (novaQuantidade != null) operacao.setQuantidade(novaQuantidade);
-        if (novoPreco != null) operacao.setPrecoUnitario(novoPreco);
+        if (novoPreco != null) {
+            validarEscalaDecimal(novoPreco); // AC-464
+            operacao.setPrecoUnitario(novoPreco);
+            operacao.setPrecoManual(true);
+            operacao.setCotacaoNoMomento(operacao.getAcao().getCotacaoAtual()); // AC-465, sem nova chamada externa (ASM-419)
+        }
 
         operacao = operacaoRepository.save(operacao);
         posicaoService.recalcular(operacao.getCarteira(), operacao.getAcao()); // AC-412
@@ -137,6 +153,13 @@ public class OperacaoService {
             throw new RegraVioladaException("OPE-002",
                     "Incompatibilidade de mercado: carteira é " + carteira.getMercado()
                     + " mas ação " + acao.getTicker() + " é " + acao.getMercado());
+        }
+    }
+
+    private void validarEscalaDecimal(BigDecimal preco) {
+        if (preco.stripTrailingZeros().scale() > 2) {
+            throw new RegraVioladaException("OPE-005",
+                    "Preço unitário deve ter no máximo 2 casas decimais: " + preco);
         }
     }
 

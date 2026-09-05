@@ -1,7 +1,7 @@
 {
   "feature": "spec-03-recadastro-exclusao",
-  "timestamp": "2026-09-05T00:49:20.768Z",
-  "gitRev": "be6910d",
+  "timestamp": "2026-09-05T02:19:39.544Z",
+  "gitRev": "ea634fd",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

@@ -75,10 +75,10 @@ class OperacaoServiceTest {
         acaoBR = new Acao(1L, "PETR4", "Petrobras", Mercado.BR, "BRL", new BigDecimal("38"), LocalDateTime.now(), true);
         acaoUS = new Acao(2L, "AAPL", "Apple", Mercado.US, "USD", new BigDecimal("150"), LocalDateTime.now(), true);
 
-        operacao = new Operacao(1L, carteiraBR, acaoBR, TipoOperacao.COMPRA, 100, new BigDecimal("38"), LocalDateTime.now());
+        operacao = new Operacao(1L, carteiraBR, acaoBR, TipoOperacao.COMPRA, 100, new BigDecimal("38"), LocalDateTime.now(), false, new BigDecimal("38"));
 
         responseDTO = new OperacaoResponseDTO(1L, 1L, "PETR4", TipoOperacao.COMPRA, 100,
-                new BigDecimal("38"), new BigDecimal("3800"), LocalDateTime.now());
+                new BigDecimal("38"), new BigDecimal("3800"), LocalDateTime.now(), "BRL", java.util.List.of());
     }
 
     @Test
@@ -91,7 +91,7 @@ class OperacaoServiceTest {
         when(operacaoRepository.save(any())).thenReturn(operacao);
         when(mapper.toResponse(operacao)).thenReturn(responseDTO);
 
-        service.comprar(new OperacaoRequestDTO(1L, "PETR4", 100), INVESTIDOR_ID);
+        service.comprar(new OperacaoRequestDTO(1L, "PETR4", 100, null), INVESTIDOR_ID);
 
         verify(brapiAdapter).buscarCotacao("PETR4");
     }
@@ -102,7 +102,7 @@ class OperacaoServiceTest {
         when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
         when(acaoRepository.findByTickerAndAtivoTrue("AAPL")).thenReturn(Optional.of(acaoUS));
 
-        assertThatThrownBy(() -> service.comprar(new OperacaoRequestDTO(1L, "AAPL", 10), INVESTIDOR_ID))
+        assertThatThrownBy(() -> service.comprar(new OperacaoRequestDTO(1L, "AAPL", 10, null), INVESTIDOR_ID))
                 .isInstanceOf(RegraVioladaException.class)
                 .hasMessageContaining("mercado");
     }
@@ -113,7 +113,7 @@ class OperacaoServiceTest {
         when(carteiraService.buscarAtiva(2L, INVESTIDOR_ID)).thenReturn(carteiraUS);
         when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
 
-        assertThatThrownBy(() -> service.comprar(new OperacaoRequestDTO(2L, "PETR4", 10), INVESTIDOR_ID))
+        assertThatThrownBy(() -> service.comprar(new OperacaoRequestDTO(2L, "PETR4", 10, null), INVESTIDOR_ID))
                 .isInstanceOf(RegraVioladaException.class)
                 .hasMessageContaining("mercado");
     }
@@ -126,7 +126,7 @@ class OperacaoServiceTest {
         when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
         when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L)).thenReturn(Optional.of(posicao));
 
-        assertThatThrownBy(() -> service.vender(new OperacaoRequestDTO(1L, "PETR4", 100), INVESTIDOR_ID))
+        assertThatThrownBy(() -> service.vender(new OperacaoRequestDTO(1L, "PETR4", 100, null), INVESTIDOR_ID))
                 .isInstanceOf(RegraVioladaException.class)
                 .hasMessageContaining("posição atual");
     }
@@ -141,7 +141,7 @@ class OperacaoServiceTest {
         when(operacaoRepository.save(any())).thenReturn(operacao);
         when(mapper.toResponse(operacao)).thenReturn(responseDTO);
 
-        service.comprar(new OperacaoRequestDTO(1L, "PETR4", 100), INVESTIDOR_ID);
+        service.comprar(new OperacaoRequestDTO(1L, "PETR4", 100, null), INVESTIDOR_ID);
 
         verify(operacaoRepository).save(any());
     }
@@ -152,7 +152,7 @@ class OperacaoServiceTest {
         when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID))
                 .thenThrow(new RecursoNaoEncontradoException("CAR-001", "Carteira não encontrada ou inativa: 1"));
 
-        assertThatThrownBy(() -> service.comprar(new OperacaoRequestDTO(1L, "PETR4", 10), INVESTIDOR_ID))
+        assertThatThrownBy(() -> service.comprar(new OperacaoRequestDTO(1L, "PETR4", 10, null), INVESTIDOR_ID))
                 .isInstanceOf(RecursoNaoEncontradoException.class);
     }
 
@@ -163,7 +163,7 @@ class OperacaoServiceTest {
         when(carteiraService.buscarAtiva(1L, outroInvestidorId))
                 .thenThrow(new RecursoNaoEncontradoException("CAR-001", "Carteira não encontrada ou inativa: 1"));
 
-        assertThatThrownBy(() -> service.comprar(new OperacaoRequestDTO(1L, "PETR4", 10), outroInvestidorId))
+        assertThatThrownBy(() -> service.comprar(new OperacaoRequestDTO(1L, "PETR4", 10, null), outroInvestidorId))
                 .isInstanceOf(RecursoNaoEncontradoException.class);
     }
 
@@ -178,7 +178,7 @@ class OperacaoServiceTest {
         when(mapper.toResponse(operacao)).thenReturn(responseDTO);
 
         // compra de valor altíssimo não deve lançar exceção de saldo
-        OperacaoResponseDTO result = service.comprar(new OperacaoRequestDTO(1L, "PETR4", 999999), INVESTIDOR_ID);
+        OperacaoResponseDTO result = service.comprar(new OperacaoRequestDTO(1L, "PETR4", 999999, null), INVESTIDOR_ID);
         assertThat(result).isNotNull();
     }
 
@@ -188,7 +188,90 @@ class OperacaoServiceTest {
         when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
         when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> service.comprar(new OperacaoRequestDTO(1L, "PETR4", 10), INVESTIDOR_ID))
+        assertThatThrownBy(() -> service.comprar(new OperacaoRequestDTO(1L, "PETR4", 10, null), INVESTIDOR_ID))
                 .isInstanceOf(RecursoNaoEncontradoException.class);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-457 Compra com preço informado usa o valor informado, não a cotação")
+    void deveComprarUsandoPrecoInformado() {
+        CotacaoResultado cotacao = new CotacaoResultado(new BigDecimal("38.50"), LocalDateTime.now());
+        when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
+        when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
+        when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(cotacao);
+        when(operacaoRepository.save(any())).thenReturn(operacao);
+        when(mapper.toResponse(operacao)).thenReturn(responseDTO);
+
+        service.comprar(new OperacaoRequestDTO(1L, "PETR4", 100, new BigDecimal("40.00")), INVESTIDOR_ID);
+
+        org.mockito.ArgumentCaptor<Operacao> captor = org.mockito.ArgumentCaptor.forClass(Operacao.class);
+        verify(operacaoRepository).save(captor.capture());
+        assertThat(captor.getValue().getPrecoUnitario()).isEqualByComparingTo("40.00");
+        assertThat(captor.getValue().getPrecoManual()).isTrue();
+        assertThat(captor.getValue().getCotacaoNoMomento()).isEqualByComparingTo("38.50"); // AC-461: cotação sempre registrada
+    }
+
+    @Test
+    @DisplayName("@spec:AC-456 @spec:AC-461 Compra sem preço informado usa a cotação atual e registra precoManual=false")
+    void deveRegistrarPrecoAutomaticoComoNaoManual() {
+        CotacaoResultado cotacao = new CotacaoResultado(new BigDecimal("38.50"), LocalDateTime.now());
+        when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
+        when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
+        when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(cotacao);
+        when(operacaoRepository.save(any())).thenReturn(operacao);
+        when(mapper.toResponse(operacao)).thenReturn(responseDTO);
+
+        service.comprar(new OperacaoRequestDTO(1L, "PETR4", 100, null), INVESTIDOR_ID);
+
+        org.mockito.ArgumentCaptor<Operacao> captor = org.mockito.ArgumentCaptor.forClass(Operacao.class);
+        verify(operacaoRepository).save(captor.capture());
+        assertThat(captor.getValue().getPrecoManual()).isFalse();
+        assertThat(captor.getValue().getPrecoUnitario()).isEqualByComparingTo("38.50");
+        assertThat(captor.getValue().getCotacaoNoMomento()).isEqualByComparingTo("38.50");
+    }
+
+    @Test
+    @DisplayName("@spec:AC-459 Preço com mais de 2 casas decimais é rejeitado (OPE-005)")
+    void deveRejeitarPrecoComMaisDeDuasCasasDecimais() {
+        CotacaoResultado cotacao = new CotacaoResultado(new BigDecimal("38.50"), LocalDateTime.now());
+        when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
+        when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
+        when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(cotacao);
+
+        assertThatThrownBy(() -> service.comprar(
+                new OperacaoRequestDTO(1L, "PETR4", 100, new BigDecimal("40.123")), INVESTIDOR_ID))
+                .isInstanceOf(RegraVioladaException.class)
+                .extracting(e -> ((RegraVioladaException) e).getCodigo())
+                .isEqualTo("OPE-005");
+
+        verify(operacaoRepository, org.mockito.Mockito.never()).save(any());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-464 Editar operação com preço zero ou negativo é rejeitado")
+    void deveRejeitarEdicaoComPrecoInvalido() {
+        // AC-464 é garantido pela anotação @Positive em OperacaoEditarDTO (validação de payload, 400/VAL-001) —
+        // este teste cobre a validação de escala decimal (OPE-005), que é validação de negócio no service.
+        when(operacaoRepository.findById(1L)).thenReturn(Optional.of(operacao));
+
+        assertThatThrownBy(() -> service.editar(1L, null, new BigDecimal("40.999"), INVESTIDOR_ID))
+                .isInstanceOf(RegraVioladaException.class)
+                .extracting(e -> ((RegraVioladaException) e).getCodigo())
+                .isEqualTo("OPE-005");
+    }
+
+    @Test
+    @DisplayName("@spec:AC-465 Editar operação com preço válido recalcula a posição e marca precoManual=true")
+    void deveEditarPrecoERecalcularPosicao() {
+        when(operacaoRepository.findById(1L)).thenReturn(Optional.of(operacao));
+        when(operacaoRepository.save(any())).thenReturn(operacao);
+        when(mapper.toResponse(operacao)).thenReturn(responseDTO);
+
+        service.editar(1L, null, new BigDecimal("41.00"), INVESTIDOR_ID);
+
+        assertThat(operacao.getPrecoUnitario()).isEqualByComparingTo("41.00");
+        assertThat(operacao.getPrecoManual()).isTrue();
+        assertThat(operacao.getCotacaoNoMomento()).isEqualByComparingTo(acaoBR.getCotacaoAtual());
+        verify(posicaoService).recalcular(carteiraBR, acaoBR);
     }
 }

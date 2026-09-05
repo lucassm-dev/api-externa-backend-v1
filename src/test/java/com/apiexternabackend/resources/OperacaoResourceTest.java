@@ -68,7 +68,7 @@ class OperacaoResourceTest {
 
     private OperacaoResponseDTO buildResponse(TipoOperacao tipo) {
         return new OperacaoResponseDTO(1L, 1L, "PETR4", tipo, 100,
-                new BigDecimal("38"), new BigDecimal("3800"), LocalDateTime.now());
+                new BigDecimal("38"), new BigDecimal("3800"), LocalDateTime.now(), "BRL", List.of());
     }
 
     @Test
@@ -79,7 +79,7 @@ class OperacaoResourceTest {
         mockMvc.perform(post("/operacoes/compra")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                new OperacaoRequestDTO(1L, "PETR4", 100))))
+                                new OperacaoRequestDTO(1L, "PETR4", 100, null))))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.tipo").value("COMPRA"))
                 .andExpect(jsonPath("$.precoUnitario").isNumber());
@@ -93,7 +93,7 @@ class OperacaoResourceTest {
         mockMvc.perform(post("/operacoes/venda")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                new OperacaoRequestDTO(1L, "PETR4", 50))))
+                                new OperacaoRequestDTO(1L, "PETR4", 50, null))))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.tipo").value("VENDA"));
     }
@@ -107,7 +107,7 @@ class OperacaoResourceTest {
         mockMvc.perform(post("/operacoes/venda")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                new OperacaoRequestDTO(1L, "PETR4", 999))))
+                                new OperacaoRequestDTO(1L, "PETR4", 999, null))))
                 .andExpect(status().isUnprocessableEntity());
     }
 
@@ -153,9 +153,60 @@ class OperacaoResourceTest {
     }
 
     @Test
+    @DisplayName("@spec:AC-464 PUT /operacoes/{id} com preço zero ou negativo retorna 400")
+    void deveRejeitarEdicaoComPrecoInvalido() throws Exception {
+        mockMvc.perform(put("/operacoes/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new OperacaoEditarDTO(null, new BigDecimal("-5")))))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.codigo").value("VAL-001"));
+    }
+
+    @Test
     @DisplayName("@spec:AC-413 DELETE /operacoes/{id} exclui lançamento e recalcula posição")
     void deveExcluirLancamento() throws Exception {
         mockMvc.perform(delete("/operacoes/1"))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-458 POST /operacoes/compra com preço zero ou negativo retorna 400")
+    void deveRejeitarPrecoZeroOuNegativo() throws Exception {
+        mockMvc.perform(post("/operacoes/compra")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new OperacaoRequestDTO(1L, "PETR4", 100, new BigDecimal("-10")))))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.codigo").value("VAL-001"))
+                .andExpect(jsonPath("$.fieldErrors[0].field").value("precoUnitario"));
+    }
+
+    @Test
+    @DisplayName("@spec:AC-460 Resposta traz aviso quando o preço informado destoa muito da cotação")
+    void deveTrazerAvisoDeDesvioNoCorpo() throws Exception {
+        OperacaoResponseDTO comAviso = new OperacaoResponseDTO(1L, 1L, "PETR4", TipoOperacao.COMPRA, 100,
+                new BigDecimal("4750.00"), new BigDecimal("475000.00"), LocalDateTime.now(), "BRL",
+                List.of("O preço informado (4750.00) está 100x acima da cotação atual (47.50). Confirme se está correto."));
+        when(operacaoService.comprar(any(), eq(INVESTIDOR_ID))).thenReturn(comAviso);
+
+        mockMvc.perform(post("/operacoes/compra")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new OperacaoRequestDTO(1L, "PETR4", 100, new BigDecimal("4750.00")))))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.avisos[0]").value(org.hamcrest.Matchers.containsString("100x acima")));
+    }
+
+    @Test
+    @DisplayName("@spec:AC-462 Resposta da operação informa a moeda do preço unitário")
+    void deveInformarMoedaNaResposta() throws Exception {
+        when(operacaoService.comprar(any(), eq(INVESTIDOR_ID))).thenReturn(buildResponse(TipoOperacao.COMPRA));
+
+        mockMvc.perform(post("/operacoes/compra")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new OperacaoRequestDTO(1L, "PETR4", 100, null))))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.moeda").value("BRL"));
     }
 }

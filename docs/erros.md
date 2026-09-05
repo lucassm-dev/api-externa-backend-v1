@@ -68,6 +68,7 @@ Implementação: `src/main/java/com/apiexternabackend/resources/exceptions/`.
 | OPE-002 | Incompatibilidade de mercado entre carteira e ação | 422 | RegraVioladaException |
 | OPE-003 | Sem posição na ação para vender | 422 | RegraVioladaException |
 | OPE-004 | Quantidade de venda excede a posição atual | 422 | RegraVioladaException |
+| OPE-005 | Preço unitário com mais de 2 casas decimais (BRL/USD usam 2 casas de subunidade) | 422 | RegraVioladaException |
 
 ## AUT — Investidor / autenticação
 
