@@ -96,25 +96,31 @@ class OperacaoServiceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-403 Comprar ação de mercado diferente da carteira é recusado")
-    void deveRejeitarCompraDeAcaoMercadoDiferente() {
+    @DisplayName("@spec:AC-403 @spec:AC-497 Comprar ação de mercado diferente da carteira é permitido (Q-MAP-09)")
+    void devePermitirCompraDeAcaoMercadoDiferente() {
+        // Q-MAP-09/AC-497 (SPEC-08): carteira aceita ações BR e US juntas — este AC (antigo "recusa")
+        // agora prova o oposto, mesma técnica já usada em AC-432 (SPEC-01) quando o comportamento muda.
         when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
         when(acaoRepository.findByTickerAndAtivoTrue("AAPL")).thenReturn(Optional.of(acaoUS));
+        when(cotacaoCacheService.obter(acaoUS, false)).thenReturn(new CotacaoResultado(new BigDecimal("150"), LocalDateTime.now()));
+        when(cambioCacheService.obterTaxaAtual()).thenReturn(new CambioCacheService.CambioObtido(
+                new com.apiexternabackend.infra.facade.CambioResultado(new BigDecimal("5"), LocalDateTime.now()), false));
+        when(operacaoRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(mapper.toResponse(any())).thenReturn(responseDTO);
 
-        assertThatThrownBy(() -> service.comprar(new OperacaoRequestDTO(1L, "AAPL", 10, null), INVESTIDOR_ID))
-                .isInstanceOf(RegraVioladaException.class)
-                .hasMessageContaining("mercado");
+        assertThat(service.comprar(new OperacaoRequestDTO(1L, "AAPL", 10, null), INVESTIDOR_ID)).isNotNull();
     }
 
     @Test
-    @DisplayName("@spec:AC-305 Operação com ação de mercado diferente da carteira (spec carteira) é recusada")
-    void deveRejeitarOperacaoMercadoIncompativel() {
+    @DisplayName("@spec:AC-305 @spec:AC-497 Operação com ação de mercado diferente da carteira é permitida (Q-MAP-09)")
+    void devePermitirOperacaoMercadoDiferente() {
         when(carteiraService.buscarAtiva(2L, INVESTIDOR_ID)).thenReturn(carteiraUS);
         when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
+        when(cotacaoCacheService.obter(acaoBR, false)).thenReturn(new CotacaoResultado(new BigDecimal("38"), LocalDateTime.now()));
+        when(operacaoRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(mapper.toResponse(any())).thenReturn(responseDTO);
 
-        assertThatThrownBy(() -> service.comprar(new OperacaoRequestDTO(2L, "PETR4", 10, null), INVESTIDOR_ID))
-                .isInstanceOf(RegraVioladaException.class)
-                .hasMessageContaining("mercado");
+        assertThat(service.comprar(new OperacaoRequestDTO(2L, "PETR4", 10, null), INVESTIDOR_ID)).isNotNull();
     }
 
     @Test

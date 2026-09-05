@@ -44,7 +44,7 @@ public class OperacaoService {
         Carteira carteira = carteiraService.buscarAtiva(dto.getCarteiraId(), investidorId); // AC-309
         Acao acao = buscarAcao(dto.getTicker());
 
-        validarMercado(carteira, acao); // AC-305/AC-403
+        // AC-497 (Q-MAP-09): carteira aceita ações BR e US juntas — sem checagem de mercado
 
         CotacaoObtida obtida = obterCotacaoComFallback(acao); // AC-477/AC-478/AC-482/AC-483/AC-484
         CotacaoResultado cotacao = obtida.resultado();
@@ -75,7 +75,7 @@ public class OperacaoService {
         Carteira carteira = carteiraService.buscarAtiva(dto.getCarteiraId(), investidorId); // AC-309
         Acao acao = buscarAcao(dto.getTicker());
 
-        validarMercado(carteira, acao); // AC-305/AC-403
+        // AC-497 (Q-MAP-09): carteira aceita ações BR e US juntas — sem checagem de mercado
 
         // AC-404: não vende mais que a posição atual
         CarteiraAcao posicao = carteiraAcaoRepository
@@ -154,14 +154,6 @@ public class OperacaoService {
     private Acao buscarAcao(String ticker) {
         return acaoRepository.findByTickerAndAtivoTrue(ticker.toUpperCase().trim())
                 .orElseThrow(() -> new RecursoNaoEncontradoException("ACA-001", "Ação não encontrada: " + ticker));
-    }
-
-    private void validarMercado(Carteira carteira, Acao acao) {
-        if (carteira.getMercado() != acao.getMercado()) {
-            throw new RegraVioladaException("OPE-002",
-                    "Incompatibilidade de mercado: carteira é " + carteira.getMercado()
-                    + " mas ação " + acao.getTicker() + " é " + acao.getMercado());
-        }
     }
 
     private void validarEscalaDecimal(BigDecimal preco) {
