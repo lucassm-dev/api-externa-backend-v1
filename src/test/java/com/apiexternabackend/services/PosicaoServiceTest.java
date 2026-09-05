@@ -71,7 +71,7 @@ class PosicaoServiceTest {
     @Test
     @DisplayName("@spec:AC-402 Compras sucessivas geram preço médio ponderado (100@38 + 100@42 = 200@40)")
     void devecalcularPrecoMedioPonderado() {
-        when(operacaoRepository.findByCarteiraIdAndAcaoIdOrderByDataHoraAsc(1L, 1L))
+        when(operacaoRepository.findByCarteiraIdAndAcaoIdAndAtivoTrueOrderByDataHoraAsc(1L, 1L))
                 .thenReturn(List.of(compra(100, "38"), compra(100, "42")));
         when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L)).thenReturn(Optional.empty());
 
@@ -87,7 +87,7 @@ class PosicaoServiceTest {
     @DisplayName("@spec:AC-405 Venda que zera a posição remove a posição")
     void deveRemoverPosicaoQuandoZerada() {
         CarteiraAcao posicao = new CarteiraAcao(1L, carteira, acao, 100, new BigDecimal("38"));
-        when(operacaoRepository.findByCarteiraIdAndAcaoIdOrderByDataHoraAsc(1L, 1L))
+        when(operacaoRepository.findByCarteiraIdAndAcaoIdAndAtivoTrueOrderByDataHoraAsc(1L, 1L))
                 .thenReturn(List.of(compra(100, "38"), venda(100, "42")));
         when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L))
                 .thenReturn(Optional.of(posicao));
@@ -100,7 +100,7 @@ class PosicaoServiceTest {
     @Test
     @DisplayName("@spec:AC-412 Editar lançamento recalcula posição a partir do histórico atualizado")
     void deveRecalcularAoEditarLancamento() {
-        when(operacaoRepository.findByCarteiraIdAndAcaoIdOrderByDataHoraAsc(1L, 1L))
+        when(operacaoRepository.findByCarteiraIdAndAcaoIdAndAtivoTrueOrderByDataHoraAsc(1L, 1L))
                 .thenReturn(List.of(compra(50, "40")));
         when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L)).thenReturn(Optional.empty());
 
@@ -123,7 +123,7 @@ class PosicaoServiceTest {
         manual.setPrecoManual(true);
         manual.setCotacaoNoMomento(new BigDecimal("38.50")); // cotação real no momento, diferente do preço manual informado
 
-        when(operacaoRepository.findByCarteiraIdAndAcaoIdOrderByDataHoraAsc(1L, 1L))
+        when(operacaoRepository.findByCarteiraIdAndAcaoIdAndAtivoTrueOrderByDataHoraAsc(1L, 1L))
                 .thenReturn(List.of(automatica, manual));
         when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L)).thenReturn(Optional.empty());
 
@@ -139,7 +139,7 @@ class PosicaoServiceTest {
     @DisplayName("@spec:AC-413 Excluir lançamento recalcula posição; sem quantidade = posição removida")
     void deveRemoverPosicaoAoExcluirUnicoLancamento() {
         CarteiraAcao posicao = new CarteiraAcao(1L, carteira, acao, 100, new BigDecimal("38"));
-        when(operacaoRepository.findByCarteiraIdAndAcaoIdOrderByDataHoraAsc(1L, 1L))
+        when(operacaoRepository.findByCarteiraIdAndAcaoIdAndAtivoTrueOrderByDataHoraAsc(1L, 1L))
                 .thenReturn(List.of());  // histórico vazio após exclusão
         when(carteiraAcaoRepository.findByCarteiraIdAndAcaoId(1L, 1L))
                 .thenReturn(Optional.of(posicao));

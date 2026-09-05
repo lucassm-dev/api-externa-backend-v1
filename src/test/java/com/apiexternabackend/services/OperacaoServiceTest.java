@@ -75,7 +75,7 @@ class OperacaoServiceTest {
         acaoBR = new Acao(1L, "PETR4", "Petrobras", Mercado.BR, "BRL", new BigDecimal("38"), LocalDateTime.now(), true);
         acaoUS = new Acao(2L, "AAPL", "Apple", Mercado.US, "USD", new BigDecimal("150"), LocalDateTime.now(), true);
 
-        operacao = new Operacao(1L, carteiraBR, acaoBR, TipoOperacao.COMPRA, 100, new BigDecimal("38"), LocalDateTime.now(), false, new BigDecimal("38"));
+        operacao = new Operacao(1L, carteiraBR, acaoBR, TipoOperacao.COMPRA, 100, new BigDecimal("38"), LocalDateTime.now(), false, new BigDecimal("38"), true, null, null);
 
         responseDTO = new OperacaoResponseDTO(1L, 1L, "PETR4", TipoOperacao.COMPRA, 100,
                 new BigDecimal("38"), new BigDecimal("3800"), LocalDateTime.now(), "BRL", java.util.List.of());
@@ -252,7 +252,7 @@ class OperacaoServiceTest {
     void deveRejeitarEdicaoComPrecoInvalido() {
         // AC-464 é garantido pela anotação @Positive em OperacaoEditarDTO (validação de payload, 400/VAL-001) —
         // este teste cobre a validação de escala decimal (OPE-005), que é validação de negócio no service.
-        when(operacaoRepository.findById(1L)).thenReturn(Optional.of(operacao));
+        when(operacaoRepository.findByIdAndAtivoTrue(1L)).thenReturn(Optional.of(operacao));
 
         assertThatThrownBy(() -> service.editar(1L, null, new BigDecimal("40.999"), INVESTIDOR_ID))
                 .isInstanceOf(RegraVioladaException.class)
@@ -263,7 +263,7 @@ class OperacaoServiceTest {
     @Test
     @DisplayName("@spec:AC-465 Editar operação com preço válido recalcula a posição e marca precoManual=true")
     void deveEditarPrecoERecalcularPosicao() {
-        when(operacaoRepository.findById(1L)).thenReturn(Optional.of(operacao));
+        when(operacaoRepository.findByIdAndAtivoTrue(1L)).thenReturn(Optional.of(operacao));
         when(operacaoRepository.save(any())).thenReturn(operacao);
         when(mapper.toResponse(operacao)).thenReturn(responseDTO);
 
