@@ -1,14 +1,18 @@
 package com.apiexternabackend.resources;
 
+import com.apiexternabackend.config.InvestidorPrincipal;
 import com.apiexternabackend.domains.dtos.AcaoRequestDTO;
 import com.apiexternabackend.domains.dtos.AcaoResponseDTO;
 import com.apiexternabackend.domains.enums.Mercado;
 import com.apiexternabackend.resources.exceptions.GlobalExceptionHandler;
 import com.apiexternabackend.resources.exceptions.IntegracaoExternaException;
+import com.apiexternabackend.resources.exceptions.PreRequisitoNaoAtendidoException;
 import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
 import com.apiexternabackend.resources.exceptions.RegraVioladaException;
 import com.apiexternabackend.services.AcaoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +23,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
@@ -44,6 +51,20 @@ class AcaoResourceTest {
     @MockBean private AcaoService service;
     @Autowired private ObjectMapper objectMapper;
 
+    private static final Long INVESTIDOR_ID = 1L;
+
+    @BeforeEach
+    void autenticarComoInvestidor() {
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
+                new InvestidorPrincipal(INVESTIDOR_ID, "joao@email.com"), null,
+                List.of(new SimpleGrantedAuthority("ROLE_INVESTIDOR"))));
+    }
+
+    @AfterEach
+    void limparContextoDeSeguranca() {
+        SecurityContextHolder.clearContext();
+    }
+
     private AcaoResponseDTO buildResponse(String ticker, Mercado mercado, String moeda) {
         return new AcaoResponseDTO(1L, ticker, "Empresa", mercado, moeda,
                 new BigDecimal("38.00"), LocalDateTime.now());
@@ -52,7 +73,7 @@ class AcaoResourceTest {
     @Test
     @DisplayName("@spec:AC-201 POST /acoes com ticker BR salva e retorna 201 com cotação e dataHora")
     void deveCadastrarAcaoBR() throws Exception {
-        when(service.cadastrar(any())).thenReturn(buildResponse("PETR4", Mercado.BR, "BRL"));
+        when(service.cadastrar(any(), eq(INVESTIDOR_ID))).thenReturn(buildResponse("PETR4", Mercado.BR, "BRL"));
 
         mockMvc.perform(post("/acoes")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -67,7 +88,7 @@ class AcaoResourceTest {
     @Test
     @DisplayName("@spec:AC-202 POST /acoes com ticker US retorna moeda USD")
     void deveCadastrarAcaoUS() throws Exception {
-        when(service.cadastrar(any())).thenReturn(buildResponse("AAPL", Mercado.US, "USD"));
+        when(service.cadastrar(any(), eq(INVESTIDOR_ID))).thenReturn(buildResponse("AAPL", Mercado.US, "USD"));
 
         mockMvc.perform(post("/acoes")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -79,7 +100,7 @@ class AcaoResourceTest {
     @Test
     @DisplayName("@spec:AC-203 POST /acoes com ticker inexistente retorna 422")
     void deveRejeitarTickerInexistente() throws Exception {
-        when(service.cadastrar(any()))
+        when(service.cadastrar(any(), eq(INVESTIDOR_ID)))
                 .thenThrow(new RegraVioladaException("EXT-008", "Ticker não encontrado na fonte BR: XXXX3"));
 
         mockMvc.perform(post("/acoes")
@@ -133,7 +154,7 @@ class AcaoResourceTest {
     @Test
     @DisplayName("@spec:AC-211 @spec:AC-429 Limite de cota da fonte retorna 429 com mensagem específica")
     void deveMensagemEspecificaParaLimiteExcedido() throws Exception {
-        when(service.cadastrar(any()))
+        when(service.cadastrar(any(), eq(INVESTIDOR_ID)))
                 .thenThrow(new IntegracaoExternaException("EXT-009", "Limite de requisições da fonte BR excedido", true));
 
         mockMvc.perform(post("/acoes")
@@ -180,5 +201,19 @@ class AcaoResourceTest {
 
         mockMvc.perform(delete("/acoes/XXXX3"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-466 POST /acoes sem carteira ativa retorna 409 com código ACA-004")
+    void deveRejeitarCadastroSemCarteiraAtiva() throws Exception {
+        when(service.cadastrar(any(), eq(INVESTIDOR_ID)))
+                .thenThrow(new PreRequisitoNaoAtendidoException("ACA-004", "Cadastre uma carteira antes de cadastrar ações"));
+
+        mockMvc.perform(post("/acoes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new AcaoRequestDTO("PETR4", Mercado.BR))))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.codigo").value("ACA-004"))
+                .andExpect(jsonPath("$.message").value(org.hamcrest.Matchers.containsString("Cadastre uma carteira")));
     }
 }
