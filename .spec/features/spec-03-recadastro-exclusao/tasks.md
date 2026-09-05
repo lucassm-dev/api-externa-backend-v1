@@ -19,8 +19,7 @@
 - Refs: AC-452, AC-453
 - Arquivos: src/main/java/com/apiexternabackend/services/CarteiraService.java, src/test/java/com/apiexternabackend/services/CarteiraServiceTest.java, src/test/java/com/apiexternabackend/resources/CarteiraResourceTest.java
 
-## T-423 — Catálogo, mapeamento e auditoria final [pendente]
-
+## T-423 — Catálogo, mapeamento e auditoria final [concluida]
 - Refs: US-415, US-416, US-417
 - Arquivos: docs/erros.md, docs/mapeamento-atual.html
 - Notas: depende de T-420..T-422 concluídas.
