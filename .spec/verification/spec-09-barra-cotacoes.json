@@ -1,23 +1,33 @@
 {
-  "feature": "spec-05-carteira-obrigatoria",
-  "timestamp": "2026-09-05T13:40:46.043Z",
+  "feature": "spec-09-barra-cotacoes",
+  "timestamp": "2026-09-05T13:38:51.657Z",
   "gitRev": "87568d5",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
   "testsParsed": 0,
   "results": {
-    "AC-466": {
+    "AC-498": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-467": {
+    "AC-499": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-468": {
+    "AC-500": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-501": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-502": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
