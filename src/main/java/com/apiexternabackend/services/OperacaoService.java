@@ -49,8 +49,16 @@ public class OperacaoService {
         CotacaoObtida obtida = obterCotacaoComFallback(acao); // AC-477/AC-478/AC-482/AC-483/AC-484
         CotacaoResultado cotacao = obtida.resultado();
         boolean precoManual = dto.getPrecoUnitario() != null; // AC-457
-        BigDecimal precoEfetivo = precoManual ? dto.getPrecoUnitario() : cotacao.preco(); // AC-456
-        validarEscalaDecimal(precoEfetivo); // AC-459
+        BigDecimal precoEfetivo;
+        if (precoManual) {
+            precoEfetivo = dto.getPrecoUnitario(); // AC-456
+            validarEscalaDecimal(precoEfetivo); // AC-459: só valida preço digitado pelo usuário
+        } else {
+            // preço automático vem da fonte com a precisão que ela quiser (ex.: Twelve Data
+            // retorna mais de 2 casas) — arredonda pra subunidade em vez de rejeitar (bug real
+            // encontrado testando compra de AAPL: OPE-005 disparava numa compra 100% automática)
+            precoEfetivo = cotacao.preco().setScale(2, java.math.RoundingMode.HALF_UP);
+        }
 
         Operacao operacao = new Operacao();
         operacao.setCarteira(carteira);
@@ -91,8 +99,16 @@ public class OperacaoService {
         CotacaoObtida obtida = obterCotacaoComFallback(acao); // AC-477/AC-478/AC-482/AC-483/AC-484
         CotacaoResultado cotacao = obtida.resultado();
         boolean precoManual = dto.getPrecoUnitario() != null; // AC-457
-        BigDecimal precoEfetivo = precoManual ? dto.getPrecoUnitario() : cotacao.preco(); // AC-456
-        validarEscalaDecimal(precoEfetivo); // AC-459
+        BigDecimal precoEfetivo;
+        if (precoManual) {
+            precoEfetivo = dto.getPrecoUnitario(); // AC-456
+            validarEscalaDecimal(precoEfetivo); // AC-459: só valida preço digitado pelo usuário
+        } else {
+            // preço automático vem da fonte com a precisão que ela quiser (ex.: Twelve Data
+            // retorna mais de 2 casas) — arredonda pra subunidade em vez de rejeitar (bug real
+            // encontrado testando compra de AAPL: OPE-005 disparava numa compra 100% automática)
+            precoEfetivo = cotacao.preco().setScale(2, java.math.RoundingMode.HALF_UP);
+        }
 
         Operacao operacao = new Operacao();
         operacao.setCarteira(carteira);

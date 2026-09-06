@@ -96,6 +96,26 @@ class OperacaoServiceTest {
     }
 
     @Test
+    @DisplayName("Compra automática com cotação de mais de 2 casas decimais arredonda em vez de recusar (regressão OPE-005)")
+    void deveArredondarCotacaoAutomaticaComMaisDeDuasCasas() {
+        // Bug real encontrado testando compra de AAPL: Twelve Data retorna preço com mais
+        // de 2 casas (ex.: 319.98999) e a validação de escala rejeitava até compra 100% automática.
+        CotacaoResultado cotacao = new CotacaoResultado(new BigDecimal("319.98999"), LocalDateTime.now());
+        when(carteiraService.buscarAtiva(1L, INVESTIDOR_ID)).thenReturn(carteiraBR);
+        when(acaoRepository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
+        when(cotacaoCacheService.obter(acaoBR, false)).thenReturn(cotacao);
+        when(operacaoRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(mapper.toResponse(any())).thenReturn(responseDTO);
+
+        OperacaoResponseDTO result = service.comprar(new OperacaoRequestDTO(1L, "PETR4", 1, null), INVESTIDOR_ID);
+
+        assertThat(result).isNotNull();
+        org.mockito.ArgumentCaptor<Operacao> captor = org.mockito.ArgumentCaptor.forClass(Operacao.class);
+        verify(operacaoRepository).save(captor.capture());
+        assertThat(captor.getValue().getPrecoUnitario()).isEqualByComparingTo("319.99");
+    }
+
+    @Test
     @DisplayName("@spec:AC-403 @spec:AC-497 Comprar ação de mercado diferente da carteira é permitido (Q-MAP-09)")
     void devePermitirCompraDeAcaoMercadoDiferente() {
         // Q-MAP-09/AC-497 (SPEC-08): carteira aceita ações BR e US juntas — este AC (antigo "recusa")
