@@ -1,124 +1,581 @@
-@baseUrl = http://localhost:8080
+### =====================================================================
+### Roteiro de testes manuais — api-externa-backend
+### Cobre SPEC-01 a SPEC-09. Cada bloco tem um comentário dizendo o que
+### testa e o status/código esperado. Rode em ordem — cada seção depende
+### dos IDs criados na anterior.
+###
+### Como usar:
+### 1. Suba a aplicação (perfil dev): ./mvnw spring-boot:run
+### 2. Rode o bloco de LOGIN, copie o "token" da resposta e cole em @token.
+### 3. Vá rodando os blocos em ordem, colando os IDs das respostas nas
+###    variáveis (@corretoraId, @carteiraId, @acaoId, @acaoUsId, @operacaoId)
+###    conforme forem aparecendo.
+### 4. Todo endpoint fora de /auth/** exige "Authorization: Bearer {{token}}"
+###    — sem isso, é 401 (AUT-005), que é o próprio primeiro teste de erro
+###    da seção de autenticação.
+### =====================================================================
 
-### Cadastrar investidor
-POST {{baseUrl}}/investidores
+@baseUrl = http://localhost:8080
+@token = COLE_AQUI_O_TOKEN_APOS_O_LOGIN
+@corretoraId = 1
+@carteiraId = 1
+@acaoId = 1
+@acaoUsId = 2
+@operacaoId = 1
+
+
+### =====================================================================
+### 1. AUTENTICAÇÃO (SPEC-02) — AUT-001..008, AC-001/002/435/436/438..441
+### =====================================================================
+
+### 1.1 [OK] Cadastro de investidor — 201, retorna o investidor sem senha
+POST {{baseUrl}}/auth/cadastro
 Content-Type: application/json
 
 {
   "nome": "Investidor Teste",
   "email": "investidor.teste@email.com",
-  "cpf": "12345678901"
+  "cpf": "12345678901",
+  "senha": "senha123"
 }
 
-### Listar investidores
+### 1.2 [ERRO] Cadastro com e-mail já usado — 409 AUT-001
+POST {{baseUrl}}/auth/cadastro
+Content-Type: application/json
+
+{
+  "nome": "Outro Nome",
+  "email": "investidor.teste@email.com",
+  "cpf": "98765432100",
+  "senha": "senha123"
+}
+
+### 1.3 [ERRO] Cadastro com CPF já usado — 409 AUT-002
+POST {{baseUrl}}/auth/cadastro
+Content-Type: application/json
+
+{
+  "nome": "Outro Nome",
+  "email": "outro.email@email.com",
+  "cpf": "12345678901",
+  "senha": "senha123"
+}
+
+### 1.4 [ERRO] Senha fora da política (sem número) — 422 AUT-008
+POST {{baseUrl}}/auth/cadastro
+Content-Type: application/json
+
+{
+  "nome": "Investidor Senha Fraca",
+  "email": "senha.fraca@email.com",
+  "cpf": "11122233344",
+  "senha": "somenteletras"
+}
+
+### 1.5 [ERRO] Payload inválido (campos faltando) — 400 VAL-001, veja fieldErrors
+POST {{baseUrl}}/auth/cadastro
+Content-Type: application/json
+
+{
+  "email": "incompleto@email.com"
+}
+
+### 1.6 [OK] Login — 200, copie "token" da resposta para @token no topo do arquivo
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "investidor.teste@email.com",
+  "senha": "senha123"
+}
+
+### 1.7 [ERRO] Login com senha errada — 401 AUT-004 (mensagem genérica, não diz qual campo)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "investidor.teste@email.com",
+  "senha": "senhaErrada"
+}
+
+### 1.8 [ERRO] Login com e-mail inexistente — 401 AUT-004 (mesma mensagem genérica do 1.7)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "nao.existe@email.com",
+  "senha": "senha123"
+}
+
+### 1.9 [ERRO] Acessar endpoint protegido sem token — 401 AUT-005
 GET {{baseUrl}}/investidores
 
-### Buscar investidor por ID
-GET {{baseUrl}}/investidores/1
+### 1.10 [ERRO] Acessar endpoint protegido com token inválido/corrompido — 401 AUT-005
+GET {{baseUrl}}/investidores
+Authorization: Bearer token-invalido-de-mentirinha
 
-### Cadastrar corretora
+
+### =====================================================================
+### 2. INVESTIDOR — a partir daqui, todo request usa Authorization: Bearer
+### =====================================================================
+
+### 2.1 [OK] Listar investidores — 200, página com o investidor cadastrado em 1.1
+GET {{baseUrl}}/investidores
+Authorization: Bearer {{token}}
+
+### 2.2 [OK] Buscar investidor por id — 200 (troque o id se não for 1)
+GET {{baseUrl}}/investidores/1
+Authorization: Bearer {{token}}
+
+### 2.3 [ERRO] Buscar investidor com id inexistente — 404 AUT-003
+GET {{baseUrl}}/investidores/999999
+Authorization: Bearer {{token}}
+
+
+### =====================================================================
+### 3. CORRETORA (SPEC-01/03) — COR-001..004, EXT-007
+### =====================================================================
+
+### 3.1 [OK] Cadastrar corretora — 201 (CNPJ real, deve passar CVM)
 POST {{baseUrl}}/corretoras
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "cnpj": "02332886000104"
 }
 
-### Listar corretoras
+### 3.2 [ERRO] CNPJ com formato inválido — 400 VAL-001 (falha no @Pattern do DTO)
+POST {{baseUrl}}/corretoras
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "cnpj": "123"
+}
+
+### 3.3 [ERRO] CNPJ que não existe na Receita/CVM — 422 COR-003
+POST {{baseUrl}}/corretoras
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "cnpj": "12345678000100"
+}
+
+### 3.4 [ERRO] CNPJ duplicado entre corretoras ativas — 409 COR-002
+POST {{baseUrl}}/corretoras
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "cnpj": "02332886000104"
+}
+
+### 3.5 [OK] Listar corretoras — 200
 GET {{baseUrl}}/corretoras
+Authorization: Bearer {{token}}
 
-### Buscar corretora por ID
-GET {{baseUrl}}/corretoras/1
+### 3.6 [OK] Buscar corretora por id — 200 (copie o id da resposta de 3.1 para @corretoraId)
+GET {{baseUrl}}/corretoras/{{corretoraId}}
+Authorization: Bearer {{token}}
 
-### Buscar corretora por CNPJ
+### 3.7 [ERRO] Buscar corretora por id inexistente — 404 COR-001
+GET {{baseUrl}}/corretoras/999999
+Authorization: Bearer {{token}}
+
+### 3.8 [OK] Buscar corretora por CNPJ — 200
 GET {{baseUrl}}/corretoras/cnpj/02332886000104
+Authorization: Bearer {{token}}
 
-### Cadastrar ação
+### ---- Os próximos dois (3.9/3.10) só depois de criar carteira+ação
+### (seções 4 e 5) — voltam aqui para provar exclusão bloqueada/permitida.
+
+### 3.9 [ERRO] Excluir corretora com carteira ativa vinculada — 422 COR-004
+### (rode isso DEPOIS de criar a carteira na seção 4 — antes disso vai dar 204)
+DELETE {{baseUrl}}/corretoras/{{corretoraId}}
+Authorization: Bearer {{token}}
+
+### 3.10 [OK] Recadastrar o mesmo CNPJ depois de excluir — 201 (prova SPEC-03/Q-MAP-07)
+### (só funciona depois de excluir de verdade a corretora — exclua a carteira
+### vinculada primeiro, senão cai no erro 3.9)
+POST {{baseUrl}}/corretoras
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "cnpj": "02332886000104"
+}
+
+
+### =====================================================================
+### 4. CARTEIRA (SPEC-02/03/05) — CAR-001/002
+### =====================================================================
+
+### 4.1 [OK] Criar carteira — 201 (sem investidorId: vem do token — RN-CAR-01)
+### "mercado" ainda existe no cadastro mas não restringe operações (SPEC-08)
+POST {{baseUrl}}/carteiras
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "corretoraId": {{corretoraId}},
+  "mercado": "BR",
+  "nome": "Carteira Principal"
+}
+
+### 4.2 [ERRO] Criar carteira com corretora inexistente — 404 COR-001
+POST {{baseUrl}}/carteiras
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "corretoraId": 999999,
+  "mercado": "BR",
+  "nome": "Carteira Inválida"
+}
+
+### 4.3 [ERRO] Payload sem nome — 400 VAL-001
+POST {{baseUrl}}/carteiras
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "corretoraId": {{corretoraId}},
+  "mercado": "BR"
+}
+
+### 4.4 [OK] Listar carteiras do investidor logado — 200 (não usa mais ?investidorId=)
+GET {{baseUrl}}/carteiras
+Authorization: Bearer {{token}}
+
+### 4.5 [OK] Renomear carteira — 200 (copie o id da resposta de 4.1 para @carteiraId)
+PATCH {{baseUrl}}/carteiras/{{carteiraId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nome": "Carteira Renomeada"
+}
+
+### 4.6 [ERRO] Renomear carteira de outro investidor / inexistente — 404 CAR-001
+### (nunca 403 — RN-AUT-02, não revela se a carteira existe e é de outro dono)
+PATCH {{baseUrl}}/carteiras/999999
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nome": "Não Deveria Funcionar"
+}
+
+### ---- 4.7 excluir com posição ativa: rode DEPOIS de comprar uma ação na
+### seção 6 (fica bloqueada); para excluir de verdade, venda tudo antes.
+
+### 4.7 [ERRO] Excluir carteira com posição ativa — 422 CAR-002
+DELETE {{baseUrl}}/carteiras/{{carteiraId}}
+Authorization: Bearer {{token}}
+
+
+### =====================================================================
+### 5. AÇÃO (SPEC-01/03/05/07) — ACA-001..004, EXT-008
+### =====================================================================
+
+### 5.1 [ERRO] Cadastrar ação sem ter carteira ativa — 409 ACA-004
+### (só reproduz isso com um investidor NOVO, sem nenhuma carteira ainda —
+### use outro login/token, ou pule este teste se já criou a carteira da seção 4)
 POST {{baseUrl}}/acoes
 Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "ticker": "VALE3",
+  "mercado": "BR"
+}
+
+### 5.2 [OK] Cadastrar ação BR — 201, retorna cotação e dataHoraCotacao (AC-201)
+### tickers liberados sem token/sem limite no sandbox da brapi: PETR4, VALE3, ITUB4, MGLU3
+POST {{baseUrl}}/acoes
+Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "ticker": "PETR4",
   "mercado": "BR"
 }
 
-### Listar ações
+### 5.3 [OK] Cadastrar ação US — 201, moeda USD (AC-202)
+POST {{baseUrl}}/acoes
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "ticker": "AAPL",
+  "mercado": "US"
+}
+
+### 5.4 [ERRO] Ticker duplicado entre ações ativas — 409 ACA-002
+POST {{baseUrl}}/acoes
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "ticker": "PETR4",
+  "mercado": "BR"
+}
+
+### 5.5 [ERRO] Ticker inexistente na fonte — 422 EXT-008
+POST {{baseUrl}}/acoes
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "ticker": "XXXX9",
+  "mercado": "BR"
+}
+
+### 5.6 [OK] Listar ações — 200
 GET {{baseUrl}}/acoes
+Authorization: Bearer {{token}}
 
-### Buscar ação por ticker
+### 5.7 [OK] Buscar ação por ticker — 200 (copie o id da resposta de 5.2 para @acaoId, e o de 5.3 para @acaoUsId)
 GET {{baseUrl}}/acoes/ticker/PETR4
+Authorization: Bearer {{token}}
 
-### Atualizar cotação da ação
-PUT {{baseUrl}}/acoes/1/atualizar-cotacao
+### 5.8 [ERRO] Buscar ticker inexistente — 404 ACA-001
+GET {{baseUrl}}/acoes/ticker/ZZZZ1
+Authorization: Bearer {{token}}
 
-### Criar carteira
-POST {{baseUrl}}/carteiras
-Content-Type: application/json
+### 5.9 [OK] Atualizar cotação — 200, dataHoraCotacao muda só se passou o TTL (15min, SPEC-07)
+PUT {{baseUrl}}/acoes/{{acaoId}}/atualizar-cotacao
+Authorization: Bearer {{token}}
 
-{
-  "investidorId": 1,
-  "corretoraId": 1,
-  "mercado": "BR",
-  "nome": "Carteira Principal"
-}
+### 5.10 [OK] Forçar atualização de cotação ignorando o cache — 200, sempre chama a fonte (AC-481)
+PUT {{baseUrl}}/acoes/{{acaoId}}/atualizar-cotacao?forcar=true
+Authorization: Bearer {{token}}
 
-### Listar carteiras do investidor
-GET {{baseUrl}}/carteiras?investidorId=1
+### 5.11 [ERRO] Atualizar cotação de ação inexistente — 404 ACA-001
+PUT {{baseUrl}}/acoes/999999/atualizar-cotacao
+Authorization: Bearer {{token}}
 
-### Renomear carteira
-PATCH {{baseUrl}}/carteiras/1
-Content-Type: application/json
+### ---- 5.12 excluir com posição ativa: rode DEPOIS de comprar (seção 6)
 
-{
-  "nome": "Carteira Renomeada"
-}
+### 5.12 [ERRO] Excluir ação com posição ativa — 422 ACA-003
+DELETE {{baseUrl}}/acoes/PETR4
+Authorization: Bearer {{token}}
 
-### Comprar ação
+
+### =====================================================================
+### 6. OPERAÇÃO (SPEC-01/03/04/06/07/08) — OPE-001/003/004/005
+### =====================================================================
+
+### 6.1 [OK] Comprar com cotação automática — 201, precoManual=false, cotacaoNoMomento preenchida (AC-401/456/461)
 POST {{baseUrl}}/operacoes/compra
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
-  "carteiraId": 1,
+  "carteiraId": {{carteiraId}},
   "ticker": "PETR4",
-  "quantidade": 10
+  "quantidade": 100
 }
 
-### Vender ação
-POST {{baseUrl}}/operacoes/venda
+### 6.2 [OK] Comprar com preço manual — 201, precoManual=true (AC-457)
+POST {{baseUrl}}/operacoes/compra
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
-  "carteiraId": 1,
+  "carteiraId": {{carteiraId}},
+  "ticker": "PETR4",
+  "quantidade": 10,
+  "precoUnitario": 35.50
+}
+
+### 6.3 [OK] Comprar com preço manual MUITO destoante da cotação — 201, mas com aviso em avisos[] (AC-460, 10x+ de desvio)
+### troque o valor abaixo por 10x+ a cotação atual de PETR4 pra ver o aviso
+POST {{baseUrl}}/operacoes/compra
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "carteiraId": {{carteiraId}},
+  "ticker": "PETR4",
+  "quantidade": 1,
+  "precoUnitario": 500.00
+}
+
+### 6.4 [OK] Comprar ação US numa carteira "BR" — 201, PERMITIDO (prova Q-MAP-09/SPEC-08 —
+### antes da SPEC-08 isso dava 422 OPE-002; agora não existe mais essa checagem)
+POST {{baseUrl}}/operacoes/compra
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "carteiraId": {{carteiraId}},
+  "ticker": "AAPL",
+  "quantidade": 5
+}
+### -> confira na resposta: taxaCambioNaOperacao preenchida (câmbio USD-BRL do momento, AC-486)
+
+### 6.5 [ERRO] Preço com mais de 2 casas decimais — 422 OPE-005
+POST {{baseUrl}}/operacoes/compra
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "carteiraId": {{carteiraId}},
+  "ticker": "PETR4",
+  "quantidade": 1,
+  "precoUnitario": 35.999
+}
+
+### 6.6 [ERRO] Comprar ação inexistente/excluída — 404 ACA-001
+POST {{baseUrl}}/operacoes/compra
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "carteiraId": {{carteiraId}},
+  "ticker": "ZZZZ1",
+  "quantidade": 1
+}
+
+### 6.7 [OK] Vender parte da posição — 201, grava precoMedioCompraNoMomento e lucroRealizado (AC-469)
+POST {{baseUrl}}/operacoes/venda
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "carteiraId": {{carteiraId}},
   "ticker": "PETR4",
   "quantidade": 5
 }
 
-### Listar histórico de operações
-GET {{baseUrl}}/operacoes?investidorId=1
-
-### Editar operação
-PUT {{baseUrl}}/operacoes/1
+### 6.8 [ERRO] Vender mais do que a posição atual — 422 OPE-004
+POST {{baseUrl}}/operacoes/venda
 Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "carteiraId": {{carteiraId}},
+  "ticker": "PETR4",
+  "quantidade": 999999
+}
+
+### 6.9 [ERRO] Vender ação sem nenhuma posição — 422 OPE-003
+POST {{baseUrl}}/operacoes/venda
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "carteiraId": {{carteiraId}},
+  "ticker": "AAPL",
+  "quantidade": 999999
+}
+
+### 6.10 [OK] Listar histórico de operações — 200, paginado (não usa mais ?investidorId=)
+GET {{baseUrl}}/operacoes
+Authorization: Bearer {{token}}
+
+### 6.11 [OK] Editar operação (preço) — 200, recalcula posição e lucro em cascata (AC-465/475/476)
+### copie o id de alguma operação da resposta de 6.10 para @operacaoId
+PUT {{baseUrl}}/operacoes/{{operacaoId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "quantidade": 12,
-  "precoUnitario": 35.50
+  "precoUnitario": 36.00
 }
 
-### Listar posições da carteira
-GET {{baseUrl}}/carteiras/1/posicoes
+### 6.12 [ERRO] Editar operação com preço com mais de 2 casas — 422 OPE-005
+PUT {{baseUrl}}/operacoes/{{operacaoId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
 
-### Excluir operação
-DELETE {{baseUrl}}/operacoes/1
+{
+  "precoUnitario": 36.999
+}
 
-### Excluir carteira
-DELETE {{baseUrl}}/carteiras/1
+### 6.13 [ERRO] Editar operação com preço zero/negativo — 400 VAL-001 (@Positive no DTO)
+PUT {{baseUrl}}/operacoes/{{operacaoId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
 
-### Excluir ação
+{
+  "precoUnitario": -10
+}
+
+### 6.14 [OK] Listar posições da carteira — 200, com rentabilidadeNaoRealizada
+GET {{baseUrl}}/carteiras/{{carteiraId}}/posicoes
+Authorization: Bearer {{token}}
+
+### 6.15 [OK] Lucro realizado da carteira — 200, total e porTicker JÁ CONVERTIDOS em BRL (AC-470/471/496)
+GET {{baseUrl}}/carteiras/{{carteiraId}}/lucro-realizado
+Authorization: Bearer {{token}}
+
+### 6.16 [OK] Consolidado da carteira — 200, valor investido/mercado/lucro em BRL + taxa de câmbio usada (AC-493/494)
+GET {{baseUrl}}/carteiras/{{carteiraId}}/consolidado
+Authorization: Bearer {{token}}
+
+### 6.17 [OK] Excluir operação — 204, soft delete (não some do banco, só das listagens — AC-472)
+DELETE {{baseUrl}}/operacoes/{{operacaoId}}
+Authorization: Bearer {{token}}
+
+### 6.18 [ERRO] Excluir a mesma operação de novo (já excluída) — 404 OPE-001 (AC-473)
+DELETE {{baseUrl}}/operacoes/{{operacaoId}}
+Authorization: Bearer {{token}}
+
+### 6.19 [ERRO] Editar operação já excluída — 404 OPE-001 (AC-473)
+PUT {{baseUrl}}/operacoes/{{operacaoId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "quantidade": 1
+}
+
+### 6.20 [ERRO] Vender/comprar em carteira de outro investidor — 404 CAR-001 (nunca 403 — RN-AUT-02)
+POST {{baseUrl}}/operacoes/compra
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "carteiraId": 999999,
+  "ticker": "PETR4",
+  "quantidade": 1
+}
+
+
+### =====================================================================
+### 7. MERCADO (SPEC-09) — barra de cotações
+### =====================================================================
+
+### 7.1 [OK] Barra de cotações — 200, itens de brapi+AwesomeAPI+CoinGecko + atualizadoEm (AC-498/502)
+GET {{baseUrl}}/mercado/barra-cotacoes
+Authorization: Bearer {{token}}
+
+### 7.2 [OK] Chamar de novo logo em seguida — 200 instantâneo, reaproveita o cache de 15min (AC-500)
+GET {{baseUrl}}/mercado/barra-cotacoes
+Authorization: Bearer {{token}}
+
+
+### =====================================================================
+### 8. LIMPEZA (opcional) — exclusões finais, na ordem inversa de dependência
+### =====================================================================
+
+### 8.1 [OK] Excluir carteira (depois de zerar toda posição vendendo tudo) — 204
+DELETE {{baseUrl}}/carteiras/{{carteiraId}}
+Authorization: Bearer {{token}}
+
+### 8.2 [OK] Excluir ação (depois de zerar a posição) — 204
 DELETE {{baseUrl}}/acoes/PETR4
+Authorization: Bearer {{token}}
 
-### Excluir corretora
-DELETE {{baseUrl}}/corretoras/1
+### 8.3 [OK] Excluir corretora (depois de excluir a carteira vinculada) — 204
+DELETE {{baseUrl}}/corretoras/{{corretoraId}}
+Authorization: Bearer {{token}}
 
-### Excluir investidor
+### 8.4 [OK] Excluir investidor — 204
 DELETE {{baseUrl}}/investidores/1
+Authorization: Bearer {{token}}
