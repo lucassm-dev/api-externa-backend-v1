@@ -11,7 +11,7 @@ public interface CorretoraRepository extends JpaRepository<Corretora, Long> {
 
     boolean existsByCnpjAndAtivoTrue(String cnpj);
 
-    Optional<Corretora> findByCnpj(String cnpj);
+    Optional<Corretora> findByCnpjAndAtivoTrue(String cnpj);
 
     Page<Corretora> findAllByAtivoTrue(Pageable pageable);
 

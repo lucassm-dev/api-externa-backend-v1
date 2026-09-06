@@ -199,6 +199,19 @@ class CorretoraServiceTest {
     }
 
     @Test
+    @DisplayName("buscarPorCnpj filtra por ativo=true — CNPJ reciclado (excluído e recadastrado) não quebra a busca")
+    void deveBuscarPorCnpjFiltrandoAtivo() {
+        when(cnpjFacade.normalizar(CNPJ_VALIDO)).thenReturn(CNPJ_VALIDO);
+        when(repository.findByCnpjAndAtivoTrue(CNPJ_VALIDO)).thenReturn(java.util.Optional.of(corretora));
+        when(mapper.toResponse(corretora)).thenReturn(responseDTO);
+
+        CorretoraResponseDTO result = service.buscarPorCnpj(CNPJ_VALIDO);
+
+        assertThat(result).isNotNull();
+        verify(repository).findByCnpjAndAtivoTrue(CNPJ_VALIDO);
+    }
+
+    @Test
     @DisplayName("@spec:AC-102 CNPJ válido busca dados cadastrais e endereço e persiste a corretora")
     void deveBuscarDadosEPersistirCorretoraValida() {
         when(repository.existsByCnpjAndAtivoTrue(CNPJ_VALIDO)).thenReturn(false);

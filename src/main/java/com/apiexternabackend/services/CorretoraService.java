@@ -90,7 +90,7 @@ public class CorretoraService {
     }
 
     public CorretoraResponseDTO buscarPorCnpj(String cnpj) {
-        return repository.findByCnpj(cnpjFacade.normalizar(cnpj))
+        return repository.findByCnpjAndAtivoTrue(cnpjFacade.normalizar(cnpj))
                 .map(mapper::toResponse)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("COR-001", "Corretora não encontrada: " + cnpj));
     }
