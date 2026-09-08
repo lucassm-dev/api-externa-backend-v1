@@ -158,4 +158,74 @@ class AutenticacaoServiceTest {
                 .isInstanceOf(CredenciaisInvalidasException.class)
                 .hasMessage("E-mail ou senha inválidos.");
     }
+
+    @Test
+    @DisplayName("@spec:AC-503 Login de investidor excluído é recusado com a mesma mensagem genérica")
+    void deveRecusarLoginDeInvestidorExcluido() {
+        // investidor inativo não aparece em findByEmailAndAtivoTrue — mesmo caminho de "não existe"
+        when(repository.findByEmailAndAtivoTrue("joao@email.com")).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.login(new AuthLoginRequestDTO("joao@email.com", "senha123")))
+                .isInstanceOf(CredenciaisInvalidasException.class)
+                .hasMessage("E-mail ou senha inválidos.");
+    }
+
+    @Test
+    @DisplayName("@spec:AC-505 E-mail de investidor excluído pode ser reaproveitado no cadastro")
+    void devePermitirCadastroComEmailDeInvestidorExcluido() {
+        AuthCadastroRequestDTO dto = new AuthCadastroRequestDTO("Outro Nome", "joao@email.com", "99988877766", "senha123");
+        when(repository.existsByEmailAndAtivoTrue(dto.getEmail())).thenReturn(false); // só o excluído tinha esse e-mail
+        when(repository.existsByCpfAndAtivoTrue(dto.getCpf())).thenReturn(false);
+        when(passwordEncoder.encode("senha123")).thenReturn("hash-bcrypt");
+        when(repository.save(any())).thenReturn(investidor);
+        when(mapper.toResponse(investidor)).thenReturn(new InvestidorResponseDTO(2L, "Outro Nome", "joao@email.com"));
+
+        InvestidorResponseDTO result = service.cadastrar(dto);
+
+        assertThat(result.getEmail()).isEqualTo("joao@email.com");
+        verify(repository).save(any());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-506 CPF de investidor excluído pode ser reaproveitado no cadastro")
+    void devePermitirCadastroComCpfDeInvestidorExcluido() {
+        AuthCadastroRequestDTO dto = new AuthCadastroRequestDTO("Outro Nome", "novo@email.com", "12345678901", "senha123");
+        when(repository.existsByEmailAndAtivoTrue(dto.getEmail())).thenReturn(false);
+        when(repository.existsByCpfAndAtivoTrue(dto.getCpf())).thenReturn(false); // só o excluído tinha esse CPF
+        when(passwordEncoder.encode("senha123")).thenReturn("hash-bcrypt");
+        when(repository.save(any())).thenReturn(investidor);
+        when(mapper.toResponse(investidor)).thenReturn(new InvestidorResponseDTO(2L, "Outro Nome", "novo@email.com"));
+
+        assertThat(service.cadastrar(dto)).isNotNull();
+        verify(repository).save(any());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-507 Duplicidade entre investidores ATIVOS continua bloqueada")
+    void deveBloquearDuplicidadeEntreAtivos() {
+        AuthCadastroRequestDTO dto = new AuthCadastroRequestDTO("Outro", "joao@email.com", "99988877766", "senha123");
+        when(repository.existsByEmailAndAtivoTrue(dto.getEmail())).thenReturn(true);
+
+        assertThatThrownBy(() -> service.cadastrar(dto))
+                .isInstanceOf(RecursoDuplicadoException.class)
+                .extracting(e -> ((RecursoDuplicadoException) e).getCodigo())
+                .isEqualTo("AUT-001");
+    }
+
+    @Test
+    @DisplayName("@spec:AC-508 Login com e-mail reaproveitado autentica o investidor ATIVO")
+    void deveAutenticarInvestidorAtivoComEmailReaproveitado() {
+        // o e-mail existe em duas linhas (uma inativa, uma ativa) — a consulta filtrada
+        // devolve só a ativa, sem quebrar por resultado múltiplo
+        Investidor ativo = new Investidor(2L, "Novo Dono", "joao@email.com", "99988877766", "hash-novo", LocalDateTime.now(), true);
+        when(repository.findByEmailAndAtivoTrue("joao@email.com")).thenReturn(Optional.of(ativo));
+        when(passwordEncoder.matches("senha123", "hash-novo")).thenReturn(true);
+        when(jwtService.gerar(2L, "joao@email.com")).thenReturn("token-do-ativo");
+        when(jwtService.expiracaoDe("token-do-ativo")).thenReturn(Instant.now().plusSeconds(86400));
+
+        AuthTokenResponseDTO result = service.login(new AuthLoginRequestDTO("joao@email.com", "senha123"));
+
+        assertThat(result.getToken()).isEqualTo("token-do-ativo");
+        verify(jwtService).gerar(2L, "joao@email.com");
+    }
 }
