@@ -9,11 +9,11 @@ import java.util.Optional;
 
 public interface InvestidorRepository extends JpaRepository<Investidor, Long> {
 
-    boolean existsByEmail(String email);
+    boolean existsByEmailAndAtivoTrue(String email);
 
-    boolean existsByCpf(String cpf);
+    boolean existsByCpfAndAtivoTrue(String cpf);
 
-    Optional<Investidor> findByEmail(String email);
+    Optional<Investidor> findByEmailAndAtivoTrue(String email);
 
     Page<Investidor> findAllByAtivoTrue(Pageable pageable);
 

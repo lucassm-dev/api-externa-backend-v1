@@ -67,6 +67,16 @@ class InvestidorResourceTest {
     }
 
     @Test
+    @DisplayName("@spec:AC-504 GET /investidores/{id} de investidor excluído retorna 404 com código AUT-003")
+    void deveRetornar404ParaInvestidorExcluido() throws Exception {
+        when(service.buscarPorId(1L)).thenThrow(new RecursoNaoEncontradoException("AUT-003", "Investidor não encontrado: 1"));
+
+        mockMvc.perform(get("/investidores/1"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.codigo").value("AUT-003"));
+    }
+
+    @Test
     @DisplayName("@spec:AC-422 DELETE /investidores/{id} com investidor ativo retorna 204")
     void deveExcluirInvestidorAtivo() throws Exception {
         mockMvc.perform(delete("/investidores/1"))

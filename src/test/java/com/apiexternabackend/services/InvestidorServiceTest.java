@@ -63,7 +63,7 @@ class InvestidorServiceTest {
     @Test
     @DisplayName("@spec:AC-055 Buscar investidor por id existente retorna seus dados")
     void deveBuscarInvestidorPorId() {
-        when(repository.findById(1L)).thenReturn(Optional.of(investidor));
+        when(repository.findByIdAndAtivoTrue(1L)).thenReturn(Optional.of(investidor));
         when(mapper.toResponse(investidor)).thenReturn(responseDTO);
 
         InvestidorResponseDTO result = service.buscarPorId(1L);
@@ -74,10 +74,22 @@ class InvestidorServiceTest {
     @Test
     @DisplayName("@spec:AC-055 Buscar investidor com id inexistente lança não encontrado")
     void deveLancarNotFoundParaIdInexistente() {
-        when(repository.findById(99L)).thenReturn(Optional.empty());
+        when(repository.findByIdAndAtivoTrue(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.buscarPorId(99L))
                 .isInstanceOf(RecursoNaoEncontradoException.class);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-504 Buscar investidor excluído por id retorna não encontrado (AUT-003)")
+    void deveRetornarNaoEncontradoParaInvestidorExcluido() {
+        // investidor existe na tabela, mas com ativo=false — a consulta filtrada não o enxerga
+        when(repository.findByIdAndAtivoTrue(1L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.buscarPorId(1L))
+                .isInstanceOf(RecursoNaoEncontradoException.class)
+                .extracting(e -> ((RecursoNaoEncontradoException) e).getCodigo())
+                .isEqualTo("AUT-003");
     }
 
     @Test

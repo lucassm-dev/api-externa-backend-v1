@@ -11,8 +11,6 @@ public interface AcaoRepository extends JpaRepository<Acao, Long> {
 
     boolean existsByTickerAndAtivoTrue(String ticker);
 
-    Optional<Acao> findByTicker(String ticker);
-
     Page<Acao> findAllByAtivoTrue(Pageable pageable);
 
     Optional<Acao> findByTickerAndAtivoTrue(String ticker);

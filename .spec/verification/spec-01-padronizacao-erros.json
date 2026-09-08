@@ -1,7 +1,7 @@
 {
   "feature": "spec-01-padronizacao-erros",
-  "timestamp": "2026-09-06T18:54:03.709Z",
-  "gitRev": "4af71f2",
+  "timestamp": "2026-09-08T03:08:58.524Z",
+  "gitRev": "a2b6cd3",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

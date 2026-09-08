@@ -86,13 +86,18 @@ Implementação: `src/main/java/com/apiexternabackend/resources/exceptions/`.
 > pelo `JwtAuthenticationEntryPoint`/`JwtAccessDeniedHandler` — não passam
 > pelo `GlobalExceptionHandler` porque acontecem no filtro de segurança,
 > antes do Spring MVC.
+>
+> Desde a SPEC-10, investidor excluído (`ativo=false`) some de todas as
+> consultas: não faz login (AUT-004), não aparece em `GET /investidores/{id}`
+> (AUT-003) e libera o e-mail/CPF para recadastro — mesmo tratamento que
+> ticker e CNPJ já tinham desde a SPEC-03.
 
 | Código | Situação | Status HTTP | Exceção |
 |---|---|---|---|
-| AUT-001 | E-mail já cadastrado | 409 | RecursoDuplicadoException |
-| AUT-002 | CPF já cadastrado | 409 | RecursoDuplicadoException |
-| AUT-003 | Investidor não encontrado | 404 | RecursoNaoEncontradoException |
-| AUT-004 | Login com e-mail ou senha incorretos (mensagem genérica, não revela qual campo errou) | 401 | CredenciaisInvalidasException |
+| AUT-001 | E-mail já cadastrado **entre investidores ativos** (e-mail de conta excluída pode ser reutilizado — SPEC-10) | 409 | RecursoDuplicadoException |
+| AUT-002 | CPF já cadastrado **entre investidores ativos** (idem AUT-001) | 409 | RecursoDuplicadoException |
+| AUT-003 | Investidor não encontrado (inclui investidor existente porém excluído — SPEC-10) | 404 | RecursoNaoEncontradoException |
+| AUT-004 | Login com e-mail ou senha incorretos, **ou conta excluída** (mensagem genérica, não revela qual campo errou nem que a conta existiu) | 401 | CredenciaisInvalidasException |
 | AUT-005 | Token ausente, malformado ou com assinatura inválida | 401 | `JwtAuthenticationEntryPoint` |
 | AUT-006 | Token expirado | 401 | `JwtAuthenticationEntryPoint` |
 | AUT-007 | Acesso negado (autenticado, sem permissão) | 403 | `JwtAccessDeniedHandler` |
@@ -145,6 +150,13 @@ Implementação: `src/main/java/com/apiexternabackend/resources/exceptions/`.
   conhecida (aviso), recusando só se nunca houve taxa em cache (`EXT-011`).
 - Desde a SPEC-08, `OPE-002` (incompatibilidade de mercado) foi removido —
   carteira aceita ações BR e US juntas (Q-MAP-09).
+- Desde a SPEC-10, a unicidade de e-mail/CPF do investidor é **parcial**
+  (índice `WHERE ativo = true`, migration `V16`), igual a ticker (`V12`) e
+  CNPJ. Toda consulta por chave natural do sistema filtra `ativo` — não
+  existe mais busca por ticker/CNPJ/e-mail sem filtro, justamente porque
+  duas linhas com a mesma chave (uma ativa, uma inativa) fazem uma consulta
+  que devolve `Optional` estourar `IncorrectResultSizeDataAccessException`
+  (foi o que causou o 500 em `GET /corretoras/cnpj/{cnpj}` em 06/09/2026).
 - `GET /mercado/barra-cotacoes` (SPEC-09) não tem código de erro próprio —
   agrega brapi, AwesomeAPI e CoinGecko, e cada fonte que falhar simplesmente
   não aparece no resultado, com um aviso em `avisos[]`. Nunca retorna

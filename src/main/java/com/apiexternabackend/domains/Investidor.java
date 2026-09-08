@@ -28,10 +28,12 @@ public class Investidor {
     @Column(nullable = false)
     private String nome;
 
-    @Column(nullable = false, unique = true)
+    // sem unique = true: a unicidade é parcial (só entre ativos, índice da migration V16).
+    // Deixar aqui recriaria uma constraint incondicional no schema de teste (ASM-440).
+    @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String cpf;
 
     @Column(nullable = false)
