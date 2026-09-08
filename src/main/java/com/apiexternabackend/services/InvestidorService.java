@@ -29,7 +29,7 @@ public class InvestidorService {
     }
 
     public InvestidorResponseDTO buscarPorId(Long id) {
-        Investidor investidor = repository.findById(id)
+        Investidor investidor = repository.findByIdAndAtivoTrue(id) // AC-504: excluído não vaza na busca individual
                 .orElseThrow(() -> new RecursoNaoEncontradoException("AUT-003", "Investidor não encontrado: " + id));
         return mapper.toResponse(investidor);
     }
