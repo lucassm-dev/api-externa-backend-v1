@@ -55,8 +55,8 @@ class AutenticacaoServiceTest {
     @DisplayName("@spec:AC-001 Cadastro com credenciais válidas cria a conta")
     void deveCadastrarComCredenciaisValidas() {
         AuthCadastroRequestDTO dto = new AuthCadastroRequestDTO("João Silva", "joao@email.com", "12345678901", "senha123");
-        when(repository.existsByEmail(dto.getEmail())).thenReturn(false);
-        when(repository.existsByCpf(dto.getCpf())).thenReturn(false);
+        when(repository.existsByEmailAndAtivoTrue(dto.getEmail())).thenReturn(false);
+        when(repository.existsByCpfAndAtivoTrue(dto.getCpf())).thenReturn(false);
         when(passwordEncoder.encode("senha123")).thenReturn("hash-bcrypt");
         when(repository.save(any())).thenReturn(investidor);
         when(mapper.toResponse(investidor)).thenReturn(new InvestidorResponseDTO(1L, "João Silva", "joao@email.com"));
@@ -71,7 +71,7 @@ class AutenticacaoServiceTest {
     @DisplayName("@spec:AC-002 Identificador de login (e-mail) é único")
     void deveRejeitarLoginDuplicado() {
         AuthCadastroRequestDTO dto = new AuthCadastroRequestDTO("João", "joao@email.com", "12345678901", "senha123");
-        when(repository.existsByEmail(dto.getEmail())).thenReturn(true);
+        when(repository.existsByEmailAndAtivoTrue(dto.getEmail())).thenReturn(true);
 
         assertThatThrownBy(() -> service.cadastrar(dto))
                 .isInstanceOf(RecursoDuplicadoException.class)
@@ -82,8 +82,8 @@ class AutenticacaoServiceTest {
     @DisplayName("@spec:AC-003 Senha nunca é guardada em texto puro — é o hash do encoder que é persistido")
     void deveSalvarSenhaComoHash() {
         AuthCadastroRequestDTO dto = new AuthCadastroRequestDTO("João", "joao@email.com", "12345678901", "senha123");
-        when(repository.existsByEmail(dto.getEmail())).thenReturn(false);
-        when(repository.existsByCpf(dto.getCpf())).thenReturn(false);
+        when(repository.existsByEmailAndAtivoTrue(dto.getEmail())).thenReturn(false);
+        when(repository.existsByCpfAndAtivoTrue(dto.getCpf())).thenReturn(false);
         when(passwordEncoder.encode("senha123")).thenReturn("$2a$10$hashFicticio");
         when(repository.save(any())).thenReturn(investidor);
         when(mapper.toResponse(investidor)).thenReturn(new InvestidorResponseDTO(1L, "João", "joao@email.com"));
@@ -100,8 +100,8 @@ class AutenticacaoServiceTest {
     @DisplayName("@spec:AC-435 CPF duplicado é recusado")
     void deveRejeitarCpfDuplicado() {
         AuthCadastroRequestDTO dto = new AuthCadastroRequestDTO("João", "joao@email.com", "12345678901", "senha123");
-        when(repository.existsByEmail(dto.getEmail())).thenReturn(false);
-        when(repository.existsByCpf(dto.getCpf())).thenReturn(true);
+        when(repository.existsByEmailAndAtivoTrue(dto.getEmail())).thenReturn(false);
+        when(repository.existsByCpfAndAtivoTrue(dto.getCpf())).thenReturn(true);
 
         assertThatThrownBy(() -> service.cadastrar(dto))
                 .isInstanceOf(RecursoDuplicadoException.class)
@@ -111,8 +111,8 @@ class AutenticacaoServiceTest {
     @Test
     @DisplayName("@spec:AC-436 Senha fora da política mínima (8+, letra e número) é recusada")
     void deveRejeitarSenhaForaDaPolitica() {
-        when(repository.existsByEmail(anyString())).thenReturn(false);
-        when(repository.existsByCpf(anyString())).thenReturn(false);
+        when(repository.existsByEmailAndAtivoTrue(anyString())).thenReturn(false);
+        when(repository.existsByCpfAndAtivoTrue(anyString())).thenReturn(false);
 
         assertThatThrownBy(() -> service.cadastrar(new AuthCadastroRequestDTO("João", "joao@email.com", "12345678901", "curta1")))
                 .isInstanceOf(RegraVioladaException.class);
@@ -125,7 +125,7 @@ class AutenticacaoServiceTest {
     @Test
     @DisplayName("@spec:AC-004 Login com credenciais corretas autentica")
     void deveAutenticarComCredenciaisCorretas() {
-        when(repository.findByEmail("joao@email.com")).thenReturn(Optional.of(investidor));
+        when(repository.findByEmailAndAtivoTrue("joao@email.com")).thenReturn(Optional.of(investidor));
         when(passwordEncoder.matches("senha123", "hash-bcrypt")).thenReturn(true);
         when(jwtService.gerar(1L, "joao@email.com")).thenReturn("token-jwt-ficticio");
         Instant expiracao = Instant.now().plusSeconds(86400);
@@ -141,7 +141,7 @@ class AutenticacaoServiceTest {
     @Test
     @DisplayName("@spec:AC-005 Login com senha incorreta é recusado com mensagem genérica")
     void deveRecusarSenhaIncorreta() {
-        when(repository.findByEmail("joao@email.com")).thenReturn(Optional.of(investidor));
+        when(repository.findByEmailAndAtivoTrue("joao@email.com")).thenReturn(Optional.of(investidor));
         when(passwordEncoder.matches("senha-errada", "hash-bcrypt")).thenReturn(false);
 
         assertThatThrownBy(() -> service.login(new AuthLoginRequestDTO("joao@email.com", "senha-errada")))
@@ -152,7 +152,7 @@ class AutenticacaoServiceTest {
     @Test
     @DisplayName("@spec:AC-005 Login com e-mail inexistente é recusado com a MESMA mensagem genérica")
     void deveRecusarEmailInexistenteComMensagemIdentica() {
-        when(repository.findByEmail("naoexiste@email.com")).thenReturn(Optional.empty());
+        when(repository.findByEmailAndAtivoTrue("naoexiste@email.com")).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.login(new AuthLoginRequestDTO("naoexiste@email.com", "qualquer123")))
                 .isInstanceOf(CredenciaisInvalidasException.class)

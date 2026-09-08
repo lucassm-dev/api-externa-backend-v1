@@ -31,10 +31,12 @@ public class AutenticacaoService {
     private final JwtService jwtService;
 
     public InvestidorResponseDTO cadastrar(AuthCadastroRequestDTO dto) {
-        if (repository.existsByEmail(dto.getEmail())) {
+        // AC-505/AC-506/AC-507: duplicidade só entre investidores ATIVOS — e-mail e CPF de
+        // conta excluída podem ser reaproveitados, igual a ticker e CNPJ desde a SPEC-03
+        if (repository.existsByEmailAndAtivoTrue(dto.getEmail())) {
             throw new RecursoDuplicadoException("AUT-001", "E-mail já está em uso: " + dto.getEmail());
         }
-        if (repository.existsByCpf(dto.getCpf())) {
+        if (repository.existsByCpfAndAtivoTrue(dto.getCpf())) {
             throw new RecursoDuplicadoException("AUT-002", "CPF já está em uso: " + dto.getCpf());
         }
         if (!POLITICA_SENHA.matcher(dto.getSenha()).matches()) {
@@ -53,7 +55,9 @@ public class AutenticacaoService {
     }
 
     public AuthTokenResponseDTO login(AuthLoginRequestDTO dto) {
-        Investidor investidor = repository.findByEmail(dto.getEmail())
+        // AC-503/AC-508: só investidor ativo faz login. Filtrar por ativo também é o que
+        // permite reaproveitar e-mail (AC-505) sem a consulta encontrar duas linhas.
+        Investidor investidor = repository.findByEmailAndAtivoTrue(dto.getEmail())
                 .filter(i -> passwordEncoder.matches(dto.getSenha(), i.getSenha()))
                 .orElseThrow(() -> new CredenciaisInvalidasException("AUT-004", MENSAGEM_LOGIN_INVALIDO));
 
