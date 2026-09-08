@@ -1,68 +1,43 @@
 {
-  "feature": "spec-08-conversao-cambio",
-  "timestamp": "2026-09-08T03:09:56.180Z",
+  "feature": "spec-10-vazamento-investidor-inativo",
+  "timestamp": "2026-09-08T03:07:32.065Z",
   "gitRev": "a2b6cd3",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
   "testsParsed": 0,
   "results": {
-    "AC-486": {
+    "AC-503": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-487": {
+    "AC-504": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-488": {
+    "AC-505": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-489": {
+    "AC-506": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-490": {
+    "AC-507": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-491": {
+    "AC-508": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-492": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
-    "AC-493": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
-    "AC-494": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
-    "AC-495": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
-    "AC-496": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
-    "AC-497": {
+    "AC-509": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
