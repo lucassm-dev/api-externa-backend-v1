@@ -113,4 +113,17 @@ class AuthResourceTest {
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.codigo").value("AUT-004"));
     }
+
+    @Test
+    @DisplayName("@spec:AC-503 POST /auth/login de investidor excluído retorna 401 com a mesma mensagem genérica")
+    void deveRetornar401ParaInvestidorExcluido() throws Exception {
+        when(service.login(any())).thenThrow(new CredenciaisInvalidasException("AUT-004", "E-mail ou senha inválidos."));
+
+        mockMvc.perform(post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new AuthLoginRequestDTO("excluido@email.com", "senha123"))))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.codigo").value("AUT-004"))
+                .andExpect(jsonPath("$.message").value("E-mail ou senha inválidos."));
+    }
 }
