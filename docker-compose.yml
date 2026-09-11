@@ -1,3 +1,11 @@
+# Sobe o sistema inteiro: banco, API e frontend. O frontend é construído a
+# partir do repositório vizinho — caminho em FRONTEND_PATH, para não obrigar
+# ninguém a manter a mesma organização de pastas que a minha.
+#
+#   cp .env.example .env   # e preencha as chaves
+#   docker compose up --build
+#   → http://localhost:8081
+
 services:
   postgres:
     image: postgres:16-alpine
@@ -11,6 +19,56 @@ services:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - investimentos-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      # O backend roda Flyway no arranque: subir antes do banco aceitar conexão
+      # derruba a aplicação em vez de esperar.
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+    container_name: investimentos-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      # Dentro da rede do compose o banco atende em `postgres`, não em
+      # localhost. Variável de ambiente vence application-dev.properties na
+      # ordem de precedência do Spring, então o perfil dev continua intacto
+      # para quem roda com mvnw na máquina.
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+
+      JWT_SECRET: ${JWT_SECRET}
+      BRAPI_TOKEN: ${BRAPI_TOKEN}
+      TWELVEDATA_API_KEY: ${TWELVEDATA_API_KEY}
+
+      # Vazio de propósito: o frontend fala com a API pela mesma origem, via
+      # nginx, então não existe requisição de outra origem para autorizar.
+      # Preencha só se algum cliente externo for chamar a API direto.
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-}
+    ports:
+      # Exposto para o Swagger e para chamadas diretas em desenvolvimento. O
+      # frontend NÃO usa esta porta: ele fala com `backend:8080` pela rede
+      # interna.
+      - "${BACKEND_PORT:-8080}:8080"
+
+  frontend:
+    build:
+      context: ${FRONTEND_PATH:-../../Angular/api-externa-frontend-v2}
+    container_name: investimentos-web
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      BACKEND_URL: http://backend:8080
+    ports:
+      - "${FRONTEND_PORT:-8081}:80"
 
 volumes:
   investimentos-pgdata:
