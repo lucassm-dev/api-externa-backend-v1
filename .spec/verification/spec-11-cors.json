@@ -1,53 +1,43 @@
 {
-  "feature": "spec-07-cache-cotacao",
-  "timestamp": "2026-09-09T17:55:53.783Z",
+  "feature": "spec-11-cors",
+  "timestamp": "2026-09-09T17:56:24.795Z",
   "gitRev": "b82b15b",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
   "testsParsed": 0,
   "results": {
-    "AC-477": {
+    "AC-510": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-478": {
+    "AC-511": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-479": {
+    "AC-512": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-480": {
+    "AC-513": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-481": {
+    "AC-514": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-482": {
+    "AC-515": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-483": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
-    "AC-484": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
-    "AC-485": {
+    "AC-516": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"

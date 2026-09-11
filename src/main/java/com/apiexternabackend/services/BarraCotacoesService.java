@@ -28,7 +28,12 @@ import java.util.Map;
 @Service
 public class BarraCotacoesService {
 
-    private static final String TICKERS_BRAPI = "PETR4,ITUB4,IVVB11,^BVSP,IFIX.SA";
+    /**
+     * Um ativo por requisição: o plano gratuito da brapi recusa chamada agrupada com
+     * HTTP 400 (QUOTES_PER_REQUEST_EXCEEDED). Cada símbolo a mais é uma requisição a
+     * mais contra a cota mensal — por isso a lista é curta (SPEC-12).
+     */
+    private static final List<String> TICKERS_BRAPI = List.of("^BVSP", "PETR4", "VALE3");
     private static final String PARES_CAMBIO = "USD-BRL,EUR-BRL";
 
     private final BrapiClient brapiClient;
@@ -58,12 +63,7 @@ public class BarraCotacoesService {
         List<ItemBarraCotacoesDTO> itens = new ArrayList<>();
         List<String> avisos = new ArrayList<>();
 
-        try {
-            itens.addAll(buscarAcoesEIndicesNaBrapi());
-        } catch (Exception e) {
-            log.warn("Ações/índices indisponíveis na brapi para a barra de cotações: {}", e.getMessage());
-            avisos.add("Ações/índices indisponíveis no momento (brapi).");
-        }
+        itens.addAll(buscarAcoesEIndicesNaBrapi(avisos));
 
         try {
             itens.addAll(buscarCambioNaAwesomeApi());
@@ -88,9 +88,28 @@ public class BarraCotacoesService {
                 && cacheada.getAtualizadoEm().isAfter(LocalDateTime.now().minusMinutes(ttlMinutos));
     }
 
-    private List<ItemBarraCotacoesDTO> buscarAcoesEIndicesNaBrapi() { // AC-498
+    private List<ItemBarraCotacoesDTO> buscarAcoesEIndicesNaBrapi(List<String> avisos) { // AC-517
+        List<ItemBarraCotacoesDTO> itens = new ArrayList<>();
+        List<String> falharam = new ArrayList<>();
+
+        for (String ticker : TICKERS_BRAPI) {
+            try {
+                itens.addAll(buscarUmAtivoNaBrapi(ticker)); // AC-518: um ativo por requisição
+            } catch (Exception e) {
+                log.warn("Ativo {} indisponível na brapi para a barra de cotações: {}", ticker, e.getMessage());
+                falharam.add(simboloExibicao(ticker));
+            }
+        }
+
+        if (!falharam.isEmpty()) { // AC-519: o que veio continua aparecendo
+            avisos.add("Indisponível no momento (brapi): " + String.join(", ", falharam) + ".");
+        }
+        return itens;
+    }
+
+    private List<ItemBarraCotacoesDTO> buscarUmAtivoNaBrapi(String ticker) {
         List<BrapiResultDTO> results = brapiClient
-                .buscarCotacao(TICKERS_BRAPI, brapiToken.isBlank() ? null : brapiToken)
+                .buscarCotacao(ticker, brapiToken.isBlank() ? null : brapiToken)
                 .getResults();
 
         List<ItemBarraCotacoesDTO> itens = new ArrayList<>();

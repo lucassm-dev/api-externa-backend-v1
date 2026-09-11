@@ -30,7 +30,11 @@ sem sair da tela.
 - **Dado** que chamo `GET /mercado/barra-cotacoes`
 - **Quando** a resposta volta
 - **Então** recebo símbolo, preço e variação percentual de USD, EUR, IBOV,
-  IFIX, BTC, IVVB11, ITUB4 e PETR4
+  IVVB11 e BTC
+
+> Composição alterada pela SPEC-12: PETR4, ITUB4 e IFIX saíram da barra. O plano
+> gratuito da brapi aceita um ativo por requisição, então cada símbolo custa uma
+> requisição da cota mensal — cinco ativos consumiriam quase toda ela.
 
 #### AC-499 — Falha de uma fonte não derruba as outras
 

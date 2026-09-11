@@ -1,33 +1,28 @@
 {
-  "feature": "spec-09-barra-cotacoes",
-  "timestamp": "2026-09-09T17:56:08.852Z",
+  "feature": "spec-12-barra-um-ativo-por-requisicao",
+  "timestamp": "2026-09-09T17:56:32.781Z",
   "gitRev": "b82b15b",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
   "testsParsed": 0,
   "results": {
-    "AC-498": {
+    "AC-517": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-499": {
+    "AC-518": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-500": {
+    "AC-519": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-501": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
-    "AC-502": {
+    "AC-520": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
