@@ -29,7 +29,11 @@ EXPOSE 8080
 
 # /v3/api-docs é rota pública (SecurityConfig.ROTAS_PUBLICAS): serve de sinal de
 # vida sem precisar de actuator nem de token.
+#
+# Baixa o corpo e joga fora, em vez de --spider: --spider fecha a conexão depois
+# do cabeçalho, e o Spring — no meio da escrita do documento — registra um
+# AsyncRequestNotUsableException a cada sondagem. Log limpo vale os poucos KB.
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=5 \
-  CMD wget --quiet --tries=1 --spider http://localhost:8080/v3/api-docs || exit 1
+  CMD wget --quiet --tries=1 -O /dev/null http://localhost:8080/v3/api-docs || exit 1
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
