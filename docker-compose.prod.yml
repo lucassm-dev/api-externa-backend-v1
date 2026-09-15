@@ -1,0 +1,35 @@
+# Override de produção: mescla com docker-compose.yml para o deploy no
+# homelab. Não publica portas de banco/API — só o frontend fica acessível,
+# via `tailscale serve`.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+
+services:
+  postgres:
+    ports: !reset []
+    mem_limit: 1g
+    command: postgres -c shared_buffers=256MB
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  backend:
+    ports: !reset []
+    mem_limit: 768m
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      JAVA_TOOL_OPTIONS: -XX:MaxRAMPercentage=75
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  frontend:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
