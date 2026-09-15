@@ -39,11 +39,22 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+
+      # O audit acusa prova desatualizada comparando o mtime do código com a data
+      # do último verify; no checkout todo arquivo nasce com a hora do job. Usar a
+      # data do último commit de cada arquivo faz "mudou depois do verify"
+      # significar mudança commitada depois do verify.
+      - name: mtime dos fontes = data do último commit
+        run: |
+          git log --format='%ct' --name-only -- src/main src/test \
+            | perl -ne 'chomp; if (/^\d+$/) { $t = $_; next } next unless length; next if $seen{$_}++; utime($t, $t, $_) if -e $_'
 
       - name: onp-spec audit --ci
         run: node .claude/skills/onp-spec-driven/scripts/onp-spec.mjs audit --ci
