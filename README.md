@@ -294,6 +294,8 @@ sessão por token de prazo fixo, catálogo compartilhado, consolidação em moed
 única, snapshot de cotação, degradação com avisos, exclusão lógica e contrato de
 erro. Requisitos de produto em [`docs/prd/`](docs/prd/).
 
+Deploy no homelab (produção, fora do desenvolvimento local): [`docs/deploy.md`](docs/deploy.md).
+
 ---
 
 ## Frontend
