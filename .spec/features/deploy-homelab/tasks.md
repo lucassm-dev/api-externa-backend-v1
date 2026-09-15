@@ -2,7 +2,7 @@
 
 > feature: deploy-homelab
 
-## T-482 — Override de produção do compose e perfil prod [pendente]
+## T-482 — Override de produção do compose e perfil prod [concluida]
 - Refs: US-438, AC-521, AC-522, AC-523, AC-524, AC-525
 - Arquivos: docker-compose.prod.yml, src/main/resources/application-prod.properties, src/test/java/com/apiexternabackend/deploy/ConfiguracaoProducaoTest.java
 - Esforço: baixo
@@ -14,7 +14,7 @@
   direto do classpath — sem subir contexto nem precisar de Docker no CI.
   Validação manual complementar: `docker compose -f docker-compose.yml -f docker-compose.prod.yml config`.
 
-## T-483 — Script de deploy [pendente]
+## T-483 — Script de deploy [concluida]
 - Refs: US-439, AC-526, AC-527, AC-528, AC-529, AC-530, AC-531, AC-532, AC-533
 - Arquivos: deploy/deploy.sh, src/test/java/com/apiexternabackend/deploy/DeployScriptTest.java, src/test/java/com/apiexternabackend/deploy/ScriptSandbox.java
 - Esforço: medio
