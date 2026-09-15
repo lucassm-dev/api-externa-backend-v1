@@ -1,7 +1,7 @@
 # Spec: Deploy no homelab
 
 > feature: deploy-homelab
-> status: rascunho
+> status: em-implementacao
 
 ## Contexto
 
