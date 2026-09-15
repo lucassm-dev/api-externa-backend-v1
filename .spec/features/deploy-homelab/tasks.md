@@ -50,7 +50,7 @@
   T-483: bash 3.2 e opções de `date`/`find` comuns a GNU e BSD — no teste de
   retenção, envelheça os arquivos com `Files.setLastModifiedTime`.
 
-## T-485 — Guia de deploy [pendente]
+## T-485 — Guia de deploy [concluida]
 - Refs: US-438, US-439, US-440
 - Arquivos: docs/deploy.md, README.md
 - Esforço: baixo

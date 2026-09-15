@@ -1,11 +1,92 @@
 {
   "feature": "deploy-homelab",
-  "timestamp": "2026-09-15T02:56:39.661Z",
-  "gitRev": "820733d",
+  "timestamp": "2026-09-15T15:51:35.353Z",
+  "gitRev": "ad8c592",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
   "testsParsed": 0,
-  "results": {},
+  "results": {
+    "AC-521": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-522": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-523": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-524": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-525": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-526": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-527": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-528": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-529": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-530": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-531": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-532": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-533": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-534": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-535": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-536": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    }
+  },
   "principles": {}
 }
