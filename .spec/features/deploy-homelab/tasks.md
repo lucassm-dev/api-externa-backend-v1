@@ -61,7 +61,7 @@
   do Flyway), restore de backup e checklist manual do servidor (ASM-451).
   README ganha só um link para o guia.
 
-## T-486 — Frontend só em 127.0.0.1 no override de produção [pendente]
+## T-486 — Frontend só em 127.0.0.1 no override de produção [concluida]
 - Refs: US-438, AC-537
 - Arquivos: docker-compose.prod.yml, src/test/java/com/apiexternabackend/deploy/ConfiguracaoProducaoTest.java
 - Esforço: baixo
@@ -73,7 +73,7 @@
   teste passa a tratar `!override` como sequência, como já faz com `!reset`, e o
   merge do teste troca a lista marcada com a tag em vez de somar.
 
-## T-487 — deploy.sh: FRONTEND_PATH do FRONTEND_DIR e verificação da API pelo proxy [pendente]
+## T-487 — deploy.sh: FRONTEND_PATH do FRONTEND_DIR e verificação da API pelo proxy [concluida]
 - Refs: US-439, AC-538, AC-539
 - Arquivos: deploy/deploy.sh, src/test/java/com/apiexternabackend/deploy/DeployScriptTest.java, src/test/java/com/apiexternabackend/deploy/ScriptSandbox.java, docs/deploy.md
 - Esforço: baixo
