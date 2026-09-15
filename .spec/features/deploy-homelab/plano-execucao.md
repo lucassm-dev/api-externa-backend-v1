@@ -1,12 +1,11 @@
 # Plano de execução — deploy-homelab
 
-> gerado por `onp-spec plano` em 2026-09-15 02:46 — NÃO edite à mão;
-> mudou tasks.md ou a config? Regenere: `onp-spec plano deploy-homelab --paralelizar T-482,T-483`
+> gerado por `onp-spec plano` em 2026-09-15 19:45 — NÃO edite à mão;
+> mudou tasks.md ou a config? Regenere: `onp-spec plano deploy-homelab`
 
 ## Resumo — o que vai acontecer
 
-- **4 tarefa(s) pendente(s)**: 2 em 2 faixa(s) paralela(s) + 2 sequencial(is)
-- **seleção do usuário**: paralelizar só T-482, T-483 — as demais rodam uma após a outra, ao final
+- **2 tarefa(s) pendente(s)**: 2 em 2 faixa(s) paralela(s) + 0 sequencial(is) (4 já concluída(s): T-482, T-483, T-484, T-485)
 - **1 faixa = 1 worktree + 1 branch + 1 janela de contexto limpa** — faixas não compartilham nenhum arquivo entre si
 - prefere outra seleção ou uma após a outra? Regenere com `onp-spec plano deploy-homelab --paralelizar T-xxx,T-yyy` ou `--sequencial`
 - tudo acontece na branch de trabalho `spec/deploy-homelab`; levar para a main é decisão sua
@@ -19,20 +18,13 @@
 
 | tarefa | título | modelo | esforço | arquivos |
 |---|---|---|---|---|
-| T-482 | Override de produção do compose e perfil prod | `claude-sonnet-5` | low | `docker-compose.prod.yml`, `src/main/resources/application-prod.properties`, `src/test/java/com/apiexternabackend/deploy/ConfiguracaoProducaoTest.java` |
+| T-486 | Frontend só em 127.0.0.1 no override de produção | `claude-sonnet-5` | low | `docker-compose.prod.yml`, `src/test/java/com/apiexternabackend/deploy/ConfiguracaoProducaoTest.java` |
 
 #### faixa-2 — branch `spec/deploy-homelab-faixa-2` — worktree `../onp-worktrees/api-externa-backend-v1-deploy-homelab-faixa-2`
 
 | tarefa | título | modelo | esforço | arquivos |
 |---|---|---|---|---|
-| T-483 | Script de deploy | `claude-sonnet-5` | medium | `deploy/deploy.sh`, `src/test/java/com/apiexternabackend/deploy/DeployScriptTest.java`, `src/test/java/com/apiexternabackend/deploy/ScriptSandbox.java` |
-
-## Tarefas sequenciais (após as ondas, na árvore principal)
-
-| tarefa | título | modelo | esforço | por que sequencial |
-|---|---|---|---|---|
-| T-484 | Script de backup | `claude-sonnet-5` | low | fora da seleção do usuário |
-| T-485 | Guia de deploy | `claude-sonnet-5` | low | fora da seleção do usuário |
+| T-487 | deploy.sh: FRONTEND_PATH do FRONTEND_DIR e verificação da API pelo proxy | `claude-sonnet-5` | low | `deploy/deploy.sh`, `src/test/java/com/apiexternabackend/deploy/DeployScriptTest.java`, `src/test/java/com/apiexternabackend/deploy/ScriptSandbox.java`, `docs/deploy.md` |
 
 ## Gestão de branches e commits
 

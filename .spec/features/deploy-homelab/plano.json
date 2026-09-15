@@ -1,15 +1,12 @@
 {
-  "runId": "api-externa-backend-v1-deploy-homelab-mu22lnio",
+  "runId": "api-externa-backend-v1-deploy-homelab-mu32zzor",
   "feature": "deploy-homelab",
   "agent": "claude",
   "modo": "paralelo",
-  "paralelizar": [
-    "T-482",
-    "T-483"
-  ],
+  "paralelizar": null,
   "modeloForcado": null,
   "esforcoForcado": null,
-  "geradoEm": "2026-09-15 02:46",
+  "geradoEm": "2026-09-15 19:45",
   "branchTrabalho": "spec/deploy-homelab",
   "baseDir": ".spec/features/deploy-homelab",
   "specDir": ".spec",
@@ -28,22 +25,17 @@
       "worktree": "../onp-worktrees/api-externa-backend-v1-deploy-homelab-faixa-1",
       "tarefas": [
         {
-          "id": "T-482",
-          "titulo": "Override de produção do compose e perfil prod",
+          "id": "T-486",
+          "titulo": "Frontend só em 127.0.0.1 no override de produção",
           "modelo": "claude-sonnet-5",
           "esforco": "low",
           "arquivos": [
             "docker-compose.prod.yml",
-            "src/main/resources/application-prod.properties",
             "src/test/java/com/apiexternabackend/deploy/ConfiguracaoProducaoTest.java"
           ],
           "refs": [
             "US-438",
-            "AC-521",
-            "AC-522",
-            "AC-523",
-            "AC-524",
-            "AC-525"
+            "AC-537"
           ]
         }
       ]
@@ -54,63 +46,31 @@
       "worktree": "../onp-worktrees/api-externa-backend-v1-deploy-homelab-faixa-2",
       "tarefas": [
         {
-          "id": "T-483",
-          "titulo": "Script de deploy",
+          "id": "T-487",
+          "titulo": "deploy.sh: FRONTEND_PATH do FRONTEND_DIR e verificação da API pelo proxy",
           "modelo": "claude-sonnet-5",
-          "esforco": "medium",
+          "esforco": "low",
           "arquivos": [
             "deploy/deploy.sh",
             "src/test/java/com/apiexternabackend/deploy/DeployScriptTest.java",
-            "src/test/java/com/apiexternabackend/deploy/ScriptSandbox.java"
+            "src/test/java/com/apiexternabackend/deploy/ScriptSandbox.java",
+            "docs/deploy.md"
           ],
           "refs": [
             "US-439",
-            "AC-526",
-            "AC-527",
-            "AC-528",
-            "AC-529",
-            "AC-530",
-            "AC-531",
-            "AC-532",
-            "AC-533"
+            "AC-538",
+            "AC-539"
           ]
         }
       ]
     }
   ],
-  "sequenciais": [
-    {
-      "id": "T-484",
-      "titulo": "Script de backup",
-      "modelo": "claude-sonnet-5",
-      "esforco": "low",
-      "arquivos": [
-        "deploy/backup.sh",
-        "src/test/java/com/apiexternabackend/deploy/BackupScriptTest.java"
-      ],
-      "refs": [
-        "US-440",
-        "AC-534",
-        "AC-535",
-        "AC-536"
-      ]
-    },
-    {
-      "id": "T-485",
-      "titulo": "Guia de deploy",
-      "modelo": "claude-sonnet-5",
-      "esforco": "low",
-      "arquivos": [
-        "docs/deploy.md",
-        "README.md"
-      ],
-      "refs": [
-        "US-438",
-        "US-439",
-        "US-440"
-      ]
-    }
+  "sequenciais": [],
+  "concluidas": [
+    "T-482",
+    "T-483",
+    "T-484",
+    "T-485"
   ],
-  "concluidas": [],
   "avisos": []
 }

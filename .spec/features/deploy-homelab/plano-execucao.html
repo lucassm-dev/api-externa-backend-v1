@@ -38,12 +38,11 @@
 </style>
 <main>
   <h1>Plano de execução — deploy-homelab</h1>
-  <p class="sub">gerado por <code>onp-spec plano</code> em 2026-09-15 02:46 · regenere após mudar tasks.md</p>
+  <p class="sub">gerado por <code>onp-spec plano</code> em 2026-09-15 19:45 · regenere após mudar tasks.md</p>
   <div class="resumo">
     <div><b>2</b> tarefa(s) em paralelo</div>
     <div><b>2</b> faixa(s) · <b>1</b> onda(s)</div>
-    <div><b>2</b> sequencial(is)</div>
-    <div>seleção do usuário: <b>T-482, T-483</b></div>
+    <div><b>0</b> sequencial(is)</div>
     <div>branch <code>spec/deploy-homelab</code></div>
   </div>
   
@@ -65,40 +64,24 @@
         <h4>faixa-1 <small>branch <code>spec/deploy-homelab-faixa-1</code> · worktree <code>../onp-worktrees/api-externa-backend-v1-deploy-homelab-faixa-1</code></small></h4>
         
         <div class="tarefa">
-          <span class="tid">T-482</span>
-          <span class="ttitulo">Override de produção do compose e perfil prod</span>
+          <span class="tid">T-486</span>
+          <span class="ttitulo">Frontend só em 127.0.0.1 no override de produção</span>
           <span class="meta"><code>claude-sonnet-5</code> · esforço <b>low</b></span>
-          <span class="arquivos"><code>docker-compose.prod.yml</code> <code>src/main/resources/application-prod.properties</code> <code>src/test/java/com/apiexternabackend/deploy/ConfiguracaoProducaoTest.java</code></span>
+          <span class="arquivos"><code>docker-compose.prod.yml</code> <code>src/test/java/com/apiexternabackend/deploy/ConfiguracaoProducaoTest.java</code></span>
         </div>
       </div>
       <div class="faixa">
         <h4>faixa-2 <small>branch <code>spec/deploy-homelab-faixa-2</code> · worktree <code>../onp-worktrees/api-externa-backend-v1-deploy-homelab-faixa-2</code></small></h4>
         
         <div class="tarefa">
-          <span class="tid">T-483</span>
-          <span class="ttitulo">Script de deploy</span>
-          <span class="meta"><code>claude-sonnet-5</code> · esforço <b>medium</b></span>
-          <span class="arquivos"><code>deploy/deploy.sh</code> <code>src/test/java/com/apiexternabackend/deploy/DeployScriptTest.java</code> <code>src/test/java/com/apiexternabackend/deploy/ScriptSandbox.java</code></span>
+          <span class="tid">T-487</span>
+          <span class="ttitulo">deploy.sh: FRONTEND_PATH do FRONTEND_DIR e verificação da API pelo proxy</span>
+          <span class="meta"><code>claude-sonnet-5</code> · esforço <b>low</b></span>
+          <span class="arquivos"><code>deploy/deploy.sh</code> <code>src/test/java/com/apiexternabackend/deploy/DeployScriptTest.java</code> <code>src/test/java/com/apiexternabackend/deploy/ScriptSandbox.java</code> <code>docs/deploy.md</code></span>
         </div>
       </div></div>
     </section>
   
-    <section class="onda">
-      <h3>Sequenciais <small>após as ondas, na árvore principal</small></h3>
-      <div class="grade"><div class="faixa">
-        <div class="tarefa">
-          <span class="tid">T-484</span>
-          <span class="ttitulo">Script de backup</span>
-          <span class="meta"><code>claude-sonnet-5</code> · esforço <b>low</b></span>
-          <span class="arquivos"><code>deploy/backup.sh</code> <code>src/test/java/com/apiexternabackend/deploy/BackupScriptTest.java</code></span>
-        </div>
-        <div class="tarefa">
-          <span class="tid">T-485</span>
-          <span class="ttitulo">Guia de deploy</span>
-          <span class="meta"><code>claude-sonnet-5</code> · esforço <b>low</b></span>
-          <span class="arquivos"><code>docs/deploy.md</code> <code>README.md</code></span>
-        </div></div></div>
-    </section>
   <section class="onda">
     <h3>Branches e commits</h3>
     <ol>

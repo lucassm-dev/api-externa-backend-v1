@@ -22,6 +22,17 @@ Decisões tomadas no brainstorming:
 - acesso por `tailscale serve` na porta do frontend, sem exposição à internet;
 - backup diário do banco por `pg_dump`, com retenção de 7 dias, no próprio HD.
 
+Ajustes antes do primeiro deploy real (2026-09-15) — três falhas que os testes
+com binários falsos não pegavam:
+
+- o `FRONTEND_PATH` do `.env.example` aponta para a organização de pastas do
+  desenvolvimento; no servidor os repositórios ficam lado a lado e o build do
+  frontend quebraria (AC-538);
+- a verificação final chamava `/api/ativos`, que o nginx não encaminha ao
+  backend — cai no SPA e responde 200 mesmo com a API fora do ar (AC-539);
+- a porta do frontend era publicada em todas as interfaces, abrindo o sistema
+  para a rede local inteira, e não só para a tailnet (AC-537).
+
 ## Histórias
 
 ### US-438 — Configuração de produção separada da de desenvolvimento
@@ -62,6 +73,13 @@ rede e o servidor modesto não se esgote.
 - **Dado** o arquivo `application-prod.properties`
 - **Quando** a propriedade `spring.jpa.show-sql` é lida
 - **Então** o valor é `false`
+
+#### AC-537 — Frontend publicado só na interface local em produção
+
+- **Dado** o compose base mesclado com `docker-compose.prod.yml`
+- **Quando** as portas publicadas do serviço `frontend` são lidas
+- **Então** existe exatamente uma porta publicada, ligada a `127.0.0.1` — a
+  publicação do compose base em todas as interfaces não sobrevive ao override
 
 ### US-439 — Deploy por um único comando
 
@@ -124,6 +142,21 @@ fazer deploy à mão hoje e por GitHub Action amanhã.
 - **Então** ele encontra o `.env`, os arquivos de compose e o repositório do
   frontend como se tivesse sido chamado de dentro do backend
 
+#### AC-538 — Deploy constrói o frontend a partir do `FRONTEND_DIR`
+
+- **Dado** `FRONTEND_DIR` apontando para o repositório do frontend
+- **Quando** `deploy/deploy.sh` chama `docker compose ... up`
+- **Então** a chamada recebe `FRONTEND_PATH` igual a `FRONTEND_DIR`, que vence o
+  `FRONTEND_PATH` do `.env`
+
+#### AC-539 — Verificação da API atravessa o nginx até o backend
+
+- **Dado** serviços saudáveis
+- **Quando** `deploy/deploy.sh` faz a verificação final da API
+- **Então** ele chama pelo nginx uma rota encaminhada ao backend e protegida
+  (`/corretoras`), e só aceita `401` — a resposta do Spring sem token; qualquer
+  outro código, inclusive `200` do SPA, falha o deploy
+
 ### US-440 — Backup diário do banco
 
 Como dono do homelab, quero um dump diário do banco com retenção curta, para
@@ -158,6 +191,9 @@ recuperar os dados se algo der errado sem lotar o HD.
 - Cópia do backup para fora do servidor
 - Mudanças no frontend
 - Monitoramento e alertas
+- `GET /auth/login` respondendo 500 em vez de 405 (o `GlobalExceptionHandler`
+  trata "método não suportado" como erro inesperado) — bug à parte, fora do
+  deploy
 
 ## Suposições
 
@@ -169,6 +205,7 @@ recuperar os dados se algo der errado sem lotar o HD.
 | ASM-453 | 768 MB de limite para o container da API bastam | aberta | Conferir consumo real com `docker stats` após o primeiro deploy |
 | ASM-454 | Migrations do Flyway só andam para frente: rollback de código não reverte o banco | confirmada | Registrado no guia de rollback; reverter dados é restaurar backup |
 | ASM-455 | A API sobe no container sem arquivo `.env` (o `spring-dotenv` não exige o arquivo) | confirmada | O compose atual já roda assim, com segredos só por variável de ambiente |
+| ASM-456 | O Compose do servidor entende a tag `!override`, usada para trocar a lista de portas do frontend (AC-537) | aberta | Validado localmente na v5.3.1 com `docker compose ... config`; confirmar no servidor com o mesmo comando antes do primeiro deploy |
 
 ## Perguntas em aberto
 
@@ -179,3 +216,4 @@ recuperar os dados se algo der errado sem lotar o HD.
 | Q-DEP-003 | Como o deploy é disparado? | respondida | Manual por SSH agora; script pronto para GitHub Action depois |
 | Q-DEP-004 | Backup entra no escopo? | respondida | Sim, diário, retenção de 7 dias, sem cópia externa |
 | Q-DEP-005 | Os repositórios são públicos? | respondida | Sim — clone por HTTPS, sem deploy key |
+| Q-DEP-006 | Qual rota a verificação final usa para provar que o nginx alcança a API? | respondida | `/corretoras` sem token → `401` com `codigo: AUT-005`, só o Spring produz essa resposta (medido no compose local em 2026-09-15) |

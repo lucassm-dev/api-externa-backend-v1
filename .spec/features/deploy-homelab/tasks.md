@@ -60,3 +60,28 @@
   como acessar banco/Swagger sem porta publicada, rollback manual (com o limite
   do Flyway), restore de backup e checklist manual do servidor (ASM-451).
   README ganha só um link para o guia.
+
+## T-486 — Frontend só em 127.0.0.1 no override de produção [pendente]
+- Refs: US-438, AC-537
+- Arquivos: docker-compose.prod.yml, src/test/java/com/apiexternabackend/deploy/ConfiguracaoProducaoTest.java
+- Esforço: baixo
+- Notas: `ports: !override ["127.0.0.1:${FRONTEND_PORT:-8081}:80"]` no
+  `frontend`. Precisa ser `!override`, não lista simples: o Compose soma a lista
+  de portas do override à do base e o `0.0.0.0:8081` continuaria publicado
+  (conferido com `docker compose config`, v5.3.1). O `tailscale serve` encaminha
+  para localhost, então a tailnet segue funcionando. O construtor SnakeYAML do
+  teste passa a tratar `!override` como sequência, como já faz com `!reset`, e o
+  merge do teste troca a lista marcada com a tag em vez de somar.
+
+## T-487 — deploy.sh: FRONTEND_PATH do FRONTEND_DIR e verificação da API pelo proxy [pendente]
+- Refs: US-439, AC-538, AC-539
+- Arquivos: deploy/deploy.sh, src/test/java/com/apiexternabackend/deploy/DeployScriptTest.java, src/test/java/com/apiexternabackend/deploy/ScriptSandbox.java, docs/deploy.md
+- Esforço: baixo
+- Notas: `export FRONTEND_PATH="$FRONTEND_DIR"` antes do `docker compose` — a
+  variável do shell vence o `.env` na interpolação do Compose, e o dev local não
+  muda porque não usa o script. Verificação da API: `GET /corretoras` pelo nginx
+  exige `401` (Spring sem token, `AUT-005`); o `/api/ativos` atual cai no SPA.
+  `ScriptSandbox`: o `docker` falso grava o `FRONTEND_PATH` recebido no `up` e o
+  `curl` falso responde `401` por padrão na rota da API. Guia: no `.env` do
+  servidor, `FRONTEND_PATH=../api-externa-frontend-v2` — rollback e restore
+  chamam o compose direto, sem o script.

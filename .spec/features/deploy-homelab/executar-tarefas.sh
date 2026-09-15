@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# executar-tarefas.sh — gerado por `onp-spec plano deploy-homelab` em 2026-09-15 02:46
+# executar-tarefas.sh — gerado por `onp-spec plano deploy-homelab` em 2026-09-15 19:45
 # NÃO edite à mão: mudou tasks.md ou a config, regenere o plano.
 #
 # uso:
@@ -14,7 +14,7 @@
 set -u
 set -o pipefail
 
-RUN_ID='api-externa-backend-v1-deploy-homelab-mu22lnio'
+RUN_ID='api-externa-backend-v1-deploy-homelab-mu32zzor'
 FEATURE='deploy-homelab'
 BASE_BRANCH='spec/deploy-homelab'
 ENGINE='.claude/skills/onp-spec-driven/scripts/onp-spec.mjs'
@@ -166,7 +166,7 @@ iniciar_resumos() {
   trap 'parar_resumos; node "$ENGINE" resumo "$FEATURE" --gravar >/dev/null 2>&1 || true' EXIT
 }
 
-# ── faixa-1: T-482 ──
+# ── faixa-1: T-486 ──
 executar_faixa_1() {
   local WT="$WT_BASE-faixa-1"
   preparar_worktree 'faixa-1' 'spec/deploy-homelab-faixa-1' "$WT" || return 1
@@ -174,14 +174,14 @@ executar_faixa_1() {
   : > "$LOG_DIR/faixa-1.log"
   (
     cd "$WT" || exit 9
-    rodar_tarefa 'faixa-1' 'T-482' 'Você executa UMA tarefa da feature "deploy-homelab" (fluxo onp-spec, spec-anchored).
+    rodar_tarefa 'faixa-1' 'T-486' 'Você executa UMA tarefa da feature "deploy-homelab" (fluxo onp-spec, spec-anchored).
 Leia primeiro: .spec/features/deploy-homelab/spec.md, .spec/features/deploy-homelab/tasks.md e .spec/constituicao.md.
 
 Sua tarefa (somente ela):
-T-482 — "Override de produção do compose e perfil prod"
-  critérios/refs: AC-521 (Banco sem porta publicada em produção), AC-522 (Só o frontend publica porta em produção), AC-523 (API em perfil de produção e com memória limitada), AC-524 (Log de container com rotação), AC-525 (Perfil de produção não despeja SQL no log)
-  arquivos permitidos (e seus testes): docker-compose.prod.yml, src/main/resources/application-prod.properties, src/test/java/com/apiexternabackend/deploy/ConfiguracaoProducaoTest.java
-  mensagem de commit: "T-482 deploy-homelab: Override de produção do compose e perfil prod"
+T-486 — "Frontend só em 127.0.0.1 no override de produção"
+  critérios/refs: AC-537 (Frontend publicado só na interface local em produção)
+  arquivos permitidos (e seus testes): docker-compose.prod.yml, src/test/java/com/apiexternabackend/deploy/ConfiguracaoProducaoTest.java
+  mensagem de commit: "T-486 deploy-homelab: Frontend só em 127.0.0.1 no override de produção"
 
 Regras inegociáveis:
 - Todo critério de aceite referenciado vira teste com @spec:AC-xxx no título.
@@ -192,11 +192,11 @@ Regras inegociáveis:
   ) >> "$LOG_DIR/faixa-1.log" 2>&1
   local st=$?
   mesclar_faixa 'faixa-1' 'spec/deploy-homelab-faixa-1' "$WT" "$st" || return 1
-  marcar_concluidas T-482
+  marcar_concluidas T-486
   return 0
 }
 
-# ── faixa-2: T-483 ──
+# ── faixa-2: T-487 ──
 executar_faixa_2() {
   local WT="$WT_BASE-faixa-2"
   preparar_worktree 'faixa-2' 'spec/deploy-homelab-faixa-2' "$WT" || return 1
@@ -204,90 +204,26 @@ executar_faixa_2() {
   : > "$LOG_DIR/faixa-2.log"
   (
     cd "$WT" || exit 9
-    rodar_tarefa 'faixa-2' 'T-483' 'Você executa UMA tarefa da feature "deploy-homelab" (fluxo onp-spec, spec-anchored).
+    rodar_tarefa 'faixa-2' 'T-487' 'Você executa UMA tarefa da feature "deploy-homelab" (fluxo onp-spec, spec-anchored).
 Leia primeiro: .spec/features/deploy-homelab/spec.md, .spec/features/deploy-homelab/tasks.md e .spec/constituicao.md.
 
 Sua tarefa (somente ela):
-T-483 — "Script de deploy"
-  critérios/refs: AC-526 (Sem `.env` o deploy nem começa), AC-527 (Mudança local não commitada aborta o deploy), AC-528 (Docker Compose antigo aborta o deploy), AC-529 (Caminho feliz atualiza e sobe com o override), AC-530 (Branch escolhida por variável), AC-531 (Serviço que não fica saudável falha o deploy), AC-532 (Verificação final pelo nginx falha o deploy), AC-533 (Funciona chamado de qualquer diretório)
-  arquivos permitidos (e seus testes): deploy/deploy.sh, src/test/java/com/apiexternabackend/deploy/DeployScriptTest.java, src/test/java/com/apiexternabackend/deploy/ScriptSandbox.java
-  mensagem de commit: "T-483 deploy-homelab: Script de deploy"
+T-487 — "deploy.sh: FRONTEND_PATH do FRONTEND_DIR e verificação da API pelo proxy"
+  critérios/refs: AC-538 (Deploy constrói o frontend a partir do `FRONTEND_DIR`), AC-539 (Verificação da API atravessa o nginx até o backend)
+  arquivos permitidos (e seus testes): deploy/deploy.sh, src/test/java/com/apiexternabackend/deploy/DeployScriptTest.java, src/test/java/com/apiexternabackend/deploy/ScriptSandbox.java, docs/deploy.md
+  mensagem de commit: "T-487 deploy-homelab: deploy.sh: FRONTEND_PATH do FRONTEND_DIR e verificação da API pelo proxy"
 
 Regras inegociáveis:
 - Todo critério de aceite referenciado vira teste com @spec:AC-xxx no título.
 - NUNCA enfraqueça, pule (skip/todo) ou apague um teste para passar — teste pulado não é prova e o audit acusa.
 - Rode os testes localmente com `./mvnw -q test` até passarem.
 - NÃO edite tasks.md, NÃO rode onp-spec verify/audit e NÃO toque em outras tarefas — o orquestrador cuida disso.
-- Ao final de CADA tarefa: `git add` só no que você tocou e um commit próprio.' 'claude-sonnet-5' medium
+- Ao final de CADA tarefa: `git add` só no que você tocou e um commit próprio.' 'claude-sonnet-5' low
   ) >> "$LOG_DIR/faixa-2.log" 2>&1
   local st=$?
   mesclar_faixa 'faixa-2' 'spec/deploy-homelab-faixa-2' "$WT" "$st" || return 1
-  marcar_concluidas T-483
+  marcar_concluidas T-487
   return 0
-}
-
-# ── sequencial T-484 (fora da seleção do usuário) ──
-executar_seq_T_484() {
-  info 'sequencial T-484 — Script de backup'
-  if rodar_tarefa seq 'T-484' 'Você executa UMA tarefa da feature "deploy-homelab" (fluxo onp-spec, spec-anchored).
-Leia primeiro: .spec/features/deploy-homelab/spec.md, .spec/features/deploy-homelab/tasks.md e .spec/constituicao.md.
-
-Sua tarefa (somente ela):
-T-484 — "Script de backup"
-  critérios/refs: AC-534 (Backup gera dump compactado e datado), AC-535 (Dumps com mais de 7 dias são removidos), AC-536 (Falha do dump não deixa arquivo enganoso)
-  arquivos permitidos (e seus testes): deploy/backup.sh, src/test/java/com/apiexternabackend/deploy/BackupScriptTest.java
-  mensagem de commit: "T-484 deploy-homelab: Script de backup"
-
-Regras inegociáveis:
-- Todo critério de aceite referenciado vira teste com @spec:AC-xxx no título.
-- NUNCA enfraqueça, pule (skip/todo) ou apague um teste para passar — teste pulado não é prova e o audit acusa.
-- Rode os testes localmente com `./mvnw -q test` até passarem.
-- NÃO edite tasks.md, NÃO rode onp-spec verify/audit e NÃO toque em outras tarefas — o orquestrador cuida disso.
-- Ao final de CADA tarefa: `git add` só no que você tocou e um commit próprio.' 'claude-sonnet-5' low >> "$LOG_DIR/seq.log" 2>&1; then
-    # commit de segurança se o agente esqueceu (rastreabilidade > perfeição)
-    if [ -n "$(git status --porcelain)" ]; then
-      git add -A && git commit -q -m 'T-484 deploy-homelab: Script de backup (auto-commit do plano)'
-    fi
-    marcar_concluidas T-484
-    verde "✔ T-484 concluída"
-    return 0
-  fi
-  vermelho "✘ T-484 falhou (log: $LOG_DIR/seq.log)"
-  amarelo "  reexecute só ela: bash .spec/features/deploy-homelab/executar-tarefas.sh --seq T-484"
-  FALHAS="$FALHAS T-484"
-  return 1
-}
-
-# ── sequencial T-485 (fora da seleção do usuário) ──
-executar_seq_T_485() {
-  info 'sequencial T-485 — Guia de deploy'
-  if rodar_tarefa seq 'T-485' 'Você executa UMA tarefa da feature "deploy-homelab" (fluxo onp-spec, spec-anchored).
-Leia primeiro: .spec/features/deploy-homelab/spec.md, .spec/features/deploy-homelab/tasks.md e .spec/constituicao.md.
-
-Sua tarefa (somente ela):
-T-485 — "Guia de deploy"
-  critérios/refs: US-438, US-439, US-440
-  arquivos permitidos (e seus testes): docs/deploy.md, README.md
-  mensagem de commit: "T-485 deploy-homelab: Guia de deploy"
-
-Regras inegociáveis:
-- Todo critério de aceite referenciado vira teste com @spec:AC-xxx no título.
-- NUNCA enfraqueça, pule (skip/todo) ou apague um teste para passar — teste pulado não é prova e o audit acusa.
-- Rode os testes localmente com `./mvnw -q test` até passarem.
-- NÃO edite tasks.md, NÃO rode onp-spec verify/audit e NÃO toque em outras tarefas — o orquestrador cuida disso.
-- Ao final de CADA tarefa: `git add` só no que você tocou e um commit próprio.' 'claude-sonnet-5' low >> "$LOG_DIR/seq.log" 2>&1; then
-    # commit de segurança se o agente esqueceu (rastreabilidade > perfeição)
-    if [ -n "$(git status --porcelain)" ]; then
-      git add -A && git commit -q -m 'T-485 deploy-homelab: Guia de deploy (auto-commit do plano)'
-    fi
-    marcar_concluidas T-485
-    verde "✔ T-485 concluída"
-    return 0
-  fi
-  vermelho "✘ T-485 falhou (log: $LOG_DIR/seq.log)"
-  amarelo "  reexecute só ela: bash .spec/features/deploy-homelab/executar-tarefas.sh --seq T-485"
-  FALHAS="$FALHAS T-485"
-  return 1
 }
 
 # ── gate: quem decide é a máquina ────────────────────────────────────
@@ -349,17 +285,13 @@ executar_tudo() {
   executar_faixa_2 & PID_FAIXA_2=$!
   wait "$PID_FAIXA_1" || true
   wait "$PID_FAIXA_2" || true
-  executar_seq_T_484 || true
-  executar_seq_T_485 || true
   encerrar tudo
 }
 
 listar() {
   echo "execução: $RUN_ID (feature $FEATURE, branch $BASE_BRANCH)"
-  echo "  faixa-1  onda 1  T-482"
-  echo "  faixa-2  onda 1  T-483"
-  echo "  seq       T-484 (sequencial)"
-  echo "  seq       T-485 (sequencial)"
+  echo "  faixa-1  onda 1  T-486"
+  echo "  faixa-2  onda 1  T-487"
   echo
   echo "reexecutar uma faixa:    --faixa <id>"
   echo "reexecutar sequencial:   --seq <T-xxx>"
@@ -396,8 +328,6 @@ case "$MODO" in
     esac ;;
   seq)
     case "$ALVO" in
-      T-484) evento --tipo inicio --escopo "seq:T-484"; iniciar_resumos; executar_seq_T_484 || true; encerrar "seq:T-484" ;;
-      T-485) evento --tipo inicio --escopo "seq:T-485"; iniciar_resumos; executar_seq_T_485 || true; encerrar "seq:T-485" ;;
       *) falhar "tarefa sequencial desconhecida: '$ALVO' — veja as disponíveis com --listar" ;;
     esac ;;
 esac
