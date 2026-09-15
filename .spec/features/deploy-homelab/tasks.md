@@ -37,7 +37,7 @@
   ter prefixo `v` e sufixo como `-desktop.1`. O `ScriptSandbox` é genérico
   (recebe o nome do script) porque a T-484 reusa.
 
-## T-484 — Script de backup [pendente]
+## T-484 — Script de backup [concluida]
 - Refs: US-440, AC-534, AC-535, AC-536
 - Arquivos: deploy/backup.sh, src/test/java/com/apiexternabackend/deploy/BackupScriptTest.java
 - Esforço: baixo
