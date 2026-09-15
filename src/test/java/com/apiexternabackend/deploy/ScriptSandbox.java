@@ -110,7 +110,11 @@ class ScriptSandbox {
     }
 
     void criarEnv() {
-        escrever(backendDir.resolve(".env"), "POSTGRES_DB=investimentos\n");
+        escrever(backendDir.resolve(".env"), "POSTGRES_DB=investimentos\nPOSTGRES_USER=investimentos\n");
+    }
+
+    void definirFalhaDump() {
+        escrever(controlDir.resolve("dump-fail.txt"), "1\n");
     }
 
     void removerEnv() {
@@ -276,7 +280,19 @@ class ScriptSandbox {
 
             if [ "$1" = "compose" ]; then
               shift
-              case "$1" in
+              subcmd=""
+              while [ $# -gt 0 ]; do
+                case "$1" in
+                  -f)
+                    shift 2
+                    ;;
+                  *)
+                    subcmd="$1"
+                    break
+                    ;;
+                esac
+              done
+              case "$subcmd" in
                 version)
                   if [ -f "$CONTROL_DIR/compose-version.txt" ]; then
                     cat "$CONTROL_DIR/compose-version.txt"
@@ -290,6 +306,14 @@ class ScriptSandbox {
                     echo "falha fake no up" >&2
                     exit 1
                   fi
+                  exit 0
+                  ;;
+                exec)
+                  if [ -f "$CONTROL_DIR/dump-fail.txt" ]; then
+                    echo "erro fake no pg_dump" >&2
+                    exit 1
+                  fi
+                  echo "-- fake pg_dump dump --"
                   exit 0
                   ;;
                 *)
