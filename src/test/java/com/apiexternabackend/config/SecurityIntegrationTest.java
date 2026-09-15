@@ -181,10 +181,11 @@ class SecurityIntegrationTest {
     }
 
     private String cpfUnico() {
-        return String.valueOf(System.nanoTime()).substring(0, 11);
+        return String.format("%011d", System.nanoTime() % 100_000_000_000L);
     }
 
     private String cnpjUnico() {
-        return String.valueOf(System.nanoTime()).substring(0, 14);
+        // nanoTime conta desde o boot: logo após ligar a máquina tem menos de 14 dígitos
+        return String.format("%014d", System.nanoTime() % 100_000_000_000_000L);
     }
 }

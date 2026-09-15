@@ -1,63 +1,88 @@
 {
-  "feature": "catalogo-acao",
-  "timestamp": "2026-09-15T15:55:53.834Z",
+  "feature": "deploy-homelab",
+  "timestamp": "2026-09-15T15:56:10.317Z",
   "gitRev": "548b5b3",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
   "testsParsed": 0,
   "results": {
-    "AC-201": {
+    "AC-521": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-202": {
+    "AC-522": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-203": {
+    "AC-523": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-204": {
+    "AC-524": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-205": {
+    "AC-525": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-206": {
+    "AC-526": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-207": {
+    "AC-527": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-208": {
+    "AC-528": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-209": {
+    "AC-529": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-210": {
+    "AC-530": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
-    "AC-211": {
+    "AC-531": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-532": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-533": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-534": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-535": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-536": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
