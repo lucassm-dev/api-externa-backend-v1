@@ -35,9 +35,13 @@ só pela tailnet do Tailscale.
   cp .env.example .env
   # JWT_SECRET: openssl rand -base64 48
   # POSTGRES_PASSWORD: openssl rand -base64 24
+  # FRONTEND_PATH=../api-externa-frontend-v2   (repos lado a lado no servidor)
   chmod 600 .env
   ```
-  Sem esse arquivo o deploy nem começa (AC-526).
+  Sem esse arquivo o deploy nem começa (AC-526). O `deploy.sh` já passa o
+  caminho do frontend ao compose (AC-538), mas o rollback e o restore chamam o
+  compose direto — por isso o `FRONTEND_PATH` do `.env` também precisa apontar
+  para o repositório vizinho.
 
 ## 2. Primeiro deploy
 
@@ -49,7 +53,9 @@ deploy/deploy.sh
 - [ ] Confirmar que os três containers (`investimentos-db`,
   `investimentos-api`, `investimentos-web`) sobem e ficam `healthy`.
 - [ ] Confirmar que o script imprime o commit implantado de cada repositório e
-  sai com código 0.
+  sai com código 0. A verificação final exige `401` em `/corretoras` pelo
+  nginx (AC-539): é a prova de que o proxy alcança a API — qualquer outro
+  código, inclusive `200`, falha o deploy.
 - [ ] Rodar as migrações do Flyway confirmando no log da API que não há erro
   (o `SPRING_PROFILES_ACTIVE=prod` do override já reduz o log a não
   despejar SQL — AC-525).

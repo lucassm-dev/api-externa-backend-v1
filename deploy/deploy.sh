@@ -69,6 +69,9 @@ atualizar_repo "$BACKEND_DIR"
 atualizar_repo "$FRONTEND_DIR"
 
 # --- sobe os serviços com o override de produção ---
+# Variável do shell vence o FRONTEND_PATH do .env: o build do frontend sai do
+# mesmo repositório que acabou de ser atualizado.
+export FRONTEND_PATH="$FRONTEND_DIR"
 docker compose \
   -f "$BACKEND_DIR/docker-compose.yml" \
   -f "$BACKEND_DIR/docker-compose.prod.yml" \
@@ -100,12 +103,13 @@ if [ "$saude_code" != "200" ]; then
   erro "/saude respondeu $saude_code pelo nginx (esperado 200)"
 fi
 
-api_code="$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:${FRONTEND_PORT}/api/ativos")"
-case "$api_code" in
-  502 | 503 | 504)
-    erro "rota da API respondeu $api_code pelo nginx"
-    ;;
-esac
+# /corretoras é encaminhada pelo nginx ao backend e exige token: só o Spring
+# responde 401 ali. Rota que o nginx não encaminha cai no SPA e daria 200 mesmo
+# com a API fora do ar.
+api_code="$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:${FRONTEND_PORT}/corretoras")"
+if [ "$api_code" != "401" ]; then
+  erro "rota da API /corretoras respondeu $api_code pelo nginx (esperado 401 do backend sem token)"
+fi
 
 # --- imprime o commit implantado de cada repositório ---
 commit_backend="$(git -C "$BACKEND_DIR" rev-parse --short HEAD)"
