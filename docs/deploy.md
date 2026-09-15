@@ -79,11 +79,12 @@ direto é só via `docker exec`/túnel SSH, nunca pela rede:
 # psql direto no container
 docker exec -it investimentos-db psql -U <POSTGRES_USER> -d <POSTGRES_DB>
 
-# Swagger, por túnel SSH até a porta interna do container
-ssh -L 8080:localhost:8080 <usuario>@<servidor>
+# Swagger, por túnel SSH até o IP do container na rede do compose
+# (o backend não publica porta no host, mas o IP do container é roteável
+#  a partir do próprio servidor Linux)
+IP=$(ssh <usuario>@<servidor> "docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' investimentos-api")
+ssh -L 8080:$IP:8080 <usuario>@<servidor>
 # depois abra http://localhost:8080/swagger-ui.html na máquina local
-# (requer expor a porta do backend localmente no túnel via docker,
-#  ex.: docker run temporário ou reconfigurar o compose só para debug)
 ```
 
 O jeito mais simples de inspecionar o backend sem editar o compose é
