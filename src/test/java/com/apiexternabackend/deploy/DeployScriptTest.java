@@ -170,4 +170,41 @@ class DeployScriptTest {
         assertThat(resultado.stdout()).contains("eee5555");
         assertThat(resultado.stdout()).contains("fff6666");
     }
+
+    @Test
+    @DisplayName("@spec:AC-538 Deploy constrói o frontend a partir do FRONTEND_DIR")
+    void frontendPathVemDoFrontendDir() {
+        sandbox.criarEnv();
+        Map<String, String> env = envPadrao();
+        env.put("FRONTEND_PATH", "../../Angular/api-externa-frontend-v2");
+
+        ScriptSandbox.Resultado resultado = sandbox.executar(SCRIPT, env);
+
+        assertThat(resultado.codigoSaida()).isZero();
+        assertThat(sandbox.frontendPathNoUp()).isEqualTo(frontendDir.toAbsolutePath().toString());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-539 Verificação da API chama rota que o nginx encaminha ao backend")
+    void verificacaoDaApiPassaPeloProxy() {
+        sandbox.criarEnv();
+
+        ScriptSandbox.Resultado resultado = sandbox.executar(SCRIPT, envPadrao());
+
+        assertThat(resultado.codigoSaida()).isZero();
+        assertThat(sandbox.chamadas())
+                .anyMatch(linha -> linha.startsWith("curl") && linha.endsWith("http://localhost:8081/corretoras"));
+    }
+
+    @Test
+    @DisplayName("@spec:AC-539 Rota da API respondendo 200 do SPA falha o deploy")
+    void rotaApiRespondendo200FalhaODeploy() {
+        sandbox.criarEnv();
+        sandbox.definirCodigoApi("200");
+
+        ScriptSandbox.Resultado resultado = sandbox.executar(SCRIPT, envPadrao());
+
+        assertThat(resultado.codigoSaida()).isNotZero();
+        assertThat(resultado.stderr()).contains("200");
+    }
 }

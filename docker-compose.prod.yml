@@ -28,6 +28,11 @@ services:
         max-file: "3"
 
   frontend:
+    # Só localhost: o `tailscale serve` encaminha para cá, e a rede local não
+    # alcança o sistema. `!override` porque lista sem tag é somada à do base e
+    # o 0.0.0.0:8081 continuaria publicado.
+    ports: !override
+      - "127.0.0.1:${FRONTEND_PORT:-8081}:80"
     logging:
       driver: json-file
       options:

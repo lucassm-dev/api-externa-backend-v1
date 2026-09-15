@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -36,31 +37,58 @@ class ConfiguracaoProducaoTest {
         for (String nome : servicosOverride.keySet()) {
             Map<String, Object> servicoBase = (Map<String, Object>) servicosBase.get(nome);
             Map<String, Object> servicoOverride = (Map<String, Object>) servicosOverride.get(nome);
-            servicoBase.putAll(servicoOverride);
+            for (Map.Entry<String, Object> campo : servicoOverride.entrySet()) {
+                servicoBase.merge(campo.getKey(), campo.getValue(), ConfiguracaoProducaoTest::mesclarCampo);
+            }
         }
         return servicosBase;
+    }
+
+    /**
+     * Mesma regra do Compose para listas como {@code ports}: sem tag, a lista do
+     * override é somada à do base; com {@code !reset} ou {@code !override}, ela
+     * substitui. Sem isso o teste aprovaria um override que deixa a porta do
+     * base publicada.
+     */
+    @SuppressWarnings("unchecked")
+    private static Object mesclarCampo(Object doBase, Object doOverride) {
+        if (doBase instanceof List<?> listaBase && doOverride instanceof List<?> listaOverride
+                && !(doOverride instanceof ListaSubstituta)) {
+            List<Object> somada = new ArrayList<>((List<Object>) listaBase);
+            somada.addAll(listaOverride);
+            return somada;
+        }
+        return doOverride;
     }
 
     private Yaml criarYamlComSuporteAReset() {
         return new Yaml(new ConstructorComSuporteAReset());
     }
 
+    private static final class ListaSubstituta extends ArrayList<Object> {
+        ListaSubstituta(List<?> itens) {
+            super(itens);
+        }
+    }
+
     /**
-     * O Docker Compose usa a tag {@code !reset} para zerar uma lista herdada
-     * do compose base (ex.: {@code ports: !reset []}). O SnakeYAML não
-     * conhece essa tag; tratamos como uma sequência comum.
+     * O Docker Compose usa as tags {@code !reset} e {@code !override} para
+     * zerar ou trocar uma lista herdada do compose base (ex.:
+     * {@code ports: !reset []}). O SnakeYAML não conhece essas tags; tratamos
+     * como sequência marcada para substituir a do base.
      */
     private static final class ConstructorComSuporteAReset extends Constructor {
         ConstructorComSuporteAReset() {
             super(new LoaderOptions());
-            this.yamlConstructors.put(new Tag("!reset"), new ConstructYamlSeqComoLista());
+            this.yamlConstructors.put(new Tag("!reset"), new ConstructYamlSeqSubstituta());
+            this.yamlConstructors.put(new Tag("!override"), new ConstructYamlSeqSubstituta());
         }
 
-        private class ConstructYamlSeqComoLista extends SafeConstructor.ConstructYamlSeq {
+        private class ConstructYamlSeqSubstituta extends SafeConstructor.ConstructYamlSeq {
             @Override
             public Object construct(Node node) {
                 node.setTag(Tag.SEQ);
-                return super.construct(node);
+                return new ListaSubstituta((List<?>) super.construct(node));
             }
         }
     }
@@ -128,5 +156,17 @@ class ConfiguracaoProducaoTest {
             properties.load(in);
         }
         assertThat(properties.getProperty("spring.jpa.show-sql")).isEqualTo("false");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    void frontend_publicado_so_na_interface_local_em_producao() throws IOException {
+        // @spec:AC-537
+        Map<String, Object> servicos = lerComposeMesclado();
+        Map<String, Object> frontend = (Map<String, Object>) servicos.get("frontend");
+        List<Object> portas = (List<Object>) frontend.get("ports");
+
+        assertThat(portas).hasSize(1);
+        assertThat(String.valueOf(portas.get(0))).startsWith("127.0.0.1:");
     }
 }

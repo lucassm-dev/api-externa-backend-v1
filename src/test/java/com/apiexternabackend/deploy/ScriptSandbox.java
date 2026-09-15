@@ -149,6 +149,15 @@ class ScriptSandbox {
         escrever(controlDir.resolve("curl-api-code.txt"), codigo + "\n");
     }
 
+    String frontendPathNoUp() {
+        try {
+            Path arquivo = controlDir.resolve("up-frontend-path.txt");
+            return Files.exists(arquivo) ? Files.readString(arquivo, StandardCharsets.UTF_8) : null;
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
     void definirCommitParaBranch(Path repoDir, String branch, String commit) {
         escrever(repoDir.resolve("COMMIT-" + branch), commit + "\n");
     }
@@ -302,6 +311,7 @@ class ScriptSandbox {
                   exit 0
                   ;;
                 up)
+                  printf '%s' "${FRONTEND_PATH-<ausente>}" > "$CONTROL_DIR/up-frontend-path.txt"
                   if [ -f "$CONTROL_DIR/up-fail.txt" ]; then
                     echo "falha fake no up" >&2
                     exit 1
@@ -356,7 +366,7 @@ class ScriptSandbox {
                 if [ -f "$CONTROL_DIR/curl-api-code.txt" ]; then
                   cat "$CONTROL_DIR/curl-api-code.txt"
                 else
-                  echo "200"
+                  echo "401"
                 fi
                 ;;
             esac
