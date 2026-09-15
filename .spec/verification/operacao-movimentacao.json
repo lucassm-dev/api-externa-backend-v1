@@ -1,7 +1,7 @@
 {
   "feature": "operacao-movimentacao",
-  "timestamp": "2026-09-09T17:55:01.398Z",
-  "gitRev": "b82b15b",
+  "timestamp": "2026-09-15T15:56:42.858Z",
+  "gitRev": "548b5b3",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
