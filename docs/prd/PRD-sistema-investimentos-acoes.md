@@ -396,6 +396,69 @@ Nenhuma métrica foi decidida. Propostas:
 
 ---
 
+## 15. Evoluções planejadas (pós-MVP)
+
+Registradas em 18/11/2026. Cada item vira spec própria; a ordem de implementação está em 15.6.
+
+### 15.1. Papéis e controle de acesso `[D]`
+
+Três papéis: **Investidor**, **Administrador** e, depois, **Suporte**. As decisões detalhadas vão para ADRs; aqui fica só o que é visível ao usuário.
+
+- O investidor se cadastra sozinho; administrador e suporte só são criados por outro administrador. O primeiro administrador nasce da configuração do ambiente
+- Investidor nunca vira administrador
+- Ninguém cadastra ação manualmente: ao pesquisar ticker e mercado, se a ação não está no catálogo, o sistema a busca na fonte externa e a inclui na hora (continua atendendo RF07, RN05 e RN07)
+- O administrador cadastra corretoras e tem duas ações distintas sobre elas: **excluir** (cadastro errado, só sem carteira vinculada) e **descontinuar** (corretora saiu do mercado — some para carteiras novas, as existentes seguem com aviso). Antes de descontinuar, o administrador vê quantas carteiras serão afetadas
+- O administrador **bloqueia e desbloqueia** usuários, com motivo obrigatório, inclusive quem tem carteira ativa. O bloqueio vale na hora, não no fim da sessão. Ninguém bloqueia a si mesmo
+- O administrador **não vê o conteúdo das carteiras** — só indicadores por usuário (quantidade de carteiras ativas, se tem posição aberta)
+- Toda ação administrativa (bloqueio, desbloqueio, exclusão e descontinuação de corretora) fica registrada: quem, o quê, em quem, quando e por quê
+- O suporte, quando existir, poderá ver a carteira de um investidor somente para leitura, somente durante um atendimento aberto com ele, e com o acesso registrado `[P]`
+
+### 15.2. Esqueci minha senha `[D]`
+
+- Na tela de login, a opção "esqueci minha senha" envia um código de segurança ao e-mail cadastrado; com o código, o usuário define a nova senha
+- `[P]` O código expira em poucos minutos, aceita poucas tentativas e só pode ser usado uma vez
+- `[P]` A resposta ao pedido é a mesma exista o e-mail ou não — não revela quem tem conta
+- `[P]` Trocar a senha encerra as sessões abertas em outros dispositivos
+- `[A]` Qual serviço envia o e-mail, dentro da regra de gratuidade (seção 2)
+
+### 15.3. Identificação do papel e perfil `[D]`
+
+- No canto superior de todas as telas: um indicador do papel do usuário (Investidor, Administrador, Suporte) e um ícone que abre o perfil
+- No perfil o usuário altera foto, e-mail e senha
+- `[P]` Trocar a senha pelo perfil exige a senha atual
+- `[P]` Trocar o e-mail exige confirmar o novo endereço com código, o mesmo mecanismo de 15.2
+- `[A]` Onde e com que limite de tamanho a foto é guardada
+
+### 15.4. Relatórios do investidor `[D]`
+
+Aba nova onde o investidor monta relatórios das **próprias** movimentações. Filtros já citados:
+
+- movimentações em um período escolhido por ele
+- movimentações de um ticker específico
+- movimentações com lucro ou com prejuízo
+
+`[A]` Lista final de filtros, se exporta arquivo, e como "lucro ou prejuízo" é medido (realizado, em aberto ou ambos) — a decidir em conjunto.
+
+> Esta evolução revoga parte do ADR-010 (consultas sem filtro): precisa de ADR que o substitua.
+
+### 15.5. Relatórios do administrador `[D]`
+
+- Usuários ativos e bloqueados, com filtro por situação
+- Picos de requisições por usuário, para controle de uso
+- `[A]` Demais filtros
+
+Respeita 15.1: relatórios do administrador mostram uso e situação das contas, nunca o conteúdo das carteiras. `[A]` Se os picos são mostrados por usuário identificado ou de forma agregada.
+
+### 15.6. Ordem proposta `[P]`
+
+1. Papéis e controle de acesso (15.1) — base de todo o resto
+2. Esqueci minha senha e perfil (15.2 e 15.3) — compartilham o código por e-mail
+3. Relatórios do investidor (15.4)
+4. Relatórios do administrador (15.5) — depende de registrar o uso da API
+5. Suporte com chat — a discutir
+
+---
+
 ## Apêndice A — Limites das fontes gratuitas
 
 Levantamento de 21/08/2026. **Limites de API mudam com frequência — confirme na página oficial antes de fechar a especificação.**
