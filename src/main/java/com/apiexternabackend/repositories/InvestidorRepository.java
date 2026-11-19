@@ -15,7 +15,7 @@ public interface InvestidorRepository extends JpaRepository<Investidor, Long> {
 
     Optional<Investidor> findByEmailAndAtivoTrue(String email);
 
-    Page<Investidor> findAllByAtivoTrue(Pageable pageable);
+    Page<Investidor> findByIdAndAtivoTrue(Long id, Pageable pageable);
 
     Optional<Investidor> findByIdAndAtivoTrue(Long id);
 }

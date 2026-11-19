@@ -22,6 +22,8 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -51,10 +53,10 @@ class InvestidorServiceTest {
     void deveListarInvestidoresPaginados() {
         PageRequest pageable = PageRequest.of(0, 10);
         Page<Investidor> page = new PageImpl<>(List.of(investidor));
-        when(repository.findAllByAtivoTrue(pageable)).thenReturn(page);
+        when(repository.findByIdAndAtivoTrue(1L, pageable)).thenReturn(page);
         when(mapper.toResponse(investidor)).thenReturn(responseDTO);
 
-        Page<InvestidorResponseDTO> result = service.listar(pageable);
+        Page<InvestidorResponseDTO> result = service.listar(1L, pageable);
 
         assertThat(result.getContent()).hasSize(1);
         assertThat(result.getContent().get(0).getEmail()).isEqualTo("joao@email.com");
@@ -66,7 +68,7 @@ class InvestidorServiceTest {
         when(repository.findByIdAndAtivoTrue(1L)).thenReturn(Optional.of(investidor));
         when(mapper.toResponse(investidor)).thenReturn(responseDTO);
 
-        InvestidorResponseDTO result = service.buscarPorId(1L);
+        InvestidorResponseDTO result = service.buscarPorId(1L, 1L);
 
         assertThat(result.getId()).isEqualTo(1L);
     }
@@ -76,7 +78,7 @@ class InvestidorServiceTest {
     void deveLancarNotFoundParaIdInexistente() {
         when(repository.findByIdAndAtivoTrue(99L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> service.buscarPorId(99L))
+        assertThatThrownBy(() -> service.buscarPorId(99L, 1L))
                 .isInstanceOf(RecursoNaoEncontradoException.class);
     }
 
@@ -86,7 +88,7 @@ class InvestidorServiceTest {
         // investidor existe na tabela, mas com ativo=false — a consulta filtrada não o enxerga
         when(repository.findByIdAndAtivoTrue(1L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> service.buscarPorId(1L))
+        assertThatThrownBy(() -> service.buscarPorId(1L, 1L))
                 .isInstanceOf(RecursoNaoEncontradoException.class)
                 .extracting(e -> ((RecursoNaoEncontradoException) e).getCodigo())
                 .isEqualTo("AUT-003");
@@ -97,7 +99,7 @@ class InvestidorServiceTest {
     void deveDesativarInvestidorAoExcluir() {
         when(repository.findByIdAndAtivoTrue(1L)).thenReturn(Optional.of(investidor));
 
-        service.excluir(1L);
+        service.excluir(1L, 1L);
 
         verify(repository).save(investidor);
         assertThat(investidor.getAtivo()).isFalse();
@@ -108,7 +110,29 @@ class InvestidorServiceTest {
     void deveLancarNotFoundAoExcluirInvestidorInexistente() {
         when(repository.findByIdAndAtivoTrue(99L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> service.excluir(99L))
+        assertThatThrownBy(() -> service.excluir(99L, 1L))
                 .isInstanceOf(RecursoNaoEncontradoException.class);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-543 Buscar investidor de outra conta lança não encontrado (AUT-003)")
+    void deveTratarContaDeOutroComoInexistenteNaBusca() {
+        when(repository.findByIdAndAtivoTrue(1L)).thenReturn(Optional.of(investidor));
+
+        assertThatThrownBy(() -> service.buscarPorId(1L, 2L))
+                .isInstanceOf(RecursoNaoEncontradoException.class)
+                .extracting(e -> ((RecursoNaoEncontradoException) e).getCodigo())
+                .isEqualTo("AUT-003");
+    }
+
+    @Test
+    @DisplayName("@spec:AC-544 Excluir investidor de outra conta lança não encontrado e não desativa")
+    void naoDeveExcluirContaDeOutro() {
+        when(repository.findByIdAndAtivoTrue(1L)).thenReturn(Optional.of(investidor));
+
+        assertThatThrownBy(() -> service.excluir(1L, 2L))
+                .isInstanceOf(RecursoNaoEncontradoException.class);
+        verify(repository, never()).save(any());
+        assertThat(investidor.getAtivo()).isTrue();
     }
 }

@@ -1,9 +1,12 @@
 package com.apiexternabackend.resources;
 
+import com.apiexternabackend.config.InvestidorPrincipal;
 import com.apiexternabackend.domains.dtos.InvestidorResponseDTO;
 import com.apiexternabackend.resources.exceptions.GlobalExceptionHandler;
 import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
 import com.apiexternabackend.services.InvestidorService;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +16,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -35,11 +42,25 @@ class InvestidorResourceTest {
     @MockBean
     private InvestidorService service;
 
+    private static final Long INVESTIDOR_ID = 1L;
+
+    @BeforeEach
+    void autenticarComoInvestidor() {
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
+                new InvestidorPrincipal(INVESTIDOR_ID, "joao@email.com"), null,
+                List.of(new SimpleGrantedAuthority("ROLE_INVESTIDOR"))));
+    }
+
+    @AfterEach
+    void limparContextoDeSeguranca() {
+        SecurityContextHolder.clearContext();
+    }
+
     @Test
     @DisplayName("@spec:AC-054 GET /investidores retorna lista paginada")
     void deveListarInvestidores() throws Exception {
         InvestidorResponseDTO resp = new InvestidorResponseDTO(1L, "João", "joao@email.com");
-        when(service.listar(any())).thenReturn(new PageImpl<>(List.of(resp), PageRequest.of(0, 10), 1));
+        when(service.listar(eq(INVESTIDOR_ID), any())).thenReturn(new PageImpl<>(List.of(resp), PageRequest.of(0, 10), 1));
 
         mockMvc.perform(get("/investidores"))
                 .andExpect(status().isOk())
@@ -50,7 +71,7 @@ class InvestidorResourceTest {
     @DisplayName("@spec:AC-055 GET /investidores/{id} com id existente retorna dados")
     void deveBuscarPorId() throws Exception {
         InvestidorResponseDTO resp = new InvestidorResponseDTO(1L, "João", "joao@email.com");
-        when(service.buscarPorId(1L)).thenReturn(resp);
+        when(service.buscarPorId(1L, INVESTIDOR_ID)).thenReturn(resp);
 
         mockMvc.perform(get("/investidores/1"))
                 .andExpect(status().isOk())
@@ -60,7 +81,7 @@ class InvestidorResourceTest {
     @Test
     @DisplayName("@spec:AC-055 GET /investidores/{id} com id inexistente retorna 404")
     void deveRetornar404ParaIdInexistente() throws Exception {
-        when(service.buscarPorId(99L)).thenThrow(new RecursoNaoEncontradoException("AUT-003", "Investidor não encontrado: 99"));
+        when(service.buscarPorId(99L, INVESTIDOR_ID)).thenThrow(new RecursoNaoEncontradoException("AUT-003", "Investidor não encontrado: 99"));
 
         mockMvc.perform(get("/investidores/99"))
                 .andExpect(status().isNotFound());
@@ -69,7 +90,7 @@ class InvestidorResourceTest {
     @Test
     @DisplayName("@spec:AC-504 GET /investidores/{id} de investidor excluído retorna 404 com código AUT-003")
     void deveRetornar404ParaInvestidorExcluido() throws Exception {
-        when(service.buscarPorId(1L)).thenThrow(new RecursoNaoEncontradoException("AUT-003", "Investidor não encontrado: 1"));
+        when(service.buscarPorId(1L, INVESTIDOR_ID)).thenThrow(new RecursoNaoEncontradoException("AUT-003", "Investidor não encontrado: 1"));
 
         mockMvc.perform(get("/investidores/1"))
                 .andExpect(status().isNotFound())
@@ -82,14 +103,14 @@ class InvestidorResourceTest {
         mockMvc.perform(delete("/investidores/1"))
                 .andExpect(status().isNoContent());
 
-        org.mockito.Mockito.verify(service).excluir(1L);
+        org.mockito.Mockito.verify(service).excluir(1L, INVESTIDOR_ID);
     }
 
     @Test
     @DisplayName("@spec:AC-423 DELETE /investidores/{id} com id inexistente retorna 404")
     void deveRetornar404AoExcluirInvestidorInexistente() throws Exception {
         org.mockito.Mockito.doThrow(new RecursoNaoEncontradoException("AUT-003", "Investidor não encontrado: 99"))
-                .when(service).excluir(99L);
+                .when(service).excluir(99L, INVESTIDOR_ID);
 
         mockMvc.perform(delete("/investidores/99"))
                 .andExpect(status().isNotFound());

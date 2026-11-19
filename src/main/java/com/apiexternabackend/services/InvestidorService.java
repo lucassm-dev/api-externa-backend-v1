@@ -17,20 +17,24 @@ public class InvestidorService {
     private final InvestidorRepository repository;
     private final InvestidorMapper mapper;
 
-    public Page<InvestidorResponseDTO> listar(Pageable pageable) {
-        return repository.findAllByAtivoTrue(pageable).map(mapper::toResponse);
+    public Page<InvestidorResponseDTO> listar(Long investidorId, Pageable pageable) {
+        return repository.findByIdAndAtivoTrue(investidorId, pageable).map(mapper::toResponse);
     }
 
-    public void excluir(Long id) {
-        Investidor investidor = repository.findByIdAndAtivoTrue(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("AUT-003", "Investidor não encontrado: " + id));
+    public void excluir(Long id, Long investidorId) {
+        Investidor investidor = buscarDoProprio(id, investidorId);
         investidor.setAtivo(false);
         repository.save(investidor);
     }
 
-    public InvestidorResponseDTO buscarPorId(Long id) {
-        Investidor investidor = repository.findByIdAndAtivoTrue(id) // AC-504: excluído não vaza na busca individual
+    public InvestidorResponseDTO buscarPorId(Long id, Long investidorId) {
+        return mapper.toResponse(buscarDoProprio(id, investidorId));
+    }
+
+    // AC-504: excluído não vaza; AC-543/AC-544: conta de outro responde igual a inexistente (ASM-458)
+    private Investidor buscarDoProprio(Long id, Long investidorId) {
+        return repository.findByIdAndAtivoTrue(id)
+                .filter(investidor -> investidor.getId().equals(investidorId))
                 .orElseThrow(() -> new RecursoNaoEncontradoException("AUT-003", "Investidor não encontrado: " + id));
-        return mapper.toResponse(investidor);
     }
 }
