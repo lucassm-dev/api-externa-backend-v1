@@ -1,0 +1,78 @@
+{
+  "runId": "api-externa-backend-v1-spec-13-autorizacao-investidor-mwmy1t6d",
+  "feature": "spec-13-autorizacao-investidor",
+  "agent": "claude",
+  "modo": "sequencial",
+  "paralelizar": null,
+  "modeloForcado": null,
+  "esforcoForcado": null,
+  "geradoEm": "2026-11-19 02:41",
+  "branchTrabalho": "spec/spec-13-autorizacao-investidor",
+  "baseDir": ".spec/features/spec-13-autorizacao-investidor",
+  "specDir": ".spec",
+  "repoName": "api-externa-backend-v1",
+  "logsDir": "../onp-worktrees/api-externa-backend-v1-spec-13-autorizacao-investidor-logs",
+  "ondas": [],
+  "faixas": [],
+  "sequenciais": [
+    {
+      "id": "T-490",
+      "titulo": "Service e resource de investidor recebem o investidor logado",
+      "modelo": "claude-sonnet-5",
+      "esforco": "medium",
+      "arquivos": [
+        "src/main/java/com/apiexternabackend/services/InvestidorService.java",
+        "src/main/java/com/apiexternabackend/resources/InvestidorResource.java"
+      ],
+      "refs": [
+        "AC-542",
+        "AC-543",
+        "AC-544"
+      ]
+    },
+    {
+      "id": "T-491",
+      "titulo": "Testes de unidade de investidor na nova assinatura",
+      "modelo": "claude-sonnet-5",
+      "esforco": "medium",
+      "arquivos": [
+        "src/test/java/com/apiexternabackend/services/InvestidorServiceTest.java",
+        "src/test/java/com/apiexternabackend/resources/InvestidorResourceTest.java"
+      ],
+      "refs": [
+        "AC-542",
+        "AC-543",
+        "AC-544"
+      ]
+    },
+    {
+      "id": "T-492",
+      "titulo": "Teste de integração: investidor A contra investidor B",
+      "modelo": "claude-sonnet-5",
+      "esforco": "medium",
+      "arquivos": [
+        "src/test/java/com/apiexternabackend/resources/InvestidorAutorizacaoIntegrationTest.java"
+      ],
+      "refs": [
+        "AC-542",
+        "AC-543",
+        "AC-544"
+      ]
+    },
+    {
+      "id": "T-493",
+      "titulo": "Specs antigas apontam para esta",
+      "modelo": "claude-sonnet-5",
+      "esforco": "medium",
+      "arquivos": [
+        ".spec/features/investidor/spec.md",
+        ".spec/features/autenticacao-investidor/spec.md"
+      ],
+      "refs": [
+        "AC-542"
+      ]
+    }
+  ],
+  "concluidas": [],
+  "avisos": []
+}

@@ -176,7 +176,7 @@ para escalar sem sticky session e simplificar a infraestrutura.
 | ASM-003 | Cadastro guarda nome, e-mail, CPF (já existia) e agora senha | confirmada | CPF não estava no escopo literal do prompt SPEC-02, mas já é campo obrigatório único da entidade existente — mantido |
 | ASM-004 | Hash de senha com BCrypt (padrão do Spring Security) | confirmada | `BCryptPasswordEncoder`, custo padrão (10) |
 | ASM-411 | Carteira de outro investidor responde 404 (`CAR-001`), não 403 — esconde a existência em vez de recusar acesso a algo visível | confirmada | Evita enumeração: B não descobre que a carteira X existe e é de A. 403 fica reservado para autorização de papel/escopo (não usado nesta spec, só 1 papel existe) |
-| ASM-412 | `GET /investidores` (lista todos) não é restrito a "ver só a si mesmo" nesta spec | confirmada | Fora de escopo explícito — nome/e-mail não justificam a complexidade agora |
+| ASM-412 | `GET /investidores` (lista todos) não é restrito a "ver só a si mesmo" nesta spec | invalidada | A listagem expunha nome, e-mail e CPF de todos (issue #16); restringida à própria conta em `spec-13-autorizacao-investidor` (AC-542) |
 | ASM-413 | Biblioteca JWT: `io.jsonwebtoken:jjwt` (jjwt-api/impl/jackson) — leve, sem depender do módulo OAuth2 do Spring Security | confirmada | Menor footprint que `spring-security-oauth2-resource-server` para um caso stateless simples de token próprio |
 
 ## Perguntas em aberto

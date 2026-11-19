@@ -1,11 +1,13 @@
 package com.apiexternabackend.resources;
 
+import com.apiexternabackend.config.InvestidorPrincipal;
 import com.apiexternabackend.domains.dtos.InvestidorResponseDTO;
 import com.apiexternabackend.services.InvestidorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,18 +22,20 @@ public class InvestidorResource {
     private final InvestidorService service;
 
     @GetMapping
-    public ResponseEntity<Page<InvestidorResponseDTO>> listar(Pageable pageable) {
-        return ResponseEntity.ok(service.listar(pageable));
+    public ResponseEntity<Page<InvestidorResponseDTO>> listar(
+            Pageable pageable, @AuthenticationPrincipal InvestidorPrincipal principal) {
+        return ResponseEntity.ok(service.listar(principal.id(), pageable));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<InvestidorResponseDTO> buscarPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(service.buscarPorId(id));
+    public ResponseEntity<InvestidorResponseDTO> buscarPorId(
+            @PathVariable Long id, @AuthenticationPrincipal InvestidorPrincipal principal) {
+        return ResponseEntity.ok(service.buscarPorId(id, principal.id()));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable Long id) {
-        service.excluir(id);
+    public ResponseEntity<Void> excluir(@PathVariable Long id, @AuthenticationPrincipal InvestidorPrincipal principal) {
+        service.excluir(id, principal.id());
         return ResponseEntity.noContent().build();
     }
 }

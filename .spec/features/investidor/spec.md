@@ -20,27 +20,30 @@ cria a conta é sempre via `/auth/cadastro`.
 
 ### US-052 — Consultar investidor
 
-Como investidor autenticado, quero listar e buscar investidores, para
-localizar dados básicos (nome/e-mail) de uma conta.
+Como investidor autenticado, quero listar e buscar a minha conta, para
+consultar meus dados básicos (nome/e-mail). Contas de outros investidores
+não aparecem (ver `spec-13-autorizacao-investidor`).
 
 #### AC-054 — Listar investidores
 
 - **Dado** que existem investidores cadastrados e o requisitante está autenticado
 - **Quando** solicito a listagem
-- **Então** recebo os investidores de forma paginada, sem expor senha nem hash
+- **Então** recebo, de forma paginada, apenas a minha própria conta (AC-542),
+  sem expor senha nem hash
 
 #### AC-055 — Buscar investidor por id
 
 - **Dado** um investidor cadastrado e o requisitante autenticado
 - **Quando** busco pelo id dele
-- **Então** recebo seus dados; id inexistente retorna "não encontrado" (`AUT-003`)
+- **Então** recebo seus dados se o id for o meu; id inexistente ou de outro
+  investidor retorna "não encontrado" (`AUT-003`, AC-543)
 
 ## Fora de escopo
 
 - Cadastro de investidor — migrado para `autenticacao-investidor` (`POST /auth/cadastro`)
 - Senha, login, token — tudo em `autenticacao-investidor`
-- Restringir a listagem a "só a própria conta" — ver ASM-412 em `autenticacao-investidor`
-- Edição e exclusão de investidor pelo próprio dono (`DELETE /investidores/{id}` continua existindo sem checar se é o próprio investidor — fora de escopo desta spec)
+- Edição de investidor pelo próprio dono
+- Restrição de listagem, busca e exclusão à própria conta — feita em `spec-13-autorizacao-investidor`
 
 ## Suposições
 
