@@ -50,4 +50,4 @@ Recusada a opção de ADMIN ver carteiras: não serve a nenhuma tarefa dele, e q
 
 - ADR-002, ADR-011, ADR-012, ADR-014
 - PRD seção 15.1
-- `docs/aulas/AULA-14-CONTROLE-DE-ACESSO (1).md`
+- `docs/aulas/AULA-14-CONTROLE-DE-ACESSO.md`
