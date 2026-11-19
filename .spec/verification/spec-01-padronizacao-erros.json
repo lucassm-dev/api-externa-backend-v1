@@ -1,7 +1,7 @@
 {
   "feature": "spec-01-padronizacao-erros",
-  "timestamp": "2026-09-15T20:18:46.373Z",
-  "gitRev": "f2c31f3",
+  "timestamp": "2026-10-30T20:25:07.502Z",
+  "gitRev": "373b11e",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
@@ -38,6 +38,11 @@
       "method": "exitcode"
     },
     "AC-432": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-540": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
