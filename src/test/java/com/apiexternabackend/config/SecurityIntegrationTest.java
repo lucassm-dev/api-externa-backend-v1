@@ -63,6 +63,18 @@ class SecurityIntegrationTest {
     }
 
     @Test
+    @DisplayName("@spec:AC-541 Resposta 401 declara charset UTF-8 e a mensagem acentuada chega íntegra")
+    void deveRetornar401EmUtf8() throws Exception {
+        var resposta = mockMvc.perform(get("/carteiras"))
+                .andExpect(status().isUnauthorized())
+                .andReturn().getResponse();
+
+        org.assertj.core.api.Assertions.assertThat(resposta.getContentType()).containsIgnoringCase("charset=UTF-8");
+        org.assertj.core.api.Assertions.assertThat(new String(resposta.getContentAsByteArray(), StandardCharsets.UTF_8))
+                .contains("Token ausente ou inválido.");
+    }
+
+    @Test
     @DisplayName("@spec:AC-438 POST /auth/cadastro e /auth/login funcionam sem token")
     void deveFuncionarSemTokenNosEndpointsPublicos() throws Exception {
         String email = "publico" + System.nanoTime() + "@email.com";

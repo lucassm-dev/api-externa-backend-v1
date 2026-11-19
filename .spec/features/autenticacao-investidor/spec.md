@@ -145,6 +145,16 @@ para escalar sem sticky session e simplificar a infraestrutura.
 - **Quando** inspeciono a resposta HTTP e os logs da aplicação
 - **Então** a senha (texto puro ou hash) não aparece em nenhum dos dois
 
+#### AC-541 — Respostas 401 e 403 da segurança saem em UTF-8
+
+- **Dado** uma chamada recusada pela camada de segurança (sem token, token
+  inválido/expirado, ou acesso negado)
+- **Quando** a API responde 401 ou 403
+- **Então** o cabeçalho `Content-Type` declara `charset=UTF-8` e a mensagem
+  acentuada chega íntegra lida como UTF-8 (ex.: "Token ausente ou inválido.")
+  — antes saía em ISO-8859-1 e o acento quebrava no cliente (medido em
+  2026-10-30)
+
 ## Fora de escopo
 
 - Recuperação de senha, verificação de e-mail, 2FA
