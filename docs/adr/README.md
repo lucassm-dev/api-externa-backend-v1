@@ -15,3 +15,13 @@ restringe o que as telas podem prometer.
 | [008](008-preco-de-mercado-como-padrao-com-override-manual.md) | Preço de mercado por padrão, manual por opt-in | Formulário mostra preço e total antes de confirmar |
 | [009](009-contrato-unico-de-erro-com-codigo-por-dominio.md) | Contrato único de erro com código por domínio | Frontend trata por código, escreve os próprios textos |
 | [010](010-consultas-paginadas-sem-filtro-e-sem-serie-historica.md) | Consultas paginadas, sem filtro e sem série histórica | Extrato sem filtros no v1; nenhum gráfico de evolução |
+
+Decididas em 2026-11-18, implementação pendente:
+
+| ADR | Decisão | Impacto principal no frontend |
+|---|---|---|
+| [011](011-jwt-pelo-resource-server-do-spring.md) | JWT pelo resource server do Spring, token de 60 min | Login de novo a cada hora; Swagger só em dev |
+| [012](012-identidade-separada-do-perfil-de-investidor.md) | Identidade (`usuario`) separada do perfil (`investidor`) | Nenhum direto; base para admin e suporte |
+| [013](013-controle-de-acesso-por-papeis.md) | Papéis INVESTIDOR/ADMIN/SUPORTE, dono dos dados, bloqueio imediato | Menus por papel; indicador de papel no topo; admin sem tela de carteira |
+| [014](014-corretora-excluir-ou-descontinuar.md) | Corretora: excluir cadastro errado ou descontinuar | Aviso de corretora descontinuada; confirmação mostra carteiras afetadas |
+| [015](015-acao-entra-no-catalogo-pela-pesquisa.md) | Ação entra no catálogo pela pesquisa | Sem tela de cadastro de ação; pesquisa por ticker e mercado |
