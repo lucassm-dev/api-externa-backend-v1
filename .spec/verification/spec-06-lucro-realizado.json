@@ -1,7 +1,7 @@
 {
   "feature": "spec-06-lucro-realizado",
-  "timestamp": "2026-11-19T02:16:36.770Z",
-  "gitRev": "0ae2436",
+  "timestamp": "2026-11-19T02:59:20.915Z",
+  "gitRev": "11c0b7e",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
