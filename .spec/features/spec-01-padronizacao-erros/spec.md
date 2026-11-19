@@ -80,6 +80,16 @@ cada caso (esperar vs avisar o usuário).
 - **Então** a API responde 200 com a última cotação conhecida — este
   comportamento já existia (RN-Q05/AC-210 de `catalogo-acao`) e **não muda**
 
+#### AC-540 — Ticker inexistente na brapi com token configurado retorna EXT-008, não EXT-010
+
+- **Dado** que o token da brapi está configurado e a brapi responde HTTP 401
+  para um ticker que não existe (comportamento medido em 2026-10-30: ela não
+  devolve 404)
+- **Quando** a aplicação tenta buscar a cotação desse ticker
+- **Então** a exceção resultante é `RegraVioladaException` com código
+  `EXT-008` (422, ticker não encontrado) — nunca `EXT-010` (fonte
+  indisponível)
+
 ### US-414 — Catálogo de códigos internos de erro por domínio
 
 Como desenvolvedor consumindo a API (frontend), quero um catálogo documentado
@@ -124,6 +134,7 @@ depender do texto da mensagem.
 | ASM-408 | Exceção não mapeada (bug/erro de programação) retorna 500 genérico com código `SYS-001` e mensagem fixa em português, sem nenhum detalhe da exceção original — só o log do servidor tem o stacktrace | confirmada | Decorre direto de AC-428 (nunca vazar stacktrace); nenhum critério do prompt original cobria esse caminho, mas é exigido para o critério "nenhuma resposta com stacktrace" valer para qualquer erro, não só os mapeados |
 | ASM-409 | Erro de validação (`400`) usa um único código genérico `VAL-001` — o detalhe fica em `fieldErrors`, não em códigos por campo | confirmada | Simplicidade: um erro de validação já é auto-descritivo pela lista de campos; criar um código por campo inválido seria abstração sem uso real |
 | ASM-410 | Mensagem de 429 não informa o horário exato de renovação da cota — nem a brapi nem a Twelve Data expõem esse dado no corpo do erro | confirmada | O texto de AC-431/Q-MAP-06 original mencionava "informando quando a cota renova"; sem esse dado na fonte, a mensagem fica genérica ("tente novamente mais tarde") |
+| ASM-457 | Com token configurado, todo 401 da brapi é tratado como ticker não encontrado (EXT-008); um token expirado ou revogado também passaria a aparecer como EXT-008 | confirmada | A brapi devolve o mesmo código `INVALID_TOKEN` para ticker inexistente e para token inválido, só a mensagem muda (medido em 2026-10-30); diferenciar por texto de mensagem seria frágil. Lucas aceitou o risco em 2026-10-30 |
 
 ## Perguntas em aberto
 
