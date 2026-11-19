@@ -1,7 +1,7 @@
 # ADR-003: Ordem obrigatória de cadastro — corretora, carteira, ação, operação
 
 - **Data**: 2026-09-08
-- **Status**: Aceito
+- **Status**: Aceito — item 2 (ação exige carteira) substituído pelo [ADR-015](015-acao-entra-no-catalogo-pela-pesquisa.md)
 - **Decisores**: Lucas Mendes (dono do produto)
 - **Tags**: fluxo, onboarding, frontend
 
