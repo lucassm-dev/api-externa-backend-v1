@@ -1,7 +1,7 @@
 {
   "feature": "cadastro-corretora",
-  "timestamp": "2026-09-15T20:01:48.746Z",
-  "gitRev": "f2c31f3",
+  "timestamp": "2026-11-19T02:13:17.237Z",
+  "gitRev": "0ae2436",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

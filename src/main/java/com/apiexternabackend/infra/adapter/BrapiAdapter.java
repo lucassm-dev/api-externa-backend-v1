@@ -49,6 +49,13 @@ public class BrapiAdapter implements CotacaoAdapter {
             throw e;
         } catch (FeignException.NotFound e) {
             throw new RegraVioladaException("EXT-008", "Ticker não encontrado na fonte BR: " + ticker);
+        } catch (FeignException.Unauthorized e) {
+            // A brapi responde 401 (não 404) para ticker inexistente quando há token (ASM-457)
+            if (!token.isBlank()) {
+                throw new RegraVioladaException("EXT-008", "Ticker não encontrado na fonte BR: " + ticker);
+            }
+            throw new IntegracaoExternaException("EXT-010",
+                    "Fonte BR (brapi) indisponível. Tente novamente mais tarde.", false);
         } catch (FeignException e) {
             if (e.status() == 429) {
                 throw new IntegracaoExternaException("EXT-009",

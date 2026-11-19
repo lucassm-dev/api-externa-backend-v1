@@ -92,6 +92,32 @@ class BrapiAdapterTest {
     }
 
     @Test
+    @DisplayName("@spec:AC-540 Brapi retorna 401 com token configurado -> RegraVioladaException EXT-008, não EXT-010")
+    void naoAutorizadoComTokenMapeiaParaTickerNaoEncontrado() {
+        ReflectionTestUtils.setField(adapter, "token", "token-valido");
+        when(client.buscarCotacao(anyString(), any())).thenThrow(feignExceptionComStatus(401));
+
+        assertThatThrownBy(() -> adapter.buscarCotacao("XXXX9"))
+                .isInstanceOf(RegraVioladaException.class)
+                .satisfies(ex -> {
+                    RegraVioladaException e = (RegraVioladaException) ex;
+                    assertThat(e.getCodigo()).isEqualTo("EXT-008");
+                    assertThat(e.getHttpStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
+                });
+    }
+
+    @Test
+    @DisplayName("Brapi retorna 401 sem token configurado continua IntegracaoExternaException EXT-010")
+    void naoAutorizadoSemTokenContinuaExt010() {
+        ReflectionTestUtils.setField(adapter, "token", "");
+        when(client.buscarCotacao(anyString(), any())).thenThrow(feignExceptionComStatus(401));
+
+        assertThatThrownBy(() -> adapter.buscarCotacao("XXXX9"))
+                .isInstanceOf(IntegracaoExternaException.class)
+                .satisfies(ex -> assertThat(((IntegracaoExternaException) ex).getCodigo()).isEqualTo("EXT-010"));
+    }
+
+    @Test
     @DisplayName("Resultado vazio na Brapi continua RegraVioladaException EXT-008")
     void resultadoVazioContinuaRegraVioladaExt008() {
         ReflectionTestUtils.setField(adapter, "token", "");

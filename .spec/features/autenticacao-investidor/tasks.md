@@ -26,3 +26,8 @@
 - Refs: AC-006, AC-007, AC-438, AC-439, AC-440, AC-441, AC-442
 - Arquivos: src/test/java/com/apiexternabackend/config/SecurityIntegrationTest.java, docs/erros.md, docs/mapeamento-atual.html
 - Notas: depende de T-414..T-417 concluídas. `@SpringBootTest` + `@AutoConfigureMockMvc` real (não `@WebMvcTest`) para exercitar o `SecurityFilterChain` de verdade: 401 sem token, 200 com token válido, 401 token expirado (gerar token com `exp` no passado), isolamento entre dois investidores de verdade (não mock).
+
+## T-489 — Charset UTF-8 nas respostas 401/403 da segurança [concluida]
+- Refs: AC-541
+- Arquivos: src/main/java/com/apiexternabackend/config/JwtAuthenticationEntryPoint.java, src/main/java/com/apiexternabackend/config/JwtAccessDeniedHandler.java, src/test/java/com/apiexternabackend/config/SecurityIntegrationTest.java, src/test/java/com/apiexternabackend/config/JwtAccessDeniedHandlerTest.java
+- Notas: os handlers escrevem direto no servlet com `application/json` sem charset, e o servlet cai no padrão ISO-8859-1. As respostas do GlobalExceptionHandler já saíam em UTF-8.

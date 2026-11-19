@@ -37,3 +37,8 @@
 - Refs: AC-426, AC-427, AC-428, AC-433
 - Arquivos: docs/erros.md, src/test/java/com/apiexternabackend/resources/exceptions/GlobalExceptionHandlerTest.java
 - Notas: depende de T-408..T-412 concluídas (o catálogo documenta os códigos que elas introduzem). Teste novo cobre: payload padronizado genérico, validação com fieldErrors, exceção não mapeada → 500 com código SYS-001 sem stacktrace.
+
+## T-488 — BrapiAdapter: 401 com token configurado vira EXT-008 [concluida]
+- Refs: AC-540
+- Arquivos: src/main/java/com/apiexternabackend/infra/adapter/BrapiAdapter.java, src/test/java/com/apiexternabackend/infra/adapter/BrapiAdapterTest.java
+- Notas: sem token, 401 continua EXT-010 (a brapi exige token para tickers fora da lista gratuita, então ali é falta de configuração, não ticker inexistente).
