@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.Instant;
 
@@ -30,6 +31,12 @@ public class GlobalExceptionHandler {
         ex.getBindingResult().getFieldErrors()
                 .forEach(fe -> err.addFieldError(fe.getField(), fe.getDefaultMessage()));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+    }
+
+    // rota pública inexistente (ex.: Swagger fora do dev, AC-549) é 404, não erro interno
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<Void> handleRotaInexistente() {
+        return ResponseEntity.notFound().build();
     }
 
     @ExceptionHandler(Exception.class)
