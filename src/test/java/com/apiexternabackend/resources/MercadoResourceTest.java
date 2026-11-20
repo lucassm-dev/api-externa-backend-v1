@@ -39,7 +39,7 @@ class MercadoResourceTest {
     @BeforeEach
     void autenticarComoInvestidor() {
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
-                new InvestidorPrincipal(1L, "joao@email.com"), null,
+                new InvestidorPrincipal(1L), null,
                 List.of(new SimpleGrantedAuthority("ROLE_INVESTIDOR"))));
     }
 

@@ -56,7 +56,7 @@ class AcaoResourceTest {
     @BeforeEach
     void autenticarComoInvestidor() {
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
-                new InvestidorPrincipal(INVESTIDOR_ID, "joao@email.com"), null,
+                new InvestidorPrincipal(INVESTIDOR_ID), null,
                 List.of(new SimpleGrantedAuthority("ROLE_INVESTIDOR"))));
     }
 
