@@ -8,10 +8,10 @@
 - Esforço: alto
 - Notas: decisões 1 a 4 do Contexto. Uma tarefa só porque nada compila sem as outras partes: `Investidor` perde `email`/`senha` e todo teste que monta investidor quebra junto. Cadastro com `@Transactional` (AC-554). Bloqueado com senha certa → 403 `AUT-009` (AC-552); não havia exceção de negócio com 403, então nasceu `AcessoNegadoException` (o `GlobalExceptionHandler` já usa o status da exceção). Os testes de integração existentes passaram sem mudança, porque cadastram pela API.
 
-## T-499 — Testa a migração V17 num Postgres real [pendente]
+## T-499 — Testa a migração V17 num Postgres real [concluida]
 - Refs: AC-551, AC-556
 - Arquivos: pom.xml, src/test/java/com/apiexternabackend/config/MigracaoUsuarioPostgresTest.java
-- Notas: decisão 5. Testcontainers (escopo test) com Flyway até a V16, insere investidor com senha em BCrypt, migra para a V17 e faz login pelo `AutenticacaoService`. Depende da T-498.
+- Notas: decisão 5. Testcontainers (escopo test) com Flyway até a V16, insere investidor com senha em BCrypt, migra para a V17 e faz login pelo `AutenticacaoService`. Depende da T-498. `testcontainers.version` fixado em 1.21.4: a 1.19.8 do Boot 3.3.5 usa uma API do Docker que o Docker 29 recusa ("Could not find a valid Docker environment").
 
 ## T-500 — Specs antigas apontam para a spec-15 [pendente]
 - Refs: AC-505
