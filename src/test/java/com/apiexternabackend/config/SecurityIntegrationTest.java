@@ -13,8 +13,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +21,22 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
+import org.springframework.security.oauth2.jwt.JwsHeader;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.Base64;
+import java.util.List;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -51,8 +58,10 @@ class SecurityIntegrationTest {
     @Autowired private ObjectMapper objectMapper;
     @Autowired private CorretoraRepository corretoraRepository;
 
-    @Value("${jwt.secret}")
-    private String jwtSecret;
+    @Autowired private JwtEncoder jwtEncoder;
+
+    @Value("${jwt.issuer}")
+    private String emissor;
 
     @Test
     @DisplayName("@spec:AC-439 Endpoint protegido sem token retorna 401 com código AUT-005")
@@ -164,32 +173,114 @@ class SecurityIntegrationTest {
         org.assertj.core.api.Assertions.assertThat(vazouSenha).isFalse();
     }
 
+    @Test
+    @DisplayName("@spec:AC-545 Token traz só sub, iss, iat, exp e authorities, sem e-mail nem CPF")
+    void tokenNaoLevaDadoPessoal() throws Exception {
+        String email = "semdado" + System.nanoTime() + "@email.com";
+        Map<String, Object> claims = payload(cadastrarELogar(email));
+
+        assertThat(claims).containsOnlyKeys("sub", "iss", "iat", "exp", "authorities");
+        assertThat(claims.toString()).doesNotContain(email);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-546 Token vale 60 minutos por padrão e o exp bate com a expiração informada")
+    void tokenValeSessentaMinutos() throws Exception {
+        String email = "validade" + System.nanoTime() + "@email.com";
+        cadastrar(email);
+        String respostaJson = login(email);
+        AuthTokenResponseDTO resposta = objectMapper.readValue(respostaJson, AuthTokenResponseDTO.class);
+        Map<String, Object> claims = payload(resposta.getToken());
+
+        long iat = ((Number) claims.get("iat")).longValue();
+        long exp = ((Number) claims.get("exp")).longValue();
+        assertThat(exp - iat).isEqualTo(3600);
+        assertThat(resposta.getExpiraEm().getEpochSecond()).isEqualTo(exp);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-547 Token adulterado depois de assinado retorna 401 AUT-005")
+    void tokenAdulteradoEhRecusado() throws Exception {
+        String[] partes = cadastrarELogar("adulterado" + System.nanoTime() + "@email.com").split("\\.");
+        Map<String, Object> claims = payload(String.join(".", partes));
+        claims.put("sub", "999999");
+        String payloadAlterado = Base64.getUrlEncoder().withoutPadding()
+                .encodeToString(objectMapper.writeValueAsBytes(claims));
+        String adulterado = partes[0] + "." + payloadAlterado + "." + partes[2];
+
+        mockMvc.perform(get("/carteiras").header("Authorization", "Bearer " + adulterado))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.codigo").value("AUT-005"));
+    }
+
+    @Test
+    @DisplayName("@spec:AC-548 Token com a mesma chave mas outro emissor retorna 401 AUT-005")
+    void tokenDeOutroEmissorEhRecusado() throws Exception {
+        Instant agora = Instant.now();
+        String token = gerarToken("outro-sistema", agora, agora.plusSeconds(3600));
+
+        mockMvc.perform(get("/carteiras").header("Authorization", "Bearer " + token))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.codigo").value("AUT-005"));
+    }
+
+    @Test
+    @DisplayName("@spec:AC-549 Fora do perfil dev o Swagger não responde a documentação")
+    void swaggerForaDoDevNaoResponde() throws Exception {
+        for (String rota : List.of("/swagger-ui.html", "/v3/api-docs")) {
+            int status = mockMvc.perform(get(rota)).andReturn().getResponse().getStatus();
+            assertThat(status).as(rota).isIn(401, 404);
+        }
+    }
+
+    @Test
+    @DisplayName("@spec:AC-550 Classes da jjwt não estão no classpath")
+    void jjwtForaDoClasspath() {
+        assertThatThrownBy(() -> Class.forName("io.jsonwebtoken.Jwts"))
+                .isInstanceOf(ClassNotFoundException.class);
+    }
+
     private String cadastrarELogar(String email) throws Exception {
+        cadastrar(email);
+        return objectMapper.readValue(login(email), AuthTokenResponseDTO.class).getToken();
+    }
+
+    private void cadastrar(String email) throws Exception {
         mockMvc.perform(post("/auth/cadastro")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
                                 new AuthCadastroRequestDTO("Investidor Teste", email, cpfUnico(), "senha123"))))
                 .andExpect(status().isCreated());
+    }
 
-        String respostaJson = mockMvc.perform(post("/auth/login")
+    private String login(String email) throws Exception {
+        return mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new AuthLoginRequestDTO(email, "senha123"))))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
-
-        return objectMapper.readValue(respostaJson, AuthTokenResponseDTO.class).getToken();
     }
 
     private String gerarTokenExpirado() {
-        SecretKey chave = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
         Instant passado = Instant.now().minusSeconds(3600);
-        return Jwts.builder()
+        return gerarToken(emissor, passado.minusSeconds(60), passado);
+    }
+
+    private String gerarToken(String iss, Instant emitidoEm, Instant expiraEm) {
+        JwtClaimsSet claims = JwtClaimsSet.builder()
                 .subject("1")
-                .claim("email", "expirado@email.com")
-                .issuedAt(Date.from(passado.minusSeconds(60)))
-                .expiration(Date.from(passado))
-                .signWith(chave)
-                .compact();
+                .issuer(iss)
+                .issuedAt(emitidoEm)
+                .expiresAt(expiraEm)
+                .claim("authorities", List.of("ROLE_INVESTIDOR"))
+                .build();
+        return jwtEncoder.encode(JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims))
+                .getTokenValue();
+    }
+
+    private Map<String, Object> payload(String token) throws Exception {
+        byte[] json = Base64.getUrlDecoder().decode(token.split("\\.")[1]);
+        return objectMapper.readValue(json, Map.class);
     }
 
     private String cpfUnico() {
