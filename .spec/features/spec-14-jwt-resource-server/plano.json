@@ -1,0 +1,100 @@
+{
+  "runId": "api-externa-backend-v1-spec-14-jwt-resource-server-mwo7waae",
+  "feature": "spec-14-jwt-resource-server",
+  "agent": "claude",
+  "modo": "sequencial",
+  "paralelizar": null,
+  "modeloForcado": null,
+  "esforcoForcado": null,
+  "geradoEm": "2026-11-20 00:04",
+  "branchTrabalho": "spec/spec-14-jwt-resource-server",
+  "baseDir": ".spec/features/spec-14-jwt-resource-server",
+  "specDir": ".spec",
+  "repoName": "api-externa-backend-v1",
+  "logsDir": "../onp-worktrees/api-externa-backend-v1-spec-14-jwt-resource-server-logs",
+  "ondas": [],
+  "faixas": [],
+  "sequenciais": [
+    {
+      "id": "T-494",
+      "titulo": "Migra emissão e leitura do token para o resource server",
+      "modelo": "claude-sonnet-5",
+      "esforco": "medium",
+      "arquivos": [
+        "pom.xml",
+        "src/main/java/com/apiexternabackend/config/SecurityConfig.java",
+        "src/main/java/com/apiexternabackend/config/JwtService.java",
+        "src/main/java/com/apiexternabackend/config/InvestidorPrincipal.java",
+        "src/main/java/com/apiexternabackend/config/JwtAuthenticationEntryPoint.java",
+        "src/main/java/com/apiexternabackend/services/AutenticacaoService.java",
+        "src/main/resources/application.properties",
+        "src/main/resources/application-dev.properties",
+        "src/main/resources/application-prod.properties",
+        "src/main/resources/application-test.properties",
+        "src/test/java/com/apiexternabackend/services/AutenticacaoServiceTest.java",
+        "src/test/java/com/apiexternabackend/resources/AcaoResourceTest.java",
+        "src/test/java/com/apiexternabackend/resources/CarteiraResourceTest.java",
+        "src/test/java/com/apiexternabackend/resources/InvestidorResourceTest.java",
+        "src/test/java/com/apiexternabackend/resources/MercadoResourceTest.java",
+        "src/test/java/com/apiexternabackend/resources/OperacaoResourceTest.java",
+        "src/test/java/com/apiexternabackend/resources/exceptions/GlobalExceptionHandlerTest.java"
+      ],
+      "refs": [
+        "AC-545",
+        "AC-546",
+        "AC-547",
+        "AC-548",
+        "AC-550",
+        "AC-439",
+        "AC-440",
+        "AC-441"
+      ]
+    },
+    {
+      "id": "T-495",
+      "titulo": "Swagger só no perfil dev",
+      "modelo": "claude-sonnet-5",
+      "esforco": "medium",
+      "arquivos": [
+        "src/main/resources/application.properties",
+        "src/main/resources/application-dev.properties"
+      ],
+      "refs": [
+        "AC-549"
+      ]
+    },
+    {
+      "id": "T-496",
+      "titulo": "Testes de integração do token novo",
+      "modelo": "claude-sonnet-5",
+      "esforco": "medium",
+      "arquivos": [
+        "src/test/java/com/apiexternabackend/config/SecurityIntegrationTest.java"
+      ],
+      "refs": [
+        "AC-545",
+        "AC-546",
+        "AC-547",
+        "AC-548",
+        "AC-549",
+        "AC-550",
+        "AC-441"
+      ]
+    },
+    {
+      "id": "T-497",
+      "titulo": "Specs e exemplo de ambiente acompanham a migração",
+      "modelo": "claude-sonnet-5",
+      "esforco": "medium",
+      "arquivos": [
+        ".spec/features/autenticacao-investidor/spec.md",
+        ".env.example"
+      ],
+      "refs": [
+        "AC-546"
+      ]
+    }
+  ],
+  "concluidas": [],
+  "avisos": []
+}

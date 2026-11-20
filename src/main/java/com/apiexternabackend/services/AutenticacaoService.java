@@ -13,6 +13,7 @@ import com.apiexternabackend.resources.exceptions.RecursoDuplicadoException;
 import com.apiexternabackend.resources.exceptions.RegraVioladaException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -61,7 +62,7 @@ public class AutenticacaoService {
                 .filter(i -> passwordEncoder.matches(dto.getSenha(), i.getSenha()))
                 .orElseThrow(() -> new CredenciaisInvalidasException("AUT-004", MENSAGEM_LOGIN_INVALIDO));
 
-        String token = jwtService.gerar(investidor.getId(), investidor.getEmail());
-        return new AuthTokenResponseDTO(token, "Bearer", jwtService.expiracaoDe(token));
+        Jwt token = jwtService.gerar(investidor.getId());
+        return new AuthTokenResponseDTO(token.getTokenValue(), "Bearer", token.getExpiresAt());
     }
 }

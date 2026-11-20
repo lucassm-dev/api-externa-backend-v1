@@ -1,7 +1,7 @@
 {
   "feature": "spec-04-preco-editavel",
-  "timestamp": "2026-11-19T02:58:44.126Z",
-  "gitRev": "11c0b7e",
+  "timestamp": "2026-11-20T16:03:27.310Z",
+  "gitRev": "b0e0ef0",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

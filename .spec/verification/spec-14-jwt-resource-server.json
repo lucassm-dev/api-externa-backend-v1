@@ -1,0 +1,42 @@
+{
+  "feature": "spec-14-jwt-resource-server",
+  "timestamp": "2026-11-20T16:09:48.266Z",
+  "gitRev": "b0e0ef0",
+  "command": "./mvnw -q test",
+  "reporter": "exitcode",
+  "exitCode": 0,
+  "testsParsed": 0,
+  "results": {
+    "AC-545": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-546": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-547": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-548": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-549": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-550": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    }
+  },
+  "principles": {}
+}

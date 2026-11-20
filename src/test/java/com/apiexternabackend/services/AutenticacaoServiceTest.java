@@ -1,6 +1,7 @@
 package com.apiexternabackend.services;
 
 import com.apiexternabackend.config.JwtService;
+import org.springframework.security.oauth2.jwt.Jwt;
 import com.apiexternabackend.domains.Investidor;
 import com.apiexternabackend.domains.dtos.AuthCadastroRequestDTO;
 import com.apiexternabackend.domains.dtos.AuthLoginRequestDTO;
@@ -127,9 +128,8 @@ class AutenticacaoServiceTest {
     void deveAutenticarComCredenciaisCorretas() {
         when(repository.findByEmailAndAtivoTrue("joao@email.com")).thenReturn(Optional.of(investidor));
         when(passwordEncoder.matches("senha123", "hash-bcrypt")).thenReturn(true);
-        when(jwtService.gerar(1L, "joao@email.com")).thenReturn("token-jwt-ficticio");
-        Instant expiracao = Instant.now().plusSeconds(86400);
-        when(jwtService.expiracaoDe("token-jwt-ficticio")).thenReturn(expiracao);
+        Instant expiracao = Instant.now().plusSeconds(3600);
+        when(jwtService.gerar(1L)).thenReturn(jwt("token-jwt-ficticio", expiracao));
 
         AuthTokenResponseDTO result = service.login(new AuthLoginRequestDTO("joao@email.com", "senha123"));
 
@@ -220,12 +220,16 @@ class AutenticacaoServiceTest {
         Investidor ativo = new Investidor(2L, "Novo Dono", "joao@email.com", "99988877766", "hash-novo", LocalDateTime.now(), true);
         when(repository.findByEmailAndAtivoTrue("joao@email.com")).thenReturn(Optional.of(ativo));
         when(passwordEncoder.matches("senha123", "hash-novo")).thenReturn(true);
-        when(jwtService.gerar(2L, "joao@email.com")).thenReturn("token-do-ativo");
-        when(jwtService.expiracaoDe("token-do-ativo")).thenReturn(Instant.now().plusSeconds(86400));
+        when(jwtService.gerar(2L)).thenReturn(jwt("token-do-ativo", Instant.now().plusSeconds(3600)));
 
         AuthTokenResponseDTO result = service.login(new AuthLoginRequestDTO("joao@email.com", "senha123"));
 
         assertThat(result.getToken()).isEqualTo("token-do-ativo");
-        verify(jwtService).gerar(2L, "joao@email.com");
+        verify(jwtService).gerar(2L);
+    }
+
+    private static Jwt jwt(String valor, Instant expiracao) {
+        return Jwt.withTokenValue(valor).header("alg", "HS256").subject("1")
+                .issuedAt(expiracao.minusSeconds(3600)).expiresAt(expiracao).build();
     }
 }
