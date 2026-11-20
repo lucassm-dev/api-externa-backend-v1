@@ -1,0 +1,89 @@
+{
+  "runId": "api-externa-backend-v1-spec-15-identidade-usuario-mwpl0m2m",
+  "feature": "spec-15-identidade-usuario",
+  "agent": "claude",
+  "modo": "sequencial",
+  "paralelizar": null,
+  "modeloForcado": null,
+  "esforcoForcado": null,
+  "geradoEm": "2026-11-20 22:59",
+  "branchTrabalho": "spec/spec-15-identidade-usuario",
+  "baseDir": ".spec/features/spec-15-identidade-usuario",
+  "specDir": ".spec",
+  "repoName": "api-externa-backend-v1",
+  "logsDir": "../onp-worktrees/api-externa-backend-v1-spec-15-identidade-usuario-logs",
+  "ondas": [],
+  "faixas": [],
+  "sequenciais": [
+    {
+      "id": "T-498",
+      "titulo": "Separa usuario de investidor no domínio, na migração e no login",
+      "modelo": "claude-sonnet-5",
+      "esforco": "high",
+      "arquivos": [
+        "src/main/resources/db/migration/V17__usuario_separado_do_investidor.sql",
+        "src/main/java/com/apiexternabackend/domains/Usuario.java",
+        "src/main/java/com/apiexternabackend/domains/enums/Papel.java",
+        "src/main/java/com/apiexternabackend/domains/enums/SituacaoUsuario.java",
+        "src/main/java/com/apiexternabackend/repositories/UsuarioRepository.java",
+        "src/main/java/com/apiexternabackend/domains/Investidor.java",
+        "src/main/java/com/apiexternabackend/repositories/InvestidorRepository.java",
+        "src/main/java/com/apiexternabackend/services/AutenticacaoService.java",
+        "src/main/java/com/apiexternabackend/services/InvestidorService.java",
+        "src/main/java/com/apiexternabackend/mappers/InvestidorMapper.java",
+        "src/test/java/com/apiexternabackend/config/IdentidadeUsuarioIntegrationTest.java",
+        "src/test/java/com/apiexternabackend/services/AutenticacaoServiceTest.java",
+        "src/test/java/com/apiexternabackend/services/InvestidorServiceTest.java",
+        "src/test/java/com/apiexternabackend/resources/AuthResourceTest.java",
+        "src/test/java/com/apiexternabackend/resources/InvestidorResourceTest.java",
+        "src/test/java/com/apiexternabackend/resources/InvestidorAutorizacaoIntegrationTest.java",
+        "src/test/java/com/apiexternabackend/config/SecurityIntegrationTest.java"
+      ],
+      "refs": [
+        "US-447",
+        "US-448",
+        "US-449",
+        "US-450",
+        "AC-552",
+        "AC-553",
+        "AC-554",
+        "AC-555",
+        "AC-557",
+        "AC-503",
+        "AC-505",
+        "AC-506",
+        "AC-507",
+        "AC-508"
+      ]
+    },
+    {
+      "id": "T-499",
+      "titulo": "Testa a migração V17 num Postgres real",
+      "modelo": "claude-sonnet-5",
+      "esforco": "medium",
+      "arquivos": [
+        "pom.xml",
+        "src/test/java/com/apiexternabackend/config/MigracaoUsuarioPostgresTest.java"
+      ],
+      "refs": [
+        "AC-551",
+        "AC-556"
+      ]
+    },
+    {
+      "id": "T-500",
+      "titulo": "Specs antigas apontam para a spec-15",
+      "modelo": "claude-sonnet-5",
+      "esforco": "medium",
+      "arquivos": [
+        ".spec/features/spec-10-vazamento-investidor-inativo/spec.md",
+        ".spec/features/autenticacao-investidor/spec.md"
+      ],
+      "refs": [
+        "AC-505"
+      ]
+    }
+  ],
+  "concluidas": [],
+  "avisos": []
+}

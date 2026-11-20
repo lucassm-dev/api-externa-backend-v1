@@ -2,12 +2,17 @@ package com.apiexternabackend.services;
 
 import com.apiexternabackend.config.JwtService;
 import com.apiexternabackend.domains.Investidor;
+import com.apiexternabackend.domains.Usuario;
 import com.apiexternabackend.domains.dtos.AuthCadastroRequestDTO;
 import com.apiexternabackend.domains.dtos.AuthLoginRequestDTO;
 import com.apiexternabackend.domains.dtos.AuthTokenResponseDTO;
 import com.apiexternabackend.domains.dtos.InvestidorResponseDTO;
+import com.apiexternabackend.domains.enums.Papel;
+import com.apiexternabackend.domains.enums.SituacaoUsuario;
 import com.apiexternabackend.mappers.InvestidorMapper;
 import com.apiexternabackend.repositories.InvestidorRepository;
+import com.apiexternabackend.repositories.UsuarioRepository;
+import com.apiexternabackend.resources.exceptions.AcessoNegadoException;
 import com.apiexternabackend.resources.exceptions.CredenciaisInvalidasException;
 import com.apiexternabackend.resources.exceptions.RecursoDuplicadoException;
 import com.apiexternabackend.resources.exceptions.RegraVioladaException;
@@ -15,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.regex.Pattern;
@@ -27,14 +33,16 @@ public class AutenticacaoService {
     private static final String MENSAGEM_LOGIN_INVALIDO = "E-mail ou senha inválidos.";
 
     private final InvestidorRepository repository;
+    private final UsuarioRepository usuarioRepository;
     private final InvestidorMapper mapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
+    @Transactional
     public InvestidorResponseDTO cadastrar(AuthCadastroRequestDTO dto) {
-        // AC-505/AC-506/AC-507: duplicidade só entre investidores ATIVOS — e-mail e CPF de
+        // AC-505/AC-506/AC-507: duplicidade só entre contas não excluídas — e-mail e CPF de
         // conta excluída podem ser reaproveitados, igual a ticker e CNPJ desde a SPEC-03
-        if (repository.existsByEmailAndAtivoTrue(dto.getEmail())) {
+        if (usuarioRepository.existsByEmailAndSituacaoNot(dto.getEmail(), SituacaoUsuario.EXCLUIDO)) {
             throw new RecursoDuplicadoException("AUT-001", "E-mail já está em uso: " + dto.getEmail());
         }
         if (repository.existsByCpfAndAtivoTrue(dto.getCpf())) {
@@ -45,24 +53,34 @@ public class AutenticacaoService {
                     "Senha deve ter no mínimo 8 caracteres, com pelo menos uma letra e um número.");
         }
 
+        // AC-553/AC-554: usuario e investidor na mesma transação
+        Usuario usuario = usuarioRepository.save(new Usuario(null, dto.getEmail(),
+                passwordEncoder.encode(dto.getSenha()), Papel.INVESTIDOR, SituacaoUsuario.ATIVO));
+
         Investidor investidor = new Investidor();
+        investidor.setUsuario(usuario);
         investidor.setNome(dto.getNome());
-        investidor.setEmail(dto.getEmail());
         investidor.setCpf(dto.getCpf());
-        investidor.setSenha(passwordEncoder.encode(dto.getSenha()));
         investidor.setCriadoEm(LocalDateTime.now());
 
         return mapper.toResponse(repository.save(investidor));
     }
 
     public AuthTokenResponseDTO login(AuthLoginRequestDTO dto) {
-        // AC-503/AC-508: só investidor ativo faz login. Filtrar por ativo também é o que
-        // permite reaproveitar e-mail (AC-505) sem a consulta encontrar duas linhas.
-        Investidor investidor = repository.findByEmailAndAtivoTrue(dto.getEmail())
-                .filter(i -> passwordEncoder.matches(dto.getSenha(), i.getSenha()))
+        // AC-503/AC-508: conta excluída não entra. Ignorar excluídos também é o que permite
+        // reaproveitar e-mail (AC-505) sem a consulta encontrar duas linhas.
+        // ASM-466: até a #19 o token só serve a investidor, então ADMIN cai na mensagem genérica.
+        Usuario usuario = usuarioRepository.findByEmailAndSituacaoNot(dto.getEmail(), SituacaoUsuario.EXCLUIDO)
+                .filter(u -> u.getPapel() == Papel.INVESTIDOR)
+                .filter(u -> passwordEncoder.matches(dto.getSenha(), u.getSenha()))
                 .orElseThrow(() -> new CredenciaisInvalidasException("AUT-004", MENSAGEM_LOGIN_INVALIDO));
 
-        Jwt token = jwtService.gerar(investidor.getId());
+        // AC-552: o bloqueio só é revelado a quem acertou a senha
+        if (usuario.getSituacao() == SituacaoUsuario.BLOQUEADO) {
+            throw new AcessoNegadoException("AUT-009", "Conta bloqueada. Procure o suporte.");
+        }
+
+        Jwt token = jwtService.gerar(usuario.getId());
         return new AuthTokenResponseDTO(token.getTokenValue(), "Bearer", token.getExpiresAt());
     }
 }

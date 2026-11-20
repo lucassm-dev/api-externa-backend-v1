@@ -3,12 +3,17 @@ package com.apiexternabackend.services;
 import com.apiexternabackend.config.JwtService;
 import org.springframework.security.oauth2.jwt.Jwt;
 import com.apiexternabackend.domains.Investidor;
+import com.apiexternabackend.domains.Usuario;
+import com.apiexternabackend.domains.enums.Papel;
+import com.apiexternabackend.domains.enums.SituacaoUsuario;
 import com.apiexternabackend.domains.dtos.AuthCadastroRequestDTO;
 import com.apiexternabackend.domains.dtos.AuthLoginRequestDTO;
 import com.apiexternabackend.domains.dtos.AuthTokenResponseDTO;
 import com.apiexternabackend.domains.dtos.InvestidorResponseDTO;
 import com.apiexternabackend.mappers.InvestidorMapper;
 import com.apiexternabackend.repositories.InvestidorRepository;
+import com.apiexternabackend.repositories.UsuarioRepository;
+import com.apiexternabackend.resources.exceptions.AcessoNegadoException;
 import com.apiexternabackend.resources.exceptions.CredenciaisInvalidasException;
 import com.apiexternabackend.resources.exceptions.RecursoDuplicadoException;
 import com.apiexternabackend.resources.exceptions.RegraVioladaException;
@@ -38,6 +43,7 @@ import static org.mockito.Mockito.when;
 class AutenticacaoServiceTest {
 
     @Mock private InvestidorRepository repository;
+    @Mock private UsuarioRepository usuarioRepository;
     @Mock private InvestidorMapper mapper;
     @Mock private PasswordEncoder passwordEncoder;
     @Mock private JwtService jwtService;
@@ -45,20 +51,23 @@ class AutenticacaoServiceTest {
     @InjectMocks
     private AutenticacaoService service;
 
+    private Usuario usuario;
     private Investidor investidor;
 
     @BeforeEach
     void setUp() {
-        investidor = new Investidor(1L, "João Silva", "joao@email.com", "12345678901", "hash-bcrypt", LocalDateTime.now(), true);
+        usuario = new Usuario(1L, "joao@email.com", "hash-bcrypt", Papel.INVESTIDOR, SituacaoUsuario.ATIVO);
+        investidor = new Investidor(1L, usuario, "João Silva", "12345678901", LocalDateTime.now(), true);
     }
 
     @Test
     @DisplayName("@spec:AC-001 Cadastro com credenciais válidas cria a conta")
     void deveCadastrarComCredenciaisValidas() {
         AuthCadastroRequestDTO dto = new AuthCadastroRequestDTO("João Silva", "joao@email.com", "12345678901", "senha123");
-        when(repository.existsByEmailAndAtivoTrue(dto.getEmail())).thenReturn(false);
+        when(usuarioRepository.existsByEmailAndSituacaoNot(dto.getEmail(), SituacaoUsuario.EXCLUIDO)).thenReturn(false);
         when(repository.existsByCpfAndAtivoTrue(dto.getCpf())).thenReturn(false);
         when(passwordEncoder.encode("senha123")).thenReturn("hash-bcrypt");
+        when(usuarioRepository.save(any())).thenReturn(usuario);
         when(repository.save(any())).thenReturn(investidor);
         when(mapper.toResponse(investidor)).thenReturn(new InvestidorResponseDTO(1L, "João Silva", "joao@email.com"));
 
@@ -72,7 +81,7 @@ class AutenticacaoServiceTest {
     @DisplayName("@spec:AC-002 Identificador de login (e-mail) é único")
     void deveRejeitarLoginDuplicado() {
         AuthCadastroRequestDTO dto = new AuthCadastroRequestDTO("João", "joao@email.com", "12345678901", "senha123");
-        when(repository.existsByEmailAndAtivoTrue(dto.getEmail())).thenReturn(true);
+        when(usuarioRepository.existsByEmailAndSituacaoNot(dto.getEmail(), SituacaoUsuario.EXCLUIDO)).thenReturn(true);
 
         assertThatThrownBy(() -> service.cadastrar(dto))
                 .isInstanceOf(RecursoDuplicadoException.class)
@@ -83,16 +92,17 @@ class AutenticacaoServiceTest {
     @DisplayName("@spec:AC-003 Senha nunca é guardada em texto puro — é o hash do encoder que é persistido")
     void deveSalvarSenhaComoHash() {
         AuthCadastroRequestDTO dto = new AuthCadastroRequestDTO("João", "joao@email.com", "12345678901", "senha123");
-        when(repository.existsByEmailAndAtivoTrue(dto.getEmail())).thenReturn(false);
+        when(usuarioRepository.existsByEmailAndSituacaoNot(dto.getEmail(), SituacaoUsuario.EXCLUIDO)).thenReturn(false);
         when(repository.existsByCpfAndAtivoTrue(dto.getCpf())).thenReturn(false);
         when(passwordEncoder.encode("senha123")).thenReturn("$2a$10$hashFicticio");
+        when(usuarioRepository.save(any())).thenReturn(usuario);
         when(repository.save(any())).thenReturn(investidor);
         when(mapper.toResponse(investidor)).thenReturn(new InvestidorResponseDTO(1L, "João", "joao@email.com"));
 
         service.cadastrar(dto);
 
-        ArgumentCaptor<Investidor> captor = ArgumentCaptor.forClass(Investidor.class);
-        verify(repository).save(captor.capture());
+        ArgumentCaptor<Usuario> captor = ArgumentCaptor.forClass(Usuario.class);
+        verify(usuarioRepository).save(captor.capture());
         assertThat(captor.getValue().getSenha()).isEqualTo("$2a$10$hashFicticio");
         assertThat(captor.getValue().getSenha()).isNotEqualTo("senha123");
     }
@@ -101,7 +111,7 @@ class AutenticacaoServiceTest {
     @DisplayName("@spec:AC-435 CPF duplicado é recusado")
     void deveRejeitarCpfDuplicado() {
         AuthCadastroRequestDTO dto = new AuthCadastroRequestDTO("João", "joao@email.com", "12345678901", "senha123");
-        when(repository.existsByEmailAndAtivoTrue(dto.getEmail())).thenReturn(false);
+        when(usuarioRepository.existsByEmailAndSituacaoNot(dto.getEmail(), SituacaoUsuario.EXCLUIDO)).thenReturn(false);
         when(repository.existsByCpfAndAtivoTrue(dto.getCpf())).thenReturn(true);
 
         assertThatThrownBy(() -> service.cadastrar(dto))
@@ -112,7 +122,7 @@ class AutenticacaoServiceTest {
     @Test
     @DisplayName("@spec:AC-436 Senha fora da política mínima (8+, letra e número) é recusada")
     void deveRejeitarSenhaForaDaPolitica() {
-        when(repository.existsByEmailAndAtivoTrue(anyString())).thenReturn(false);
+        when(usuarioRepository.existsByEmailAndSituacaoNot(anyString(), eq(SituacaoUsuario.EXCLUIDO))).thenReturn(false);
         when(repository.existsByCpfAndAtivoTrue(anyString())).thenReturn(false);
 
         assertThatThrownBy(() -> service.cadastrar(new AuthCadastroRequestDTO("João", "joao@email.com", "12345678901", "curta1")))
@@ -126,7 +136,7 @@ class AutenticacaoServiceTest {
     @Test
     @DisplayName("@spec:AC-004 Login com credenciais corretas autentica")
     void deveAutenticarComCredenciaisCorretas() {
-        when(repository.findByEmailAndAtivoTrue("joao@email.com")).thenReturn(Optional.of(investidor));
+        when(usuarioRepository.findByEmailAndSituacaoNot("joao@email.com", SituacaoUsuario.EXCLUIDO)).thenReturn(Optional.of(usuario));
         when(passwordEncoder.matches("senha123", "hash-bcrypt")).thenReturn(true);
         Instant expiracao = Instant.now().plusSeconds(3600);
         when(jwtService.gerar(1L)).thenReturn(jwt("token-jwt-ficticio", expiracao));
@@ -141,7 +151,7 @@ class AutenticacaoServiceTest {
     @Test
     @DisplayName("@spec:AC-005 Login com senha incorreta é recusado com mensagem genérica")
     void deveRecusarSenhaIncorreta() {
-        when(repository.findByEmailAndAtivoTrue("joao@email.com")).thenReturn(Optional.of(investidor));
+        when(usuarioRepository.findByEmailAndSituacaoNot("joao@email.com", SituacaoUsuario.EXCLUIDO)).thenReturn(Optional.of(usuario));
         when(passwordEncoder.matches("senha-errada", "hash-bcrypt")).thenReturn(false);
 
         assertThatThrownBy(() -> service.login(new AuthLoginRequestDTO("joao@email.com", "senha-errada")))
@@ -152,7 +162,7 @@ class AutenticacaoServiceTest {
     @Test
     @DisplayName("@spec:AC-005 Login com e-mail inexistente é recusado com a MESMA mensagem genérica")
     void deveRecusarEmailInexistenteComMensagemIdentica() {
-        when(repository.findByEmailAndAtivoTrue("naoexiste@email.com")).thenReturn(Optional.empty());
+        when(usuarioRepository.findByEmailAndSituacaoNot("naoexiste@email.com", SituacaoUsuario.EXCLUIDO)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.login(new AuthLoginRequestDTO("naoexiste@email.com", "qualquer123")))
                 .isInstanceOf(CredenciaisInvalidasException.class)
@@ -163,7 +173,7 @@ class AutenticacaoServiceTest {
     @DisplayName("@spec:AC-503 Login de investidor excluído é recusado com a mesma mensagem genérica")
     void deveRecusarLoginDeInvestidorExcluido() {
         // investidor inativo não aparece em findByEmailAndAtivoTrue — mesmo caminho de "não existe"
-        when(repository.findByEmailAndAtivoTrue("joao@email.com")).thenReturn(Optional.empty());
+        when(usuarioRepository.findByEmailAndSituacaoNot("joao@email.com", SituacaoUsuario.EXCLUIDO)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.login(new AuthLoginRequestDTO("joao@email.com", "senha123")))
                 .isInstanceOf(CredenciaisInvalidasException.class)
@@ -174,9 +184,10 @@ class AutenticacaoServiceTest {
     @DisplayName("@spec:AC-505 E-mail de investidor excluído pode ser reaproveitado no cadastro")
     void devePermitirCadastroComEmailDeInvestidorExcluido() {
         AuthCadastroRequestDTO dto = new AuthCadastroRequestDTO("Outro Nome", "joao@email.com", "99988877766", "senha123");
-        when(repository.existsByEmailAndAtivoTrue(dto.getEmail())).thenReturn(false); // só o excluído tinha esse e-mail
+        when(usuarioRepository.existsByEmailAndSituacaoNot(dto.getEmail(), SituacaoUsuario.EXCLUIDO)).thenReturn(false); // só o excluído tinha esse e-mail
         when(repository.existsByCpfAndAtivoTrue(dto.getCpf())).thenReturn(false);
         when(passwordEncoder.encode("senha123")).thenReturn("hash-bcrypt");
+        when(usuarioRepository.save(any())).thenReturn(usuario);
         when(repository.save(any())).thenReturn(investidor);
         when(mapper.toResponse(investidor)).thenReturn(new InvestidorResponseDTO(2L, "Outro Nome", "joao@email.com"));
 
@@ -190,9 +201,10 @@ class AutenticacaoServiceTest {
     @DisplayName("@spec:AC-506 CPF de investidor excluído pode ser reaproveitado no cadastro")
     void devePermitirCadastroComCpfDeInvestidorExcluido() {
         AuthCadastroRequestDTO dto = new AuthCadastroRequestDTO("Outro Nome", "novo@email.com", "12345678901", "senha123");
-        when(repository.existsByEmailAndAtivoTrue(dto.getEmail())).thenReturn(false);
+        when(usuarioRepository.existsByEmailAndSituacaoNot(dto.getEmail(), SituacaoUsuario.EXCLUIDO)).thenReturn(false);
         when(repository.existsByCpfAndAtivoTrue(dto.getCpf())).thenReturn(false); // só o excluído tinha esse CPF
         when(passwordEncoder.encode("senha123")).thenReturn("hash-bcrypt");
+        when(usuarioRepository.save(any())).thenReturn(usuario);
         when(repository.save(any())).thenReturn(investidor);
         when(mapper.toResponse(investidor)).thenReturn(new InvestidorResponseDTO(2L, "Outro Nome", "novo@email.com"));
 
@@ -204,7 +216,7 @@ class AutenticacaoServiceTest {
     @DisplayName("@spec:AC-507 Duplicidade entre investidores ATIVOS continua bloqueada")
     void deveBloquearDuplicidadeEntreAtivos() {
         AuthCadastroRequestDTO dto = new AuthCadastroRequestDTO("Outro", "joao@email.com", "99988877766", "senha123");
-        when(repository.existsByEmailAndAtivoTrue(dto.getEmail())).thenReturn(true);
+        when(usuarioRepository.existsByEmailAndSituacaoNot(dto.getEmail(), SituacaoUsuario.EXCLUIDO)).thenReturn(true);
 
         assertThatThrownBy(() -> service.cadastrar(dto))
                 .isInstanceOf(RecursoDuplicadoException.class)
@@ -217,8 +229,8 @@ class AutenticacaoServiceTest {
     void deveAutenticarInvestidorAtivoComEmailReaproveitado() {
         // o e-mail existe em duas linhas (uma inativa, uma ativa) — a consulta filtrada
         // devolve só a ativa, sem quebrar por resultado múltiplo
-        Investidor ativo = new Investidor(2L, "Novo Dono", "joao@email.com", "99988877766", "hash-novo", LocalDateTime.now(), true);
-        when(repository.findByEmailAndAtivoTrue("joao@email.com")).thenReturn(Optional.of(ativo));
+        Usuario ativo = new Usuario(2L, "joao@email.com", "hash-novo", Papel.INVESTIDOR, SituacaoUsuario.ATIVO);
+        when(usuarioRepository.findByEmailAndSituacaoNot("joao@email.com", SituacaoUsuario.EXCLUIDO)).thenReturn(Optional.of(ativo));
         when(passwordEncoder.matches("senha123", "hash-novo")).thenReturn(true);
         when(jwtService.gerar(2L)).thenReturn(jwt("token-do-ativo", Instant.now().plusSeconds(3600)));
 
@@ -226,6 +238,35 @@ class AutenticacaoServiceTest {
 
         assertThat(result.getToken()).isEqualTo("token-do-ativo");
         verify(jwtService).gerar(2L);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-552 Bloqueado com a senha certa recebe 403 AUT-009; com a senha errada, a mensagem genérica")
+    void deveAvisarBloqueioSoComSenhaCerta() {
+        usuario.setSituacao(SituacaoUsuario.BLOQUEADO);
+        when(usuarioRepository.findByEmailAndSituacaoNot("joao@email.com", SituacaoUsuario.EXCLUIDO)).thenReturn(Optional.of(usuario));
+        when(passwordEncoder.matches("senha123", "hash-bcrypt")).thenReturn(true);
+        when(passwordEncoder.matches("senha-errada", "hash-bcrypt")).thenReturn(false);
+
+        assertThatThrownBy(() -> service.login(new AuthLoginRequestDTO("joao@email.com", "senha123")))
+                .isInstanceOf(AcessoNegadoException.class)
+                .hasMessage("Conta bloqueada. Procure o suporte.")
+                .extracting(e -> ((AcessoNegadoException) e).getCodigo())
+                .isEqualTo("AUT-009");
+        assertThatThrownBy(() -> service.login(new AuthLoginRequestDTO("joao@email.com", "senha-errada")))
+                .isInstanceOf(CredenciaisInvalidasException.class)
+                .hasMessage("E-mail ou senha inválidos.");
+    }
+
+    @Test
+    @DisplayName("ASM-466 ADMIN não recebe token de investidor até a #19")
+    void deveRecusarAdminComMensagemGenerica() {
+        usuario.setPapel(Papel.ADMIN);
+        when(usuarioRepository.findByEmailAndSituacaoNot("joao@email.com", SituacaoUsuario.EXCLUIDO)).thenReturn(Optional.of(usuario));
+
+        assertThatThrownBy(() -> service.login(new AuthLoginRequestDTO("joao@email.com", "senha123")))
+                .isInstanceOf(CredenciaisInvalidasException.class)
+                .hasMessage("E-mail ou senha inválidos.");
     }
 
     private static Jwt jwt(String valor, Instant expiracao) {

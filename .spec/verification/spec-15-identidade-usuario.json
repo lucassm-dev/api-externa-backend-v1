@@ -1,0 +1,37 @@
+{
+  "feature": "spec-15-identidade-usuario",
+  "timestamp": "2026-11-20T23:10:27.722Z",
+  "gitRev": "781282e",
+  "command": "./mvnw -q test",
+  "reporter": "exitcode",
+  "exitCode": 0,
+  "testsParsed": 0,
+  "results": {
+    "AC-552": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-553": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-554": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-555": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-557": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    }
+  },
+  "principles": {}
+}
