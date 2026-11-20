@@ -13,7 +13,7 @@
 - Arquivos: pom.xml, src/test/java/com/apiexternabackend/config/MigracaoUsuarioPostgresTest.java
 - Notas: decisão 5. Testcontainers (escopo test) com Flyway até a V16, insere investidor com senha em BCrypt, migra para a V17 e faz login pelo `AutenticacaoService`. Depende da T-498. `testcontainers.version` fixado em 1.21.4: a 1.19.8 do Boot 3.3.5 usa uma API do Docker que o Docker 29 recusa ("Could not find a valid Docker environment").
 
-## T-500 — Specs antigas apontam para a spec-15 [pendente]
+## T-500 — Specs antigas apontam para a spec-15 [concluida]
 - Refs: AC-505
 - Arquivos: .spec/features/spec-10-vazamento-investidor-inativo/spec.md, .spec/features/autenticacao-investidor/spec.md
 - Notas: suposições que falam de e-mail e senha em `investidor` (por exemplo ASM-440) passam a apontar para a spec-15.

@@ -108,8 +108,8 @@ o CNPJ.
 
 | ID | Suposição | Status | Resolução |
 |---|---|---|---|
-| ASM-439 | A unicidade de e-mail/CPF passa a valer só entre investidores ativos, com índice único parcial no banco (`WHERE ativo = true`), exatamente o padrão da migration `V12` para ticker e CNPJ. | aberta | — |
-| ASM-440 | O `unique = true` das colunas `email` e `cpf` da entidade `Investidor` precisa sair, senão o Hibernate recria a constraint incondicional no schema de teste (H2, Flyway desligado) e o teste de recadastro falha — mesma pegadinha já enfrentada na SPEC-03. | aberta | — |
+| ASM-439 | A unicidade de e-mail/CPF passa a valer só entre investidores ativos, com índice único parcial no banco (`WHERE ativo = true`), exatamente o padrão da migration `V12` para ticker e CNPJ. | confirmada | Aplicada na V16. Desde a `spec-15-identidade-usuario` (V17) o índice de e-mail mora em `usuario` (`WHERE situacao <> 'EXCLUIDO'`); o de CPF continua em `investidor` |
+| ASM-440 | O `unique = true` das colunas `email` e `cpf` da entidade `Investidor` precisa sair, senão o Hibernate recria a constraint incondicional no schema de teste (H2, Flyway desligado) e o teste de recadastro falha — mesma pegadinha já enfrentada na SPEC-03. | confirmada | Aplicada na entidade. Desde a `spec-15-identidade-usuario` o e-mail saiu de `Investidor` e a mesma regra vale para `Usuario.email` |
 | ASM-441 | Login recusado por conta inativa devolve a mesma mensagem genérica de credencial inválida (`AUT-004`), sem código próprio, para não revelar que a conta existe — coerente com a semântica de não-enumeração já adotada em CAR-001/OPE-001. | aberta | — |
 | ASM-442 | Um investidor inativo que ainda tenha token JWT válido emitido antes da exclusão continua passando pelo filtro até o token expirar (24h) — revogação de token em curso está fora do escopo desta spec. | aberta | — |
 
