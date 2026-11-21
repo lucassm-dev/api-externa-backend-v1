@@ -1,0 +1,70 @@
+{
+  "version": 2,
+  "engine": ".claude/skills/onp-spec-driven-claude-v4-0-0/scripts/onp-spec.mjs",
+  "config": {
+    "maxParalelas": 3,
+    "model": null,
+    "esforco": "medium",
+    "permissionMode": "acceptEdits",
+    "allowedTools": null,
+    "sandbox": "workspace-write",
+    "quotaCommand": null,
+    "modelsCommand": null,
+    "notifications": {
+      "enabled": false,
+      "command": null
+    },
+    "quota": {
+      "thresholdPercent": 5,
+      "pollIntervalMs": 60000
+    }
+  },
+  "testCommand": "./mvnw -q test",
+  "runId": "api-externa-backend-v1-spec-17-auth-me-mwpxwzcd-ab901e8c",
+  "feature": "spec-17-auth-me",
+  "agent": "claude",
+  "modo": "sequencial",
+  "paralelizar": null,
+  "modeloForcado": null,
+  "esforcoForcado": null,
+  "geradoEm": "2026-11-21 05:01",
+  "createdAt": "2026-11-21T05:01:05.390Z",
+  "branchTrabalho": "spec/spec-17-auth-me",
+  "baseDir": ".spec/features/spec-17-auth-me",
+  "artifactDir": ".spec/features/spec-17-auth-me",
+  "specDir": ".spec",
+  "repoName": "api-externa-backend-v1",
+  "logsDir": "../onp-worktrees/api-externa-backend-v1-spec-17-auth-me-logs",
+  "ondas": [],
+  "faixas": [],
+  "sequenciais": [
+    {
+      "id": "T-504",
+      "titulo": "Rota GET /auth/me",
+      "modelo": null,
+      "esforco": "medium",
+      "arquivos": [
+        "src/main/java/com/apiexternabackend/config/SecurityConfig.java",
+        "src/main/java/com/apiexternabackend/resources/AuthResource.java",
+        "src/main/java/com/apiexternabackend/services/AutenticacaoService.java",
+        "src/main/java/com/apiexternabackend/domains/dtos/UsuarioLogadoResponseDTO.java",
+        "src/test/java/com/apiexternabackend/config/AuthMeIntegrationTest.java"
+      ],
+      "refs": [
+        "US-456",
+        "US-457",
+        "AC-569",
+        "AC-570",
+        "AC-571",
+        "AC-572",
+        "AC-573",
+        "AC-574",
+        "AC-575"
+      ],
+      "prompt": "Você executa UMA tarefa da feature \"spec-17-auth-me\" (fluxo onp-spec, spec-anchored).\nLeia primeiro: .spec/features/spec-17-auth-me/spec.md, .spec/features/spec-17-auth-me/tasks.md e .spec/constituicao.md.\n\nSua tarefa (somente ela):\nT-504 — \"Rota GET /auth/me\"\n  critérios/refs: AC-569 (Investidor recebe os próprios dados e o papel), AC-570 (Cada token devolve só o próprio dono), AC-571 (ADMIN recebe os dados sem nome), AC-572 (Sem token não há dados), AC-573 (Conta excluída é tratada como sessão encerrada), AC-574 (Resposta nunca traz a senha), AC-575 (Cadastro e login continuam públicos)\n  arquivos permitidos (e seus testes): src/main/java/com/apiexternabackend/config/SecurityConfig.java, src/main/java/com/apiexternabackend/resources/AuthResource.java, src/main/java/com/apiexternabackend/services/AutenticacaoService.java, src/main/java/com/apiexternabackend/domains/dtos/UsuarioLogadoResponseDTO.java, src/test/java/com/apiexternabackend/config/AuthMeIntegrationTest.java\n  mensagem de commit: \"T-504 spec-17-auth-me: Rota GET /auth/me\"\n\nRegras inegociáveis:\n- Todo critério de aceite referenciado vira teste com @spec:AC-xxx no título.\n- NUNCA enfraqueça, pule (skip/todo) ou apague um teste para passar — teste pulado não é prova e o audit acusa.\n- Rode os testes localmente com `./mvnw -q test` até passarem.\n- NÃO edite tasks.md, NÃO rode onp-spec verify/audit e NÃO toque em outras tarefas — o orquestrador cuida disso.\n- Specs, PRDs, ADRs, TDDs e documentos existentes são somente leitura. Nunca reformate, migre ou sobrescreva esses arquivos; mudanças de requisito exigem uma proposta separada e resposta do cliente.\n- Leia PRD, ADR, design.md e research.md quando existirem; pare e solicite decisão nativa se houver conflito de domínio/requisito/decisão. Nunca decida conflitos em headless.\n- Ao retomar após limite, inspecione git diff/log e continue o trabalho parcial sem repetir operações já concluídas.\n- Ao final de CADA tarefa: `git add` só no que você tocou e um commit próprio."
+    }
+  ],
+  "concluidas": [],
+  "avisos": [],
+  "sourceFingerprint": "b8c2ab84515685e114962ffa07126fd1e053e0ebdd073d4d42f19f0be609e79b"
+}
