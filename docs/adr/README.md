@@ -25,3 +25,9 @@ Decididas em 2026-11-18, implementação pendente:
 | [013](013-controle-de-acesso-por-papeis.md) | Papéis INVESTIDOR/ADMIN/SUPORTE, dono dos dados, bloqueio imediato | Menus por papel; indicador de papel no topo; admin sem tela de carteira |
 | [014](014-corretora-excluir-ou-descontinuar.md) | Corretora: excluir cadastro errado ou descontinuar | Aviso de corretora descontinuada; confirmação mostra carteiras afetadas |
 | [015](015-acao-entra-no-catalogo-pela-pesquisa.md) | Ação entra no catálogo pela pesquisa | Sem tela de cadastro de ação; pesquisa por ticker e mercado |
+
+Decididas em 2026-11-21, implementação pendente:
+
+| ADR | Decisão | Impacto principal no frontend |
+|---|---|---|
+| [016](016-envio-de-email-por-smtp-gratuito.md) | E-mail por SMTP gratuito (Gmail com senha de app), credenciais em variáveis de ambiente | Pedido de código sempre responde igual; em fluxo autenticado, falha de envio vira 503 `EXT-012` |
