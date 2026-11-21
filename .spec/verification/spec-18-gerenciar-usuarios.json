@@ -1,7 +1,7 @@
 {
   "feature": "spec-18-gerenciar-usuarios",
-  "timestamp": "2026-11-21T22:04:53.310Z",
-  "gitRev": "646d2e0",
+  "timestamp": "2026-11-21T23:27:50.270Z",
+  "gitRev": "0f0b87a",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

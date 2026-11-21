@@ -54,7 +54,7 @@ public class SecurityConfig {
 
     private static final String[] ROTAS_PUBLICAS = {
             // spec-17: /auth/me exige token, então só cadastro e login ficam abertos
-            "/auth/cadastro", "/auth/login",
+            "/auth/cadastro", "/auth/login", "/auth/esqueci-senha", "/auth/redefinir-senha",
             "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**"
     };
 
@@ -123,12 +123,17 @@ public class SecurityConfig {
     // AC-585/ASM-484: a situação é lida do banco a cada requisição para o bloqueio valer na hora
     private AbstractAuthenticationToken autenticacaoDe(Jwt jwt) {
         Long id = Long.valueOf(jwt.getSubject());
-        SituacaoUsuario situacao = usuarioRepository.findById(id).map(Usuario::getSituacao).orElse(SituacaoUsuario.EXCLUIDO);
+        Usuario usuario = usuarioRepository.findById(id).orElse(null);
+        SituacaoUsuario situacao = usuario == null ? SituacaoUsuario.EXCLUIDO : usuario.getSituacao();
         if (situacao == SituacaoUsuario.BLOQUEADO) {
             throw new DisabledException("Conta bloqueada.");
         }
         if (situacao == SituacaoUsuario.EXCLUIDO) {
             throw new InvalidBearerTokenException("Conta excluída.");
+        }
+        // #26: troca de senha derruba os tokens emitidos antes dela (iat tem precisão de segundos)
+        if (usuario.getSenhaAlteradaEm() != null && jwt.getIssuedAt().isBefore(usuario.getSenhaAlteradaEm())) {
+            throw new InvalidBearerTokenException("Token anterior à troca de senha.");
         }
         var authorities = jwt.getClaimAsStringList("authorities").stream().map(SimpleGrantedAuthority::new).toList();
         return new UsernamePasswordAuthenticationToken(new InvestidorPrincipal(id), null, authorities);

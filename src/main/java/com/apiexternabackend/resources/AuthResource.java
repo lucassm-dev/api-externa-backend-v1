@@ -7,6 +7,9 @@ import com.apiexternabackend.domains.dtos.AuthTokenResponseDTO;
 import com.apiexternabackend.domains.dtos.InvestidorResponseDTO;
 import com.apiexternabackend.domains.dtos.UsuarioLogadoResponseDTO;
 import com.apiexternabackend.services.AutenticacaoService;
+import com.apiexternabackend.services.RecuperacaoSenhaService;
+import com.apiexternabackend.domains.dtos.EsqueciSenhaRequestDTO;
+import com.apiexternabackend.domains.dtos.RedefinirSenhaRequestDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthResource {
 
     private final AutenticacaoService service;
+    private final RecuperacaoSenhaService recuperacaoSenhaService;
 
     @PostMapping("/cadastro")
     public ResponseEntity<InvestidorResponseDTO> cadastrar(@RequestBody @Valid AuthCadastroRequestDTO dto) {
@@ -33,6 +37,18 @@ public class AuthResource {
     @PostMapping("/login")
     public ResponseEntity<AuthTokenResponseDTO> login(@RequestBody @Valid AuthLoginRequestDTO dto) {
         return ResponseEntity.ok(service.login(dto));
+    }
+
+    @PostMapping("/esqueci-senha")
+    public ResponseEntity<Void> esqueciSenha(@RequestBody @Valid EsqueciSenhaRequestDTO dto) {
+        recuperacaoSenhaService.solicitar(dto.getEmail());
+        return ResponseEntity.accepted().build();
+    }
+
+    @PostMapping("/redefinir-senha")
+    public ResponseEntity<Void> redefinirSenha(@RequestBody @Valid RedefinirSenhaRequestDTO dto) {
+        recuperacaoSenhaService.redefinir(dto.getEmail(), dto.getCodigo(), dto.getNovaSenha());
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/me")

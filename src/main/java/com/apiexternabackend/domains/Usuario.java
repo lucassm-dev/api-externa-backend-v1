@@ -47,6 +47,9 @@ public class Usuario {
     @Column(name = "bloqueado_em")
     private LocalDateTime bloqueadoEm;
 
+    @Column(name = "senha_alterada_em")
+    private java.time.Instant senhaAlteradaEm;
+
     public Usuario(Long id, String email, String senha, Papel papel, SituacaoUsuario situacao) {
         this.id = id;
         this.email = email;
