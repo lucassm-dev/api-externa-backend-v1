@@ -35,6 +35,7 @@ class AuthResourceTest {
 
     @Autowired private MockMvc mockMvc;
     @MockBean private AutenticacaoService service;
+    @MockBean private com.apiexternabackend.services.RecuperacaoSenhaService recuperacaoSenhaService;
     @Autowired private ObjectMapper objectMapper;
 
     @Test
