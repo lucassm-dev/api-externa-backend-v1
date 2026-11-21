@@ -1,6 +1,9 @@
 package com.apiexternabackend.services;
 
 import com.apiexternabackend.domains.Investidor;
+import com.apiexternabackend.domains.Usuario;
+import com.apiexternabackend.domains.enums.Papel;
+import com.apiexternabackend.domains.enums.SituacaoUsuario;
 import com.apiexternabackend.domains.dtos.InvestidorResponseDTO;
 import com.apiexternabackend.mappers.InvestidorMapper;
 import com.apiexternabackend.repositories.InvestidorRepository;
@@ -44,7 +47,7 @@ class InvestidorServiceTest {
 
     @BeforeEach
     void setUp() {
-        investidor = new Investidor(1L, "João Silva", "joao@email.com", "12345678901", "hash", LocalDateTime.now(), true);
+        investidor = new Investidor(1L, new Usuario(1L, "joao@email.com", "hash", Papel.INVESTIDOR, SituacaoUsuario.ATIVO), "João Silva", "12345678901", LocalDateTime.now(), true);
         responseDTO = new InvestidorResponseDTO(1L, "João Silva", "joao@email.com");
     }
 
@@ -103,6 +106,7 @@ class InvestidorServiceTest {
 
         verify(repository).save(investidor);
         assertThat(investidor.getAtivo()).isFalse();
+        assertThat(investidor.getUsuario().getSituacao()).isEqualTo(SituacaoUsuario.EXCLUIDO);
     }
 
     @Test

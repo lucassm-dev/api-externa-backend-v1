@@ -1,7 +1,7 @@
 # Spec: Autenticacao investidor
 
 > feature: autenticacao-investidor
-> status: em-andamento
+> status: implementada
 
 ## Contexto
 
@@ -172,8 +172,8 @@ para escalar sem sticky session e simplificar a infraestrutura.
 | ID | Suposição | Status | Resolução |
 |---|---|---|---|
 | ASM-001 | Autenticação stateless via JWT (Bearer token), não sessão em servidor | confirmada | Decisão do Lucas — SPEC-02 |
-| ASM-002 | O identificador de login é o e-mail do investidor | confirmada | Login será por e-mail, não username |
-| ASM-003 | Cadastro guarda nome, e-mail, CPF (já existia) e agora senha | confirmada | CPF não estava no escopo literal do prompt SPEC-02, mas já é campo obrigatório único da entidade existente — mantido |
+| ASM-002 | O identificador de login é o e-mail do investidor | confirmada | Login será por e-mail, não username. Desde a `spec-15-identidade-usuario` o e-mail mora em `usuario`, não em `investidor` |
+| ASM-003 | Cadastro guarda nome, e-mail, CPF (já existia) e agora senha | confirmada | CPF não estava no escopo literal do prompt SPEC-02, mas já é campo obrigatório único da entidade existente — mantido. Desde a `spec-15-identidade-usuario` e-mail e senha ficam em `usuario`; `investidor` guarda nome e CPF |
 | ASM-004 | Hash de senha com BCrypt (padrão do Spring Security) | confirmada | `BCryptPasswordEncoder`, custo padrão (10) |
 | ASM-411 | Carteira de outro investidor responde 404 (`CAR-001`), não 403 — esconde a existência em vez de recusar acesso a algo visível | confirmada | Evita enumeração: B não descobre que a carteira X existe e é de A. 403 fica reservado para autorização de papel/escopo (não usado nesta spec, só 1 papel existe) |
 | ASM-412 | `GET /investidores` (lista todos) não é restrito a "ver só a si mesmo" nesta spec | invalidada | A listagem expunha nome, e-mail e CPF de todos (issue #16); restringida à própria conta em `spec-13-autorizacao-investidor` (AC-542) |

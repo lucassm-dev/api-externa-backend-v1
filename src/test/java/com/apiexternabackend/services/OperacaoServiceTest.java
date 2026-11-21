@@ -5,6 +5,9 @@ import com.apiexternabackend.domains.Carteira;
 import com.apiexternabackend.domains.CarteiraAcao;
 import com.apiexternabackend.domains.Corretora;
 import com.apiexternabackend.domains.Investidor;
+import com.apiexternabackend.domains.Usuario;
+import com.apiexternabackend.domains.enums.Papel;
+import com.apiexternabackend.domains.enums.SituacaoUsuario;
 import com.apiexternabackend.domains.Operacao;
 import com.apiexternabackend.domains.dtos.OperacaoRequestDTO;
 import com.apiexternabackend.domains.dtos.OperacaoResponseDTO;
@@ -64,7 +67,7 @@ class OperacaoServiceTest {
 
     @BeforeEach
     void setUp() {
-        investidor = new Investidor(INVESTIDOR_ID, "João", "joao@email.com", "12345678901", "hash", LocalDateTime.now(), true);
+        investidor = new Investidor(INVESTIDOR_ID, new Usuario(INVESTIDOR_ID, "joao@email.com", "hash", Papel.INVESTIDOR, SituacaoUsuario.ATIVO), "João", "12345678901", LocalDateTime.now(), true);
         corretora = new Corretora();
         corretora.setId(1L);
 
