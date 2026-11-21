@@ -1,0 +1,90 @@
+{
+  "runId": "api-externa-backend-v1-spec-16-papeis-matriz-acesso-mwpwie69",
+  "feature": "spec-16-papeis-matriz-acesso",
+  "agent": "claude",
+  "modo": "sequencial",
+  "paralelizar": null,
+  "modeloForcado": null,
+  "esforcoForcado": null,
+  "geradoEm": "2026-11-21 04:21",
+  "branchTrabalho": "spec/spec-16-papeis-matriz-acesso",
+  "baseDir": ".spec/features/spec-16-papeis-matriz-acesso",
+  "specDir": ".spec",
+  "repoName": "api-externa-backend-v1",
+  "logsDir": "../onp-worktrees/api-externa-backend-v1-spec-16-papeis-matriz-acesso-logs",
+  "ondas": [],
+  "faixas": [],
+  "sequenciais": [
+    {
+      "id": "T-501",
+      "titulo": "Papel real no token e login do ADMIN",
+      "modelo": "claude-sonnet-5",
+      "esforco": "medium",
+      "arquivos": [
+        "src/main/java/com/apiexternabackend/config/JwtService.java",
+        "src/main/java/com/apiexternabackend/services/AutenticacaoService.java",
+        "src/test/java/com/apiexternabackend/services/AutenticacaoServiceTest.java",
+        "src/test/java/com/apiexternabackend/config/IdentidadeUsuarioIntegrationTest.java"
+      ],
+      "refs": [
+        "US-451",
+        "US-455",
+        "AC-558",
+        "AC-568"
+      ]
+    },
+    {
+      "id": "T-502",
+      "titulo": "Matriz de acesso nas rotas",
+      "modelo": "claude-sonnet-5",
+      "esforco": "high",
+      "arquivos": [
+        "src/main/java/com/apiexternabackend/config/SecurityConfig.java",
+        "src/main/java/com/apiexternabackend/resources/CorretoraResource.java",
+        "src/main/java/com/apiexternabackend/resources/AcaoResource.java",
+        "src/main/java/com/apiexternabackend/resources/MercadoResource.java",
+        "src/main/java/com/apiexternabackend/resources/CarteiraResource.java",
+        "src/main/java/com/apiexternabackend/resources/OperacaoResource.java",
+        "src/main/java/com/apiexternabackend/resources/InvestidorResource.java",
+        "src/test/java/com/apiexternabackend/config/MatrizAcessoIntegrationTest.java",
+        "src/test/java/com/apiexternabackend/resources/CorretoraResourceTest.java",
+        "src/test/java/com/apiexternabackend/resources/AcaoResourceTest.java",
+        "src/test/java/com/apiexternabackend/resources/MercadoResourceTest.java",
+        "src/test/java/com/apiexternabackend/resources/CarteiraResourceTest.java",
+        "src/test/java/com/apiexternabackend/resources/OperacaoResourceTest.java",
+        "src/test/java/com/apiexternabackend/resources/InvestidorResourceTest.java"
+      ],
+      "refs": [
+        "US-452",
+        "US-453",
+        "AC-559",
+        "AC-560",
+        "AC-561",
+        "AC-562",
+        "AC-563"
+      ]
+    },
+    {
+      "id": "T-503",
+      "titulo": "Primeiro ADMIN pelas variáveis de ambiente",
+      "modelo": "claude-sonnet-5",
+      "esforco": "medium",
+      "arquivos": [
+        "src/main/java/com/apiexternabackend/config/AdminInicial.java",
+        "src/main/java/com/apiexternabackend/repositories/UsuarioRepository.java",
+        "src/main/resources/application.properties",
+        ".env.example",
+        "src/test/java/com/apiexternabackend/config/AdminInicialTest.java"
+      ],
+      "refs": [
+        "US-454",
+        "AC-564",
+        "AC-565",
+        "AC-566",
+        "AC-567"
+      ]
+    }
+  ],
+  "concluidas": [],
+  "avisos": []
+}
