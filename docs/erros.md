@@ -102,6 +102,10 @@ Implementação: `src/main/java/com/apiexternabackend/resources/exceptions/`.
 | AUT-006 | Token expirado | 401 | `JwtAuthenticationEntryPoint` |
 | AUT-007 | Acesso negado (autenticado, sem permissão) | 403 | `JwtAccessDeniedHandler` |
 | AUT-008 | Senha fora da política mínima (8+ caracteres, com letra e número) | 422 | RegraVioladaException |
+| AUT-009 | Login de conta bloqueada (só revelado a quem acertou a senha) | 403 | AcessoNegadoException |
+| AUT-010 | Requisição com token válido de conta bloqueada — o bloqueio vale na hora (spec-18) | 401 | `JwtAuthenticationEntryPoint` |
+| AUT-011 | ADMIN tentando bloquear a si mesmo (spec-18) | 422 | RegraVioladaException |
+| AUT-012 | Usuário não encontrado na gestão de usuários (inclui excluído — spec-18) | 404 | RecursoNaoEncontradoException |
 
 ## EXT — Integração externa
 

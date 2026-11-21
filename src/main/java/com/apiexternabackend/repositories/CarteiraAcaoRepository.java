@@ -15,4 +15,6 @@ public interface CarteiraAcaoRepository extends JpaRepository<CarteiraAcao, Long
     long countByAcaoIdAndQuantidadeGreaterThan(Long acaoId, Integer quantidade);
 
     long countByCarteiraIdAndQuantidadeGreaterThan(Long carteiraId, Integer quantidade);
+
+    boolean existsByCarteiraInvestidorIdAndCarteiraAtivaTrueAndQuantidadeGreaterThan(Long investidorId, Integer quantidade);
 }

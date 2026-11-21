@@ -10,7 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,7 +20,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Usuario {
 
     @Id
@@ -41,4 +40,18 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private SituacaoUsuario situacao;
+
+    @Column(name = "motivo_bloqueio")
+    private String motivoBloqueio;
+
+    @Column(name = "bloqueado_em")
+    private LocalDateTime bloqueadoEm;
+
+    public Usuario(Long id, String email, String senha, Papel papel, SituacaoUsuario situacao) {
+        this.id = id;
+        this.email = email;
+        this.senha = senha;
+        this.papel = papel;
+        this.situacao = situacao;
+    }
 }

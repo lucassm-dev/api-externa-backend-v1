@@ -1,7 +1,7 @@
 {
   "feature": "spec-09-barra-cotacoes",
-  "timestamp": "2026-11-21T06:17:30.810Z",
-  "gitRev": "bfa786a",
+  "timestamp": "2026-11-21T19:27:55.755Z",
+  "gitRev": "e43c642",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
