@@ -172,7 +172,7 @@ papel de um investidor, para que ninguém se promova a ADMIN.
 | ASM-474 | "Já existe ADMIN" é qualquer `usuario` com papel `ADMIN` não excluído; com um ADMIN existente, as variáveis são ignoradas (trocar a senha por elas não é suportado). | aberta | — |
 | ASM-475 | O principal continua `InvestidorPrincipal(id)` também para o ADMIN; o nome fica impreciso, mas nenhum resource de ADMIN usa o id ainda. Renomear entra quando a #21 precisar. | aberta | — |
 | ASM-476 | Com o catálogo de ações só para ADMIN, o investidor não consegue comprar ticker que ainda não está no catálogo até um ADMIN cadastrar ou até a #24 (ação entra pela pesquisa). | invalidada | Dono do produto, 2026-11-21: ações ficam abertas aos dois papéis até a #24 (decisão 3) |
-| ASM-477 | Até a #21, um usuário bloqueado com token já emitido continua acessando até o token expirar (no máximo 60 minutos). | aberta | — |
+| ASM-477 | Até a #21, um usuário bloqueado com token já emitido continua acessando até o token expirar (no máximo 60 minutos). | invalidada | spec-18 (#21), AC-585: bloqueio vale na requisição seguinte |
 | ASM-478 | Tokens emitidos antes do deploy trazem `ROLE_INVESTIDOR` e continuam válidos até expirar; como só investidores tinham login, o papel deles está correto. | aberta | — |
 
 ## Perguntas em aberto

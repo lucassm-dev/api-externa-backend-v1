@@ -7,7 +7,10 @@ import com.apiexternabackend.domains.dtos.CarteiraResponseDTO;
 import com.apiexternabackend.domains.dtos.CorretoraRequestDTO;
 import com.apiexternabackend.domains.dtos.CorretoraResponseDTO;
 import com.apiexternabackend.domains.enums.Mercado;
+import com.apiexternabackend.domains.Usuario;
 import com.apiexternabackend.domains.enums.Papel;
+import com.apiexternabackend.domains.enums.SituacaoUsuario;
+import com.apiexternabackend.repositories.UsuarioRepository;
 import com.apiexternabackend.services.AcaoService;
 import com.apiexternabackend.services.BarraCotacoesService;
 import com.apiexternabackend.services.CarteiraService;
@@ -56,6 +59,7 @@ class MatrizAcessoIntegrationTest {
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
     @Autowired private JwtService jwtService;
+    @Autowired private UsuarioRepository usuarioRepository;
 
     @MockBean private CorretoraService corretoraService;
     @MockBean private AcaoService acaoService;
@@ -70,8 +74,9 @@ class MatrizAcessoIntegrationTest {
 
     @BeforeEach
     void preparar() {
-        tokenInvestidor = jwtService.gerar(1L, Papel.INVESTIDOR).getTokenValue();
-        tokenAdmin = jwtService.gerar(2L, Papel.ADMIN).getTokenValue();
+        // spec-18: a checagem por requisição exige que o dono do token exista e esteja ativo
+        tokenInvestidor = jwtService.gerar(usuario(Papel.INVESTIDOR), Papel.INVESTIDOR).getTokenValue();
+        tokenAdmin = jwtService.gerar(usuario(Papel.ADMIN), Papel.ADMIN).getTokenValue();
 
         CorretoraResponseDTO corretora = new CorretoraResponseDTO();
         corretora.setId(10L);
@@ -195,5 +200,10 @@ class MatrizAcessoIntegrationTest {
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    private Long usuario(Papel papel) {
+        return usuarioRepository.save(new Usuario(null, "matriz" + System.nanoTime() + "@email.com", "hash",
+                papel, SituacaoUsuario.ATIVO)).getId();
     }
 }

@@ -103,7 +103,7 @@ válida e nunca exponha a senha, para que a rota não vaze dado de acesso.
 | ASM-479 | A resposta é um DTO novo (`UsuarioLogadoResponseDTO`) com `id`, `nome`, `email`, `papel`, sem reaproveitar `InvestidorResponseDTO`, que não tem papel. | aberta | — |
 | ASM-480 | O teste do ADMIN (AC-571) usa um token gerado direto pelo `JwtService` para um `usuario` ADMIN gravado no banco, porque o login do ADMIN só abre com a #19. | aberta | — |
 | ASM-481 | Conta excluída é detectada pela situação `EXCLUIDO` do `usuario` lido pelo id do token; usuário inexistente pelo id também responde 401 `AUT-005`. | aberta | — |
-| ASM-482 | Bloqueado com token válido recebe 200 em `/auth/me` até a #21 (bloqueio imediato), coerente com a ASM-477 da spec-16. | aberta | — |
+| ASM-482 | Bloqueado com token válido recebe 200 em `/auth/me` até a #21 (bloqueio imediato), coerente com a ASM-477 da spec-16. | invalidada | spec-18 (#21), AC-585: bloqueado recebe 401 AUT-010 |
 | ASM-483 | Os códigos desta spec começam em US-456/AC-569/ASM-479/T-504 porque a spec-16 (branch `feat/19`) já reserva US-451–455, AC-558–568, ASM-472–478 e T-501–503; o motor não enxerga branches não mergeadas. | confirmada | Conferido no git em 2026-11-21 |
 
 ## Perguntas em aberto

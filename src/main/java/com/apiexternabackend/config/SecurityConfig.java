@@ -1,5 +1,10 @@
 package com.apiexternabackend.config;
 
+import com.apiexternabackend.domains.Usuario;
+import com.apiexternabackend.domains.enums.SituacaoUsuario;
+import com.apiexternabackend.repositories.UsuarioRepository;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -38,6 +43,7 @@ public class SecurityConfig {
 
     private final JwtAuthenticationEntryPoint authenticationEntryPoint;
     private final JwtAccessDeniedHandler accessDeniedHandler;
+    private final UsuarioRepository usuarioRepository;
 
     /**
      * Origens autorizadas a chamar a API de outro endereço. Vazio por padrão: ambiente que
@@ -106,7 +112,7 @@ public class SecurityConfig {
                         .authenticationEntryPoint(authenticationEntryPoint)
                         .accessDeniedHandler(accessDeniedHandler))
                 .oauth2ResourceServer(o -> o
-                        .jwt(j -> j.jwtAuthenticationConverter(SecurityConfig::autenticacaoDe))
+                        .jwt(j -> j.jwtAuthenticationConverter(this::autenticacaoDe))
                         .authenticationEntryPoint(authenticationEntryPoint)
                         .accessDeniedHandler(accessDeniedHandler));
 
@@ -114,8 +120,17 @@ public class SecurityConfig {
     }
 
     // ASM-460: os resources continuam recebendo InvestidorPrincipal via @AuthenticationPrincipal
-    private static AbstractAuthenticationToken autenticacaoDe(Jwt jwt) {
+    // AC-585/ASM-484: a situação é lida do banco a cada requisição para o bloqueio valer na hora
+    private AbstractAuthenticationToken autenticacaoDe(Jwt jwt) {
+        Long id = Long.valueOf(jwt.getSubject());
+        SituacaoUsuario situacao = usuarioRepository.findById(id).map(Usuario::getSituacao).orElse(SituacaoUsuario.EXCLUIDO);
+        if (situacao == SituacaoUsuario.BLOQUEADO) {
+            throw new DisabledException("Conta bloqueada.");
+        }
+        if (situacao == SituacaoUsuario.EXCLUIDO) {
+            throw new InvalidBearerTokenException("Conta excluída.");
+        }
         var authorities = jwt.getClaimAsStringList("authorities").stream().map(SimpleGrantedAuthority::new).toList();
-        return new UsernamePasswordAuthenticationToken(new InvestidorPrincipal(Long.valueOf(jwt.getSubject())), null, authorities);
+        return new UsernamePasswordAuthenticationToken(new InvestidorPrincipal(id), null, authorities);
     }
 }

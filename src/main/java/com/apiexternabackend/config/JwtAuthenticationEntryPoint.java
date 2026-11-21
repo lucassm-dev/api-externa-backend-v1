@@ -1,5 +1,6 @@
 package com.apiexternabackend.config;
 
+import org.springframework.security.authentication.DisabledException;
 import com.apiexternabackend.resources.exceptions.StandardError;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,10 +27,11 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
             throws IOException {
         boolean tokenExpirado = expirado(authException);
+        boolean bloqueado = authException instanceof DisabledException;
 
-        String codigo = tokenExpirado ? "AUT-006" : "AUT-005";
-        String mensagem = tokenExpirado
-                ? "Token expirado. Faça login novamente."
+        String codigo = bloqueado ? "AUT-010" : tokenExpirado ? "AUT-006" : "AUT-005";
+        String mensagem = bloqueado ? "Conta bloqueada. Procure o suporte."
+                : tokenExpirado ? "Token expirado. Faça login novamente."
                 : "Token ausente ou inválido.";
 
         StandardError erro = new StandardError(

@@ -1,0 +1,67 @@
+{
+  "feature": "spec-18-gerenciar-usuarios",
+  "timestamp": "2026-11-21T20:04:46.107Z",
+  "gitRev": "2e4bc85",
+  "command": "./mvnw -q test",
+  "reporter": "exitcode",
+  "exitCode": 0,
+  "testsParsed": 0,
+  "results": {
+    "AC-576": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-577": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-578": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-579": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-580": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-581": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-582": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-583": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-584": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-585": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-586": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    }
+  },
+  "principles": {}
+}

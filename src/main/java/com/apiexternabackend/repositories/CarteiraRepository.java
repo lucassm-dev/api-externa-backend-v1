@@ -12,4 +12,6 @@ public interface CarteiraRepository extends JpaRepository<Carteira, Long> {
     long countByCorretoraIdAndAtivaTrue(Long corretoraId);
 
     boolean existsByInvestidorIdAndAtivaTrue(Long investidorId);
+
+    long countByInvestidorIdAndAtivaTrue(Long investidorId);
 }
