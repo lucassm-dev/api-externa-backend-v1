@@ -1,17 +1,12 @@
 {
   "feature": "spec-03-recadastro-exclusao",
-  "timestamp": "2026-11-21T21:19:46.359Z",
-  "gitRev": "315ac44",
+  "timestamp": "2026-11-21T21:58:05.150Z",
+  "gitRev": "646d2e0",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
   "testsParsed": 0,
   "results": {
-    "AC-444": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
     "AC-445": {
       "status": "pass",
       "testName": null,
@@ -22,27 +17,12 @@
       "testName": null,
       "method": "exitcode"
     },
-    "AC-447": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
     "AC-448": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"
     },
     "AC-449": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
-    "AC-450": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
-    "AC-451": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"

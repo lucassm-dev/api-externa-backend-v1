@@ -1,7 +1,7 @@
 {
   "feature": "spec-11-cors",
-  "timestamp": "2026-11-21T21:23:20.796Z",
-  "gitRev": "315ac44",
+  "timestamp": "2026-11-21T22:01:40.097Z",
+  "gitRev": "646d2e0",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

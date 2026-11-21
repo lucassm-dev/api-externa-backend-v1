@@ -1,0 +1,47 @@
+{
+  "feature": "spec-21-acao-pela-pesquisa",
+  "timestamp": "2026-11-21T22:06:17.727Z",
+  "gitRev": "646d2e0",
+  "command": "./mvnw -q test",
+  "reporter": "exitcode",
+  "exitCode": 0,
+  "testsParsed": 0,
+  "results": {
+    "AC-602": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-603": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-604": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-605": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-606": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-607": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-608": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    }
+  },
+  "principles": {}
+}

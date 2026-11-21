@@ -1,7 +1,7 @@
 {
   "feature": "spec-16-papeis-matriz-acesso",
-  "timestamp": "2026-11-21T21:25:33.881Z",
-  "gitRev": "315ac44",
+  "timestamp": "2026-11-21T22:03:56.223Z",
+  "gitRev": "646d2e0",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
