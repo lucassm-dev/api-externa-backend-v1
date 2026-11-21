@@ -45,6 +45,8 @@ Implementação: `src/main/java/com/apiexternabackend/resources/exceptions/`.
 | COR-002 | Corretora já cadastrada (CNPJ duplicado) | 409 | RecursoDuplicadoException |
 | COR-003 | Regra de cadastro violada: CNPJ com formato/dígitos inválidos, CNPJ não encontrado na Receita, CEP não encontrado, ou corretora não autorizada na CVM (a fonte respondeu e disse que não está OK) | 422 | RegraVioladaException |
 | COR-004 | Exclusão bloqueada: existe carteira ativa vinculada à corretora | 422 | RegraVioladaException |
+| COR-005 | Criar carteira em corretora descontinuada (spec-20) | 422 | RegraVioladaException |
+| COR-006 | Descontinuar corretora já descontinuada (spec-20) | 422 | RegraVioladaException |
 
 ## ACA — Ação
 

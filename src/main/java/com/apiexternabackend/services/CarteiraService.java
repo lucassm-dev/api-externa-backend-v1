@@ -33,6 +33,9 @@ public class CarteiraService {
 
         Corretora corretora = corretoraRepository.findById(dto.getCorretoraId())
                 .orElseThrow(() -> new RecursoNaoEncontradoException("COR-001", "Corretora não encontrada: " + dto.getCorretoraId()));
+        if (Boolean.TRUE.equals(corretora.getDescontinuada())) {
+            throw new RegraVioladaException("COR-005", "Corretora descontinuada não aceita carteira nova: " + corretora.getId());
+        }
 
         Carteira carteira = new Carteira();
         carteira.setInvestidor(investidor);

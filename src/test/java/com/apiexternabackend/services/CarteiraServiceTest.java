@@ -66,7 +66,7 @@ class CarteiraServiceTest {
         carteiraBR = new Carteira(1L, investidor, corretora, Mercado.BR, "Carteira BR", true);
         carteiraUS = new Carteira(2L, investidor, corretora, Mercado.US, "Carteira US", true);
 
-        responseBR = new CarteiraResponseDTO(1L, 1L, 1L, "XP", Mercado.BR, "BRL", "Carteira BR", true);
+        responseBR = new CarteiraResponseDTO(1L, 1L, 1L, "XP", Mercado.BR, "BRL", "Carteira BR", true, false);
     }
 
     @Test
@@ -114,8 +114,8 @@ class CarteiraServiceTest {
         when(investidorRepository.findById(INVESTIDOR_ID)).thenReturn(Optional.of(investidor));
         when(corretoraRepository.findById(1L)).thenReturn(Optional.of(corretora));
         when(carteiraRepository.save(any())).thenReturn(carteiraBR);
-        CarteiraResponseDTO respBR = new CarteiraResponseDTO(1L, 1L, 1L, "XP", Mercado.BR, "BRL", "BR", true);
-        CarteiraResponseDTO respUS = new CarteiraResponseDTO(2L, 1L, 1L, "XP", Mercado.US, "USD", "US", true);
+        CarteiraResponseDTO respBR = new CarteiraResponseDTO(1L, 1L, 1L, "XP", Mercado.BR, "BRL", "BR", true, false);
+        CarteiraResponseDTO respUS = new CarteiraResponseDTO(2L, 1L, 1L, "XP", Mercado.US, "USD", "US", true, false);
         when(mapper.toResponse(any())).thenReturn(respBR).thenReturn(respUS);
 
         CarteiraResponseDTO br = service.criar(new CarteiraRequestDTO(1L, Mercado.BR, "BR"), INVESTIDOR_ID);
@@ -145,7 +145,7 @@ class CarteiraServiceTest {
     void deveRenomearCarteira() {
         when(carteiraRepository.findById(1L)).thenReturn(Optional.of(carteiraBR));
         when(carteiraRepository.save(any())).thenReturn(carteiraBR);
-        CarteiraResponseDTO novoNome = new CarteiraResponseDTO(1L, 1L, 1L, "XP", Mercado.BR, "BRL", "Novo Nome", true);
+        CarteiraResponseDTO novoNome = new CarteiraResponseDTO(1L, 1L, 1L, "XP", Mercado.BR, "BRL", "Novo Nome", true, false);
         when(mapper.toResponse(carteiraBR)).thenReturn(novoNome);
 
         CarteiraResponseDTO result = service.renomear(1L, "Novo Nome", INVESTIDOR_ID);
@@ -185,7 +185,7 @@ class CarteiraServiceTest {
         when(corretoraRepository.findById(1L)).thenReturn(Optional.of(corretora));
         Carteira novaCarteira = new Carteira(4L, investidor, corretora, Mercado.BR, "Teste", true);
         when(carteiraRepository.save(any())).thenReturn(novaCarteira);
-        CarteiraResponseDTO resp = new CarteiraResponseDTO(4L, 1L, 1L, "XP", Mercado.BR, "BRL", "Teste", true);
+        CarteiraResponseDTO resp = new CarteiraResponseDTO(4L, 1L, 1L, "XP", Mercado.BR, "BRL", "Teste", true, false);
         when(mapper.toResponse(novaCarteira)).thenReturn(resp);
 
         CarteiraResponseDTO result = service.criar(new CarteiraRequestDTO(1L, Mercado.BR, "Teste"), INVESTIDOR_ID);
