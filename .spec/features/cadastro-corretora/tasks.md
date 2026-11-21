@@ -26,11 +26,11 @@
 - Arquivos: src/main/java/com/apiexternabackend/infra/client/cep/CepClient.java, src/main/java/com/apiexternabackend/infra/client/cep/dto/CepResponseDTO.java, src/main/java/com/apiexternabackend/infra/facade/CepFacade.java
 - Notas: preenche endereço a partir do CEP; CEP inexistente/fonte fora → erro tratado.
 
-## T-105 — Ingestão da base da CVM [pendente]
+## T-105 — Verificação da corretora na base da CVM [concluida]
 
 - Refs: AC-105, AC-106
-- Arquivos: src/main/java/com/apiexternabackend/domains/CvmParticipante.java, src/main/java/com/apiexternabackend/repositories/CvmParticipanteRepository.java, src/main/resources/db/migration/V3__create_cvm_participante.sql, src/main/java/com/apiexternabackend/infra/client/cvm/CvmCorretoraClient.java, src/main/java/com/apiexternabackend/infra/client/cvm/dto/CvmCorretoraResponseDTO.java, src/main/java/com/apiexternabackend/services/CvmIngestaoService.java, src/main/java/com/apiexternabackend/config/CvmIngestaoScheduler.java
-- Notas: caminho crítico (risco do PRD). Baixa cad_intermed.zip, descompacta, parseia CSV (Latin-1, ';'), faz upsert; guarda a data da base. Roda na subida (se vazia/velha) + @Scheduled diário.
+- Arquivos: src/main/java/com/apiexternabackend/infra/client/cvm/CvmCorretoraClient.java, src/main/java/com/apiexternabackend/infra/client/cvm/dto/CvmCorretoraResponseDTO.java, src/main/java/com/apiexternabackend/infra/facade/CvmFacade.java, src/main/resources/db/migration/V3__create_cvm_participante.sql, src/main/resources/db/migration/V7__drop_cvm_participante.sql
+- Notas: caminho crítico (risco do PRD). Plano original: baixar cad_intermed.zip, parsear o CSV e fazer upsert em `cvm_participante`, na subida e num @Scheduled diário. Abandonado no commit 9c1eb61: a ingestão (`CvmParticipante`, repositório, `CvmIngestaoService`, `CvmIngestaoScheduler`) saiu e a tabela caiu na V7; a verificação passou a consultar a CVM direto pelo `CvmFacade`. AC-105 e AC-106 são provados pelos testes de `CvmFacadeTest`, `CorretoraServiceTest` e `CorretoraResourceTest`.
 
 ## T-106 — Verificação de autorização na CVM (facade) [pendente]
 

@@ -1,7 +1,7 @@
 # Spec: Investidor
 
 > feature: investidor
-> status: em-andamento
+> status: em-implementacao
 
 ## Contexto
 

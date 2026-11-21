@@ -1,7 +1,7 @@
 # Spec: Autenticacao investidor
 
 > feature: autenticacao-investidor
-> status: em-andamento
+> status: implementada
 
 ## Contexto
 

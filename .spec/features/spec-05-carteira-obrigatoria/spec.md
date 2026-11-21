@@ -1,7 +1,7 @@
 # Spec: SPEC-05 — Carteira obrigatória para cadastrar ação
 
 > feature: spec-05-carteira-obrigatoria
-> status: em-andamento
+> status: implementada
 
 ## Contexto
 

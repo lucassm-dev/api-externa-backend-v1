@@ -1,7 +1,7 @@
 # Spec: SPEC-04 — Preço sugerido pela cotação, mas editável
 
 > feature: spec-04-preco-editavel
-> status: em-andamento
+> status: implementada
 
 ## Contexto
 

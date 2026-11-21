@@ -1,7 +1,7 @@
 # Spec: SPEC-03 — Recadastro após exclusão e bloqueio com vínculo ativo
 
 > feature: spec-03-recadastro-exclusao
-> status: em-andamento
+> status: implementada
 
 ## Contexto
 
