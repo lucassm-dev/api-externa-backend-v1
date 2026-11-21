@@ -1,5 +1,7 @@
 package com.apiexternabackend.services;
 
+import java.time.LocalDateTime;
+import com.apiexternabackend.domains.dtos.CarteirasAfetadasResponseDTO;
 import org.springframework.transaction.annotation.Transactional;
 import com.apiexternabackend.repositories.RegistroAdministrativoRepository;
 import com.apiexternabackend.domains.enums.AlvoAdministrativo;
@@ -72,7 +74,7 @@ public class CorretoraService {
     }
 
     public Page<CorretoraResponseDTO> listar(Pageable pageable) {
-        return repository.findAllByAtivoTrue(pageable).map(mapper::toResponse);
+        return repository.findAllByAtivoTrueAndDescontinuadaFalse(pageable).map(mapper::toResponse);
     }
 
     @Transactional
@@ -90,6 +92,29 @@ public class CorretoraService {
         repository.save(corretora);
         registroRepository.save(new RegistroAdministrativo(adminId, AcaoAdministrativa.EXCLUSAO_CORRETORA,
                 AlvoAdministrativo.CORRETORA, corretora.getId(), null));
+    }
+
+    public CarteirasAfetadasResponseDTO carteirasAfetadas(Long id) {
+        Corretora corretora = buscarAtiva(id);
+        return new CarteirasAfetadasResponseDTO(carteiraRepository.countByCorretoraIdAndAtivaTrue(corretora.getId()));
+    }
+
+    @Transactional
+    public CorretoraResponseDTO descontinuar(Long id, String motivo, Long adminId) {
+        Corretora corretora = buscarAtiva(id);
+        if (corretora.getDescontinuada()) {
+            throw new RegraVioladaException("COR-006", "Corretora já está descontinuada: " + id);
+        }
+        corretora.setDescontinuada(true);
+        corretora.setDescontinuadaEm(LocalDateTime.now());
+        registroRepository.save(new RegistroAdministrativo(adminId, AcaoAdministrativa.DESCONTINUACAO_CORRETORA,
+                AlvoAdministrativo.CORRETORA, corretora.getId(), motivo));
+        return mapper.toResponse(repository.save(corretora));
+    }
+
+    private Corretora buscarAtiva(Long id) {
+        return repository.findByIdAndAtivoTrue(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("COR-001", "Corretora não encontrada: " + id));
     }
 
     public CorretoraResponseDTO buscarPorId(Long id) {

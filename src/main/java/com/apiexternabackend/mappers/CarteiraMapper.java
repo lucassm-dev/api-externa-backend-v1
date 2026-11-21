@@ -14,6 +14,7 @@ public interface CarteiraMapper {
     @Mapping(target = "investidorId", source = "investidor.id")
     @Mapping(target = "corretoraId", source = "corretora.id")
     @Mapping(target = "nomeCorretora", source = "corretora.razaoSocial")
+    @Mapping(target = "corretoraDescontinuada", source = "corretora.descontinuada")
     @Mapping(target = "moeda", source = "mercado", qualifiedByName = "mercadoParaMoeda")
     CarteiraResponseDTO toResponse(Carteira carteira);
 

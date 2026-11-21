@@ -54,6 +54,12 @@ public class Corretora {
     @Column(nullable = false)
     private Boolean ativo = true;
 
+    @Column(nullable = false)
+    private Boolean descontinuada = false;
+
+    @Column(name = "descontinuada_em")
+    private LocalDateTime descontinuadaEm;
+
     private LocalDate dataBaseCvm;
 
     @Column(nullable = false)

@@ -1,5 +1,8 @@
 package com.apiexternabackend.resources;
 
+import org.springframework.web.bind.annotation.PatchMapping;
+import com.apiexternabackend.domains.dtos.DescontinuacaoRequestDTO;
+import com.apiexternabackend.domains.dtos.CarteirasAfetadasResponseDTO;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import com.apiexternabackend.config.InvestidorPrincipal;
 import com.apiexternabackend.domains.dtos.CorretoraRequestDTO;
@@ -51,6 +54,19 @@ public class CorretoraResource {
     @GetMapping("/cnpj/{cnpj}")
     public ResponseEntity<CorretoraResponseDTO> buscarPorCnpj(@PathVariable String cnpj) {
         return ResponseEntity.ok(service.buscarPorCnpj(cnpj));
+    }
+
+    @GetMapping("/{id}/carteiras-afetadas")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CarteirasAfetadasResponseDTO> carteirasAfetadas(@PathVariable Long id) {
+        return ResponseEntity.ok(service.carteirasAfetadas(id));
+    }
+
+    @PatchMapping("/{id}/descontinuar")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CorretoraResponseDTO> descontinuar(@PathVariable Long id, @RequestBody @Valid DescontinuacaoRequestDTO dto,
+                                                             @AuthenticationPrincipal InvestidorPrincipal admin) {
+        return ResponseEntity.ok(service.descontinuar(id, dto.motivo(), admin.id()));
     }
 
     @DeleteMapping("/{id}")

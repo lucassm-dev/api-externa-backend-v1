@@ -13,7 +13,7 @@ public interface CorretoraRepository extends JpaRepository<Corretora, Long> {
 
     Optional<Corretora> findByCnpjAndAtivoTrue(String cnpj);
 
-    Page<Corretora> findAllByAtivoTrue(Pageable pageable);
+    Page<Corretora> findAllByAtivoTrueAndDescontinuadaFalse(Pageable pageable);
 
     Optional<Corretora> findByIdAndAtivoTrue(Long id);
 }

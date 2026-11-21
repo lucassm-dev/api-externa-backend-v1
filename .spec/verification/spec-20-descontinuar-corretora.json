@@ -1,0 +1,57 @@
+{
+  "feature": "spec-20-descontinuar-corretora",
+  "timestamp": "2026-11-21T21:27:29.112Z",
+  "gitRev": "315ac44",
+  "command": "./mvnw -q test",
+  "reporter": "exitcode",
+  "exitCode": 0,
+  "testsParsed": 0,
+  "results": {
+    "AC-593": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-594": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-595": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-596": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-597": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-598": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-599": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-600": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-601": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    }
+  },
+  "principles": {}
+}

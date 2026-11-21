@@ -1,7 +1,7 @@
 {
   "feature": "spec-15-identidade-usuario",
-  "timestamp": "2026-11-21T20:51:13.123Z",
-  "gitRev": "b6d5735",
+  "timestamp": "2026-11-21T21:25:06.950Z",
+  "gitRev": "315ac44",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

@@ -62,7 +62,7 @@ class CarteiraResourceTest {
     }
 
     private CarteiraResponseDTO buildResponse() {
-        return new CarteiraResponseDTO(1L, 1L, 1L, "XP", Mercado.BR, "BRL", "Carteira BR", true);
+        return new CarteiraResponseDTO(1L, 1L, 1L, "XP", Mercado.BR, "BRL", "Carteira BR", true, false);
     }
 
     @Test
@@ -106,7 +106,7 @@ class CarteiraResourceTest {
     @Test
     @DisplayName("@spec:AC-307 PATCH /carteiras/{id} renomeia a carteira")
     void deveRenomearCarteira() throws Exception {
-        CarteiraResponseDTO resp = new CarteiraResponseDTO(1L, 1L, 1L, "XP", Mercado.BR, "BRL", "Novo Nome", true);
+        CarteiraResponseDTO resp = new CarteiraResponseDTO(1L, 1L, 1L, "XP", Mercado.BR, "BRL", "Novo Nome", true, false);
         when(service.renomear(eq(1L), eq("Novo Nome"), eq(INVESTIDOR_ID))).thenReturn(resp);
 
         mockMvc.perform(patch("/carteiras/1")

@@ -31,4 +31,5 @@ public class CorretoraResponseDTO {
     private Boolean validadaNaCvm;
     private LocalDate dataBaseCvm;
     private LocalDateTime dataCadastro;
+    private Boolean descontinuada;
 }

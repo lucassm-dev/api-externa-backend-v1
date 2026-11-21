@@ -20,4 +20,5 @@ public class CarteiraResponseDTO {
     private String moeda;
     private String nome;
     private Boolean ativa;
+    private Boolean corretoraDescontinuada;
 }
