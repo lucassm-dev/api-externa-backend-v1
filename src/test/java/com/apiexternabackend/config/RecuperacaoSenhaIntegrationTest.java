@@ -53,7 +53,7 @@ class RecuperacaoSenhaIntegrationTest {
     @MockBean private JavaMailSender mailSender;
 
     @Test
-    @DisplayName("#26 Senha antiga para de funcionar e a nova funciona")
+    @DisplayName("@spec:AC-609 Senha antiga para de funcionar e a nova funciona")
     void trocaASenha() throws Exception {
         String email = cadastrar();
         redefinir(email, pedirCodigo(email), "novaSenha9").andExpect(status().isNoContent());
@@ -63,7 +63,7 @@ class RecuperacaoSenhaIntegrationTest {
     }
 
     @Test
-    @DisplayName("#26 Token emitido antes da troca recebe 401")
+    @DisplayName("@spec:AC-610 Token emitido antes da troca recebe 401")
     void tokenAntigoCai() throws Exception {
         String email = cadastrar();
         String tokenAntigo = token(login(email, "senha123"));
@@ -75,7 +75,7 @@ class RecuperacaoSenhaIntegrationTest {
     }
 
     @Test
-    @DisplayName("#26 Código já usado é recusado")
+    @DisplayName("@spec:AC-611 Código já usado é recusado")
     void codigoUsadoRecusado() throws Exception {
         String email = cadastrar();
         String codigo = pedirCodigo(email);
@@ -84,7 +84,7 @@ class RecuperacaoSenhaIntegrationTest {
     }
 
     @Test
-    @DisplayName("#26 Código expirado é recusado")
+    @DisplayName("@spec:AC-612 Código expirado é recusado")
     void codigoExpiradoRecusado() throws Exception {
         String email = cadastrar();
         String codigo = pedirCodigo(email);
@@ -99,7 +99,7 @@ class RecuperacaoSenhaIntegrationTest {
     }
 
     @Test
-    @DisplayName("#26 Após 5 erros, nem o código certo vale")
+    @DisplayName("@spec:AC-613 Após 5 erros, nem o código certo vale")
     void limiteDeTentativas() throws Exception {
         String email = cadastrar();
         String codigo = pedirCodigo(email);
@@ -111,7 +111,7 @@ class RecuperacaoSenhaIntegrationTest {
     }
 
     @Test
-    @DisplayName("#26 Pedir novo código invalida o anterior")
+    @DisplayName("@spec:AC-614 Pedir novo código invalida o anterior")
     void novoCodigoInvalidaAnterior() throws Exception {
         String email = cadastrar();
         String primeiro = pedirCodigo(email);
@@ -123,7 +123,7 @@ class RecuperacaoSenhaIntegrationTest {
     }
 
     @Test
-    @DisplayName("#26 E-mail inexistente responde igual ao existente e não envia nada")
+    @DisplayName("@spec:AC-615 E-mail inexistente responde igual ao existente e não envia nada")
     void emailInexistenteRespondeIgual() throws Exception {
         String existente = cadastrar();
         String a = esqueci(existente).andExpect(status().isAccepted()).andReturn().getResponse().getContentAsString();
@@ -134,7 +134,7 @@ class RecuperacaoSenhaIntegrationTest {
     }
 
     @Test
-    @DisplayName("#26 Usuário bloqueado não recebe código nem redefine")
+    @DisplayName("@spec:AC-616 Usuário bloqueado não recebe código nem redefine")
     void bloqueadoNaoRecupera() throws Exception {
         String email = cadastrar();
         var u = usuarioRepository.findByEmailAndSituacaoNot(email, SituacaoUsuario.EXCLUIDO).orElseThrow();
@@ -147,7 +147,7 @@ class RecuperacaoSenhaIntegrationTest {
     }
 
     @Test
-    @DisplayName("#26 Mais de 3 pedidos em 15 minutos não enviam e-mail")
+    @DisplayName("@spec:AC-617 Mais de 3 pedidos em 15 minutos não enviam e-mail")
     void limiteDePedidos() throws Exception {
         String email = cadastrar();
         for (int i = 0; i < 4; i++) {
@@ -157,7 +157,7 @@ class RecuperacaoSenhaIntegrationTest {
     }
 
     @Test
-    @DisplayName("#26 Falha no SMTP responde igual e não grava código")
+    @DisplayName("@spec:AC-618 Falha no SMTP responde igual e não grava código")
     void falhaNoEnvioRespondeIgual() throws Exception {
         String email = cadastrar();
         doThrow(new MailSendException("fora")).when(mailSender).send(any(SimpleMailMessage.class));
@@ -167,7 +167,7 @@ class RecuperacaoSenhaIntegrationTest {
     }
 
     @Test
-    @DisplayName("#26 Código é guardado como hash")
+    @DisplayName("@spec:AC-619 Código é guardado como hash")
     void codigoGuardadoComoHash() throws Exception {
         String email = cadastrar();
         String codigo = pedirCodigo(email);

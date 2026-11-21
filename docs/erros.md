@@ -104,6 +104,7 @@ Implementação: `src/main/java/com/apiexternabackend/resources/exceptions/`.
 | AUT-010 | Requisição com token válido de conta bloqueada — o bloqueio vale na hora (spec-18) | 401 | `JwtAuthenticationEntryPoint` |
 | AUT-011 | ADMIN tentando bloquear a si mesmo (spec-18) | 422 | RegraVioladaException |
 | AUT-012 | Usuário não encontrado na gestão de usuários (inclui excluído — spec-18) | 404 | RecursoNaoEncontradoException |
+| AUT-013 | Código de recuperação inválido, expirado, já usado ou sem tentativas (spec-22) | 422 | RegraVioladaException |
 
 ## EXT — Integração externa
 
