@@ -1,7 +1,7 @@
 {
   "feature": "spec-07-cache-cotacao",
-  "timestamp": "2026-11-21T20:47:42.201Z",
-  "gitRev": "b6d5735",
+  "timestamp": "2026-11-21T21:21:34.305Z",
+  "gitRev": "315ac44",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
