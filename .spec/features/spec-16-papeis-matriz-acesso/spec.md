@@ -20,8 +20,13 @@ Decisões de projeto (respondidas pelo dono do produto em 2026-11-21):
    resources), conforme a matriz abaixo. Sem token continua 401 antes de
    qualquer regra de papel; papel errado responde 403 `AUT-007` (handler que
    já existe).
-3. **Catálogo de ações segue o de corretoras**: só ADMIN cadastra, atualiza
-   cotação e exclui ação; pesquisar é dos dois papéis.
+3. **Rotas de ação ficam como estão até a issue #24**, liberadas para os dois
+   papéis (pesquisar, atualizar cotação, cadastrar e excluir). A #24 faz a
+   pesquisa cadastrar sozinha o ticker que não está no catálogo e remove
+   `POST /acoes` e `DELETE /acoes/{ticker}`; atualizar cotação continua do
+   investidor. Revisão da decisão original (só ADMIN alteraria ações), feita
+   pelo dono do produto em 2026-11-21 no gate de impacto: fechar o cadastro
+   antes da #24 deixaria o investidor sem como comprar ticker novo.
 4. **Bloqueio com efeito imediato fica para a issue #21**, junto com o
    bloquear/desbloquear. Até lá, bloqueado só é barrado no login (spec-15).
 5. **Primeiro ADMIN vem de variáveis de ambiente**, criado na inicialização só
@@ -36,7 +41,8 @@ Decisões de projeto (respondidas pelo dono do produto em 2026-11-21):
 | Consultar corretoras | `GET /corretoras`, `GET /corretoras/{id}`, `GET /corretoras/cnpj/{cnpj}` | ✅ | ✅ |
 | Cadastrar e excluir corretora | `POST /corretoras`, `DELETE /corretoras/{id}` | ❌ | ✅ |
 | Pesquisar ação | `GET /acoes`, `GET /acoes/ticker/{ticker}`, `GET /mercado/barra-cotacoes` | ✅ | ✅ |
-| Alterar catálogo de ações | `POST /acoes`, `PUT /acoes/{id}/atualizar-cotacao`, `DELETE /acoes/{ticker}` | ❌ | ✅ |
+| Ações até a #24 | `POST /acoes`, `PUT /acoes/{id}/atualizar-cotacao`, `DELETE /acoes/{ticker}` | ✅ | ✅ |
+| Dados do usuário logado | `GET /auth/me` (spec-17) | ✅ | ✅ |
 | Carteiras, operações e perfil próprios | `/carteiras/**`, `/operacoes/**`, `/investidores/**` | ✅ | ❌ |
 | Gerenciar usuários | (nasce na #21) | ❌ | ✅ |
 
@@ -54,10 +60,11 @@ para que a API saiba o que cada um pode fazer.
 - **Então** os dois recebem token; o do investidor traz `authorities`
   `["ROLE_INVESTIDOR"]` e o do ADMIN traz `["ROLE_ADMIN"]`
 
-### US-452 — Catálogo compartilhado só o ADMIN altera
+### US-452 — Catálogo de corretoras só o ADMIN altera
 
-Como dono do produto, quero que só o ADMIN altere os catálogos de corretoras
-e de ações, para que um investidor não mude dado que todos usam.
+Como dono do produto, quero que só o ADMIN altere o catálogo de corretoras,
+para que um investidor não mude dado que todos usam. O catálogo de ações
+continua aberto aos dois papéis até a #24 mudar como a ação entra nele.
 
 #### AC-559 — Os dois papéis consultam corretoras
 
@@ -79,13 +86,13 @@ e de ações, para que um investidor não mude dado que todos usam.
   cotações
 - **Então** investidor e ADMIN recebem 200; sem token recebe 401 `AUT-005`
 
-#### AC-562 — Só o ADMIN altera o catálogo de ações
+#### AC-562 — Os dois papéis continuam alterando ações até a #24
 
 - **Dado** um token de investidor, um de ADMIN e nenhum token
 - **Quando** cada um chama `POST /acoes`, `PUT /acoes/{id}/atualizar-cotacao`
   e `DELETE /acoes/{ticker}`
-- **Então** o ADMIN é atendido (2xx); o investidor recebe 403 `AUT-007`;
-  sem token recebe 401 `AUT-005`
+- **Então** investidor e ADMIN são atendidos (nunca 403); sem token recebe
+  401 `AUT-005`
 
 ### US-453 — Dado do investidor é só do investidor
 
@@ -152,6 +159,8 @@ papel de um investidor, para que ninguém se promova a ADMIN.
 - Bloqueio com efeito imediato em toda requisição — issue #21.
 - `GET /auth/me` — issue #20.
 - Descontinuar corretora — issue #23.
+- Ação entrar no catálogo pela pesquisa e remoção de `POST`/`DELETE /acoes` —
+  issue #24.
 - Papel `SUPORTE` — ADR próprio, depois.
 
 ## Suposições
@@ -162,7 +171,7 @@ papel de um investidor, para que ninguém se promova a ADMIN.
 | ASM-473 | A senha do ADMIN das variáveis segue a mesma política do autocadastro (8+, letra e número); fora dela, o ADMIN não é criado e o log avisa (sem mostrar a senha). | aberta | — |
 | ASM-474 | "Já existe ADMIN" é qualquer `usuario` com papel `ADMIN` não excluído; com um ADMIN existente, as variáveis são ignoradas (trocar a senha por elas não é suportado). | aberta | — |
 | ASM-475 | O principal continua `InvestidorPrincipal(id)` também para o ADMIN; o nome fica impreciso, mas nenhum resource de ADMIN usa o id ainda. Renomear entra quando a #21 precisar. | aberta | — |
-| ASM-476 | Com o catálogo de ações só para ADMIN, o investidor não consegue comprar ticker que ainda não está no catálogo até um ADMIN cadastrar ou até a #24 (ação entra pela pesquisa). | aberta | — |
+| ASM-476 | Com o catálogo de ações só para ADMIN, o investidor não consegue comprar ticker que ainda não está no catálogo até um ADMIN cadastrar ou até a #24 (ação entra pela pesquisa). | invalidada | Dono do produto, 2026-11-21: ações ficam abertas aos dois papéis até a #24 (decisão 3) |
 | ASM-477 | Até a #21, um usuário bloqueado com token já emitido continua acessando até o token expirar (no máximo 60 minutos). | aberta | — |
 | ASM-478 | Tokens emitidos antes do deploy trazem `ROLE_INVESTIDOR` e continuam válidos até expirar; como só investidores tinham login, o papel deles está correto. | aberta | — |
 

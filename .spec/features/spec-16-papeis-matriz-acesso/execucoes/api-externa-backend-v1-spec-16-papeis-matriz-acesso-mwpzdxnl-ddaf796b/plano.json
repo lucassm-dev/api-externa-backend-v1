@@ -1,0 +1,118 @@
+{
+  "version": 2,
+  "engine": ".claude/skills/onp-spec-driven-claude-v4-0-0/scripts/onp-spec.mjs",
+  "config": {
+    "maxParalelas": 3,
+    "model": null,
+    "esforco": "medium",
+    "permissionMode": "acceptEdits",
+    "allowedTools": null,
+    "sandbox": "workspace-write",
+    "quotaCommand": null,
+    "modelsCommand": null,
+    "notifications": {
+      "enabled": false,
+      "command": null
+    },
+    "quota": {
+      "thresholdPercent": 5,
+      "pollIntervalMs": 60000
+    }
+  },
+  "testCommand": "./mvnw -q test",
+  "runId": "api-externa-backend-v1-spec-16-papeis-matriz-acesso-mwpzdxnl-ddaf796b",
+  "feature": "spec-16-papeis-matriz-acesso",
+  "agent": "claude",
+  "modo": "sequencial",
+  "paralelizar": null,
+  "modeloForcado": null,
+  "esforcoForcado": null,
+  "geradoEm": "2026-11-21 05:42",
+  "createdAt": "2026-11-21T05:42:15.970Z",
+  "branchTrabalho": "spec/spec-16-papeis-matriz-acesso",
+  "baseDir": ".spec/features/spec-16-papeis-matriz-acesso",
+  "artifactDir": ".spec/features/spec-16-papeis-matriz-acesso/execucoes/api-externa-backend-v1-spec-16-papeis-matriz-acesso-mwpzdxnl-ddaf796b",
+  "specDir": ".spec",
+  "repoName": "api-externa-backend-v1",
+  "logsDir": "../onp-worktrees/api-externa-backend-v1-spec-16-papeis-matriz-acesso-logs",
+  "ondas": [],
+  "faixas": [],
+  "sequenciais": [
+    {
+      "id": "T-501",
+      "titulo": "Papel real no token e login do ADMIN",
+      "modelo": null,
+      "esforco": "medium",
+      "arquivos": [
+        "src/main/java/com/apiexternabackend/config/JwtService.java",
+        "src/main/java/com/apiexternabackend/services/AutenticacaoService.java",
+        "src/test/java/com/apiexternabackend/services/AutenticacaoServiceTest.java",
+        "src/test/java/com/apiexternabackend/config/IdentidadeUsuarioIntegrationTest.java",
+        "src/test/java/com/apiexternabackend/config/AuthMeIntegrationTest.java"
+      ],
+      "refs": [
+        "US-451",
+        "US-455",
+        "AC-558",
+        "AC-568"
+      ],
+      "prompt": "Você executa UMA tarefa da feature \"spec-16-papeis-matriz-acesso\" (fluxo onp-spec, spec-anchored).\nLeia primeiro: .spec/features/spec-16-papeis-matriz-acesso/spec.md, .spec/features/spec-16-papeis-matriz-acesso/tasks.md e .spec/constituicao.md.\n\nSua tarefa (somente ela):\nT-501 — \"Papel real no token e login do ADMIN\"\n  critérios/refs: AC-558 (Token leva o papel do usuário, e o ADMIN consegue entrar), AC-568 (Autocadastro ignora papel enviado e nenhuma entrada da API aceita papel)\n  arquivos permitidos (e seus testes): src/main/java/com/apiexternabackend/config/JwtService.java, src/main/java/com/apiexternabackend/services/AutenticacaoService.java, src/test/java/com/apiexternabackend/services/AutenticacaoServiceTest.java, src/test/java/com/apiexternabackend/config/IdentidadeUsuarioIntegrationTest.java, src/test/java/com/apiexternabackend/config/AuthMeIntegrationTest.java\n  mensagem de commit: \"T-501 spec-16-papeis-matriz-acesso: Papel real no token e login do ADMIN\"\n\nRegras inegociáveis:\n- Todo critério de aceite referenciado vira teste com @spec:AC-xxx no título.\n- NUNCA enfraqueça, pule (skip/todo) ou apague um teste para passar — teste pulado não é prova e o audit acusa.\n- Rode os testes localmente com `./mvnw -q test` até passarem.\n- NÃO edite tasks.md, NÃO rode onp-spec verify/audit e NÃO toque em outras tarefas — o orquestrador cuida disso.\n- Specs, PRDs, ADRs, TDDs e documentos existentes são somente leitura. Nunca reformate, migre ou sobrescreva esses arquivos; mudanças de requisito exigem uma proposta separada e resposta do cliente.\n- Leia PRD, ADR, design.md e research.md quando existirem; pare e solicite decisão nativa se houver conflito de domínio/requisito/decisão. Nunca decida conflitos em headless.\n- Ao retomar após limite, inspecione git diff/log e continue o trabalho parcial sem repetir operações já concluídas.\n- Ao final de CADA tarefa: `git add` só no que você tocou e um commit próprio."
+    },
+    {
+      "id": "T-502",
+      "titulo": "Matriz de acesso nas rotas",
+      "modelo": null,
+      "esforco": "high",
+      "arquivos": [
+        "src/main/java/com/apiexternabackend/config/SecurityConfig.java",
+        "src/main/java/com/apiexternabackend/resources/CorretoraResource.java",
+        "src/main/java/com/apiexternabackend/resources/AcaoResource.java",
+        "src/main/java/com/apiexternabackend/resources/MercadoResource.java",
+        "src/main/java/com/apiexternabackend/resources/CarteiraResource.java",
+        "src/main/java/com/apiexternabackend/resources/OperacaoResource.java",
+        "src/main/java/com/apiexternabackend/resources/InvestidorResource.java",
+        "src/test/java/com/apiexternabackend/config/MatrizAcessoIntegrationTest.java",
+        "src/test/java/com/apiexternabackend/resources/CorretoraResourceTest.java",
+        "src/test/java/com/apiexternabackend/resources/AcaoResourceTest.java",
+        "src/test/java/com/apiexternabackend/resources/MercadoResourceTest.java",
+        "src/test/java/com/apiexternabackend/resources/CarteiraResourceTest.java",
+        "src/test/java/com/apiexternabackend/resources/OperacaoResourceTest.java",
+        "src/test/java/com/apiexternabackend/resources/InvestidorResourceTest.java"
+      ],
+      "refs": [
+        "US-452",
+        "US-453",
+        "AC-559",
+        "AC-560",
+        "AC-561",
+        "AC-562",
+        "AC-563"
+      ],
+      "prompt": "Você executa UMA tarefa da feature \"spec-16-papeis-matriz-acesso\" (fluxo onp-spec, spec-anchored).\nLeia primeiro: .spec/features/spec-16-papeis-matriz-acesso/spec.md, .spec/features/spec-16-papeis-matriz-acesso/tasks.md e .spec/constituicao.md.\n\nSua tarefa (somente ela):\nT-502 — \"Matriz de acesso nas rotas\"\n  critérios/refs: AC-559 (Os dois papéis consultam corretoras), AC-560 (Só o ADMIN cadastra e exclui corretora), AC-561 (Os dois papéis pesquisam ações), AC-562 (Os dois papéis continuam alterando ações até a #24), AC-563 (ADMIN não acessa carteiras, operações nem perfil de investidor)\n  arquivos permitidos (e seus testes): src/main/java/com/apiexternabackend/config/SecurityConfig.java, src/main/java/com/apiexternabackend/resources/CorretoraResource.java, src/main/java/com/apiexternabackend/resources/AcaoResource.java, src/main/java/com/apiexternabackend/resources/MercadoResource.java, src/main/java/com/apiexternabackend/resources/CarteiraResource.java, src/main/java/com/apiexternabackend/resources/OperacaoResource.java, src/main/java/com/apiexternabackend/resources/InvestidorResource.java, src/test/java/com/apiexternabackend/config/MatrizAcessoIntegrationTest.java, src/test/java/com/apiexternabackend/resources/CorretoraResourceTest.java, src/test/java/com/apiexternabackend/resources/AcaoResourceTest.java, src/test/java/com/apiexternabackend/resources/MercadoResourceTest.java, src/test/java/com/apiexternabackend/resources/CarteiraResourceTest.java, src/test/java/com/apiexternabackend/resources/OperacaoResourceTest.java, src/test/java/com/apiexternabackend/resources/InvestidorResourceTest.java\n  mensagem de commit: \"T-502 spec-16-papeis-matriz-acesso: Matriz de acesso nas rotas\"\n\nRegras inegociáveis:\n- Todo critério de aceite referenciado vira teste com @spec:AC-xxx no título.\n- NUNCA enfraqueça, pule (skip/todo) ou apague um teste para passar — teste pulado não é prova e o audit acusa.\n- Rode os testes localmente com `./mvnw -q test` até passarem.\n- NÃO edite tasks.md, NÃO rode onp-spec verify/audit e NÃO toque em outras tarefas — o orquestrador cuida disso.\n- Specs, PRDs, ADRs, TDDs e documentos existentes são somente leitura. Nunca reformate, migre ou sobrescreva esses arquivos; mudanças de requisito exigem uma proposta separada e resposta do cliente.\n- Leia PRD, ADR, design.md e research.md quando existirem; pare e solicite decisão nativa se houver conflito de domínio/requisito/decisão. Nunca decida conflitos em headless.\n- Ao retomar após limite, inspecione git diff/log e continue o trabalho parcial sem repetir operações já concluídas.\n- Ao final de CADA tarefa: `git add` só no que você tocou e um commit próprio."
+    },
+    {
+      "id": "T-503",
+      "titulo": "Primeiro ADMIN pelas variáveis de ambiente",
+      "modelo": null,
+      "esforco": "medium",
+      "arquivos": [
+        "src/main/java/com/apiexternabackend/config/AdminInicial.java",
+        "src/main/java/com/apiexternabackend/repositories/UsuarioRepository.java",
+        "src/main/resources/application.properties",
+        ".env.example",
+        "src/test/java/com/apiexternabackend/config/AdminInicialTest.java"
+      ],
+      "refs": [
+        "US-454",
+        "AC-564",
+        "AC-565",
+        "AC-566",
+        "AC-567"
+      ],
+      "prompt": "Você executa UMA tarefa da feature \"spec-16-papeis-matriz-acesso\" (fluxo onp-spec, spec-anchored).\nLeia primeiro: .spec/features/spec-16-papeis-matriz-acesso/spec.md, .spec/features/spec-16-papeis-matriz-acesso/tasks.md e .spec/constituicao.md.\n\nSua tarefa (somente ela):\nT-503 — \"Primeiro ADMIN pelas variáveis de ambiente\"\n  critérios/refs: AC-564 (Inicialização cria o ADMIN uma única vez), AC-565 (A senha do ADMIN não aparece em log nem no código), AC-566 (Sem as variáveis, sobe sem ADMIN e avisa), AC-567 (E-mail de investidor não vira ADMIN)\n  arquivos permitidos (e seus testes): src/main/java/com/apiexternabackend/config/AdminInicial.java, src/main/java/com/apiexternabackend/repositories/UsuarioRepository.java, src/main/resources/application.properties, .env.example, src/test/java/com/apiexternabackend/config/AdminInicialTest.java\n  mensagem de commit: \"T-503 spec-16-papeis-matriz-acesso: Primeiro ADMIN pelas variáveis de ambiente\"\n\nRegras inegociáveis:\n- Todo critério de aceite referenciado vira teste com @spec:AC-xxx no título.\n- NUNCA enfraqueça, pule (skip/todo) ou apague um teste para passar — teste pulado não é prova e o audit acusa.\n- Rode os testes localmente com `./mvnw -q test` até passarem.\n- NÃO edite tasks.md, NÃO rode onp-spec verify/audit e NÃO toque em outras tarefas — o orquestrador cuida disso.\n- Specs, PRDs, ADRs, TDDs e documentos existentes são somente leitura. Nunca reformate, migre ou sobrescreva esses arquivos; mudanças de requisito exigem uma proposta separada e resposta do cliente.\n- Leia PRD, ADR, design.md e research.md quando existirem; pare e solicite decisão nativa se houver conflito de domínio/requisito/decisão. Nunca decida conflitos em headless.\n- Ao retomar após limite, inspecione git diff/log e continue o trabalho parcial sem repetir operações já concluídas.\n- Ao final de CADA tarefa: `git add` só no que você tocou e um commit próprio."
+    }
+  ],
+  "concluidas": [],
+  "avisos": [],
+  "sourceFingerprint": "78dafd38f8fc8b5a1327354926f29079c8e05d20f122b66a795c8ff4ae8ff5c6"
+}

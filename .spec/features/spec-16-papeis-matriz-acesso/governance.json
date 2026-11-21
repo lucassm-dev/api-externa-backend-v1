@@ -1,0 +1,620 @@
+{
+  "version": 1,
+  "large": false,
+  "domains": [],
+  "decisions": [
+    {
+      "conflictId": "catalogo-corretoras-so-admin",
+      "choice": "prosseguir",
+      "answer": "Prosseguir (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"Corretoras\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "b7cdb30b254d2bbb9cb0bd3744e70e5628c7e036bab76056693b35fd138cfd5b",
+      "answeredAt": "2026-11-21T05:42:00.457Z"
+    },
+    {
+      "conflictId": "impacto:cadastro-corretora",
+      "choice": "prosseguir",
+      "answer": "Prosseguir (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"Corretoras\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "872579b1420cfaabdc417f8731a6ce970c36d6ef2a52b1363e063aa7b44aed46",
+      "answeredAt": "2026-11-21T05:42:01.119Z"
+    },
+    {
+      "conflictId": "impacto:refactor-cnpj-delete",
+      "choice": "prosseguir",
+      "answer": "Prosseguir (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"Corretoras\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "f8d382a99e842c6e1cbe1667de35b4cc456eff5d39e0bec455ce2c454dce9401",
+      "answeredAt": "2026-11-21T05:42:01.530Z"
+    },
+    {
+      "conflictId": "impacto:spec-03-recadastro-exclusao",
+      "choice": "prosseguir",
+      "answer": "Prosseguir (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"Corretoras\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "8cbb5183afa4d4ca81e7d06984ccd58128f5d700c116f866222eb4a79f758758",
+      "answeredAt": "2026-11-21T05:42:02.037Z"
+    },
+    {
+      "conflictId": "papel-real-no-token",
+      "choice": "prosseguir",
+      "answer": "Prosseguir (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"Token\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "799e9f6d9a59a190719c987c86121dd09fd4a9d286cb1b8b5d76c6818aa0d692",
+      "answeredAt": "2026-11-21T05:42:02.828Z"
+    },
+    {
+      "conflictId": "impacto:autenticacao-investidor",
+      "choice": "prosseguir",
+      "answer": "Prosseguir (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"Token\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "cbd9d0332cd74332d32324e3b48e2190d938829a13f27332e1becf953ad24112",
+      "answeredAt": "2026-11-21T05:42:03.426Z"
+    },
+    {
+      "conflictId": "impacto:spec-14-jwt-resource-server",
+      "choice": "prosseguir",
+      "answer": "Prosseguir (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"Token\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "f27558c1257ae25beb5ce5e0e8f88b5d2d30f64160bdcfc642c552f4554d03c5",
+      "answeredAt": "2026-11-21T05:42:03.987Z"
+    },
+    {
+      "conflictId": "impacto:spec-15-identidade-usuario",
+      "choice": "prosseguir",
+      "answer": "Prosseguir (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"Token\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "1cb77a8d924def7c3de3eb868c8d3012a40094bb73e9da9da0c1970eae742bd2",
+      "answeredAt": "2026-11-21T05:42:04.592Z"
+    },
+    {
+      "conflictId": "impacto:spec-17-auth-me",
+      "choice": "prosseguir",
+      "answer": "Prosseguir (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"Token\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "d727dd8516aa53fe450f8bd8c39f5af26a39e960a1a633be5103835042afd629",
+      "answeredAt": "2026-11-21T05:42:04.988Z"
+    },
+    {
+      "conflictId": "impacto:catalogo-acao",
+      "choice": "prosseguir",
+      "answer": "Ações inalteradas até a #24 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"Ações (segunda pergunta)\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "e7474afd2c97ad080e079860b804e188538a79cb5073a46fe4c87769cb95c40d",
+      "answeredAt": "2026-11-21T05:42:05.333Z"
+    },
+    {
+      "conflictId": "impacto:operacao-movimentacao",
+      "choice": "prosseguir",
+      "answer": "Ações inalteradas até a #24 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"Ações (segunda pergunta)\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "e1805a94bc994e05bca6edd5c610c9742ced023b4c6110aa1bb1de034be37d7c",
+      "answeredAt": "2026-11-21T05:42:05.682Z"
+    },
+    {
+      "conflictId": "impacto:carteira",
+      "choice": "prosseguir",
+      "answer": "Prosseguir em todos (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"19 domínios\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "33f72817b5dfa59581b84f65d886787ce7dbb3e1fcee793c0afca58e11fa3b1c",
+      "answeredAt": "2026-11-21T05:42:06.024Z"
+    },
+    {
+      "conflictId": "impacto:investidor",
+      "choice": "prosseguir",
+      "answer": "Prosseguir em todos (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"19 domínios\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "4e690ea2ef291051a8c11c5da9b70d287a1d4fbb744741994c59cd9165bd374d",
+      "answeredAt": "2026-11-21T05:42:06.361Z"
+    },
+    {
+      "conflictId": "impacto:spec-01-padronizacao-erros",
+      "choice": "prosseguir",
+      "answer": "Prosseguir em todos (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"19 domínios\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "34a1f177aa2ad81199759d859a11fca9adb1e67e4203bdd254ee15070d0cfb16",
+      "answeredAt": "2026-11-21T05:42:06.694Z"
+    },
+    {
+      "conflictId": "impacto:spec-04-preco-editavel",
+      "choice": "prosseguir",
+      "answer": "Prosseguir em todos (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"19 domínios\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "e4cca9983fd27ced322ab44b75a6baa60082fa0e4ac2fdd584b3e81e7398174f",
+      "answeredAt": "2026-11-21T05:42:07.045Z"
+    },
+    {
+      "conflictId": "impacto:spec-05-carteira-obrigatoria",
+      "choice": "prosseguir",
+      "answer": "Prosseguir em todos (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"19 domínios\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "2a21a341ebb88df6e4fe73f7aae6d664f93fdd1950d8af1233b7034ee42bb39c",
+      "answeredAt": "2026-11-21T05:42:07.392Z"
+    },
+    {
+      "conflictId": "impacto:spec-06-lucro-realizado",
+      "choice": "prosseguir",
+      "answer": "Prosseguir em todos (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"19 domínios\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "7a4a156f379cfb0bfb1052b9c47275ce403d7fe575cecc4e93b53535bb479f58",
+      "answeredAt": "2026-11-21T05:42:07.736Z"
+    },
+    {
+      "conflictId": "impacto:spec-07-cache-cotacao",
+      "choice": "prosseguir",
+      "answer": "Prosseguir em todos (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"19 domínios\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "495968926ea19194cfb5b527848b0c6ec3f5c5a26c69c78b5d87bb9bb6642ca0",
+      "answeredAt": "2026-11-21T05:42:08.073Z"
+    },
+    {
+      "conflictId": "impacto:spec-08-conversao-cambio",
+      "choice": "prosseguir",
+      "answer": "Prosseguir em todos (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"19 domínios\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "e268565a7d6bee0580e349428d1316def3c83a52ec343373f776dd86ab3249f6",
+      "answeredAt": "2026-11-21T05:42:08.402Z"
+    },
+    {
+      "conflictId": "impacto:spec-09-barra-cotacoes",
+      "choice": "prosseguir",
+      "answer": "Prosseguir em todos (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"19 domínios\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "1736ddceef08a60e999c5723997a9eac9c332cc1145bbdf1b6913fda174dc926",
+      "answeredAt": "2026-11-21T05:42:08.744Z"
+    },
+    {
+      "conflictId": "impacto:spec-10-vazamento-investidor-inativo",
+      "choice": "prosseguir",
+      "answer": "Prosseguir em todos (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"19 domínios\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "c22702d0254976007e647b2d3872000383610f6cf9342c4b6b67de39af7f1300",
+      "answeredAt": "2026-11-21T05:42:09.093Z"
+    },
+    {
+      "conflictId": "impacto:spec-11-cors",
+      "choice": "prosseguir",
+      "answer": "Prosseguir em todos (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"19 domínios\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "25080f0cd0b6e07d147ef5fdeaf69ff98b214190c0188fa605bacdee4883f532",
+      "answeredAt": "2026-11-21T05:42:09.452Z"
+    },
+    {
+      "conflictId": "impacto:spec-12-barra-um-ativo-por-requisicao",
+      "choice": "prosseguir",
+      "answer": "Prosseguir em todos (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"19 domínios\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "18037a70dc697792975b5be363372f4a4a546247c39b590f7671078fded63653",
+      "answeredAt": "2026-11-21T05:42:09.790Z"
+    },
+    {
+      "conflictId": "impacto:spec-13-autorizacao-investidor",
+      "choice": "prosseguir",
+      "answer": "Prosseguir em todos (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta \"19 domínios\"",
+      "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+      "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+      "conflictFingerprint": "26ee384820dbf5590f53befefbe51bc3920b73c104a6dafae3bb269ecfc7ece6",
+      "answeredAt": "2026-11-21T05:42:10.123Z"
+    }
+  ],
+  "clientRequest": "",
+  "review": {
+    "summary": "spec-16 coloca @PreAuthorize em todos os resources e o papel real no token. Mudam regra: (1) rotas de /acoes ficam como estão, liberadas aos dois papéis até a #24 (decisão 3 revista pelo dono do produto); (2) POST/DELETE de /corretoras passam a ser só ADMIN; (3) o token deixa de levar ROLE_INVESTIDOR fixo (ASM-461 da spec-14) e o ADMIN passa a fazer login (ASM-466 da spec-15). Nos demais domínios (carteira, operações, investidor, spec-01, spec-04 a spec-13, spec-17), o comportamento para o investidor não muda; o ADMIN recebe 403 nas rotas de dados do investidor e 200 nas de consulta. spec-17 só acompanha a nova assinatura de JwtService.gerar no teste do AC-571.",
+    "reviewer": "Claude Code (claude-opus-5-5), sessão interativa de 2026-11-21",
+    "conflicts": [
+      {
+        "id": "impacto:autenticacao-investidor",
+        "automatic": true,
+        "feature": "autenticacao-investidor",
+        "summary": "A mudança interfere no domínio da feature autenticacao-investidor.",
+        "files": [
+          ".env.example",
+          "src/main/java/com/apiexternabackend/config/JwtService.java",
+          "src/main/java/com/apiexternabackend/config/SecurityConfig.java",
+          "src/main/java/com/apiexternabackend/resources/CarteiraResource.java",
+          "src/main/java/com/apiexternabackend/resources/InvestidorResource.java",
+          "src/main/java/com/apiexternabackend/resources/OperacaoResource.java",
+          "src/main/java/com/apiexternabackend/services/AutenticacaoService.java",
+          "src/test/java/com/apiexternabackend/resources/CarteiraResourceTest.java",
+          "src/test/java/com/apiexternabackend/resources/InvestidorResourceTest.java",
+          "src/test/java/com/apiexternabackend/resources/OperacaoResourceTest.java",
+          "src/test/java/com/apiexternabackend/services/AutenticacaoServiceTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/autenticacao-investidor/spec.md"
+      },
+      {
+        "id": "impacto:cadastro-corretora",
+        "automatic": true,
+        "feature": "cadastro-corretora",
+        "summary": "A mudança interfere no domínio da feature cadastro-corretora.",
+        "files": [
+          "src/main/java/com/apiexternabackend/resources/CorretoraResource.java",
+          "src/test/java/com/apiexternabackend/resources/CorretoraResourceTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/cadastro-corretora/spec.md"
+      },
+      {
+        "id": "impacto:carteira",
+        "automatic": true,
+        "feature": "carteira",
+        "summary": "A mudança interfere no domínio da feature carteira.",
+        "files": [
+          "src/main/java/com/apiexternabackend/resources/CarteiraResource.java",
+          "src/test/java/com/apiexternabackend/resources/CarteiraResourceTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/carteira/spec.md"
+      },
+      {
+        "id": "impacto:catalogo-acao",
+        "automatic": true,
+        "feature": "catalogo-acao",
+        "summary": "A mudança interfere no domínio da feature catalogo-acao.",
+        "files": [
+          "src/main/java/com/apiexternabackend/resources/AcaoResource.java",
+          "src/test/java/com/apiexternabackend/resources/AcaoResourceTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/catalogo-acao/spec.md"
+      },
+      {
+        "id": "impacto:investidor",
+        "automatic": true,
+        "feature": "investidor",
+        "summary": "A mudança interfere no domínio da feature investidor.",
+        "files": [
+          "src/main/java/com/apiexternabackend/resources/InvestidorResource.java",
+          "src/test/java/com/apiexternabackend/resources/InvestidorResourceTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/investidor/spec.md"
+      },
+      {
+        "id": "impacto:operacao-movimentacao",
+        "automatic": true,
+        "feature": "operacao-movimentacao",
+        "summary": "A mudança interfere no domínio da feature operacao-movimentacao.",
+        "files": [
+          "src/main/java/com/apiexternabackend/resources/OperacaoResource.java",
+          "src/test/java/com/apiexternabackend/resources/OperacaoResourceTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/operacao-movimentacao/spec.md"
+      },
+      {
+        "id": "impacto:refactor-cnpj-delete",
+        "automatic": true,
+        "feature": "refactor-cnpj-delete",
+        "summary": "A mudança interfere no domínio da feature refactor-cnpj-delete.",
+        "files": [
+          "src/main/java/com/apiexternabackend/resources/AcaoResource.java",
+          "src/main/java/com/apiexternabackend/resources/CorretoraResource.java",
+          "src/main/java/com/apiexternabackend/resources/InvestidorResource.java",
+          "src/test/java/com/apiexternabackend/resources/AcaoResourceTest.java",
+          "src/test/java/com/apiexternabackend/resources/CorretoraResourceTest.java",
+          "src/test/java/com/apiexternabackend/resources/InvestidorResourceTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/refactor-cnpj-delete/spec.md"
+      },
+      {
+        "id": "impacto:spec-01-padronizacao-erros",
+        "automatic": true,
+        "feature": "spec-01-padronizacao-erros",
+        "summary": "A mudança interfere no domínio da feature spec-01-padronizacao-erros.",
+        "files": [
+          "src/test/java/com/apiexternabackend/resources/AcaoResourceTest.java",
+          "src/test/java/com/apiexternabackend/resources/CarteiraResourceTest.java",
+          "src/test/java/com/apiexternabackend/resources/CorretoraResourceTest.java",
+          "src/test/java/com/apiexternabackend/resources/InvestidorResourceTest.java",
+          "src/test/java/com/apiexternabackend/resources/OperacaoResourceTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-01-padronizacao-erros/spec.md"
+      },
+      {
+        "id": "impacto:spec-03-recadastro-exclusao",
+        "automatic": true,
+        "feature": "spec-03-recadastro-exclusao",
+        "summary": "A mudança interfere no domínio da feature spec-03-recadastro-exclusao.",
+        "files": [
+          "src/test/java/com/apiexternabackend/resources/AcaoResourceTest.java",
+          "src/test/java/com/apiexternabackend/resources/CarteiraResourceTest.java",
+          "src/test/java/com/apiexternabackend/resources/CorretoraResourceTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-03-recadastro-exclusao/spec.md"
+      },
+      {
+        "id": "impacto:spec-04-preco-editavel",
+        "automatic": true,
+        "feature": "spec-04-preco-editavel",
+        "summary": "A mudança interfere no domínio da feature spec-04-preco-editavel.",
+        "files": [
+          "src/test/java/com/apiexternabackend/resources/OperacaoResourceTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-04-preco-editavel/spec.md"
+      },
+      {
+        "id": "impacto:spec-05-carteira-obrigatoria",
+        "automatic": true,
+        "feature": "spec-05-carteira-obrigatoria",
+        "summary": "A mudança interfere no domínio da feature spec-05-carteira-obrigatoria.",
+        "files": [
+          "src/main/java/com/apiexternabackend/resources/AcaoResource.java",
+          "src/test/java/com/apiexternabackend/resources/AcaoResourceTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-05-carteira-obrigatoria/spec.md"
+      },
+      {
+        "id": "impacto:spec-06-lucro-realizado",
+        "automatic": true,
+        "feature": "spec-06-lucro-realizado",
+        "summary": "A mudança interfere no domínio da feature spec-06-lucro-realizado.",
+        "files": [
+          "src/main/java/com/apiexternabackend/resources/OperacaoResource.java",
+          "src/test/java/com/apiexternabackend/resources/OperacaoResourceTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-06-lucro-realizado/spec.md"
+      },
+      {
+        "id": "impacto:spec-07-cache-cotacao",
+        "automatic": true,
+        "feature": "spec-07-cache-cotacao",
+        "summary": "A mudança interfere no domínio da feature spec-07-cache-cotacao.",
+        "files": [
+          "src/main/java/com/apiexternabackend/resources/AcaoResource.java",
+          "src/main/resources/application.properties",
+          "src/test/java/com/apiexternabackend/resources/AcaoResourceTest.java",
+          "src/test/java/com/apiexternabackend/resources/OperacaoResourceTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-07-cache-cotacao/spec.md"
+      },
+      {
+        "id": "impacto:spec-08-conversao-cambio",
+        "automatic": true,
+        "feature": "spec-08-conversao-cambio",
+        "summary": "A mudança interfere no domínio da feature spec-08-conversao-cambio.",
+        "files": [
+          "src/main/java/com/apiexternabackend/resources/OperacaoResource.java",
+          "src/main/resources/application.properties",
+          "src/test/java/com/apiexternabackend/resources/OperacaoResourceTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-08-conversao-cambio/spec.md"
+      },
+      {
+        "id": "impacto:spec-09-barra-cotacoes",
+        "automatic": true,
+        "feature": "spec-09-barra-cotacoes",
+        "summary": "A mudança interfere no domínio da feature spec-09-barra-cotacoes.",
+        "files": [
+          "src/main/java/com/apiexternabackend/resources/MercadoResource.java",
+          "src/main/resources/application.properties",
+          "src/test/java/com/apiexternabackend/resources/MercadoResourceTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-09-barra-cotacoes/spec.md"
+      },
+      {
+        "id": "impacto:spec-10-vazamento-investidor-inativo",
+        "automatic": true,
+        "feature": "spec-10-vazamento-investidor-inativo",
+        "summary": "A mudança interfere no domínio da feature spec-10-vazamento-investidor-inativo.",
+        "files": [
+          "src/main/java/com/apiexternabackend/services/AutenticacaoService.java",
+          "src/test/java/com/apiexternabackend/resources/InvestidorResourceTest.java",
+          "src/test/java/com/apiexternabackend/services/AutenticacaoServiceTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-10-vazamento-investidor-inativo/spec.md"
+      },
+      {
+        "id": "impacto:spec-11-cors",
+        "automatic": true,
+        "feature": "spec-11-cors",
+        "summary": "A mudança interfere no domínio da feature spec-11-cors.",
+        "files": [
+          "src/main/java/com/apiexternabackend/config/SecurityConfig.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-11-cors/spec.md"
+      },
+      {
+        "id": "impacto:spec-12-barra-um-ativo-por-requisicao",
+        "automatic": true,
+        "feature": "spec-12-barra-um-ativo-por-requisicao",
+        "summary": "A mudança interfere no domínio da feature spec-12-barra-um-ativo-por-requisicao.",
+        "files": [
+          "src/main/resources/application.properties"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-12-barra-um-ativo-por-requisicao/spec.md"
+      },
+      {
+        "id": "impacto:spec-13-autorizacao-investidor",
+        "automatic": true,
+        "feature": "spec-13-autorizacao-investidor",
+        "summary": "A mudança interfere no domínio da feature spec-13-autorizacao-investidor.",
+        "files": [
+          "src/main/java/com/apiexternabackend/resources/InvestidorResource.java",
+          "src/test/java/com/apiexternabackend/resources/InvestidorResourceTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-13-autorizacao-investidor/spec.md"
+      },
+      {
+        "id": "impacto:spec-14-jwt-resource-server",
+        "automatic": true,
+        "feature": "spec-14-jwt-resource-server",
+        "summary": "A mudança interfere no domínio da feature spec-14-jwt-resource-server.",
+        "files": [
+          ".env.example",
+          "src/main/java/com/apiexternabackend/config/JwtService.java",
+          "src/main/java/com/apiexternabackend/config/SecurityConfig.java",
+          "src/main/java/com/apiexternabackend/services/AutenticacaoService.java",
+          "src/main/resources/application.properties",
+          "src/test/java/com/apiexternabackend/resources/AcaoResourceTest.java",
+          "src/test/java/com/apiexternabackend/resources/CarteiraResourceTest.java",
+          "src/test/java/com/apiexternabackend/resources/InvestidorResourceTest.java",
+          "src/test/java/com/apiexternabackend/resources/MercadoResourceTest.java",
+          "src/test/java/com/apiexternabackend/resources/OperacaoResourceTest.java",
+          "src/test/java/com/apiexternabackend/services/AutenticacaoServiceTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-14-jwt-resource-server/spec.md"
+      },
+      {
+        "id": "impacto:spec-15-identidade-usuario",
+        "automatic": true,
+        "feature": "spec-15-identidade-usuario",
+        "summary": "A mudança interfere no domínio da feature spec-15-identidade-usuario.",
+        "files": [
+          "src/main/java/com/apiexternabackend/repositories/UsuarioRepository.java",
+          "src/main/java/com/apiexternabackend/services/AutenticacaoService.java",
+          "src/test/java/com/apiexternabackend/config/IdentidadeUsuarioIntegrationTest.java",
+          "src/test/java/com/apiexternabackend/services/AutenticacaoServiceTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-15-identidade-usuario/spec.md"
+      },
+      {
+        "id": "impacto:spec-17-auth-me",
+        "automatic": true,
+        "feature": "spec-17-auth-me",
+        "summary": "A mudança interfere no domínio da feature spec-17-auth-me.",
+        "files": [
+          "src/main/java/com/apiexternabackend/config/SecurityConfig.java",
+          "src/main/java/com/apiexternabackend/services/AutenticacaoService.java",
+          "src/test/java/com/apiexternabackend/config/AuthMeIntegrationTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-17-auth-me/spec.md"
+      },
+      {
+        "id": "catalogo-corretoras-so-admin",
+        "summary": "Investidor perde POST/DELETE de /corretoras.",
+        "rule": ".spec/features/cadastro-corretora/spec.md"
+      },
+      {
+        "id": "papel-real-no-token",
+        "summary": "Token passa a levar o papel do usuário; ADMIN faz login.",
+        "rule": ".spec/features/spec-14-jwt-resource-server/spec.md"
+      }
+    ],
+    "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
+    "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
+    "reviewedAt": "2026-11-21T05:41:48.751Z",
+    "documents": [
+      ".spec/features/autenticacao-investidor/design.md",
+      ".spec/features/autenticacao-investidor/spec.md",
+      ".spec/features/autenticacao-investidor/tasks.md",
+      ".spec/features/cadastro-corretora/spec.md",
+      ".spec/features/cadastro-corretora/tasks.md",
+      ".spec/features/carteira/spec.md",
+      ".spec/features/carteira/tasks.md",
+      ".spec/features/catalogo-acao/spec.md",
+      ".spec/features/catalogo-acao/tasks.md",
+      ".spec/features/deploy-homelab/spec.md",
+      ".spec/features/deploy-homelab/tasks.md",
+      ".spec/features/investidor/spec.md",
+      ".spec/features/investidor/tasks.md",
+      ".spec/features/operacao-movimentacao/spec.md",
+      ".spec/features/operacao-movimentacao/tasks.md",
+      ".spec/features/refactor-cnpj-delete/spec.md",
+      ".spec/features/refactor-cnpj-delete/tasks.md",
+      ".spec/features/spec-01-padronizacao-erros/spec.md",
+      ".spec/features/spec-01-padronizacao-erros/tasks.md",
+      ".spec/features/spec-03-recadastro-exclusao/design.md",
+      ".spec/features/spec-03-recadastro-exclusao/spec.md",
+      ".spec/features/spec-03-recadastro-exclusao/tasks.md",
+      ".spec/features/spec-04-preco-editavel/design.md",
+      ".spec/features/spec-04-preco-editavel/spec.md",
+      ".spec/features/spec-04-preco-editavel/tasks.md",
+      ".spec/features/spec-05-carteira-obrigatoria/spec.md",
+      ".spec/features/spec-05-carteira-obrigatoria/tasks.md",
+      ".spec/features/spec-06-lucro-realizado/spec.md",
+      ".spec/features/spec-06-lucro-realizado/tasks.md",
+      ".spec/features/spec-07-cache-cotacao/spec.md",
+      ".spec/features/spec-07-cache-cotacao/tasks.md",
+      ".spec/features/spec-08-conversao-cambio/design.md",
+      ".spec/features/spec-08-conversao-cambio/spec.md",
+      ".spec/features/spec-08-conversao-cambio/tasks.md",
+      ".spec/features/spec-09-barra-cotacoes/design.md",
+      ".spec/features/spec-09-barra-cotacoes/spec.md",
+      ".spec/features/spec-09-barra-cotacoes/tasks.md",
+      ".spec/features/spec-10-vazamento-investidor-inativo/spec.md",
+      ".spec/features/spec-10-vazamento-investidor-inativo/tasks.md",
+      ".spec/features/spec-11-cors/spec.md",
+      ".spec/features/spec-11-cors/tasks.md",
+      ".spec/features/spec-12-barra-um-ativo-por-requisicao/spec.md",
+      ".spec/features/spec-12-barra-um-ativo-por-requisicao/tasks.md",
+      ".spec/features/spec-13-autorizacao-investidor/spec.md",
+      ".spec/features/spec-13-autorizacao-investidor/tasks.md",
+      ".spec/features/spec-14-jwt-resource-server/design.md",
+      ".spec/features/spec-14-jwt-resource-server/spec.md",
+      ".spec/features/spec-14-jwt-resource-server/tasks.md",
+      ".spec/features/spec-15-identidade-usuario/spec.md",
+      ".spec/features/spec-15-identidade-usuario/tasks.md",
+      ".spec/features/spec-16-papeis-matriz-acesso/spec.md",
+      ".spec/features/spec-16-papeis-matriz-acesso/tasks.md",
+      ".spec/features/spec-17-auth-me/spec.md",
+      ".spec/features/spec-17-auth-me/tasks.md",
+      ".spec/constituicao.md",
+      "onpspec.config.json"
+    ]
+  }
+}
