@@ -1,5 +1,7 @@
 package com.apiexternabackend.resources;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import com.apiexternabackend.config.InvestidorPrincipal;
 import com.apiexternabackend.domains.dtos.CorretoraRequestDTO;
 import com.apiexternabackend.domains.dtos.CorretoraResponseDTO;
 import com.apiexternabackend.services.CorretoraService;
@@ -53,8 +55,8 @@ public class CorretoraResource {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> excluir(@PathVariable Long id) {
-        service.excluir(id);
+    public ResponseEntity<Void> excluir(@PathVariable Long id, @AuthenticationPrincipal InvestidorPrincipal admin) {
+        service.excluir(id, admin.id());
         return ResponseEntity.noContent().build();
     }
 }

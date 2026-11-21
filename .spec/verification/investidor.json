@@ -1,7 +1,7 @@
 {
   "feature": "investidor",
-  "timestamp": "2026-11-21T19:56:37.821Z",
-  "gitRev": "2e4bc85",
+  "timestamp": "2026-11-21T20:44:10.905Z",
+  "gitRev": "b6d5735",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

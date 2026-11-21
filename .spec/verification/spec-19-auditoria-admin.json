@@ -1,0 +1,42 @@
+{
+  "feature": "spec-19-auditoria-admin",
+  "timestamp": "2026-11-21T20:52:58.221Z",
+  "gitRev": "b6d5735",
+  "command": "./mvnw -q test",
+  "reporter": "exitcode",
+  "exitCode": 0,
+  "testsParsed": 0,
+  "results": {
+    "AC-587": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-588": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-589": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-590": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-591": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-592": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    }
+  },
+  "principles": {}
+}

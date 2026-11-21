@@ -50,7 +50,8 @@ public class UsuarioAdminResource {
     }
 
     @PatchMapping("/{id}/desbloquear")
-    public ResponseEntity<UsuarioAdminResponseDTO> desbloquear(@PathVariable Long id) {
-        return ResponseEntity.ok(service.desbloquear(id));
+    public ResponseEntity<UsuarioAdminResponseDTO> desbloquear(@PathVariable Long id,
+                                                               @AuthenticationPrincipal InvestidorPrincipal admin) {
+        return ResponseEntity.ok(service.desbloquear(id, admin.id()));
     }
 }

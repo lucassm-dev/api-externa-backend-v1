@@ -49,6 +49,7 @@ class CorretoraServiceTest {
     @Mock private CnpjFacade cnpjFacade;
     @Mock private CepFacade cepFacade;
     @Mock private CvmFacade cvmFacade;
+    @Mock private com.apiexternabackend.repositories.RegistroAdministrativoRepository registroRepository;
 
     @InjectMocks
     private CorretoraService service;
@@ -129,7 +130,7 @@ class CorretoraServiceTest {
         when(repository.findByIdAndAtivoTrue(1L)).thenReturn(java.util.Optional.of(ativa));
         when(carteiraRepository.countByCorretoraIdAndAtivaTrue(1L)).thenReturn(0L);
 
-        service.excluir(1L);
+        service.excluir(1L, 2L);
 
         verify(repository).save(ativa);
         assertThat(ativa.getAtivo()).isFalse();
@@ -140,7 +141,7 @@ class CorretoraServiceTest {
     void deveLancarNotFoundAoExcluirCorretoraInexistente() {
         when(repository.findByIdAndAtivoTrue(99L)).thenReturn(java.util.Optional.empty());
 
-        assertThatThrownBy(() -> service.excluir(99L))
+        assertThatThrownBy(() -> service.excluir(99L, 2L))
                 .isInstanceOf(RecursoNaoEncontradoException.class);
     }
 
@@ -153,7 +154,7 @@ class CorretoraServiceTest {
         when(repository.findByIdAndAtivoTrue(1L)).thenReturn(java.util.Optional.of(ativa));
         when(carteiraRepository.countByCorretoraIdAndAtivaTrue(1L)).thenReturn(1L);
 
-        assertThatThrownBy(() -> service.excluir(1L))
+        assertThatThrownBy(() -> service.excluir(1L, 2L))
                 .isInstanceOf(com.apiexternabackend.resources.exceptions.RegraVioladaException.class);
 
         verify(repository, never()).save(any());
@@ -168,7 +169,7 @@ class CorretoraServiceTest {
         when(repository.findByIdAndAtivoTrue(1L)).thenReturn(java.util.Optional.of(ativa));
         when(carteiraRepository.countByCorretoraIdAndAtivaTrue(1L)).thenReturn(0L);
 
-        service.excluir(1L);
+        service.excluir(1L, 2L);
 
         verify(repository).save(ativa);
     }
