@@ -139,7 +139,7 @@ class AutenticacaoServiceTest {
         when(usuarioRepository.findByEmailAndSituacaoNot("joao@email.com", SituacaoUsuario.EXCLUIDO)).thenReturn(Optional.of(usuario));
         when(passwordEncoder.matches("senha123", "hash-bcrypt")).thenReturn(true);
         Instant expiracao = Instant.now().plusSeconds(3600);
-        when(jwtService.gerar(1L)).thenReturn(jwt("token-jwt-ficticio", expiracao));
+        when(jwtService.gerar(1L, Papel.INVESTIDOR)).thenReturn(jwt("token-jwt-ficticio", expiracao));
 
         AuthTokenResponseDTO result = service.login(new AuthLoginRequestDTO("joao@email.com", "senha123"));
 
@@ -232,12 +232,12 @@ class AutenticacaoServiceTest {
         Usuario ativo = new Usuario(2L, "joao@email.com", "hash-novo", Papel.INVESTIDOR, SituacaoUsuario.ATIVO);
         when(usuarioRepository.findByEmailAndSituacaoNot("joao@email.com", SituacaoUsuario.EXCLUIDO)).thenReturn(Optional.of(ativo));
         when(passwordEncoder.matches("senha123", "hash-novo")).thenReturn(true);
-        when(jwtService.gerar(2L)).thenReturn(jwt("token-do-ativo", Instant.now().plusSeconds(3600)));
+        when(jwtService.gerar(2L, Papel.INVESTIDOR)).thenReturn(jwt("token-do-ativo", Instant.now().plusSeconds(3600)));
 
         AuthTokenResponseDTO result = service.login(new AuthLoginRequestDTO("joao@email.com", "senha123"));
 
         assertThat(result.getToken()).isEqualTo("token-do-ativo");
-        verify(jwtService).gerar(2L);
+        verify(jwtService).gerar(2L, Papel.INVESTIDOR);
     }
 
     @Test
@@ -259,14 +259,15 @@ class AutenticacaoServiceTest {
     }
 
     @Test
-    @DisplayName("ASM-466 ADMIN não recebe token de investidor até a #19")
-    void deveRecusarAdminComMensagemGenerica() {
+    @DisplayName("@spec:AC-558 ADMIN faz login e o token é gerado com o papel ADMIN")
+    void deveAutenticarAdminComPapelAdmin() {
         usuario.setPapel(Papel.ADMIN);
         when(usuarioRepository.findByEmailAndSituacaoNot("joao@email.com", SituacaoUsuario.EXCLUIDO)).thenReturn(Optional.of(usuario));
+        when(passwordEncoder.matches("senha123", "hash-bcrypt")).thenReturn(true);
+        when(jwtService.gerar(1L, Papel.ADMIN)).thenReturn(jwt("token-admin", Instant.now().plusSeconds(3600)));
 
-        assertThatThrownBy(() -> service.login(new AuthLoginRequestDTO("joao@email.com", "senha123")))
-                .isInstanceOf(CredenciaisInvalidasException.class)
-                .hasMessage("E-mail ou senha inválidos.");
+        assertThat(service.login(new AuthLoginRequestDTO("joao@email.com", "senha123")).getToken()).isEqualTo("token-admin");
+        verify(jwtService).gerar(1L, Papel.ADMIN);
     }
 
     private static Jwt jwt(String valor, Instant expiracao) {

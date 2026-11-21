@@ -71,8 +71,7 @@ class AuthMeIntegrationTest {
     void adminRecebeDadosSemNome() throws Exception {
         String email = emailUnico();
         Usuario admin = usuarioRepository.save(new Usuario(null, email, "hash", Papel.ADMIN, SituacaoUsuario.ATIVO));
-        // ASM-480: o login do ADMIN só abre com a #19, então o token sai direto do JwtService
-        String token = jwtService.gerar(admin.getId()).getTokenValue();
+        String token = jwtService.gerar(admin.getId(), Papel.ADMIN).getTokenValue();
 
         me(token)
                 .andExpect(status().isOk())

@@ -17,6 +17,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.type.filter.AnnotationTypeFilter;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -43,6 +54,7 @@ class IdentidadeUsuarioIntegrationTest {
     @Autowired private InvestidorRepository investidorRepository;
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private AutenticacaoService autenticacaoService;
+    @Autowired private JwtDecoder jwtDecoder;
 
     @Test
     @DisplayName("@spec:AC-553 Autocadastro cria usuário INVESTIDOR ATIVO e investidor com o mesmo id, senha em hash")
@@ -116,6 +128,59 @@ class IdentidadeUsuarioIntegrationTest {
         assertThat(investidorRepository.findAll()).extracting(Investidor::getId)
                 .contains(investidorId)
                 .doesNotContain(admin.getId());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-558 Token do investidor leva ROLE_INVESTIDOR e o do ADMIN leva ROLE_ADMIN")
+    void tokenLevaOPapelReal() throws Exception {
+        String emailInvestidor = emailUnico();
+        cadastrar(emailInvestidor);
+        String emailAdmin = emailUnico();
+        usuarioRepository.save(new Usuario(null, emailAdmin, passwordEncoder.encode("senhaAdmin1"), Papel.ADMIN, SituacaoUsuario.ATIVO));
+
+        assertThat(authoritiesDoLogin(emailInvestidor, "senha123")).containsExactly("ROLE_INVESTIDOR");
+        assertThat(authoritiesDoLogin(emailAdmin, "senhaAdmin1")).containsExactly("ROLE_ADMIN");
+    }
+
+    @Test
+    @DisplayName("@spec:AC-568 Autocadastro com papel ADMIN no corpo cria INVESTIDOR, e nenhuma entrada da API aceita papel")
+    void ninguemSePromoveAAdmin() throws Exception {
+        String email = emailUnico();
+        String corpo = """
+                {"nome": "Tentou Ser Admin", "email": "%s", "cpf": "%s", "senha": "senha123", "papel": "ADMIN"}
+                """.formatted(email, cpfUnico());
+        String json = mockMvc.perform(post("/auth/cadastro").contentType(MediaType.APPLICATION_JSON).content(corpo))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+        Long id = objectMapper.readTree(json).get("id").asLong();
+
+        assertThat(usuarioRepository.findById(id).orElseThrow().getPapel()).isEqualTo(Papel.INVESTIDOR);
+        assertThat(entradasComPapel()).isEmpty();
+    }
+
+    private List<String> authoritiesDoLogin(String email, String senha) throws Exception {
+        String json = login(email, senha).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        String token = objectMapper.readValue(json, AuthTokenResponseDTO.class).getToken();
+        return jwtDecoder.decode(token).getClaimAsStringList("authorities");
+    }
+
+    // varre todo @RequestBody e parâmetro dos controllers atrás de algo chamado "papel"
+    private static List<String> entradasComPapel() throws Exception {
+        var scanner = new ClassPathScanningCandidateComponentProvider(false);
+        scanner.addIncludeFilter(new AnnotationTypeFilter(RestController.class));
+        List<String> achados = new ArrayList<>();
+        for (var bean : scanner.findCandidateComponents("com.apiexternabackend")) {
+            for (Method metodo : Class.forName(bean.getBeanClassName()).getDeclaredMethods()) {
+                for (Parameter parametro : metodo.getParameters()) {
+                    if (parametro.getName().equalsIgnoreCase("papel")) achados.add(metodo + " -> " + parametro.getName());
+                    if (!parametro.isAnnotationPresent(RequestBody.class)) continue;
+                    for (Field campo : parametro.getType().getDeclaredFields()) {
+                        if (campo.getName().equalsIgnoreCase("papel")) achados.add(parametro.getType().getName() + ".papel");
+                    }
+                }
+            }
+        }
+        return achados;
     }
 
     private Long cadastrar(String email) throws Exception {

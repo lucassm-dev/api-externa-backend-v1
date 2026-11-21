@@ -2,7 +2,7 @@
 
 > feature: spec-16-papeis-matriz-acesso
 
-## T-501 — Papel real no token e login do ADMIN [pendente]
+## T-501 — Papel real no token e login do ADMIN [concluida]
 - Refs: US-451, US-455, AC-558, AC-568
 - Arquivos: src/main/java/com/apiexternabackend/config/JwtService.java, src/main/java/com/apiexternabackend/services/AutenticacaoService.java, src/test/java/com/apiexternabackend/services/AutenticacaoServiceTest.java, src/test/java/com/apiexternabackend/config/IdentidadeUsuarioIntegrationTest.java, src/test/java/com/apiexternabackend/config/AuthMeIntegrationTest.java
 - Notas: decisão 1. `JwtService.gerar` passa a receber o papel. Sai o filtro de papel do login e o teste da ASM-466 da spec-15 vira o oposto (ADMIN entra). O `AuthMeIntegrationTest` (spec-17, AC-571) gera token de ADMIN pelo `JwtService` e acompanha a nova assinatura. AC-568: teste de integração do cadastro com `"papel"` no corpo + varredura dos DTOs de entrada em `domains/dtos` por campo `papel`.

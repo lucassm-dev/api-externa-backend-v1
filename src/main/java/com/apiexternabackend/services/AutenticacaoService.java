@@ -70,9 +70,7 @@ public class AutenticacaoService {
     public AuthTokenResponseDTO login(AuthLoginRequestDTO dto) {
         // AC-503/AC-508: conta excluída não entra. Ignorar excluídos também é o que permite
         // reaproveitar e-mail (AC-505) sem a consulta encontrar duas linhas.
-        // ASM-466: até a #19 o token só serve a investidor, então ADMIN cai na mensagem genérica.
         Usuario usuario = usuarioRepository.findByEmailAndSituacaoNot(dto.getEmail(), SituacaoUsuario.EXCLUIDO)
-                .filter(u -> u.getPapel() == Papel.INVESTIDOR)
                 .filter(u -> passwordEncoder.matches(dto.getSenha(), u.getSenha()))
                 .orElseThrow(() -> new CredenciaisInvalidasException("AUT-004", MENSAGEM_LOGIN_INVALIDO));
 
@@ -81,7 +79,7 @@ public class AutenticacaoService {
             throw new AcessoNegadoException("AUT-009", "Conta bloqueada. Procure o suporte.");
         }
 
-        Jwt token = jwtService.gerar(usuario.getId());
+        Jwt token = jwtService.gerar(usuario.getId(), usuario.getPapel());
         return new AuthTokenResponseDTO(token.getTokenValue(), "Bearer", token.getExpiresAt());
     }
 
