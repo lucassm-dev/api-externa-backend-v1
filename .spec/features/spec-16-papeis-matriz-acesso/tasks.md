@@ -13,7 +13,7 @@
 - Esforço: alto
 - Notas: decisões 2 e 3. `AcaoResource` não ganha restrição de papel (só autenticado) até a #24. `@EnableMethodSecurity` no `SecurityConfig`; `@PreAuthorize` por classe ou método conforme a matriz. O teste de matriz usa tokens reais de cada papel e serviços externos mockados (CVM, cotação) para o 2xx do ADMIN. Os testes `@WebMvcTest` existentes passam a precisar do papel certo no token mockado; ajustar ao que quebrar. Depende da T-501 (papel no token).
 
-## T-503 — Primeiro ADMIN pelas variáveis de ambiente [pendente]
+## T-503 — Primeiro ADMIN pelas variáveis de ambiente [concluida]
 - Refs: US-454, AC-564, AC-565, AC-566, AC-567
 - Arquivos: src/main/java/com/apiexternabackend/config/AdminInicial.java, src/main/java/com/apiexternabackend/repositories/UsuarioRepository.java, src/main/resources/application.properties, .env.example, src/test/java/com/apiexternabackend/config/AdminInicialTest.java
 - Notas: decisão 5. `ApplicationRunner` lendo `admin.email`/`admin.senha` (ASM-472). Log só com o e-mail. AC-565 por captura de saída (`OutputCaptureExtension`) e varredura de `src/main` por padrão de `admin.senha`.

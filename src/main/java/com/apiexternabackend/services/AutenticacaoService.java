@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class AutenticacaoService {
 
-    private static final Pattern POLITICA_SENHA = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d).{8,}$");
+    public static final Pattern POLITICA_SENHA = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d).{8,}$");
     private static final String MENSAGEM_LOGIN_INVALIDO = "E-mail ou senha inválidos.";
 
     private final InvestidorRepository repository;
