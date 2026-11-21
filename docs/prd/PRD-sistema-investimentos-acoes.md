@@ -419,7 +419,7 @@ Três papéis: **Investidor**, **Administrador** e, depois, **Suporte**. As deci
 - `[P]` O código expira em poucos minutos, aceita poucas tentativas e só pode ser usado uma vez
 - `[P]` A resposta ao pedido é a mesma exista o e-mail ou não — não revela quem tem conta
 - `[P]` Trocar a senha encerra as sessões abertas em outros dispositivos
-- `[A]` Qual serviço envia o e-mail, dentro da regra de gratuidade (seção 2)
+- `[D]` O e-mail sai por SMTP gratuito (Gmail com senha de app), dentro da regra de gratuidade (seção 2) — ADR-016
 
 ### 15.3. Identificação do papel e perfil `[D]`
 
