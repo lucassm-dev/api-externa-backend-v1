@@ -1,0 +1,47 @@
+{
+  "feature": "spec-17-auth-me",
+  "timestamp": "2026-11-21T05:08:13.699Z",
+  "gitRev": "506d15e",
+  "command": "./mvnw -q test",
+  "reporter": "exitcode",
+  "exitCode": 0,
+  "testsParsed": 0,
+  "results": {
+    "AC-569": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-570": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-571": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-572": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-573": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-574": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-575": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    }
+  },
+  "principles": {}
+}

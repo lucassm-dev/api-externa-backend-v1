@@ -45,7 +45,8 @@ public class SecurityConfig {
     private List<String> origensPermitidas = List.of();
 
     private static final String[] ROTAS_PUBLICAS = {
-            "/auth/**",
+            // spec-17: /auth/me exige token, então só cadastro e login ficam abertos
+            "/auth/cadastro", "/auth/login",
             "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**"
     };
 
