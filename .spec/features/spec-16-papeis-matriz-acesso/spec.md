@@ -41,7 +41,7 @@ Decisões de projeto (respondidas pelo dono do produto em 2026-11-21):
 | Consultar corretoras | `GET /corretoras`, `GET /corretoras/{id}`, `GET /corretoras/cnpj/{cnpj}` | ✅ | ✅ |
 | Cadastrar e excluir corretora | `POST /corretoras`, `DELETE /corretoras/{id}` | ❌ | ✅ |
 | Pesquisar ação | `GET /acoes`, `GET /acoes/ticker/{ticker}`, `GET /mercado/barra-cotacoes` | ✅ | ✅ |
-| Ações até a #24 | `POST /acoes`, `PUT /acoes/{id}/atualizar-cotacao`, `DELETE /acoes/{ticker}` | ✅ | ✅ |
+| Atualizar cotação (a ação entra pela pesquisa desde a #24, spec-21) | `PUT /acoes/{id}/atualizar-cotacao` | ✅ | ✅ |
 | Dados do usuário logado | `GET /auth/me` (spec-17) | ✅ | ✅ |
 | Carteiras, operações e perfil próprios | `/carteiras/**`, `/operacoes/**`, `/investidores/**` | ✅ | ❌ |
 | Gerenciar usuários | (nasce na #21) | ❌ | ✅ |
@@ -86,11 +86,12 @@ continua aberto aos dois papéis até a #24 mudar como a ação entra nele.
   cotações
 - **Então** investidor e ADMIN recebem 200; sem token recebe 401 `AUT-005`
 
-#### AC-562 — Os dois papéis continuam alterando ações até a #24
+#### AC-562 — Os dois papéis atualizam cotação de ação
+
+<!-- spec-21 (#24): POST /acoes e DELETE /acoes/{ticker} foram removidos; a ação entra pela pesquisa -->
 
 - **Dado** um token de investidor, um de ADMIN e nenhum token
-- **Quando** cada um chama `POST /acoes`, `PUT /acoes/{id}/atualizar-cotacao`
-  e `DELETE /acoes/{ticker}`
+- **Quando** cada um chama `PUT /acoes/{id}/atualizar-cotacao`
 - **Então** investidor e ADMIN são atendidos (nunca 403); sem token recebe
   401 `AUT-005`
 

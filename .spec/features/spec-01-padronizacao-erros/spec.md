@@ -25,13 +25,13 @@ erro de forma genérica sem depender de parsing de mensagem.
 - **Dado** uma chamada que dispara uma exceção de negócio conhecida (recurso
   não encontrado, recurso duplicado, regra violada ou integração externa)
 - **Quando** a API responde
-- **Então** o corpo traz `timestamp`, `status`, `codigo` (ex.: `ACA-002`),
+- **Então** o corpo traz `timestamp`, `status`, `codigo` (ex.: `COR-001`),
   `error` (categoria em português), `message` (mensagem final ao usuário) e
   `path` — e o status HTTP corresponde ao tipo da exceção
 
 #### AC-427 — Erro de validação de payload lista os campos inválidos
 
-- **Dado** uma requisição com corpo inválido (ex.: `POST /acoes` sem ticker)
+- **Dado** uma requisição com corpo inválido (ex.: `POST /carteiras` sem nome)
 - **Quando** a validação de bean falha
 - **Então** a resposta é 400 com `fieldErrors` listando cada campo e a
   mensagem de validação correspondente

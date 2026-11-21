@@ -26,8 +26,7 @@ NegocioException (abstrata)
 ├── RecursoDuplicadoException       → 409
 ├── RegraVioladaException           → 422
 ├── IntegracaoExternaException      → 429 (limiteExcedido=true) ou 503 (limiteExcedido=false)
-├── CredenciaisInvalidasException   → 401 (login incorreto — único caso de negócio fixo em 401)
-└── PreRequisitoNaoAtendidoException → 409 (pré-requisito de estado não satisfeito, ex.: cadastrar ação sem carteira)
+└── CredenciaisInvalidasException   → 401 (login incorreto — único caso de negócio fixo em 401)
 ```
 
 401/403 de autenticação/autorização (token ausente, expirado, acesso negado)
@@ -53,9 +52,6 @@ Implementação: `src/main/java/com/apiexternabackend/resources/exceptions/`.
 | Código | Situação | Status HTTP | Exceção |
 |---|---|---|---|
 | ACA-001 | Ação não encontrada (inclui ação existente porém inativa — busca individual e operação nunca enxergam ação excluída) | 404 | RecursoNaoEncontradoException |
-| ACA-002 | Ação já cadastrada (ticker duplicado **entre ativas** — ticker de ação excluída pode ser reutilizado) | 409 | RecursoDuplicadoException |
-| ACA-003 | Exclusão bloqueada: ação tem posição ativa (quantidade > 0) em pelo menos uma carteira | 422 | RegraVioladaException |
-| ACA-004 | Cadastro bloqueado: investidor não tem nenhuma carteira ativa (cadastre uma carteira antes de cadastrar ações) | 409 | PreRequisitoNaoAtendidoException |
 
 ## CAR — Carteira
 

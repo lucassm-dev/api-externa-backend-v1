@@ -1,6 +1,5 @@
 package com.apiexternabackend.config;
 
-import com.apiexternabackend.domains.dtos.AcaoRequestDTO;
 import com.apiexternabackend.domains.dtos.AcaoResponseDTO;
 import com.apiexternabackend.domains.dtos.CarteiraRequestDTO;
 import com.apiexternabackend.domains.dtos.CarteiraResponseDTO;
@@ -84,7 +83,7 @@ class MatrizAcessoIntegrationTest {
 
         AcaoResponseDTO acao = new AcaoResponseDTO();
         acao.setId(20L);
-        when(acaoService.cadastrar(any(), anyLong())).thenReturn(acao);
+        when(acaoService.buscarPorTicker(any(), any())).thenReturn(acao);
         when(acaoService.atualizarCotacao(anyLong(), anyBoolean())).thenReturn(acao);
 
         CarteiraResponseDTO carteira = new CarteiraResponseDTO();
@@ -137,12 +136,10 @@ class MatrizAcessoIntegrationTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-562 Investidor e ADMIN cadastram, atualizam cotação e excluem ação até a #24; sem token 401 AUT-005")
-    void doisPapeisAlteramAcoes() throws Exception {
+    @DisplayName("@spec:AC-562 Investidor e ADMIN atualizam cotação de ação; sem token 401 AUT-005")
+    void doisPapeisAtualizamCotacao() throws Exception {
         List<Supplier<MockHttpServletRequestBuilder>> rotas = List.of(
-                () -> json(post("/acoes"), new AcaoRequestDTO("PETR4", Mercado.BR)),
-                () -> put("/acoes/20/atualizar-cotacao"),
-                () -> delete("/acoes/PETR4"));
+                () -> put("/acoes/20/atualizar-cotacao"));
 
         for (var rota : rotas) {
             atendido(rota, tokenInvestidor);

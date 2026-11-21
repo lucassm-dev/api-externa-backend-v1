@@ -8,7 +8,7 @@
 - Notas: pré-requisito de compilação — feita antes de T-420/421/422. Ver design.md.
 
 ## T-420 — Ação: recadastro, busca individual e operação filtram ativo, bloqueio com posição [concluida]
-- Refs: AC-444, AC-446, AC-447, AC-448, AC-449, AC-450, AC-451
+- Refs: AC-446, AC-448, AC-449
 - Arquivos: src/main/java/com/apiexternabackend/services/AcaoService.java, src/main/java/com/apiexternabackend/services/OperacaoService.java, src/test/java/com/apiexternabackend/services/AcaoServiceTest.java, src/test/java/com/apiexternabackend/resources/AcaoResourceTest.java, src/test/java/com/apiexternabackend/services/OperacaoServiceTest.java
 
 ## T-421 — Corretora: recadastro, bloqueio de exclusão com carteira ativa [concluida]

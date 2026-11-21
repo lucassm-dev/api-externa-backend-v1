@@ -1,7 +1,7 @@
 {
   "feature": "spec-14-jwt-resource-server",
-  "timestamp": "2026-11-21T21:24:40.495Z",
-  "gitRev": "315ac44",
+  "timestamp": "2026-11-21T22:03:00.956Z",
+  "gitRev": "646d2e0",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

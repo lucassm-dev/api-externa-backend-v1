@@ -15,6 +15,7 @@
 
 ## T-003 — DELETE Ação [pendente]
 
-- Refs: US-411, AC-424, AC-425
+- Refs: AC-448
+- Notas: spec-21 (#24) removeu o DELETE de ação e os AC-424/AC-425; o campo `ativo` que esta tarefa criou continua escondendo ação inativa da busca (AC-448).
 - Arquivos: src/main/java/com/apiexternabackend/domains/Acao.java, src/main/java/com/apiexternabackend/services/AcaoService.java, src/main/java/com/apiexternabackend/resources/AcaoResource.java, src/main/resources/db/migration/V10__add_ativo_acao.sql, src/test/java/com/apiexternabackend/services/AcaoServiceTest.java, src/test/java/com/apiexternabackend/resources/AcaoResourceTest.java
 - Esforço: medio

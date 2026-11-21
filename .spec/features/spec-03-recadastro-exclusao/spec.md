@@ -46,17 +46,12 @@ tinha a pergunta **Q-404** em aberto: "as listagens já filtram por
 
 ## Histórias
 
+> Removidos pela spec-21 (#24, ADR-015): AC-444, AC-447, AC-450, AC-451. A ação entra no catálogo pela pesquisa; os códigos não são reaproveitados.
+
 ### US-415 — Recadastro de ação e corretora após exclusão
 
 Como operador do sistema, quero recadastrar um ticker/CNPJ que foi excluído
 anteriormente, para não ficar travado por um registro que já não está ativo.
-
-#### AC-444 — Recadastrar ticker de ação excluída funciona
-
-- **Dado** que cadastrei PETR4, exclui, e nenhuma outra PETR4 ativa existe
-- **Quando** cadastro PETR4 novamente
-- **Então** o cadastro é aceito (201), criando uma **nova linha** — a antiga
-  continua no banco, inativa
 
 #### AC-445 — Recadastrar CNPJ de corretora excluída funciona
 
@@ -65,20 +60,13 @@ anteriormente, para não ficar travado por um registro que já não está ativo.
 - **Quando** cadastro o mesmo CNPJ novamente
 - **Então** o cadastro é aceito (201), criando uma nova linha
 
-#### AC-446 — Ticker/CNPJ duplicado entre registros ATIVOS continua bloqueado
+#### AC-446 — CNPJ duplicado entre corretoras ATIVAS continua bloqueado
 
-- **Dado** uma ação (ou corretora) já ativa com um ticker (ou CNPJ)
-- **Quando** tento cadastrar outra com o mesmo identificador, também ativa
+<!-- spec-21 (#24): a parte de ticker saiu; ação só entra pela pesquisa, que reaproveita a existente -->
+
+- **Dado** uma corretora já ativa com um CNPJ
+- **Quando** tento cadastrar outra com o mesmo CNPJ
 - **Então** o cadastro é recusado (409), como já era antes
-
-#### AC-447 — Histórico de operações do ticker antigo não é corrompido nem ressuscitado
-
-- **Dado** um ticker excluído com operações antigas vinculadas, e um novo
-  cadastro do mesmo ticker
-- **Quando** consulto o histórico de operações
-- **Então** as operações antigas continuam apontando para a ação antiga
-  (inativa, outro id) — nunca para a ação recadastrada; a ação recadastrada
-  começa sem posição nem histórico
 
 ### US-416 — Ação excluída não é visível nem operável
 
@@ -104,20 +92,6 @@ já não existe mais.
 Como operador do sistema, quero que o sistema impeça excluir ação, corretora
 ou carteira que ainda tenha posição/vínculo ativo, para não deixar dado
 órfão ou inconsistente.
-
-#### AC-450 — Excluir ação com posição ativa é bloqueado
-
-- **Dado** uma ação com quantidade > 0 em pelo menos uma carteira
-- **Quando** tento excluí-la
-- **Então** a exclusão é recusada (409), com mensagem informando quantas
-  carteiras têm posição ativa nela
-
-#### AC-451 — Excluir ação com posições zeradas é permitido
-
-- **Dado** uma ação cujas posições estão todas zeradas (mesmo com histórico
-  de operações)
-- **Quando** tento excluí-la
-- **Então** a exclusão é aceita (204)
 
 #### AC-452 — Excluir carteira com posição ativa é bloqueado
 

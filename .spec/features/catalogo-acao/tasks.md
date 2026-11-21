@@ -4,14 +4,14 @@
 
 ## T-200 — Entidade Acao, enum de mercado, repositório e migration [pendente]
 
-- Refs: US-201, AC-204
+- Refs: US-201
 - Arquivos: src/main/java/com/apiexternabackend/domains/Acao.java, src/main/java/com/apiexternabackend/domains/enums/Mercado.java, src/main/java/com/apiexternabackend/repositories/AcaoRepository.java, src/main/resources/db/migration/V4__create_acao.sql
 - Notas: ticker (único), nomeEmpresa, mercado (BR/US), moeda, cotacaoAtual, dataHoraCotacao. existsByTicker/findByTicker.
 
 ## T-201 — DTOs e mapper da ação [pendente]
 
 - Refs: AC-201, AC-202, AC-206, AC-207
-- Arquivos: src/main/java/com/apiexternabackend/domains/dtos/AcaoRequestDTO.java, src/main/java/com/apiexternabackend/domains/dtos/AcaoResponseDTO.java, src/main/java/com/apiexternabackend/mappers/AcaoMapper.java
+- Arquivos: src/main/java/com/apiexternabackend/domains/dtos/AcaoResponseDTO.java, src/main/java/com/apiexternabackend/mappers/AcaoMapper.java
 - Notas: Request com ticker + mercado. Response com cotação e dataHoraCotacao (RN-Q01).
 
 ## T-202 — Adapter de cotação (isolamento, Item 15) [pendente]
@@ -46,6 +46,6 @@
 
 ## T-207 — Testes da ação [pendente]
 
-- Refs: AC-201, AC-202, AC-203, AC-204, AC-205, AC-206, AC-207, AC-208, AC-209, AC-210, AC-211
+- Refs: AC-201, AC-202, AC-203, AC-205, AC-206, AC-207, AC-208, AC-209, AC-210, AC-211
 - Arquivos: src/test/java/com/apiexternabackend/services/AcaoServiceTest.java, src/test/java/com/apiexternabackend/resources/AcaoResourceTest.java
 - Notas: fontes de cotação mockadas; um teste por critério.

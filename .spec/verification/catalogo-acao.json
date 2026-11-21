@@ -1,7 +1,7 @@
 {
   "feature": "catalogo-acao",
-  "timestamp": "2026-11-21T21:17:06.622Z",
-  "gitRev": "315ac44",
+  "timestamp": "2026-11-21T21:55:24.719Z",
+  "gitRev": "646d2e0",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
@@ -18,11 +18,6 @@
       "method": "exitcode"
     },
     "AC-203": {
-      "status": "pass",
-      "testName": null,
-      "method": "exitcode"
-    },
-    "AC-204": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"

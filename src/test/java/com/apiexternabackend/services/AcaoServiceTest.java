@@ -1,7 +1,6 @@
 package com.apiexternabackend.services;
 
 import com.apiexternabackend.domains.Acao;
-import com.apiexternabackend.domains.dtos.AcaoRequestDTO;
 import com.apiexternabackend.domains.dtos.AcaoResponseDTO;
 import com.apiexternabackend.domains.enums.Mercado;
 import com.apiexternabackend.infra.adapter.BrapiAdapter;
@@ -10,7 +9,6 @@ import com.apiexternabackend.infra.adapter.TwelveDataAdapter;
 import com.apiexternabackend.mappers.AcaoMapper;
 import com.apiexternabackend.repositories.AcaoRepository;
 import com.apiexternabackend.resources.exceptions.IntegracaoExternaException;
-import com.apiexternabackend.resources.exceptions.RecursoDuplicadoException;
 import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
 import com.apiexternabackend.resources.exceptions.RegraVioladaException;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +31,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,11 +38,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class AcaoServiceTest {
 
-    private static final Long INVESTIDOR_ID = 1L;
 
     @Mock private AcaoRepository repository;
-    @Mock private com.apiexternabackend.repositories.CarteiraAcaoRepository carteiraAcaoRepository;
-    @Mock private com.apiexternabackend.repositories.CarteiraRepository carteiraRepository;
     @Mock private AcaoMapper mapper;
     @Mock private BrapiAdapter brapiAdapter;
     @Mock private TwelveDataAdapter twelveDataAdapter;
@@ -63,7 +57,6 @@ class AcaoServiceTest {
 
     @BeforeEach
     void setUp() {
-        lenient().when(carteiraRepository.existsByInvestidorIdAndAtivaTrue(INVESTIDOR_ID)).thenReturn(true);
         LocalDateTime agora = LocalDateTime.now();
         cotacaoBR = new CotacaoResultado(new BigDecimal("38.00"), agora);
         cotacaoUS = new CotacaoResultado(new BigDecimal("150.00"), agora);
@@ -76,14 +69,14 @@ class AcaoServiceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-201 Ticker brasileiro válido é cadastrado com cotação BR e moeda BRL")
+    @DisplayName("@spec:AC-201 Ticker brasileiro válido entra no catálogo pela pesquisa com cotação BR e moeda BRL")
     void deveCadastrarAcaoBrasileira() {
-        when(repository.existsByTickerAndAtivoTrue("PETR4")).thenReturn(false);
+        when(repository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.empty());
         when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(cotacaoBR);
         when(repository.save(any())).thenReturn(acaoBR);
         when(mapper.toResponse(acaoBR)).thenReturn(responseBR);
 
-        AcaoResponseDTO result = service.cadastrar(new AcaoRequestDTO("PETR4", Mercado.BR), INVESTIDOR_ID);
+        AcaoResponseDTO result = service.buscarPorTicker("PETR4", Mercado.BR);
 
         assertThat(result.getMercado()).isEqualTo(Mercado.BR);
         assertThat(result.getMoeda()).isEqualTo("BRL");
@@ -94,12 +87,12 @@ class AcaoServiceTest {
     @Test
     @DisplayName("@spec:AC-202 Ticker americano usa a fonte US (Twelve Data) e moeda USD")
     void deveCadastrarAcaoAmericana() {
-        when(repository.existsByTickerAndAtivoTrue("AAPL")).thenReturn(false);
+        when(repository.findByTickerAndAtivoTrue("AAPL")).thenReturn(Optional.empty());
         when(twelveDataAdapter.buscarCotacao("AAPL")).thenReturn(cotacaoUS);
         when(repository.save(any())).thenReturn(acaoUS);
         when(mapper.toResponse(acaoUS)).thenReturn(responseUS);
 
-        AcaoResponseDTO result = service.cadastrar(new AcaoRequestDTO("AAPL", Mercado.US), INVESTIDOR_ID);
+        AcaoResponseDTO result = service.buscarPorTicker("AAPL", Mercado.US);
 
         assertThat(result.getMercado()).isEqualTo(Mercado.US);
         assertThat(result.getMoeda()).isEqualTo("USD");
@@ -108,34 +101,25 @@ class AcaoServiceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-203 Ticker inexistente na fonte impede o cadastro")
+    @DisplayName("@spec:AC-203 Ticker inexistente na fonte não entra no catálogo")
     void deveRejeitarTickerInexistente() {
-        when(repository.existsByTickerAndAtivoTrue("XXXX3")).thenReturn(false);
+        when(repository.findByTickerAndAtivoTrue("XXXX3")).thenReturn(Optional.empty());
         when(brapiAdapter.buscarCotacao("XXXX3"))
                 .thenThrow(new RegraVioladaException("EXT-008", "Ticker não encontrado na fonte BR: XXXX3"));
 
-        assertThatThrownBy(() -> service.cadastrar(new AcaoRequestDTO("XXXX3", Mercado.BR), INVESTIDOR_ID))
+        assertThatThrownBy(() -> service.buscarPorTicker("XXXX3", Mercado.BR))
                 .isInstanceOf(RegraVioladaException.class)
                 .hasMessageContaining("não encontrado");
     }
 
     @Test
-    @DisplayName("@spec:AC-204 @spec:AC-446 Ticker duplicado entre ativos é impedido")
-    void deveRejeitarTickerDuplicado() {
-        when(repository.existsByTickerAndAtivoTrue("PETR4")).thenReturn(true);
-
-        assertThatThrownBy(() -> service.cadastrar(new AcaoRequestDTO("PETR4", Mercado.BR), INVESTIDOR_ID))
-                .isInstanceOf(RecursoDuplicadoException.class);
-    }
-
-    @Test
     @DisplayName("@spec:AC-205 Mercado BR usa fonte BR, mercado US usa fonte US — nunca a fonte errada")
     void deveRotearParaFonteCorretaConforme() {
-        when(repository.existsByTickerAndAtivoTrue("PETR4")).thenReturn(false);
+        when(repository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.empty());
         when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(cotacaoBR);
         when(repository.save(any())).thenReturn(acaoBR);
         when(mapper.toResponse(acaoBR)).thenReturn(responseBR);
-        service.cadastrar(new AcaoRequestDTO("PETR4", Mercado.BR), INVESTIDOR_ID);
+        service.buscarPorTicker("PETR4", Mercado.BR);
         verify(brapiAdapter).buscarCotacao("PETR4");
         verify(twelveDataAdapter, never()).buscarCotacao(any());
     }
@@ -158,7 +142,7 @@ class AcaoServiceTest {
         when(repository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
         when(mapper.toResponse(acaoBR)).thenReturn(responseBR);
 
-        AcaoResponseDTO result = service.buscarPorTicker("PETR4");
+        AcaoResponseDTO result = service.buscarPorTicker("PETR4", null);
 
         assertThat(result.getTicker()).isEqualTo("PETR4");
     }
@@ -168,7 +152,7 @@ class AcaoServiceTest {
     void deveLancarNotFoundParaTickerInexistente() {
         when(repository.findByTickerAndAtivoTrue("XXXX3")).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> service.buscarPorTicker("XXXX3"))
+        assertThatThrownBy(() -> service.buscarPorTicker("XXXX3", null))
                 .isInstanceOf(RecursoNaoEncontradoException.class);
     }
 
@@ -201,12 +185,12 @@ class AcaoServiceTest {
     @Test
     @DisplayName("@spec:AC-209 Cotação sempre acompanha data/hora de obtenção")
     void deveCotacaoAcompanharDataHora() {
-        when(repository.existsByTickerAndAtivoTrue("PETR4")).thenReturn(false);
+        when(repository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.empty());
         when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(cotacaoBR);
         when(repository.save(any())).thenReturn(acaoBR);
         when(mapper.toResponse(acaoBR)).thenReturn(responseBR);
 
-        AcaoResponseDTO result = service.cadastrar(new AcaoRequestDTO("PETR4", Mercado.BR), INVESTIDOR_ID);
+        AcaoResponseDTO result = service.buscarPorTicker("PETR4", Mercado.BR);
 
         assertThat(result.getDataHoraCotacao()).isNotNull();
     }
@@ -229,11 +213,11 @@ class AcaoServiceTest {
     @Test
     @DisplayName("@spec:AC-211 @spec:AC-429 Cota excedida resulta em exceção mapeada para 429 com mensagem de limite")
     void deveMensagemEspecificaParaLimiteExcedido() {
-        when(repository.existsByTickerAndAtivoTrue("PETR4")).thenReturn(false);
+        when(repository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.empty());
         when(brapiAdapter.buscarCotacao("PETR4"))
                 .thenThrow(new IntegracaoExternaException("EXT-009", "Limite de requisições da fonte BR excedido", true));
 
-        assertThatThrownBy(() -> service.cadastrar(new AcaoRequestDTO("PETR4", Mercado.BR), INVESTIDOR_ID))
+        assertThatThrownBy(() -> service.buscarPorTicker("PETR4", Mercado.BR))
                 .isInstanceOf(IntegracaoExternaException.class)
                 .hasMessageContaining("Limite")
                 .extracting(e -> ((IntegracaoExternaException) e).getHttpStatus())
@@ -256,130 +240,13 @@ class AcaoServiceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-433 Exceções de Ação carregam código do catálogo (ACA-001/ACA-002)")
+    @DisplayName("@spec:AC-433 Exceções de Ação carregam código do catálogo (ACA-001)")
     void deveExcecoesDeAcaoCarregaremCodigoDoCatalogo() {
-        when(repository.existsByTickerAndAtivoTrue("PETR4")).thenReturn(true);
-        assertThatThrownBy(() -> service.cadastrar(new AcaoRequestDTO("PETR4", Mercado.BR), INVESTIDOR_ID))
-                .isInstanceOf(RecursoDuplicadoException.class)
-                .extracting(e -> ((RecursoDuplicadoException) e).getCodigo())
-                .isEqualTo("ACA-002");
-
         when(repository.findByTickerAndAtivoTrue("XXXX3")).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> service.buscarPorTicker("XXXX3"))
+        assertThatThrownBy(() -> service.buscarPorTicker("XXXX3", null))
                 .isInstanceOf(RecursoNaoEncontradoException.class)
                 .extracting(e -> ((RecursoNaoEncontradoException) e).getCodigo())
                 .isEqualTo("ACA-001");
     }
 
-    @Test
-    @DisplayName("@spec:AC-424 Ação ativa é desativada ao excluir pelo ticker")
-    void deveDesativarAcaoAoExcluir() {
-        when(repository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
-        when(carteiraAcaoRepository.countByAcaoIdAndQuantidadeGreaterThan(acaoBR.getId(), 0)).thenReturn(0L);
-
-        service.excluir("PETR4");
-
-        verify(repository).save(acaoBR);
-        assertThat(acaoBR.getAtivo()).isFalse();
-    }
-
-    @Test
-    @DisplayName("@spec:AC-425 Excluir ação inexistente ou inativa lança RecursoNaoEncontradoException")
-    void deveLancarNotFoundAoExcluirAcaoInexistente() {
-        when(repository.findByTickerAndAtivoTrue("XXXX3")).thenReturn(Optional.empty());
-
-        assertThatThrownBy(() -> service.excluir("XXXX3"))
-                .isInstanceOf(RecursoNaoEncontradoException.class);
-    }
-
-    @Test
-    @DisplayName("@spec:AC-444 Recadastrar ticker de ação excluída funciona (verificação de duplicidade só considera ativas)")
-    void deveRecadastrarTickerDeAcaoExcluida() {
-        when(repository.existsByTickerAndAtivoTrue("PETR4")).thenReturn(false);
-        when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(cotacaoBR);
-        when(repository.save(any())).thenReturn(acaoBR);
-        when(mapper.toResponse(acaoBR)).thenReturn(responseBR);
-
-        AcaoResponseDTO result = service.cadastrar(new AcaoRequestDTO("PETR4", Mercado.BR), INVESTIDOR_ID);
-
-        assertThat(result).isNotNull();
-        verify(repository).existsByTickerAndAtivoTrue("PETR4");
-    }
-
-    @Test
-    @DisplayName("@spec:AC-447 Recadastro cria linha nova — nunca reativa/reaproveita a linha antiga (histórico não é ressuscitado)")
-    void deveRecadastroSempreCriarLinhaNovaNuncaReativarAntiga() {
-        when(repository.existsByTickerAndAtivoTrue("PETR4")).thenReturn(false);
-        when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(cotacaoBR);
-        when(repository.save(any())).thenReturn(acaoBR);
-        when(mapper.toResponse(acaoBR)).thenReturn(responseBR);
-
-        service.cadastrar(new AcaoRequestDTO("PETR4", Mercado.BR), INVESTIDOR_ID);
-
-        org.mockito.ArgumentCaptor<Acao> captor = org.mockito.ArgumentCaptor.forClass(Acao.class);
-        verify(repository).save(captor.capture());
-        assertThat(captor.getValue().getId()).isNull();
-    }
-
-    @Test
-    @DisplayName("@spec:AC-450 Excluir ação com posição ativa (quantidade > 0) é bloqueado")
-    void deveBloquearExclusaoComPosicaoAtiva() {
-        when(repository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
-        when(carteiraAcaoRepository.countByAcaoIdAndQuantidadeGreaterThan(acaoBR.getId(), 0)).thenReturn(2L);
-
-        assertThatThrownBy(() -> service.excluir("PETR4"))
-                .isInstanceOf(com.apiexternabackend.resources.exceptions.RegraVioladaException.class)
-                .hasMessageContaining("2");
-
-        verify(repository, never()).save(any());
-    }
-
-    @Test
-    @DisplayName("@spec:AC-451 Excluir ação com posições zeradas é permitido")
-    void devePermitirExclusaoComPosicoesZeradas() {
-        when(repository.findByTickerAndAtivoTrue("PETR4")).thenReturn(Optional.of(acaoBR));
-        when(carteiraAcaoRepository.countByAcaoIdAndQuantidadeGreaterThan(acaoBR.getId(), 0)).thenReturn(0L);
-
-        service.excluir("PETR4");
-
-        verify(repository).save(acaoBR);
-        assertThat(acaoBR.getAtivo()).isFalse();
-    }
-
-    @Test
-    @DisplayName("@spec:AC-466 Investidor sem carteira ativa não cadastra ação")
-    void deveRejeitarCadastroSemCarteiraAtiva() {
-        when(carteiraRepository.existsByInvestidorIdAndAtivaTrue(INVESTIDOR_ID)).thenReturn(false);
-
-        assertThatThrownBy(() -> service.cadastrar(new AcaoRequestDTO("PETR4", Mercado.BR), INVESTIDOR_ID))
-                .isInstanceOf(com.apiexternabackend.resources.exceptions.PreRequisitoNaoAtendidoException.class)
-                .extracting(e -> ((com.apiexternabackend.resources.exceptions.PreRequisitoNaoAtendidoException) e).getCodigo())
-                .isEqualTo("ACA-004");
-
-        verify(repository, never()).save(any());
-        verify(brapiAdapter, never()).buscarCotacao(any());
-    }
-
-    @Test
-    @DisplayName("@spec:AC-467 Investidor com carteira ativa cadastra normalmente")
-    void devePermitirCadastroComCarteiraAtiva() {
-        when(carteiraRepository.existsByInvestidorIdAndAtivaTrue(INVESTIDOR_ID)).thenReturn(true);
-        when(repository.existsByTickerAndAtivoTrue("PETR4")).thenReturn(false);
-        when(brapiAdapter.buscarCotacao("PETR4")).thenReturn(cotacaoBR);
-        when(repository.save(any())).thenReturn(acaoBR);
-        when(mapper.toResponse(acaoBR)).thenReturn(responseBR);
-
-        AcaoResponseDTO result = service.cadastrar(new AcaoRequestDTO("PETR4", Mercado.BR), INVESTIDOR_ID);
-
-        assertThat(result).isNotNull();
-    }
-
-    @Test
-    @DisplayName("@spec:AC-468 Mensagem de erro orienta cadastrar uma carteira antes")
-    void deveOrientarProximoPassoNaMensagemDeErro() {
-        when(carteiraRepository.existsByInvestidorIdAndAtivaTrue(INVESTIDOR_ID)).thenReturn(false);
-
-        assertThatThrownBy(() -> service.cadastrar(new AcaoRequestDTO("PETR4", Mercado.BR), INVESTIDOR_ID))
-                .hasMessageContaining("Cadastre uma carteira antes de cadastrar ações");
-    }
 }

@@ -13,6 +13,8 @@ pela API. A exclusão segue o padrão já estabelecido pela Carteira: exclusão 
 
 ## Histórias
 
+> Removidos pela spec-21 (#24, ADR-015): US-411 (AC-424, AC-425). A ação entra no catálogo pela pesquisa; os códigos não são reaproveitados.
+
 ### US-408 — Validação de CNPJ encapsulada no CnpjFacade
 
 Como desenvolvedor, quero que a normalização e validação de CNPJ estejam no
@@ -85,25 +87,6 @@ para que ele deixe de aparecer nas listagens sem perder o histórico.
 
 - **Dado** que o ID não existe ou o investidor já está inativo
 - **Quando** `DELETE /investidores/{id}` é chamado
-- **Então** a API retorna 404
-
----
-
-### US-411 — Exclusão lógica de Ação
-
-Como operador do sistema, quero excluir logicamente uma ação pelo ticker,
-para que ela deixe de aparecer no catálogo sem perder o histórico.
-
-#### AC-424 — Ação ativa é desativada e some do catálogo
-
-- **Dado** uma ação cadastrada e ativa
-- **Quando** `DELETE /acoes/{ticker}` é chamado
-- **Então** a API retorna 204 e a ação não aparece em `GET /acoes`
-
-#### AC-425 — DELETE em ação inexistente ou inativa retorna 404
-
-- **Dado** que o ticker não existe ou a ação já está inativa
-- **Quando** `DELETE /acoes/{ticker}` é chamado
 - **Então** a API retorna 404
 
 ---
