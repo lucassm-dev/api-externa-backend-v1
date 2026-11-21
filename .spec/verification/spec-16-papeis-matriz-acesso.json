@@ -1,13 +1,38 @@
 {
   "feature": "spec-16-papeis-matriz-acesso",
-  "timestamp": "2026-11-21T05:44:50.832Z",
-  "gitRev": "96b1dd4",
+  "timestamp": "2026-11-21T05:56:46.463Z",
+  "gitRev": "459cb8f",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
   "testsParsed": 0,
   "results": {
     "AC-558": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-559": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-560": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-561": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-562": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-563": {
       "status": "pass",
       "testName": null,
       "method": "exitcode"

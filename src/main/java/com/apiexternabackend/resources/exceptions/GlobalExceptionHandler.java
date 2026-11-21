@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -37,6 +38,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<Void> handleRotaInexistente() {
         return ResponseEntity.notFound().build();
+    }
+
+    // @PreAuthorize nega dentro do controller; relançar devolve ao filtro de segurança, que responde 403 AUT-007
+    @ExceptionHandler(AccessDeniedException.class)
+    public void handleAcessoNegado(AccessDeniedException ex) {
+        throw ex;
     }
 
     @ExceptionHandler(Exception.class)
