@@ -47,6 +47,8 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       BRAPI_TOKEN: ${BRAPI_TOKEN}
       TWELVEDATA_API_KEY: ${TWELVEDATA_API_KEY}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_SENHA: ${ADMIN_SENHA:-}
 
       # Vazio de propósito: o frontend fala com a API pela mesma origem, via
       # nginx, então não existe requisição de outra origem para autorizar.

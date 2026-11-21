@@ -1,0 +1,67 @@
+{
+  "feature": "spec-16-papeis-matriz-acesso",
+  "timestamp": "2026-11-21T07:01:07.187Z",
+  "gitRev": "5be72b2",
+  "command": "./mvnw -q test",
+  "reporter": "exitcode",
+  "exitCode": 0,
+  "testsParsed": 0,
+  "results": {
+    "AC-558": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-559": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-560": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-561": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-562": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-563": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-564": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-565": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-566": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-567": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-568": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    }
+  },
+  "principles": {}
+}

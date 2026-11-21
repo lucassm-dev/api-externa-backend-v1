@@ -1,5 +1,6 @@
 package com.apiexternabackend.config;
 
+import com.apiexternabackend.domains.enums.Papel;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -27,15 +28,15 @@ public class JwtService {
         this.expiracaoMs = expiracaoMs;
     }
 
-    public Jwt gerar(Long investidorId) {
+    public Jwt gerar(Long usuarioId, Papel papel) {
         Instant agora = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
-                .subject(String.valueOf(investidorId))
+                .subject(String.valueOf(usuarioId))
                 .issuer(emissor)
                 .issuedAt(agora)
                 .expiresAt(agora.plusMillis(expiracaoMs))
-                // ASM-461: papel fixo até a issue #19
-                .claim("authorities", List.of("ROLE_INVESTIDOR"))
+                // spec-16 (AC-558): papel real do usuário
+                .claim("authorities", List.of("ROLE_" + papel.name()))
                 .build();
         return encoder.encode(JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims));
     }

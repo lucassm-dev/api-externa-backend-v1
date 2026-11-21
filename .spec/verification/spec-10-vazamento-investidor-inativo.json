@@ -1,7 +1,7 @@
 {
   "feature": "spec-10-vazamento-investidor-inativo",
-  "timestamp": "2026-11-21T05:23:02.324Z",
-  "gitRev": "4ad9271",
+  "timestamp": "2026-11-21T06:17:54.605Z",
+  "gitRev": "bfa786a",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
