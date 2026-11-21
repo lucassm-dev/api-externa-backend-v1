@@ -1,12 +1,10 @@
 package com.apiexternabackend.resources;
 
 import com.apiexternabackend.config.InvestidorPrincipal;
-import com.apiexternabackend.domains.dtos.AcaoRequestDTO;
 import com.apiexternabackend.domains.dtos.AcaoResponseDTO;
 import com.apiexternabackend.domains.enums.Mercado;
 import com.apiexternabackend.resources.exceptions.GlobalExceptionHandler;
 import com.apiexternabackend.resources.exceptions.IntegracaoExternaException;
-import com.apiexternabackend.resources.exceptions.PreRequisitoNaoAtendidoException;
 import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
 import com.apiexternabackend.resources.exceptions.RegraVioladaException;
 import com.apiexternabackend.services.AcaoService;
@@ -71,14 +69,12 @@ class AcaoResourceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-201 POST /acoes com ticker BR salva e retorna 201 com cotação e dataHora")
+    @DisplayName("@spec:AC-201 Pesquisa de ticker BR novo inclui e retorna 200 com cotação e dataHora")
     void deveCadastrarAcaoBR() throws Exception {
-        when(service.cadastrar(any(), eq(INVESTIDOR_ID))).thenReturn(buildResponse("PETR4", Mercado.BR, "BRL"));
+        when(service.buscarPorTicker(any(), any())).thenReturn(buildResponse("PETR4", Mercado.BR, "BRL"));
 
-        mockMvc.perform(post("/acoes")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new AcaoRequestDTO("PETR4", Mercado.BR))))
-                .andExpect(status().isCreated())
+        mockMvc.perform(get("/acoes/ticker/PETR4").param("mercado", "BR"))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.ticker").value("PETR4"))
                 .andExpect(jsonPath("$.moeda").value("BRL"))
                 .andExpect(jsonPath("$.cotacaoAtual").isNumber())
@@ -86,26 +82,22 @@ class AcaoResourceTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-202 POST /acoes com ticker US retorna moeda USD")
+    @DisplayName("@spec:AC-202 Pesquisa de ticker US novo retorna moeda USD")
     void deveCadastrarAcaoUS() throws Exception {
-        when(service.cadastrar(any(), eq(INVESTIDOR_ID))).thenReturn(buildResponse("AAPL", Mercado.US, "USD"));
+        when(service.buscarPorTicker(any(), any())).thenReturn(buildResponse("AAPL", Mercado.US, "USD"));
 
-        mockMvc.perform(post("/acoes")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new AcaoRequestDTO("AAPL", Mercado.US))))
-                .andExpect(status().isCreated())
+        mockMvc.perform(get("/acoes/ticker/AAPL").param("mercado", "US"))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.moeda").value("USD"));
     }
 
     @Test
-    @DisplayName("@spec:AC-203 POST /acoes com ticker inexistente retorna 422")
+    @DisplayName("@spec:AC-203 Pesquisa de ticker inexistente na fonte retorna 422")
     void deveRejeitarTickerInexistente() throws Exception {
-        when(service.cadastrar(any(), eq(INVESTIDOR_ID)))
+        when(service.buscarPorTicker(any(), any()))
                 .thenThrow(new RegraVioladaException("EXT-008", "Ticker não encontrado na fonte BR: XXXX3"));
 
-        mockMvc.perform(post("/acoes")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new AcaoRequestDTO("XXXX3", Mercado.BR))))
+        mockMvc.perform(get("/acoes/ticker/XXXX3").param("mercado", "BR"))
                 .andExpect(status().isUnprocessableEntity());
     }
 
@@ -123,7 +115,7 @@ class AcaoResourceTest {
     @Test
     @DisplayName("@spec:AC-207 GET /acoes/ticker/{ticker} retorna dados da ação")
     void deveBuscarPorTicker() throws Exception {
-        when(service.buscarPorTicker("PETR4")).thenReturn(buildResponse("PETR4", Mercado.BR, "BRL"));
+        when(service.buscarPorTicker("PETR4", null)).thenReturn(buildResponse("PETR4", Mercado.BR, "BRL"));
 
         mockMvc.perform(get("/acoes/ticker/PETR4"))
                 .andExpect(status().isOk())
@@ -133,7 +125,7 @@ class AcaoResourceTest {
     @Test
     @DisplayName("@spec:AC-207 @spec:AC-433 GET /acoes/ticker/{ticker} com ticker inexistente retorna 404 com código ACA-001")
     void deveRetornar404ParaTickerInexistente() throws Exception {
-        when(service.buscarPorTicker("XXXX3"))
+        when(service.buscarPorTicker("XXXX3", null))
                 .thenThrow(new RecursoNaoEncontradoException("ACA-001", "Ação não encontrada: XXXX3"));
 
         mockMvc.perform(get("/acoes/ticker/XXXX3"))
@@ -165,12 +157,10 @@ class AcaoResourceTest {
     @Test
     @DisplayName("@spec:AC-211 @spec:AC-429 Limite de cota da fonte retorna 429 com mensagem específica")
     void deveMensagemEspecificaParaLimiteExcedido() throws Exception {
-        when(service.cadastrar(any(), eq(INVESTIDOR_ID)))
+        when(service.buscarPorTicker(any(), any()))
                 .thenThrow(new IntegracaoExternaException("EXT-009", "Limite de requisições da fonte BR excedido", true));
 
-        mockMvc.perform(post("/acoes")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new AcaoRequestDTO("PETR4", Mercado.BR))))
+        mockMvc.perform(get("/acoes/ticker/PETR4").param("mercado", "BR"))
                 .andExpect(status().isTooManyRequests())
                 .andExpect(jsonPath("$.message").value(org.hamcrest.Matchers.containsString("Limite")));
     }
@@ -195,36 +185,4 @@ class AcaoResourceTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    @DisplayName("@spec:AC-424 DELETE /acoes/{ticker} com ação ativa retorna 204")
-    void deveExcluirAcaoAtiva() throws Exception {
-        mockMvc.perform(delete("/acoes/PETR4"))
-                .andExpect(status().isNoContent());
-
-        org.mockito.Mockito.verify(service).excluir("PETR4");
-    }
-
-    @Test
-    @DisplayName("@spec:AC-425 DELETE /acoes/{ticker} com ticker inexistente retorna 404")
-    void deveRetornar404AoExcluirAcaoInexistente() throws Exception {
-        org.mockito.Mockito.doThrow(new RecursoNaoEncontradoException("ACA-001", "Ação não encontrada: XXXX3"))
-                .when(service).excluir("XXXX3");
-
-        mockMvc.perform(delete("/acoes/XXXX3"))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @DisplayName("@spec:AC-466 POST /acoes sem carteira ativa retorna 409 com código ACA-004")
-    void deveRejeitarCadastroSemCarteiraAtiva() throws Exception {
-        when(service.cadastrar(any(), eq(INVESTIDOR_ID)))
-                .thenThrow(new PreRequisitoNaoAtendidoException("ACA-004", "Cadastre uma carteira antes de cadastrar ações"));
-
-        mockMvc.perform(post("/acoes")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new AcaoRequestDTO("PETR4", Mercado.BR))))
-                .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.codigo").value("ACA-004"))
-                .andExpect(jsonPath("$.message").value(org.hamcrest.Matchers.containsString("Cadastre uma carteira")));
-    }
 }

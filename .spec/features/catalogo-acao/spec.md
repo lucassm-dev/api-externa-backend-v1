@@ -13,38 +13,34 @@ fonte externa — nada é digitado.
 
 ## Histórias
 
-### US-201 — Cadastrar ação por ticker e mercado
+> Removidos pela spec-21 (#24, ADR-015): AC-204. A ação entra no catálogo pela pesquisa; os códigos não são reaproveitados.
 
-Como investidor, quero cadastrar uma ação informando ticker e mercado, para que
+### US-201 — Ação entra no catálogo por ticker e mercado
+
+Como investidor, quero pesquisar uma ação informando ticker e mercado, para que
 ela exista no catálogo e possa ser comprada.
 
-#### AC-201 — Ticker brasileiro válido é cadastrado com cotação e horário (RN-A03, RN-Q01)
+#### AC-201 — Ticker brasileiro válido entra no catálogo com cotação e horário (RN-A03, RN-Q01)
 
 - **Dado** um ticker brasileiro existente na fonte BR (brapi)
-- **Quando** cadastro a ação no mercado BR
+- **Quando** pesquiso a ação no mercado BR (spec-21: a pesquisa inclui no catálogo)
 - **Então** a ação é salva com nome da empresa, moeda (BRL), cotação atual e a data/hora em que a cotação foi obtida
 
 #### AC-202 — Ticker americano válido usa a fonte US (RN-A03)
 
 - **Dado** um ticker americano existente na fonte US (Twelve Data)
-- **Quando** cadastro a ação no mercado US
+- **Quando** pesquiso a ação no mercado US
 - **Então** a ação é salva com moeda USD, cotação e horário, consultando a fonte americana e não a brasileira
 
-#### AC-203 — Ticker inexistente na fonte impede o cadastro (RN-A02, item 14)
+#### AC-203 — Ticker inexistente na fonte não entra no catálogo (RN-A02, item 14)
 
 - **Dado** um ticker que não existe na fonte do mercado informado
-- **Quando** tento cadastrar
-- **Então** o cadastro é recusado e a mensagem informa que o ticker não foi encontrado
-
-#### AC-204 — Ticker duplicado é impedido (RN-A01, RF12)
-
-- **Dado** que já existe uma ação cadastrada com um ticker
-- **Quando** tento cadastrar outra com o mesmo ticker
-- **Então** o cadastro é recusado por duplicidade
+- **Quando** pesquiso o ticker com o mercado
+- **Então** a pesquisa é recusada, nada é gravado e a mensagem informa que o ticker não foi encontrado
 
 #### AC-205 — O sistema direciona a busca conforme o mercado (RN-A03, RN-A06)
 
-- **Dado** um cadastro de ação com mercado BR e outro com mercado US
+- **Dado** uma pesquisa de ação nova com mercado BR e outra com mercado US
 - **Quando** cada um é processado
 - **Então** o BR consulta a fonte brasileira e o US a americana — nunca a fonte errada para o mercado
 

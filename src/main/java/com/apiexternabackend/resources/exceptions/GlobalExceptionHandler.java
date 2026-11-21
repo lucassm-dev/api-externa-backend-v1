@@ -1,5 +1,6 @@
 package com.apiexternabackend.resources.exceptions;
 
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -38,6 +39,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<Void> handleRotaInexistente() {
         return ResponseEntity.notFound().build();
+    }
+
+    // spec-21: método que a rota não aceita (ex.: POST /acoes depois da #24) é 405, não erro interno
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<Void> handleMetodoNaoSuportado() {
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
     }
 
     // @PreAuthorize nega dentro do controller; relançar devolve ao filtro de segurança, que responde 403 AUT-007

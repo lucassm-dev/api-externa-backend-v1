@@ -9,8 +9,6 @@ import java.util.Optional;
 
 public interface AcaoRepository extends JpaRepository<Acao, Long> {
 
-    boolean existsByTickerAndAtivoTrue(String ticker);
-
     Page<Acao> findAllByAtivoTrue(Pageable pageable);
 
     Optional<Acao> findByTickerAndAtivoTrue(String ticker);
