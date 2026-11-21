@@ -1,5 +1,11 @@
 package com.apiexternabackend.resources;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import com.apiexternabackend.config.InvestidorPrincipal;
 import com.apiexternabackend.domains.dtos.CorretoraRequestDTO;
 import com.apiexternabackend.domains.dtos.CorretoraResponseDTO;
 import com.apiexternabackend.resources.exceptions.GlobalExceptionHandler;
@@ -43,6 +49,20 @@ class CorretoraResourceTest {
     @Autowired private MockMvc mockMvc;
     @MockBean private CorretoraService service;
     @Autowired private ObjectMapper objectMapper;
+
+    private static final Long ADMIN_ID = 2L;
+
+    // spec-19: o DELETE lê o id do ADMIN do principal para o registro administrativo
+    @BeforeEach
+    void autenticarComoAdmin() {
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
+                new InvestidorPrincipal(ADMIN_ID), null, List.of(new SimpleGrantedAuthority("ROLE_ADMIN"))));
+    }
+
+    @AfterEach
+    void limparContextoDeSeguranca() {
+        SecurityContextHolder.clearContext();
+    }
 
     private CorretoraResponseDTO buildResponse() {
         CorretoraResponseDTO r = new CorretoraResponseDTO();
@@ -153,14 +173,14 @@ class CorretoraResourceTest {
         mockMvc.perform(delete("/corretoras/1"))
                 .andExpect(status().isNoContent());
 
-        org.mockito.Mockito.verify(service).excluir(1L);
+        org.mockito.Mockito.verify(service).excluir(1L, ADMIN_ID);
     }
 
     @Test
     @DisplayName("@spec:AC-421 DELETE /corretoras/{id} com id inexistente retorna 404")
     void deveRetornar404AoExcluirCorretoraInexistente() throws Exception {
         org.mockito.Mockito.doThrow(new RecursoNaoEncontradoException("COR-001", "Corretora não encontrada: 99"))
-                .when(service).excluir(99L);
+                .when(service).excluir(99L, ADMIN_ID);
 
         mockMvc.perform(delete("/corretoras/99"))
                 .andExpect(status().isNotFound());

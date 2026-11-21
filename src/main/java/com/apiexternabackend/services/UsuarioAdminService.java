@@ -1,14 +1,18 @@
 package com.apiexternabackend.services;
 
 import com.apiexternabackend.domains.Investidor;
+import com.apiexternabackend.domains.RegistroAdministrativo;
 import com.apiexternabackend.domains.Usuario;
 import com.apiexternabackend.domains.dtos.CriarAdminRequestDTO;
 import com.apiexternabackend.domains.dtos.UsuarioAdminResponseDTO;
+import com.apiexternabackend.domains.enums.AcaoAdministrativa;
+import com.apiexternabackend.domains.enums.AlvoAdministrativo;
 import com.apiexternabackend.domains.enums.Papel;
 import com.apiexternabackend.domains.enums.SituacaoUsuario;
 import com.apiexternabackend.repositories.CarteiraAcaoRepository;
 import com.apiexternabackend.repositories.CarteiraRepository;
 import com.apiexternabackend.repositories.InvestidorRepository;
+import com.apiexternabackend.repositories.RegistroAdministrativoRepository;
 import com.apiexternabackend.repositories.UsuarioRepository;
 import com.apiexternabackend.resources.exceptions.RecursoDuplicadoException;
 import com.apiexternabackend.resources.exceptions.RecursoNaoEncontradoException;
@@ -31,6 +35,7 @@ public class UsuarioAdminService {
     private final CarteiraRepository carteiraRepository;
     private final CarteiraAcaoRepository carteiraAcaoRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RegistroAdministrativoRepository registroRepository;
 
     @Transactional(readOnly = true)
     public Page<UsuarioAdminResponseDTO> listar(SituacaoUsuario situacao, Pageable pageable) {
@@ -67,15 +72,17 @@ public class UsuarioAdminService {
         usuario.setSituacao(SituacaoUsuario.BLOQUEADO);
         usuario.setMotivoBloqueio(motivo);
         usuario.setBloqueadoEm(LocalDateTime.now());
+        registroRepository.save(new RegistroAdministrativo(adminId, AcaoAdministrativa.BLOQUEIO, AlvoAdministrativo.USUARIO, id, motivo));
         return toResponse(usuario);
     }
 
     @Transactional
-    public UsuarioAdminResponseDTO desbloquear(Long id) {
+    public UsuarioAdminResponseDTO desbloquear(Long id, Long adminId) {
         Usuario usuario = buscar(id);
         usuario.setSituacao(SituacaoUsuario.ATIVO);
         usuario.setMotivoBloqueio(null);
         usuario.setBloqueadoEm(null);
+        registroRepository.save(new RegistroAdministrativo(adminId, AcaoAdministrativa.DESBLOQUEIO, AlvoAdministrativo.USUARIO, id, null));
         return toResponse(usuario);
     }
 

@@ -1,5 +1,10 @@
 package com.apiexternabackend.services;
 
+import org.springframework.transaction.annotation.Transactional;
+import com.apiexternabackend.repositories.RegistroAdministrativoRepository;
+import com.apiexternabackend.domains.enums.AlvoAdministrativo;
+import com.apiexternabackend.domains.enums.AcaoAdministrativa;
+import com.apiexternabackend.domains.RegistroAdministrativo;
 import com.apiexternabackend.domains.Corretora;
 import com.apiexternabackend.domains.dtos.CorretoraRequestDTO;
 import com.apiexternabackend.domains.dtos.CorretoraResponseDTO;
@@ -31,6 +36,7 @@ public class CorretoraService {
     private final CnpjFacade cnpjFacade;
     private final CepFacade cepFacade;
     private final CvmFacade cvmFacade;
+    private final RegistroAdministrativoRepository registroRepository;
 
     public CorretoraResponseDTO cadastrar(CorretoraRequestDTO dto) {
         String cnpj = cnpjFacade.normalizar(dto.getCnpj());
@@ -69,7 +75,8 @@ public class CorretoraService {
         return repository.findAllByAtivoTrue(pageable).map(mapper::toResponse);
     }
 
-    public void excluir(Long id) {
+    @Transactional
+    public void excluir(Long id, Long adminId) {
         Corretora corretora = repository.findByIdAndAtivoTrue(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("COR-001", "Corretora não encontrada: " + id));
 
@@ -81,6 +88,8 @@ public class CorretoraService {
 
         corretora.setAtivo(false);
         repository.save(corretora);
+        registroRepository.save(new RegistroAdministrativo(adminId, AcaoAdministrativa.EXCLUSAO_CORRETORA,
+                AlvoAdministrativo.CORRETORA, corretora.getId(), null));
     }
 
     public CorretoraResponseDTO buscarPorId(Long id) {
