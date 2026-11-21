@@ -1,7 +1,7 @@
 {
   "feature": "carteira",
-  "timestamp": "2026-11-20T23:26:02.435Z",
-  "gitRev": "b152807",
+  "timestamp": "2026-11-21T05:17:50.208Z",
+  "gitRev": "4ad9271",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

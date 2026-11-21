@@ -7,6 +7,7 @@ import com.apiexternabackend.domains.dtos.AuthCadastroRequestDTO;
 import com.apiexternabackend.domains.dtos.AuthLoginRequestDTO;
 import com.apiexternabackend.domains.dtos.AuthTokenResponseDTO;
 import com.apiexternabackend.domains.dtos.InvestidorResponseDTO;
+import com.apiexternabackend.domains.dtos.UsuarioLogadoResponseDTO;
 import com.apiexternabackend.domains.enums.Papel;
 import com.apiexternabackend.domains.enums.SituacaoUsuario;
 import com.apiexternabackend.mappers.InvestidorMapper;
@@ -82,5 +83,14 @@ public class AutenticacaoService {
 
         Jwt token = jwtService.gerar(usuario.getId());
         return new AuthTokenResponseDTO(token.getTokenValue(), "Bearer", token.getExpiresAt());
+    }
+
+    public UsuarioLogadoResponseDTO usuarioLogado(Long usuarioId) {
+        // AC-573: conta excluída com token ainda válido responde como token inválido
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .filter(u -> u.getSituacao() != SituacaoUsuario.EXCLUIDO)
+                .orElseThrow(() -> new CredenciaisInvalidasException("AUT-005", "Token ausente ou inválido."));
+        String nome = repository.findById(usuarioId).map(Investidor::getNome).orElse(null);
+        return new UsuarioLogadoResponseDTO(usuario.getId(), nome, usuario.getEmail(), usuario.getPapel());
     }
 }

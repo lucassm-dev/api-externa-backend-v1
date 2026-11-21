@@ -1,14 +1,18 @@
 package com.apiexternabackend.resources;
 
+import com.apiexternabackend.config.InvestidorPrincipal;
 import com.apiexternabackend.domains.dtos.AuthCadastroRequestDTO;
 import com.apiexternabackend.domains.dtos.AuthLoginRequestDTO;
 import com.apiexternabackend.domains.dtos.AuthTokenResponseDTO;
 import com.apiexternabackend.domains.dtos.InvestidorResponseDTO;
+import com.apiexternabackend.domains.dtos.UsuarioLogadoResponseDTO;
 import com.apiexternabackend.services.AutenticacaoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,5 +33,10 @@ public class AuthResource {
     @PostMapping("/login")
     public ResponseEntity<AuthTokenResponseDTO> login(@RequestBody @Valid AuthLoginRequestDTO dto) {
         return ResponseEntity.ok(service.login(dto));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UsuarioLogadoResponseDTO> me(@AuthenticationPrincipal InvestidorPrincipal principal) {
+        return ResponseEntity.ok(service.usuarioLogado(principal.id()));
     }
 }

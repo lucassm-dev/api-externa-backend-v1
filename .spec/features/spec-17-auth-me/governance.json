@@ -1,0 +1,196 @@
+{
+  "version": 1,
+  "large": false,
+  "domains": [],
+  "decisions": [
+    {
+      "conflictId": "rotas-publicas-auth",
+      "choice": "prosseguir",
+      "answer": "Prosseguir (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta: Rotas /auth",
+      "fingerprint": "e128bb505359f4873326fab956151ed8343667354e86f19dc66328b735cf59bd",
+      "ownFingerprint": "2d3f60988f896f93775e098a3c948bc38146fcff07d90fffd8006805e43bcfba",
+      "conflictFingerprint": "876dd6f618db8f9b3d6b3caed56aeacd4c35a2697bcf32f3beb46b48e53bc13b",
+      "answeredAt": "2026-11-21T05:00:57.653Z"
+    },
+    {
+      "conflictId": "impacto:autenticacao-investidor",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nos 5 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta: 5 domínios",
+      "fingerprint": "e128bb505359f4873326fab956151ed8343667354e86f19dc66328b735cf59bd",
+      "ownFingerprint": "2d3f60988f896f93775e098a3c948bc38146fcff07d90fffd8006805e43bcfba",
+      "conflictFingerprint": "e401db0ac48100f2449f379ad0cabd6952dbcbf8855fd5a76fd3e66ce35ba7ba",
+      "answeredAt": "2026-11-21T05:00:57.752Z"
+    },
+    {
+      "conflictId": "impacto:spec-10-vazamento-investidor-inativo",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nos 5 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta: 5 domínios",
+      "fingerprint": "e128bb505359f4873326fab956151ed8343667354e86f19dc66328b735cf59bd",
+      "ownFingerprint": "2d3f60988f896f93775e098a3c948bc38146fcff07d90fffd8006805e43bcfba",
+      "conflictFingerprint": "e1ada1cbb03e0da7bdbf9deb7ca06b94ad15718cb62ffb15b9125d5294c852c7",
+      "answeredAt": "2026-11-21T05:00:57.850Z"
+    },
+    {
+      "conflictId": "impacto:spec-11-cors",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nos 5 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta: 5 domínios",
+      "fingerprint": "e128bb505359f4873326fab956151ed8343667354e86f19dc66328b735cf59bd",
+      "ownFingerprint": "2d3f60988f896f93775e098a3c948bc38146fcff07d90fffd8006805e43bcfba",
+      "conflictFingerprint": "25080f0cd0b6e07d147ef5fdeaf69ff98b214190c0188fa605bacdee4883f532",
+      "answeredAt": "2026-11-21T05:00:57.950Z"
+    },
+    {
+      "conflictId": "impacto:spec-14-jwt-resource-server",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nos 5 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta: 5 domínios",
+      "fingerprint": "e128bb505359f4873326fab956151ed8343667354e86f19dc66328b735cf59bd",
+      "ownFingerprint": "2d3f60988f896f93775e098a3c948bc38146fcff07d90fffd8006805e43bcfba",
+      "conflictFingerprint": "f7bb753d02a83c9eec35e834045c65d7088ff5f87bc5e4682704c39f8a0c2cfc",
+      "answeredAt": "2026-11-21T05:00:58.047Z"
+    },
+    {
+      "conflictId": "impacto:spec-15-identidade-usuario",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nos 5 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-21, pergunta: 5 domínios",
+      "fingerprint": "e128bb505359f4873326fab956151ed8343667354e86f19dc66328b735cf59bd",
+      "ownFingerprint": "2d3f60988f896f93775e098a3c948bc38146fcff07d90fffd8006805e43bcfba",
+      "conflictFingerprint": "078f37fa9331d960c3981e361e994aa1a6d1f63dc4bcc3261c812ed263041513",
+      "answeredAt": "2026-11-21T05:00:58.147Z"
+    }
+  ],
+  "clientRequest": "",
+  "review": {
+    "summary": "T-504 altera SecurityConfig e AutenticacaoService. Única mudança de regra: ROTAS_PUBLICAS deixa de liberar /auth/** inteiro e passa a liberar só /auth/cadastro e /auth/login (Swagger inalterado), para /auth/me exigir token; AC-575 garante que cadastro e login continuam públicos. CORS (spec-11), emissão/validação do JWT (spec-14), reuso de e-mail/CPF (spec-10) e o modelo usuario/investidor (spec-15) não mudam: AutenticacaoService só ganha um método de leitura.",
+    "reviewer": "Claude Code (claude-opus-5-5), sessão interativa de 2026-11-21",
+    "conflicts": [
+      {
+        "id": "impacto:autenticacao-investidor",
+        "automatic": true,
+        "feature": "autenticacao-investidor",
+        "summary": "A mudança interfere no domínio da feature autenticacao-investidor.",
+        "files": [
+          "src/main/java/com/apiexternabackend/config/SecurityConfig.java",
+          "src/main/java/com/apiexternabackend/resources/AuthResource.java",
+          "src/main/java/com/apiexternabackend/services/AutenticacaoService.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/autenticacao-investidor/spec.md"
+      },
+      {
+        "id": "impacto:spec-10-vazamento-investidor-inativo",
+        "automatic": true,
+        "feature": "spec-10-vazamento-investidor-inativo",
+        "summary": "A mudança interfere no domínio da feature spec-10-vazamento-investidor-inativo.",
+        "files": [
+          "src/main/java/com/apiexternabackend/services/AutenticacaoService.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-10-vazamento-investidor-inativo/spec.md"
+      },
+      {
+        "id": "impacto:spec-11-cors",
+        "automatic": true,
+        "feature": "spec-11-cors",
+        "summary": "A mudança interfere no domínio da feature spec-11-cors.",
+        "files": [
+          "src/main/java/com/apiexternabackend/config/SecurityConfig.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-11-cors/spec.md"
+      },
+      {
+        "id": "impacto:spec-14-jwt-resource-server",
+        "automatic": true,
+        "feature": "spec-14-jwt-resource-server",
+        "summary": "A mudança interfere no domínio da feature spec-14-jwt-resource-server.",
+        "files": [
+          "src/main/java/com/apiexternabackend/config/SecurityConfig.java",
+          "src/main/java/com/apiexternabackend/services/AutenticacaoService.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-14-jwt-resource-server/spec.md"
+      },
+      {
+        "id": "impacto:spec-15-identidade-usuario",
+        "automatic": true,
+        "feature": "spec-15-identidade-usuario",
+        "summary": "A mudança interfere no domínio da feature spec-15-identidade-usuario.",
+        "files": [
+          "src/main/java/com/apiexternabackend/services/AutenticacaoService.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-15-identidade-usuario/spec.md"
+      },
+      {
+        "id": "rotas-publicas-auth",
+        "summary": "/auth/** deixa de ser inteiro público; só cadastro e login continuam sem token.",
+        "rule": ".spec/features/spec-14-jwt-resource-server/spec.md"
+      }
+    ],
+    "fingerprint": "e128bb505359f4873326fab956151ed8343667354e86f19dc66328b735cf59bd",
+    "ownFingerprint": "2d3f60988f896f93775e098a3c948bc38146fcff07d90fffd8006805e43bcfba",
+    "reviewedAt": "2026-11-21T04:59:23.070Z",
+    "documents": [
+      ".spec/features/autenticacao-investidor/design.md",
+      ".spec/features/autenticacao-investidor/spec.md",
+      ".spec/features/autenticacao-investidor/tasks.md",
+      ".spec/features/cadastro-corretora/spec.md",
+      ".spec/features/cadastro-corretora/tasks.md",
+      ".spec/features/carteira/spec.md",
+      ".spec/features/carteira/tasks.md",
+      ".spec/features/catalogo-acao/spec.md",
+      ".spec/features/catalogo-acao/tasks.md",
+      ".spec/features/deploy-homelab/spec.md",
+      ".spec/features/deploy-homelab/tasks.md",
+      ".spec/features/investidor/spec.md",
+      ".spec/features/investidor/tasks.md",
+      ".spec/features/operacao-movimentacao/spec.md",
+      ".spec/features/operacao-movimentacao/tasks.md",
+      ".spec/features/refactor-cnpj-delete/spec.md",
+      ".spec/features/refactor-cnpj-delete/tasks.md",
+      ".spec/features/spec-01-padronizacao-erros/spec.md",
+      ".spec/features/spec-01-padronizacao-erros/tasks.md",
+      ".spec/features/spec-03-recadastro-exclusao/design.md",
+      ".spec/features/spec-03-recadastro-exclusao/spec.md",
+      ".spec/features/spec-03-recadastro-exclusao/tasks.md",
+      ".spec/features/spec-04-preco-editavel/design.md",
+      ".spec/features/spec-04-preco-editavel/spec.md",
+      ".spec/features/spec-04-preco-editavel/tasks.md",
+      ".spec/features/spec-05-carteira-obrigatoria/spec.md",
+      ".spec/features/spec-05-carteira-obrigatoria/tasks.md",
+      ".spec/features/spec-06-lucro-realizado/spec.md",
+      ".spec/features/spec-06-lucro-realizado/tasks.md",
+      ".spec/features/spec-07-cache-cotacao/spec.md",
+      ".spec/features/spec-07-cache-cotacao/tasks.md",
+      ".spec/features/spec-08-conversao-cambio/design.md",
+      ".spec/features/spec-08-conversao-cambio/spec.md",
+      ".spec/features/spec-08-conversao-cambio/tasks.md",
+      ".spec/features/spec-09-barra-cotacoes/design.md",
+      ".spec/features/spec-09-barra-cotacoes/spec.md",
+      ".spec/features/spec-09-barra-cotacoes/tasks.md",
+      ".spec/features/spec-10-vazamento-investidor-inativo/spec.md",
+      ".spec/features/spec-10-vazamento-investidor-inativo/tasks.md",
+      ".spec/features/spec-11-cors/spec.md",
+      ".spec/features/spec-11-cors/tasks.md",
+      ".spec/features/spec-12-barra-um-ativo-por-requisicao/spec.md",
+      ".spec/features/spec-12-barra-um-ativo-por-requisicao/tasks.md",
+      ".spec/features/spec-13-autorizacao-investidor/spec.md",
+      ".spec/features/spec-13-autorizacao-investidor/tasks.md",
+      ".spec/features/spec-14-jwt-resource-server/design.md",
+      ".spec/features/spec-14-jwt-resource-server/spec.md",
+      ".spec/features/spec-14-jwt-resource-server/tasks.md",
+      ".spec/features/spec-15-identidade-usuario/spec.md",
+      ".spec/features/spec-15-identidade-usuario/tasks.md",
+      ".spec/features/spec-17-auth-me/spec.md",
+      ".spec/features/spec-17-auth-me/tasks.md",
+      ".spec/constituicao.md",
+      "onpspec.config.json"
+    ]
+  }
+}
