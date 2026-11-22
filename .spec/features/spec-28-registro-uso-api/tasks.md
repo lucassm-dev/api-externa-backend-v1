@@ -10,7 +10,7 @@
 - Arquivos: src/main/resources/db/migration/V24__registro_uso.sql, src/main/java/com/apiexternabackend/domains/RegistroUso.java, src/main/java/com/apiexternabackend/repositories/RegistroUsoRepository.java, src/main/java/com/apiexternabackend/config/RegistroUsoFilter.java, src/main/java/com/apiexternabackend/config/SecurityConfig.java, src/test/java/com/apiexternabackend/config/RegistroUsoIntegrationTest.java
 - Notas: TDD (Aula 15), um ciclo vermelho/verde por critério. Filtro dentro da cadeia do Spring Security, depois do `AuthorizationFilter`; rota pelo padrão do handler (`BEST_MATCHING_PATTERN_ATTRIBUTE`).
 
-## T-523 — Gravar o registro sem atrasar nem derrubar a requisição [pendente]
+## T-523 — Gravar o registro sem atrasar nem derrubar a requisição [em-andamento]
 
 - Refs: US-477, AC-654, AC-655
 - Arquivos: src/main/java/com/apiexternabackend/services/RegistroUsoService.java, src/main/java/com/apiexternabackend/config/RegistroUsoFilter.java, src/main/java/com/apiexternabackend/ApiExternaBackendApplication.java, src/test/java/com/apiexternabackend/config/RegistroUsoIntegrationTest.java

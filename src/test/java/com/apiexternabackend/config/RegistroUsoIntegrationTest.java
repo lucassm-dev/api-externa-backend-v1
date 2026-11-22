@@ -13,23 +13,31 @@ import com.apiexternabackend.repositories.CorretoraRepository;
 import com.apiexternabackend.repositories.InvestidorRepository;
 import com.apiexternabackend.repositories.RegistroUsoRepository;
 import com.apiexternabackend.repositories.UsuarioRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.lang.reflect.Field;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -49,7 +57,7 @@ class RegistroUsoIntegrationTest {
     @Autowired private InvestidorRepository investidorRepository;
     @Autowired private CorretoraRepository corretoraRepository;
     @Autowired private CarteiraRepository carteiraRepository;
-    @Autowired private RegistroUsoRepository registroRepository;
+    @SpyBean private RegistroUsoRepository registroRepository;
     @Autowired private TransactionTemplate transacao;
 
     private Investidor investidor;
@@ -59,6 +67,11 @@ class RegistroUsoIntegrationTest {
     void preparar() {
         investidor = investidor();
         token = jwtService.gerar(investidor.getUsuario().getId(), Papel.INVESTIDOR).getTokenValue();
+    }
+
+    @AfterEach
+    void restaurarSpy() {
+        Mockito.reset(registroRepository);
     }
 
     @Test
@@ -120,6 +133,24 @@ class RegistroUsoIntegrationTest {
 
         Thread.sleep(300);
         assertThat(registroRepository.count()).isEqualTo(antes);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-654 a resposta não espera a gravação do registro")
+    void respostaNaoEsperaGravacao() throws Exception {
+        CountDownLatch liberar = new CountDownLatch(1);
+        doAnswer(gravacao -> {
+            liberar.await(5, TimeUnit.SECONDS);
+            return gravacao.getArgument(0);
+        }).when(registroRepository).save(any());
+
+        try {
+            long inicio = System.nanoTime();
+            mockMvc.perform(get("/operacoes").header("Authorization", "Bearer " + token)).andExpect(status().isOk());
+            assertThat(Duration.ofNanos(System.nanoTime() - inicio)).isLessThan(Duration.ofSeconds(2));
+        } finally {
+            liberar.countDown();
+        }
     }
 
     // a gravação é assíncrona: espera até 3 s pelo registro do usuário
