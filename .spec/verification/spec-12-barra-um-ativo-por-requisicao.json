@@ -1,7 +1,7 @@
 {
   "feature": "spec-12-barra-um-ativo-por-requisicao",
-  "timestamp": "2026-11-22T01:02:15.577Z",
-  "gitRev": "95e338c",
+  "timestamp": "2026-11-22T02:29:30.064Z",
+  "gitRev": "ccca03a",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

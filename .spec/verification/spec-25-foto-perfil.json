@@ -1,0 +1,47 @@
+{
+  "feature": "spec-25-foto-perfil",
+  "timestamp": "2026-11-22T02:38:18.130Z",
+  "gitRev": "ccca03a",
+  "command": "./mvnw -q test",
+  "reporter": "exitcode",
+  "exitCode": 0,
+  "testsParsed": 0,
+  "results": {
+    "AC-633": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-634": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-635": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-636": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-637": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-638": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-639": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    }
+  },
+  "principles": {}
+}
