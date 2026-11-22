@@ -45,14 +45,18 @@ job @Scheduled 03:00 America/Sao_Paulo ─► RegistroUsoService.descartarAntigo
 - `RegistroUsoFilter` (`OncePerRequestFilter`, criado em `SecurityConfig`, sem
   `@Component` para não ser registrado de novo como filtro do servlet). Antes de
   seguir, lê o `InvestidorPrincipal` do `SecurityContextHolder`; sem ele, só
-  segue (AC-653). Depois de `chain.doFilter`, lê
-  `HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE` (ou `desconhecida`), o método
-  e `response.getStatus()` e chama o serviço.
-- `RegistroUsoService.registrar(usuarioId, metodo, rota, status, quando)`:
-  `@Async`, captura qualquer exceção e loga sem dados da requisição (AC-655).
+  segue (AC-653). Depois de `chain.doFilter`, pega o padrão da rota
+  (`BEST_MATCHING_PATTERN_ATTRIBUTE`, só quando o handler é um `HandlerMethod`;
+  senão `desconhecida`, ASM-507), o método e `response.getStatus()` e chama o
+  serviço. O 403 do `@PreAuthorize` sobe como `AccessDeniedException` (embrulhada
+  pelo `DispatcherServlet`) até o `ExceptionTranslationFilter`, que fica antes
+  deste filtro; o filtro grava com 403 e relança (ASM-506).
+- `RegistroUsoService.registrar(RegistroUso)`: `@Async`. Uma exceção na
+  gravação fica na thread do executor e é logada pelo
+  `SimpleAsyncUncaughtExceptionHandler` do Spring, sem os dados da requisição (AC-655).
 - `RegistroUso`: entidade `@Immutable`, construtor com todos os campos.
-- `RegistroUsoRepository extends Repository`: `save`, `findAll` e um
-  `@Modifying @Query("delete ... where registradoEm < :limite")`.
+- `RegistroUsoRepository extends Repository`: `save`, `count`, `findByUsuarioId` e
+  `apagarAnterioresA` (`@Modifying @Query("delete ... where registradoEm < :limite")`).
 
 Modelo de dados (Flyway `V24__registro_uso.sql`):
 
@@ -93,15 +97,21 @@ feature; o acesso do administrador vem no #36, com `hasRole('ADMIN')`.
 reais), um teste por critério com `@spec:AC-xxx` no `@DisplayName`:
 
 - AC-651/652/653: chamadas reais via MockMvc e leitura da tabela com espera curta (gravação assíncrona).
-- AC-654: `@SpyBean` do repositório trava o `save` num `CountDownLatch`; a resposta tem de chegar mesmo assim.
-- AC-655: `save` lança exceção; a resposta continua 200.
+- AC-654: um trigger H2 só de teste (`RegistroUsoTrigger`) trava o `INSERT` num `CountDownLatch`; a resposta tem de chegar em menos de 2 s.
+- AC-655: o mesmo trigger derruba o `INSERT`; a resposta continua 200 e nada é gravado.
+- ASM-506 (403) e ASM-507 (rota inexistente) têm testes próprios, anotados com AC-651 e AC-652.
+
+Lição da implementação: o cache de resultado por sessão do H2 devolvia a
+consulta antiga (vazia) depois do `INSERT` feito pela thread da gravação (3 de
+12 execuções falhavam). O perfil de teste usa `QUERY_CACHE_SIZE=0` (0 de 16).
 - AC-656: grava registros com 91 e 89 dias e chama o descarte direto.
 
 Regressão: a suíte inteira (`./mvnw test`) continua verde.
 
 ## 10. Operação e observabilidade
 
-Falha de gravação vira `log.warn` com o tipo do erro, sem dados da requisição.
+Falha de gravação é logada em ERROR pelo `SimpleAsyncUncaughtExceptionHandler`
+com a exceção e o método, sem dados da requisição.
 O job loga quantos registros apagou. Diagnóstico: `SELECT count(*) FROM
 registro_uso GROUP BY date(registrado_em)`.
 

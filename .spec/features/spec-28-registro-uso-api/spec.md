@@ -3,7 +3,7 @@
 # Spec: Registro de uso da API por usuário
 
 > feature: spec-28-registro-uso-api
-> status: pronta
+> status: implementada
 
 ## Contexto
 

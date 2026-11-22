@@ -5,7 +5,7 @@
   "domains": [],
   "clientRequest": "Registrar as requisições à API por usuário: quando e qual tipo de operação. Não registrar corpo da requisição, senha nem token. Definir por quanto tempo os registros ficam guardados.",
   "review": {
-    "summary": "Li ADR-011 (JWT pelo resource server), ADR-013 (papéis), specs 14, 16, 17, 18, 22 e 11 (CORS) e a spec-19 (registro administrativo). O único ponto de contato é SecurityConfig.securityFilterChain, que ganha um addFilterAfter(RegistroUsoFilter, AuthorizationFilter). Não muda rotas públicas, CORS, conversão do JWT, papéis, nem o status/corpo de nenhuma resposta; só lê o principal já autenticado e grava em tabela nova, de forma assíncrona e engolindo falhas. Sem conflito semântico com as regras dessas features.",
+    "summary": "Reavaliação depois da implementação. Li ADR-011, ADR-013, specs 11, 14, 16, 17, 18, 22, autenticacao-investidor, investidor e spec-19. Único ponto de contato: SecurityConfig ganha addFilterAfter(RegistroUsoFilter, AuthorizationFilter). O filtro só lê o principal já autenticado; quando o @PreAuthorize nega, captura a AccessDeniedException, grava 403 e relança a mesma exceção, então o ExceptionTranslationFilter continua respondendo 403 AUT-007 como antes. Rotas públicas, CORS, conversão do JWT e papéis não mudam; a suíte inteira (370 testes) passa. O perfil de teste passou a usar QUERY_CACHE_SIZE=0 no H2, o que só desliga um cache de resultado e não muda contrato de nenhuma feature. Sem conflito semântico.",
     "reviewer": "Claude Code (Opus 5.5), sessão de 2026-11-22, feature spec-28-registro-uso-api",
     "conflicts": [
       {
@@ -14,7 +14,8 @@
         "feature": "autenticacao-investidor",
         "summary": "A mudança interfere no domínio da feature autenticacao-investidor.",
         "files": [
-          "src/main/java/com/apiexternabackend/config/SecurityConfig.java"
+          "src/main/java/com/apiexternabackend/config/SecurityConfig.java",
+          "src/main/resources/application-test.properties"
         ],
         "domains": [],
         "rule": ".spec/features/autenticacao-investidor/spec.md"
@@ -36,7 +37,8 @@
         "feature": "spec-11-cors",
         "summary": "A mudança interfere no domínio da feature spec-11-cors.",
         "files": [
-          "src/main/java/com/apiexternabackend/config/SecurityConfig.java"
+          "src/main/java/com/apiexternabackend/config/SecurityConfig.java",
+          "src/main/resources/application-test.properties"
         ],
         "domains": [],
         "rule": ".spec/features/spec-11-cors/spec.md"
@@ -47,7 +49,8 @@
         "feature": "spec-14-jwt-resource-server",
         "summary": "A mudança interfere no domínio da feature spec-14-jwt-resource-server.",
         "files": [
-          "src/main/java/com/apiexternabackend/config/SecurityConfig.java"
+          "src/main/java/com/apiexternabackend/config/SecurityConfig.java",
+          "src/main/resources/application-test.properties"
         ],
         "domains": [],
         "rule": ".spec/features/spec-14-jwt-resource-server/spec.md"
@@ -97,9 +100,9 @@
         "rule": ".spec/features/spec-22-esqueci-senha/spec.md"
       }
     ],
-    "fingerprint": "ae63a8195ce83514cc4f941b3cc78ab8c52aa0f1e1078cc5868965bd15d3d283",
-    "ownFingerprint": "c2a9e3ce2d02687e7237291770ba050b6d242dfa319b6b2e80b150b25a193cf9",
-    "reviewedAt": "2026-11-22T15:35:02.779Z",
+    "fingerprint": "cf7d0e12700871c4c70bc72b38ef3746a890a516b33b5d6189abfd8ccc6659a9",
+    "ownFingerprint": "e4aa14b634c7415005a71d59b4aa6bb6fec853d1e2f9da3ffc517c8e4df4c96a",
+    "reviewedAt": "2026-11-22T16:04:23.496Z",
     "documents": [
       ".spec/features/autenticacao-investidor/design.md",
       ".spec/features/autenticacao-investidor/spec.md",
@@ -343,6 +346,86 @@
       "ownFingerprint": "c2a9e3ce2d02687e7237291770ba050b6d242dfa319b6b2e80b150b25a193cf9",
       "conflictFingerprint": "eeee6a5520a76b767b5806436768d4b6fc26c1d1589c37f5e5518714c9a163ba",
       "answeredAt": "2026-11-22T15:35:04.272Z"
+    },
+    {
+      "conflictId": "impacto:autenticacao-investidor",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28 (mesmos 8 domínios, reavaliados após a implementação)",
+      "fingerprint": "cf7d0e12700871c4c70bc72b38ef3746a890a516b33b5d6189abfd8ccc6659a9",
+      "ownFingerprint": "e4aa14b634c7415005a71d59b4aa6bb6fec853d1e2f9da3ffc517c8e4df4c96a",
+      "conflictFingerprint": "a57089cda8fca2d18685956ac614158bbfc3bd037a37bf516c6eac564da6bae4",
+      "answeredAt": "2026-11-22T16:04:23.754Z"
+    },
+    {
+      "conflictId": "impacto:investidor",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28 (mesmos 8 domínios, reavaliados após a implementação)",
+      "fingerprint": "cf7d0e12700871c4c70bc72b38ef3746a890a516b33b5d6189abfd8ccc6659a9",
+      "ownFingerprint": "e4aa14b634c7415005a71d59b4aa6bb6fec853d1e2f9da3ffc517c8e4df4c96a",
+      "conflictFingerprint": "0c6163ab5da5090109477b471c502abde0337218a4b02df27da979558a516c00",
+      "answeredAt": "2026-11-22T16:04:23.959Z"
+    },
+    {
+      "conflictId": "impacto:spec-11-cors",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28 (mesmos 8 domínios, reavaliados após a implementação)",
+      "fingerprint": "cf7d0e12700871c4c70bc72b38ef3746a890a516b33b5d6189abfd8ccc6659a9",
+      "ownFingerprint": "e4aa14b634c7415005a71d59b4aa6bb6fec853d1e2f9da3ffc517c8e4df4c96a",
+      "conflictFingerprint": "14bd2029ee35dd991384c08e54f3292c83e2f1fb8d02fbe7fbc9cb89099985f3",
+      "answeredAt": "2026-11-22T16:04:24.157Z"
+    },
+    {
+      "conflictId": "impacto:spec-14-jwt-resource-server",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28 (mesmos 8 domínios, reavaliados após a implementação)",
+      "fingerprint": "cf7d0e12700871c4c70bc72b38ef3746a890a516b33b5d6189abfd8ccc6659a9",
+      "ownFingerprint": "e4aa14b634c7415005a71d59b4aa6bb6fec853d1e2f9da3ffc517c8e4df4c96a",
+      "conflictFingerprint": "1e9b0c7d142a9896bb164be53e4736bb691827acaab491173349a00a23751219",
+      "answeredAt": "2026-11-22T16:04:24.361Z"
+    },
+    {
+      "conflictId": "impacto:spec-16-papeis-matriz-acesso",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28 (mesmos 8 domínios, reavaliados após a implementação)",
+      "fingerprint": "cf7d0e12700871c4c70bc72b38ef3746a890a516b33b5d6189abfd8ccc6659a9",
+      "ownFingerprint": "e4aa14b634c7415005a71d59b4aa6bb6fec853d1e2f9da3ffc517c8e4df4c96a",
+      "conflictFingerprint": "2e12591e103b474984bdc922e0915d8882eeec7fb391b0c01c53aac119dc0b32",
+      "answeredAt": "2026-11-22T16:04:24.568Z"
+    },
+    {
+      "conflictId": "impacto:spec-17-auth-me",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28 (mesmos 8 domínios, reavaliados após a implementação)",
+      "fingerprint": "cf7d0e12700871c4c70bc72b38ef3746a890a516b33b5d6189abfd8ccc6659a9",
+      "ownFingerprint": "e4aa14b634c7415005a71d59b4aa6bb6fec853d1e2f9da3ffc517c8e4df4c96a",
+      "conflictFingerprint": "0b4043a3ba561cf9f2773c078c43d86d53fe91459c99010354cbf0a0a5e8ab2f",
+      "answeredAt": "2026-11-22T16:04:24.774Z"
+    },
+    {
+      "conflictId": "impacto:spec-18-gerenciar-usuarios",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28 (mesmos 8 domínios, reavaliados após a implementação)",
+      "fingerprint": "cf7d0e12700871c4c70bc72b38ef3746a890a516b33b5d6189abfd8ccc6659a9",
+      "ownFingerprint": "e4aa14b634c7415005a71d59b4aa6bb6fec853d1e2f9da3ffc517c8e4df4c96a",
+      "conflictFingerprint": "1cbf39632e07ff10a9e7b03f3019e242a7000bb7ddc88b43f0259a546616c137",
+      "answeredAt": "2026-11-22T16:04:24.984Z"
+    },
+    {
+      "conflictId": "impacto:spec-22-esqueci-senha",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28 (mesmos 8 domínios, reavaliados após a implementação)",
+      "fingerprint": "cf7d0e12700871c4c70bc72b38ef3746a890a516b33b5d6189abfd8ccc6659a9",
+      "ownFingerprint": "e4aa14b634c7415005a71d59b4aa6bb6fec853d1e2f9da3ffc517c8e4df4c96a",
+      "conflictFingerprint": "eeee6a5520a76b767b5806436768d4b6fc26c1d1589c37f5e5518714c9a163ba",
+      "answeredAt": "2026-11-22T16:04:25.183Z"
     }
   ]
 }
