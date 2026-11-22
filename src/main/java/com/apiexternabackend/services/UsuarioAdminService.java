@@ -38,13 +38,11 @@ public class UsuarioAdminService {
     private final RegistroAdministrativoRepository registroRepository;
 
     @Transactional(readOnly = true)
-    public Page<UsuarioAdminResponseDTO> listar(SituacaoUsuario situacao, Pageable pageable) {
+    public Page<UsuarioAdminResponseDTO> listar(SituacaoUsuario situacao, Papel papel, Pageable pageable) {
         if (situacao == SituacaoUsuario.EXCLUIDO) {
             return Page.empty(pageable);
         }
-        Page<Usuario> usuarios = situacao == null
-                ? usuarioRepository.findBySituacaoNot(SituacaoUsuario.EXCLUIDO, pageable)
-                : usuarioRepository.findBySituacao(situacao, pageable);
+        Page<Usuario> usuarios = usuarioRepository.listar(situacao, papel, pageable);
         // shortcut: 3 consultas por usuário da página (N+1); trocar por agregação se a página crescer
         return usuarios.map(this::toResponse);
     }
