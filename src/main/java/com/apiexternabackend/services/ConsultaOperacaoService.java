@@ -11,12 +11,14 @@ import com.apiexternabackend.mappers.CarteiraAcaoMapper;
 import com.apiexternabackend.mappers.OperacaoMapper;
 import com.apiexternabackend.repositories.CarteiraAcaoRepository;
 import com.apiexternabackend.repositories.OperacaoRepository;
+import com.apiexternabackend.resources.exceptions.RegraVioladaException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +36,16 @@ public class ConsultaOperacaoService {
     private final CarteiraService carteiraService;
     private final CambioCacheService cambioCacheService;
 
-    public Page<OperacaoResponseDTO> historico(Long investidorId, Pageable pageable) {
-        return operacaoRepository.findByInvestidorId(investidorId, pageable)
+    public Page<OperacaoResponseDTO> historico(Long investidorId, LocalDate dataInicio, LocalDate dataFim,
+                                               String ticker, Pageable pageable) {
+        if (dataInicio != null && dataFim != null && dataFim.isBefore(dataInicio)) {
+            throw new RegraVioladaException("OPE-006", "Data final anterior à data inicial");
+        }
+        return operacaoRepository.buscarExtrato(investidorId,
+                        dataInicio == null ? null : dataInicio.atStartOfDay(),
+                        dataFim == null ? null : dataFim.plusDays(1).atStartOfDay(),
+                        ticker == null || ticker.isBlank() ? null : ticker.trim().toUpperCase(),
+                        pageable)
                 .map(operacaoMapper::toResponse);
     }
 
