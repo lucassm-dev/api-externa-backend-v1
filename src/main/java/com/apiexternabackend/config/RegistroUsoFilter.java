@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerMapping;
 
 import java.io.IOException;
@@ -31,9 +32,16 @@ class RegistroUsoFilter extends OncePerRequestFilter {
         Authentication autenticacao = SecurityContextHolder.getContext().getAuthentication();
         chain.doFilter(request, response);
         if (autenticacao != null && autenticacao.getPrincipal() instanceof InvestidorPrincipal principal) {
-            Object rota = request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
             registroUsoService.registrar(new RegistroUso(
-                    principal.id(), request.getMethod(), String.valueOf(rota), response.getStatus(), LocalDateTime.now()));
+                    principal.id(), request.getMethod(), rota(request), response.getStatus(), LocalDateTime.now()));
         }
+    }
+
+    // ASM-507: só rota de controller tem padrão; o resto ("/**" dos arquivos estáticos) nunca grava a URL digitada
+    private String rota(HttpServletRequest request) {
+        if (request.getAttribute(HandlerMapping.BEST_MATCHING_HANDLER_ATTRIBUTE) instanceof HandlerMethod) {
+            return (String) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
+        }
+        return "desconhecida";
     }
 }
