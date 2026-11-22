@@ -1,0 +1,37 @@
+{
+  "feature": "spec-23-trocar-senha",
+  "timestamp": "2026-11-22T00:30:43.683Z",
+  "gitRev": "4649c9f",
+  "command": "./mvnw -q test",
+  "reporter": "exitcode",
+  "exitCode": 0,
+  "testsParsed": 0,
+  "results": {
+    "AC-620": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-621": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-622": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-623": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-624": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    }
+  },
+  "principles": {}
+}
