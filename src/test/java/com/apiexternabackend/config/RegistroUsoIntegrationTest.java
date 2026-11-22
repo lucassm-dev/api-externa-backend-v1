@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -74,6 +75,17 @@ class RegistroUsoIntegrationTest {
         assertThat(registro.getRota()).isEqualTo("/carteiras/{id}/posicoes");
         assertThat(registro.getStatus()).isEqualTo(200);
         assertThat(registro.getRegistradoEm()).isBetween(antes, LocalDateTime.now());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-651 requisição negada por falta de papel também é registrada, com 403")
+    void requisicaoNegadaRegistra403() throws Exception {
+        mockMvc.perform(delete("/corretoras/{id}", 1L).header("Authorization", "Bearer " + token))
+                .andExpect(status().isForbidden());
+
+        RegistroUso registro = esperarRegistro(investidor.getUsuario().getId());
+        assertThat(registro.getRota()).isEqualTo("/corretoras/{id}");
+        assertThat(registro.getStatus()).isEqualTo(403);
     }
 
     @Test
