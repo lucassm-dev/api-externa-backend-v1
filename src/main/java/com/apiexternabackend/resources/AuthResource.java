@@ -9,6 +9,9 @@ import com.apiexternabackend.domains.dtos.UsuarioLogadoResponseDTO;
 import com.apiexternabackend.services.AutenticacaoService;
 import com.apiexternabackend.services.RecuperacaoSenhaService;
 import com.apiexternabackend.services.TrocaEmailService;
+import com.apiexternabackend.services.FotoPerfilService;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import com.apiexternabackend.domains.dtos.PedirTrocaEmailRequestDTO;
 import com.apiexternabackend.domains.dtos.ConfirmarTrocaEmailRequestDTO;
 import com.apiexternabackend.domains.dtos.EsqueciSenhaRequestDTO;
@@ -34,6 +37,7 @@ public class AuthResource {
     private final AutenticacaoService service;
     private final RecuperacaoSenhaService recuperacaoSenhaService;
     private final TrocaEmailService trocaEmailService;
+    private final FotoPerfilService fotoPerfilService;
 
     @PostMapping("/cadastro")
     public ResponseEntity<InvestidorResponseDTO> cadastrar(@RequestBody @Valid AuthCadastroRequestDTO dto) {
@@ -75,6 +79,18 @@ public class AuthResource {
                                                     @RequestBody @Valid ConfirmarTrocaEmailRequestDTO dto) {
         trocaEmailService.confirmar(principal.id(), dto.getCodigo());
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/me/foto")
+    public ResponseEntity<Void> enviarFoto(@AuthenticationPrincipal InvestidorPrincipal principal,
+                                           @RequestParam("arquivo") MultipartFile arquivo) {
+        fotoPerfilService.enviar(principal.id(), arquivo);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/me/foto")
+    public ResponseEntity<byte[]> foto() {
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/me")
