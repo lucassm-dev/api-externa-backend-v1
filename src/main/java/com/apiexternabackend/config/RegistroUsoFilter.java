@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -30,11 +31,24 @@ class RegistroUsoFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         Authentication autenticacao = SecurityContextHolder.getContext().getAuthentication();
-        chain.doFilter(request, response);
-        if (autenticacao != null && autenticacao.getPrincipal() instanceof InvestidorPrincipal principal) {
-            registroUsoService.registrar(new RegistroUso(
-                    principal.id(), request.getMethod(), rota(request), response.getStatus(), LocalDateTime.now()));
+        if (!(autenticacao != null && autenticacao.getPrincipal() instanceof InvestidorPrincipal principal)) {
+            chain.doFilter(request, response);
+            return;
         }
+        try {
+            chain.doFilter(request, response);
+        } catch (ServletException | RuntimeException erro) {
+            // ASM-506: o 403 do @PreAuthorize sobe (embrulhado pelo DispatcherServlet) até o ExceptionTranslationFilter, antes deste filtro
+            if (erro instanceof AccessDeniedException || erro.getCause() instanceof AccessDeniedException) {
+                registrar(principal, request, HttpServletResponse.SC_FORBIDDEN);
+            }
+            throw erro;
+        }
+        registrar(principal, request, response.getStatus());
+    }
+
+    private void registrar(InvestidorPrincipal principal, HttpServletRequest request, int status) {
+        registroUsoService.registrar(new RegistroUso(principal.id(), request.getMethod(), rota(request), status, LocalDateTime.now()));
     }
 
     // ASM-507: só rota de controller tem padrão; o resto ("/**" dos arquivos estáticos) nunca grava a URL digitada
