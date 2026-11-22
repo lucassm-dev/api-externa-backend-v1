@@ -25,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -88,6 +89,12 @@ public class AuthResource {
     public ResponseEntity<Void> enviarFoto(@AuthenticationPrincipal InvestidorPrincipal principal,
                                            @RequestParam("arquivo") MultipartFile arquivo) throws IOException {
         fotoPerfilService.enviar(principal.id(), arquivo);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/me/foto")
+    public ResponseEntity<Void> removerFoto(@AuthenticationPrincipal InvestidorPrincipal principal) {
+        fotoPerfilService.remover(principal.id());
         return ResponseEntity.noContent().build();
     }
 

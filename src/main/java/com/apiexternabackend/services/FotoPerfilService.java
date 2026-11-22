@@ -36,6 +36,10 @@ public class FotoPerfilService {
         repository.save(new FotoPerfil(usuarioId, conteudo, tipo, Instant.now()));
     }
 
+    public void remover(Long usuarioId) {
+        repository.deleteById(usuarioId);
+    }
+
     public Optional<FotoPerfil> buscar(Long usuarioId) {
         return repository.findById(usuarioId);
     }
