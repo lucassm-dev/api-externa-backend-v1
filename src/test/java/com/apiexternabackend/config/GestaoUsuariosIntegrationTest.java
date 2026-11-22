@@ -140,6 +140,17 @@ class GestaoUsuariosIntegrationTest {
     }
 
     @Test
+    @DisplayName("@spec:AC-659 Só o ADMIN vê os totais")
+    void soAdminVeTotais() throws Exception {
+        String tokenInvestidor = token(usuario(Papel.INVESTIDOR, SituacaoUsuario.ATIVO));
+
+        mockMvc.perform(get("/admin/usuarios/totais").header("Authorization", "Bearer " + tokenInvestidor))
+                .andExpect(status().isForbidden()).andExpect(jsonPath("$.codigo").value("AUT-007"));
+        mockMvc.perform(get("/admin/usuarios/totais"))
+                .andExpect(status().isUnauthorized()).andExpect(jsonPath("$.codigo").value("AUT-005"));
+    }
+
+    @Test
     @DisplayName("@spec:AC-577 Listagem não mostra conteúdo financeiro nem senha")
     void listagemSemConteudoFinanceiro() throws Exception {
         Investidor investidor = investidor(SituacaoUsuario.ATIVO, "Rico");
