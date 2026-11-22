@@ -4,6 +4,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -33,6 +34,12 @@ public class GlobalExceptionHandler {
         ex.getBindingResult().getFieldErrors()
                 .forEach(fe -> err.addFieldError(fe.getField(), fe.getDefaultMessage()));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+    }
+
+    // spec-25: upload acima do teto do multipart (3 MB) é barrado pelo Spring antes do serviço; responde como o limite de 2 MB
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<StandardError> handleUploadGrande(HttpServletRequest request) {
+        return handleNegocio(new RegraVioladaException("AUT-016", "A foto deve ter no máximo 2 MB."), request);
     }
 
     // rota pública inexistente (ex.: Swagger fora do dev, AC-549) é 404, não erro interno

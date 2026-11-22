@@ -13,7 +13,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartFile;
+import com.apiexternabackend.resources.exceptions.GlobalExceptionHandler;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -21,6 +23,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -56,6 +59,16 @@ class FotoPerfilIntegrationTest {
     }
 
     @Test
+    @DisplayName("@spec:AC-633 Upload acima do teto do multipart também responde AUT-016, não erro interno")
+    void uploadAcimaDoTetoDoMultipart() {
+        // o MockMvc não aplica o teto do multipart, então o handler é chamado direto
+        var resposta = new GlobalExceptionHandler().handleUploadGrande(new MockHttpServletRequest("PUT", "/auth/me/foto"));
+
+        assertThat(resposta.getStatusCode().value()).isEqualTo(422);
+        assertThat(resposta.getBody().getCodigo()).isEqualTo("AUT-016");
+    }
+
+    @Test
     @DisplayName("@spec:AC-634 Conteúdo que não é JPEG, PNG nem WebP é recusado com AUT-017, mesmo declarado como imagem")
     void formatoInvalido() throws Exception {
         String token = token(cadastrar());
@@ -80,6 +93,39 @@ class FotoPerfilIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(tipo))
                 .andExpect(content().bytes(imagem));
+    }
+
+    @Test
+    @DisplayName("@spec:AC-636 Enviar outra foto substitui a anterior")
+    void trocarFoto() throws Exception {
+        String token = token(cadastrar());
+        enviar(token, imagem("image/png")).andExpect(status().isNoContent());
+
+        byte[] nova = imagem("image/jpeg");
+        enviar(token, nova).andExpect(status().isNoContent());
+
+        foto(token).andExpect(content().contentType("image/jpeg")).andExpect(content().bytes(nova));
+    }
+
+    @Test
+    @DisplayName("@spec:AC-638 Cada usuário só lê, troca e remove a própria foto; sem token é 401")
+    void cadaUmNaPropriaFoto() throws Exception {
+        String tokenA = token(cadastrar());
+        String tokenB = token(cadastrar());
+        byte[] fotoA = imagem("image/png");
+        enviar(tokenA, fotoA).andExpect(status().isNoContent());
+
+        foto(tokenB).andExpect(status().isNotFound());
+        enviar(tokenB, imagem("image/jpeg")).andExpect(status().isNoContent());
+        mockMvc.perform(delete("/auth/me/foto").header("Authorization", "Bearer " + tokenB))
+                .andExpect(status().isNoContent());
+        foto(tokenA).andExpect(status().isOk()).andExpect(content().bytes(fotoA));
+
+        mockMvc.perform(get("/auth/me/foto")).andExpect(status().isUnauthorized());
+        mockMvc.perform(delete("/auth/me/foto")).andExpect(status().isUnauthorized());
+        mockMvc.perform(multipart(HttpMethod.PUT, "/auth/me/foto")
+                        .file(new MockMultipartFile("arquivo", "f.png", MediaType.IMAGE_PNG_VALUE, fotoA)))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
