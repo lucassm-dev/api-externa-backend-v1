@@ -431,15 +431,15 @@ Três papéis: **Investidor**, **Administrador** e, depois, **Suporte**. As deci
 
 ### 15.4. Relatórios do investidor `[D]`
 
-Aba nova onde o investidor monta relatórios das **próprias** movimentações. Filtros já citados:
+Aba nova onde o investidor monta relatórios das **próprias** movimentações. Filtros, combináveis entre si:
 
 - movimentações em um período escolhido por ele
 - movimentações de um ticker específico
 - movimentações com lucro ou com prejuízo
+- movimentações de uma carteira
+- movimentações de compra ou de venda
 
-`[A]` Lista final de filtros, se exporta arquivo, e como "lucro ou prejuízo" é medido (realizado, em aberto ou ambos) — a decidir em conjunto.
-
-> Esta evolução revoga parte do ADR-010 (consultas sem filtro): precisa de ADR que o substitua.
+`[D]` Lucro ou prejuízo é o **realizado** na venda, pelo preço médio (SPEC-06); por isso esse filtro só traz vendas. O relatório não exporta arquivo. Os filtros são aplicados no servidor, no extrato `GET /operacoes` — ADR-018, que substitui o ADR-010 na parte de filtros.
 
 ### 15.5. Relatórios do administrador `[D]`
 
