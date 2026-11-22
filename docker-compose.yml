@@ -49,6 +49,11 @@ services:
       TWELVEDATA_API_KEY: ${TWELVEDATA_API_KEY}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-}
       ADMIN_SENHA: ${ADMIN_SENHA:-}
+      MAIL_HOST: ${MAIL_HOST:-smtp.gmail.com}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      MAIL_FROM: ${MAIL_FROM:-}
 
       # Vazio de propósito: o frontend fala com a API pela mesma origem, via
       # nginx, então não existe requisição de outra origem para autorizar.
