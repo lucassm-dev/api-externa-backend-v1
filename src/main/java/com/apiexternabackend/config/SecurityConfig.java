@@ -3,6 +3,7 @@ package com.apiexternabackend.config;
 import com.apiexternabackend.domains.Usuario;
 import com.apiexternabackend.domains.enums.SituacaoUsuario;
 import com.apiexternabackend.repositories.UsuarioRepository;
+import com.apiexternabackend.services.RegistroUsoService;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -44,6 +46,7 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint authenticationEntryPoint;
     private final JwtAccessDeniedHandler accessDeniedHandler;
     private final UsuarioRepository usuarioRepository;
+    private final RegistroUsoService registroUsoService;
 
     /**
      * Origens autorizadas a chamar a API de outro endereço. Vazio por padrão: ambiente que
@@ -114,7 +117,8 @@ public class SecurityConfig {
                 .oauth2ResourceServer(o -> o
                         .jwt(j -> j.jwtAuthenticationConverter(this::autenticacaoDe))
                         .authenticationEntryPoint(authenticationEntryPoint)
-                        .accessDeniedHandler(accessDeniedHandler));
+                        .accessDeniedHandler(accessDeniedHandler))
+                .addFilterAfter(new RegistroUsoFilter(registroUsoService), AuthorizationFilter.class);
 
         return http.build();
     }
