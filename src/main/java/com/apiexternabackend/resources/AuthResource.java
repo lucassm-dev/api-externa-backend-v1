@@ -12,6 +12,8 @@ import com.apiexternabackend.services.TrocaEmailService;
 import com.apiexternabackend.services.FotoPerfilService;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import com.apiexternabackend.domains.dtos.PedirTrocaEmailRequestDTO;
 import com.apiexternabackend.domains.dtos.ConfirmarTrocaEmailRequestDTO;
 import com.apiexternabackend.domains.dtos.EsqueciSenhaRequestDTO;
@@ -83,7 +85,7 @@ public class AuthResource {
 
     @PutMapping("/me/foto")
     public ResponseEntity<Void> enviarFoto(@AuthenticationPrincipal InvestidorPrincipal principal,
-                                           @RequestParam("arquivo") MultipartFile arquivo) {
+                                           @RequestParam("arquivo") MultipartFile arquivo) throws IOException {
         fotoPerfilService.enviar(principal.id(), arquivo);
         return ResponseEntity.noContent().build();
     }
