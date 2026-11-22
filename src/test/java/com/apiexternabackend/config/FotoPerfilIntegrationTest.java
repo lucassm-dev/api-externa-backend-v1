@@ -21,6 +21,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
+import static org.hamcrest.Matchers.nullValue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -78,6 +80,33 @@ class FotoPerfilIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(tipo))
                 .andExpect(content().bytes(imagem));
+    }
+
+    @Test
+    @DisplayName("@spec:AC-637 Remover a foto responde 204 e a leitura passa a dar 404")
+    void removerFoto() throws Exception {
+        String token = token(cadastrar());
+        enviar(token, imagem("image/png")).andExpect(status().isNoContent());
+
+        mockMvc.perform(delete("/auth/me/foto").header("Authorization", "Bearer " + token))
+                .andExpect(status().isNoContent());
+
+        foto(token).andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-639 GET /auth/me informa fotoUrl com foto e null sem foto")
+    void meInformaFoto() throws Exception {
+        String token = token(cadastrar());
+        me(token).andExpect(jsonPath("$.fotoUrl").value(nullValue()));
+
+        enviar(token, imagem("image/png")).andExpect(status().isNoContent());
+
+        me(token).andExpect(jsonPath("$.fotoUrl").value("/auth/me/foto"));
+    }
+
+    private ResultActions me(String token) throws Exception {
+        return mockMvc.perform(get("/auth/me").header("Authorization", "Bearer " + token));
     }
 
     private static byte[] imagem(String tipo) {
