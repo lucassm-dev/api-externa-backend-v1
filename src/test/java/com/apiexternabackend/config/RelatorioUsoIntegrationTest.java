@@ -114,6 +114,25 @@ class RelatorioUsoIntegrationTest {
         assertThat(requisicoesDe(relatorio, investidor)).isEqualTo(60);
     }
 
+    @Test
+    @DisplayName("@spec:AC-663 No máximo 10 horas e 10 usuários")
+    void noMaximoDezHorasEDezUsuarios() throws Exception {
+        LocalDate dia = LocalDate.now().minusDays(50);
+        List<Long> usuarios = new ArrayList<>();
+        for (int i = 1; i <= 12; i++) {
+            Long usuario = usuario(Papel.INVESTIDOR).getId();
+            usuarios.add(usuario);
+            registrar(usuario, dia.atTime(i - 1, 0), i);
+        }
+
+        JsonNode relatorio = relatorio("dataInicio=" + dia + "&dataFim=" + dia);
+
+        assertThat(relatorio.get("picos")).extracting(p -> p.get("requisicoes").asLong())
+                .containsExactly(12L, 11L, 10L, 9L, 8L, 7L, 6L, 5L, 4L, 3L);
+        assertThat(relatorio.get("usuarios")).extracting(u -> u.get("id").asLong())
+                .containsExactlyElementsOf(usuarios.subList(2, 12).reversed());
+    }
+
     private static long requisicoesDe(JsonNode relatorio, Long usuarioId) {
         for (JsonNode usuario : relatorio.get("usuarios")) {
             if (usuario.get("id").asLong() == usuarioId) {
