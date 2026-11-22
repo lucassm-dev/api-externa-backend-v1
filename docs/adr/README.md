@@ -31,3 +31,4 @@ Decididas em 2026-11-21, implementação pendente:
 | ADR | Decisão | Impacto principal no frontend |
 |---|---|---|
 | [016](016-envio-de-email-por-smtp-gratuito.md) | E-mail por SMTP gratuito (Gmail com senha de app), credenciais em variáveis de ambiente | Pedido de código sempre responde igual; em fluxo autenticado, falha de envio vira 503 `EXT-012` |
+| [017](017-foto-de-perfil-no-banco.md) | Foto de perfil no Postgres, em tabela própria (`bytea`), até 2 MB, JPEG/PNG/WebP detectados pela assinatura | Backup continua um único `pg_dump`; banco cresce até 2 MB por usuário |

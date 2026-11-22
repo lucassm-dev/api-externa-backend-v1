@@ -427,7 +427,7 @@ Três papéis: **Investidor**, **Administrador** e, depois, **Suporte**. As deci
 - No perfil o usuário altera foto, e-mail e senha
 - `[P]` Trocar a senha pelo perfil exige a senha atual
 - `[P]` Trocar o e-mail exige confirmar o novo endereço com código, o mesmo mecanismo de 15.2
-- `[A]` Onde e com que limite de tamanho a foto é guardada
+- `[D]` A foto fica no Postgres, em tabela própria, até 2 MB, em JPEG, PNG ou WebP — ADR-017
 
 ### 15.4. Relatórios do investidor `[D]`
 
