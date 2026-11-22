@@ -110,6 +110,7 @@ Implementação: `src/main/java/com/apiexternabackend/resources/exceptions/`.
 | AUT-015 | Limite de pedidos de código de troca de e-mail (3 a cada 15 min — spec-24) | 422 | RegraVioladaException |
 | AUT-016 | Foto de perfil acima de 2 MB, inclusive acima do teto do multipart (ADR-017 — spec-25) | 422 | RegraVioladaException |
 | AUT-017 | Foto de perfil fora de JPEG, PNG ou WebP, detectado pela assinatura do arquivo (ADR-017 — spec-25) | 422 | RegraVioladaException |
+| AUT-018 | Relatório de uso (`GET /admin/uso`) com `dataFim` anterior a `dataInicio` (spec-30) | 422 | RegraVioladaException |
 
 ## EXT — Integração externa
 

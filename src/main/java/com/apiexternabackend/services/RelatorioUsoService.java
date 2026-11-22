@@ -2,6 +2,7 @@ package com.apiexternabackend.services;
 
 import com.apiexternabackend.domains.dtos.RelatorioUsoResponseDTO;
 import com.apiexternabackend.repositories.RegistroUsoRepository;
+import com.apiexternabackend.resources.exceptions.RegraVioladaException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,9 @@ public class RelatorioUsoService {
         // ASM-512: sem datas, hoje e os 6 dias anteriores
         LocalDate ultimoDia = dataFim != null ? dataFim : LocalDate.now();
         LocalDate primeiroDia = dataInicio != null ? dataInicio : ultimoDia.minusDays(6);
+        if (ultimoDia.isBefore(primeiroDia)) {
+            throw new RegraVioladaException("AUT-018", "Data final anterior à data inicial");
+        }
         LocalDateTime inicio = primeiroDia.atStartOfDay();
         LocalDateTime fim = ultimoDia.plusDays(1).atStartOfDay();
         List<RelatorioUsoResponseDTO.Pico> picos = repository.picosPorHora(inicio, fim).stream()
