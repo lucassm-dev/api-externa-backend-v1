@@ -1,7 +1,7 @@
 {
   "feature": "spec-25-foto-perfil",
-  "timestamp": "2026-11-22T16:27:29.785Z",
-  "gitRev": "a0fdc79",
+  "timestamp": "2026-11-22T17:19:47.822Z",
+  "gitRev": "1949c45",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

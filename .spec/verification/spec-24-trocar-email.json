@@ -1,7 +1,7 @@
 {
   "feature": "spec-24-trocar-email",
-  "timestamp": "2026-11-22T16:26:43.092Z",
-  "gitRev": "a0fdc79",
+  "timestamp": "2026-11-22T17:19:05.578Z",
+  "gitRev": "1949c45",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
