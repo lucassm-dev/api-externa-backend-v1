@@ -1,7 +1,7 @@
 # Spec: Fuso de Brasília na aplicação
 
 > feature: spec-31-fuso-brasilia
-> status: pronta
+> status: implementada
 
 ## Contexto
 

@@ -2,7 +2,7 @@
 
 > feature: spec-31-fuso-brasilia
 
-## T-530 — Fixar o fuso de Brasília na imagem [pendente]
+## T-530 — Fixar o fuso de Brasília na imagem [concluida]
 
 - Refs: US-481, AC-666
 - Arquivos: Dockerfile, docs/deploy.md, src/test/java/com/apiexternabackend/deploy/ConfiguracaoProducaoTest.java
