@@ -25,6 +25,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.EnumMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -38,15 +40,22 @@ public class UsuarioAdminService {
     private final RegistroAdministrativoRepository registroRepository;
 
     @Transactional(readOnly = true)
-    public Page<UsuarioAdminResponseDTO> listar(SituacaoUsuario situacao, Pageable pageable) {
+    public Page<UsuarioAdminResponseDTO> listar(SituacaoUsuario situacao, Papel papel, Pageable pageable) {
         if (situacao == SituacaoUsuario.EXCLUIDO) {
             return Page.empty(pageable);
         }
-        Page<Usuario> usuarios = situacao == null
-                ? usuarioRepository.findBySituacaoNot(SituacaoUsuario.EXCLUIDO, pageable)
-                : usuarioRepository.findBySituacao(situacao, pageable);
+        Page<Usuario> usuarios = usuarioRepository.listar(situacao, papel, pageable);
         // shortcut: 3 consultas por usuário da página (N+1); trocar por agregação se a página crescer
         return usuarios.map(this::toResponse);
+    }
+
+    // spec-29: as duas situações sempre presentes, com 0 quando não há ninguém (ASM-508)
+    public Map<SituacaoUsuario, Long> totais(Papel papel) {
+        Map<SituacaoUsuario, Long> totais = new EnumMap<>(Map.of(SituacaoUsuario.ATIVO, 0L, SituacaoUsuario.BLOQUEADO, 0L));
+        for (Object[] linha : usuarioRepository.contarPorSituacao(papel)) {
+            totais.put((SituacaoUsuario) linha[0], (Long) linha[1]);
+        }
+        return totais;
     }
 
     @Transactional

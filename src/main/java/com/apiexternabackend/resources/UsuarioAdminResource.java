@@ -4,6 +4,7 @@ import com.apiexternabackend.config.InvestidorPrincipal;
 import com.apiexternabackend.domains.dtos.BloqueioRequestDTO;
 import com.apiexternabackend.domains.dtos.CriarAdminRequestDTO;
 import com.apiexternabackend.domains.dtos.UsuarioAdminResponseDTO;
+import com.apiexternabackend.domains.enums.Papel;
 import com.apiexternabackend.domains.enums.SituacaoUsuario;
 import com.apiexternabackend.services.UsuarioAdminService;
 import jakarta.validation.Valid;
@@ -24,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/admin/usuarios")
 @PreAuthorize("hasRole('ADMIN')")
@@ -34,8 +37,14 @@ public class UsuarioAdminResource {
 
     @GetMapping
     public ResponseEntity<Page<UsuarioAdminResponseDTO>> listar(@RequestParam(required = false) SituacaoUsuario situacao,
+                                                                @RequestParam(required = false) Papel papel,
                                                                 @PageableDefault(sort = "id") Pageable pageable) {
-        return ResponseEntity.ok(service.listar(situacao, pageable));
+        return ResponseEntity.ok(service.listar(situacao, papel, pageable));
+    }
+
+    @GetMapping("/totais")
+    public ResponseEntity<Map<SituacaoUsuario, Long>> totais(@RequestParam(required = false) Papel papel) {
+        return ResponseEntity.ok(service.totais(papel));
     }
 
     @PostMapping

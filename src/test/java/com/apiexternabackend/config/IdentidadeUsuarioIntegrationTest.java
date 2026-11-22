@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -164,7 +165,8 @@ class IdentidadeUsuarioIntegrationTest {
         return jwtDecoder.decode(token).getClaimAsStringList("authorities");
     }
 
-    // varre todo @RequestBody e parâmetro dos controllers atrás de algo chamado "papel"
+    // varre todo @RequestBody e parâmetro dos controllers atrás de algo chamado "papel";
+    // spec-29: parâmetro de rota GET é filtro de leitura (ex.: ?papel= na listagem do ADMIN) e não atribui papel
     private static List<String> entradasComPapel() throws Exception {
         var scanner = new ClassPathScanningCandidateComponentProvider(false);
         scanner.addIncludeFilter(new AnnotationTypeFilter(RestController.class));
@@ -172,7 +174,9 @@ class IdentidadeUsuarioIntegrationTest {
         for (var bean : scanner.findCandidateComponents("com.apiexternabackend")) {
             for (Method metodo : Class.forName(bean.getBeanClassName()).getDeclaredMethods()) {
                 for (Parameter parametro : metodo.getParameters()) {
-                    if (parametro.getName().equalsIgnoreCase("papel")) achados.add(metodo + " -> " + parametro.getName());
+                    if (parametro.getName().equalsIgnoreCase("papel") && !metodo.isAnnotationPresent(GetMapping.class)) {
+                        achados.add(metodo + " -> " + parametro.getName());
+                    }
                     if (!parametro.isAnnotationPresent(RequestBody.class)) continue;
                     for (Field campo : parametro.getType().getDeclaredFields()) {
                         if (campo.getName().equalsIgnoreCase("papel")) achados.add(parametro.getType().getName() + ".papel");

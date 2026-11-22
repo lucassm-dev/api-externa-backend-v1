@@ -106,6 +106,51 @@ class GestaoUsuariosIntegrationTest {
     }
 
     @Test
+    @DisplayName("@spec:AC-657 Listagem filtra por papel")
+    void listagemFiltraPorPapel() throws Exception {
+        Investidor ativo = investidor(SituacaoUsuario.ATIVO, "Ativo Papel");
+        Investidor bloqueado = investidor(SituacaoUsuario.BLOQUEADO, "Bloqueado Papel");
+
+        List<JsonNode> investidores = listarCom("papel=INVESTIDOR");
+        assertThat(ids(investidores)).contains(ativo.getId(), bloqueado.getId()).doesNotContain(admin.getId());
+        assertThat(investidores).allMatch(u -> u.get("papel").asText().equals("INVESTIDOR"));
+
+        List<JsonNode> investidoresBloqueados = listarCom("papel=INVESTIDOR&situacao=BLOQUEADO");
+        assertThat(ids(investidoresBloqueados)).contains(bloqueado.getId()).doesNotContain(ativo.getId());
+        assertThat(investidoresBloqueados).allMatch(u -> u.get("papel").asText().equals("INVESTIDOR")
+                && u.get("situacao").asText().equals("BLOQUEADO"));
+    }
+
+    @Test
+    @DisplayName("@spec:AC-658 Totais por situação, sem excluídos")
+    void totaisPorSituacao() throws Exception {
+        JsonNode antes = totais("papel=INVESTIDOR");
+        investidor(SituacaoUsuario.ATIVO, "Ativo Um");
+        investidor(SituacaoUsuario.ATIVO, "Ativo Dois");
+        investidor(SituacaoUsuario.BLOQUEADO, "Bloqueado Total");
+        usuario(Papel.INVESTIDOR, SituacaoUsuario.EXCLUIDO);
+        usuario(Papel.ADMIN, SituacaoUsuario.ATIVO);
+
+        JsonNode depois = totais("papel=INVESTIDOR");
+        assertThat(depois.get("ATIVO").asLong() - antes.get("ATIVO").asLong()).isEqualTo(2);
+        assertThat(depois.get("BLOQUEADO").asLong() - antes.get("BLOQUEADO").asLong()).isEqualTo(1);
+        List<String> chaves = new ArrayList<>();
+        depois.fieldNames().forEachRemaining(chaves::add);
+        assertThat(chaves).containsExactlyInAnyOrder("ATIVO", "BLOQUEADO");
+    }
+
+    @Test
+    @DisplayName("@spec:AC-659 Só o ADMIN vê os totais")
+    void soAdminVeTotais() throws Exception {
+        String tokenInvestidor = token(usuario(Papel.INVESTIDOR, SituacaoUsuario.ATIVO));
+
+        mockMvc.perform(get("/admin/usuarios/totais").header("Authorization", "Bearer " + tokenInvestidor))
+                .andExpect(status().isForbidden()).andExpect(jsonPath("$.codigo").value("AUT-007"));
+        mockMvc.perform(get("/admin/usuarios/totais"))
+                .andExpect(status().isUnauthorized()).andExpect(jsonPath("$.codigo").value("AUT-005"));
+    }
+
+    @Test
     @DisplayName("@spec:AC-577 Listagem não mostra conteúdo financeiro nem senha")
     void listagemSemConteudoFinanceiro() throws Exception {
         Investidor investidor = investidor(SituacaoUsuario.ATIVO, "Rico");
@@ -261,12 +306,22 @@ class GestaoUsuariosIntegrationTest {
     }
 
     private List<JsonNode> listar(String situacao) throws Exception {
-        String url = "/admin/usuarios?size=1000" + (situacao == null ? "" : "&situacao=" + situacao);
+        return listarCom(situacao == null ? "" : "situacao=" + situacao);
+    }
+
+    private List<JsonNode> listarCom(String filtros) throws Exception {
+        String url = "/admin/usuarios?size=1000&" + filtros;
         String json = mockMvc.perform(get(url).header("Authorization", "Bearer " + tokenAdmin))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         List<JsonNode> linhas = new ArrayList<>();
         objectMapper.readTree(json).get("content").forEach(linhas::add);
         return linhas;
+    }
+
+    private JsonNode totais(String filtros) throws Exception {
+        String json = mockMvc.perform(get("/admin/usuarios/totais?" + filtros).header("Authorization", "Bearer " + tokenAdmin))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        return objectMapper.readTree(json);
     }
 
     private static JsonNode porId(List<JsonNode> linhas, Long id) {

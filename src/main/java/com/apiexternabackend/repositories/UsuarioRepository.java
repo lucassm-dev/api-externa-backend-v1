@@ -7,7 +7,10 @@ import com.apiexternabackend.domains.Usuario;
 import com.apiexternabackend.domains.enums.Papel;
 import com.apiexternabackend.domains.enums.SituacaoUsuario;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
@@ -18,7 +21,18 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     Optional<Usuario> findByEmailAndSituacaoNot(String email, SituacaoUsuario situacao);
 
-    Page<Usuario> findBySituacaoNot(SituacaoUsuario situacao, Pageable pageable);
+    // spec-18/spec-29: excluídos nunca aparecem; situação e papel são filtros opcionais
+    @Query("""
+            select u from Usuario u
+            where u.situacao <> com.apiexternabackend.domains.enums.SituacaoUsuario.EXCLUIDO
+              and (:situacao is null or u.situacao = :situacao)
+              and (:papel is null or u.papel = :papel)""")
+    Page<Usuario> listar(@Param("situacao") SituacaoUsuario situacao, @Param("papel") Papel papel, Pageable pageable);
 
-    Page<Usuario> findBySituacao(SituacaoUsuario situacao, Pageable pageable);
+    @Query("""
+            select u.situacao, count(u) from Usuario u
+            where u.situacao <> com.apiexternabackend.domains.enums.SituacaoUsuario.EXCLUIDO
+              and (:papel is null or u.papel = :papel)
+            group by u.situacao""")
+    List<Object[]> contarPorSituacao(@Param("papel") Papel papel);
 }
