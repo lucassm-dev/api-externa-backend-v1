@@ -10,9 +10,15 @@ import java.util.Optional;
 
 public interface CodigoRecuperacaoRepository extends JpaRepository<CodigoRecuperacao, Long> {
 
-    long countByUsuarioAndCriadoEmAfter(Usuario usuario, Instant desde);
+    long countByUsuarioAndNovoEmailIsNullAndCriadoEmAfter(Usuario usuario, Instant desde);
 
-    List<CodigoRecuperacao> findByUsuarioAndUsadoEmIsNull(Usuario usuario);
+    List<CodigoRecuperacao> findByUsuarioAndNovoEmailIsNullAndUsadoEmIsNull(Usuario usuario);
 
-    Optional<CodigoRecuperacao> findFirstByUsuarioAndUsadoEmIsNullOrderByCriadoEmDesc(Usuario usuario);
+    Optional<CodigoRecuperacao> findFirstByUsuarioAndNovoEmailIsNullAndUsadoEmIsNullOrderByCriadoEmDesc(Usuario usuario);
+
+    long countByUsuarioAndNovoEmailIsNotNullAndCriadoEmAfter(Usuario usuario, Instant desde);
+
+    List<CodigoRecuperacao> findByUsuarioAndNovoEmailIsNotNullAndUsadoEmIsNull(Usuario usuario);
+
+    Optional<CodigoRecuperacao> findFirstByUsuarioAndNovoEmailIsNotNullAndUsadoEmIsNullOrderByCriadoEmDesc(Usuario usuario);
 }

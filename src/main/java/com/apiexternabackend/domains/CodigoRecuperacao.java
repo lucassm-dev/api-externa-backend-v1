@@ -36,4 +36,8 @@ public class CodigoRecuperacao {
 
     @Column(name = "usado_em")
     private Instant usadoEm;
+
+    // nulo = recuperação de senha; preenchido = troca de e-mail (#28)
+    @Column(name = "novo_email")
+    private String novoEmail;
 }

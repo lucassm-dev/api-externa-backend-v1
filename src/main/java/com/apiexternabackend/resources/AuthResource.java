@@ -8,6 +8,9 @@ import com.apiexternabackend.domains.dtos.InvestidorResponseDTO;
 import com.apiexternabackend.domains.dtos.UsuarioLogadoResponseDTO;
 import com.apiexternabackend.services.AutenticacaoService;
 import com.apiexternabackend.services.RecuperacaoSenhaService;
+import com.apiexternabackend.services.TrocaEmailService;
+import com.apiexternabackend.domains.dtos.PedirTrocaEmailRequestDTO;
+import com.apiexternabackend.domains.dtos.ConfirmarTrocaEmailRequestDTO;
 import com.apiexternabackend.domains.dtos.EsqueciSenhaRequestDTO;
 import com.apiexternabackend.domains.dtos.RedefinirSenhaRequestDTO;
 import com.apiexternabackend.domains.dtos.TrocarSenhaRequestDTO;
@@ -30,6 +33,7 @@ public class AuthResource {
 
     private final AutenticacaoService service;
     private final RecuperacaoSenhaService recuperacaoSenhaService;
+    private final TrocaEmailService trocaEmailService;
 
     @PostMapping("/cadastro")
     public ResponseEntity<InvestidorResponseDTO> cadastrar(@RequestBody @Valid AuthCadastroRequestDTO dto) {
@@ -57,6 +61,20 @@ public class AuthResource {
     public ResponseEntity<AuthTokenResponseDTO> trocarSenha(@AuthenticationPrincipal InvestidorPrincipal principal,
                                                             @RequestBody @Valid TrocarSenhaRequestDTO dto) {
         return ResponseEntity.ok(service.trocarSenha(principal.id(), dto));
+    }
+
+    @PostMapping("/email")
+    public ResponseEntity<Void> pedirTrocaEmail(@AuthenticationPrincipal InvestidorPrincipal principal,
+                                                @RequestBody @Valid PedirTrocaEmailRequestDTO dto) {
+        trocaEmailService.pedir(principal.id(), dto.getNovoEmail(), dto.getSenhaAtual());
+        return ResponseEntity.accepted().build();
+    }
+
+    @PostMapping("/email/confirmar")
+    public ResponseEntity<Void> confirmarTrocaEmail(@AuthenticationPrincipal InvestidorPrincipal principal,
+                                                    @RequestBody @Valid ConfirmarTrocaEmailRequestDTO dto) {
+        trocaEmailService.confirmar(principal.id(), dto.getCodigo());
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/me")
