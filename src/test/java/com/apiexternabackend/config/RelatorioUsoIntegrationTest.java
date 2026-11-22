@@ -144,6 +144,17 @@ class RelatorioUsoIntegrationTest {
                 .andExpect(status().isUnprocessableEntity()).andExpect(jsonPath("$.codigo").value("AUT-018"));
     }
 
+    @Test
+    @DisplayName("@spec:AC-665 Só o ADMIN vê o relatório")
+    void soAdminVeRelatorio() throws Exception {
+        String tokenInvestidor = jwtService.gerar(usuario(Papel.INVESTIDOR).getId(), Papel.INVESTIDOR).getTokenValue();
+
+        mockMvc.perform(get("/admin/uso").header("Authorization", "Bearer " + tokenInvestidor))
+                .andExpect(status().isForbidden()).andExpect(jsonPath("$.codigo").value("AUT-007"));
+        mockMvc.perform(get("/admin/uso"))
+                .andExpect(status().isUnauthorized()).andExpect(jsonPath("$.codigo").value("AUT-005"));
+    }
+
     private static long requisicoesDe(JsonNode relatorio, Long usuarioId) {
         for (JsonNode usuario : relatorio.get("usuarios")) {
             if (usuario.get("id").asLong() == usuarioId) {
