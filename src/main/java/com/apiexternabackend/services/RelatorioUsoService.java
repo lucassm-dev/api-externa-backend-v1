@@ -17,8 +17,11 @@ public class RelatorioUsoService {
     private final RegistroUsoRepository repository;
 
     public RelatorioUsoResponseDTO relatorio(LocalDate dataInicio, LocalDate dataFim) {
-        LocalDateTime inicio = dataInicio.atStartOfDay();
-        LocalDateTime fim = dataFim.plusDays(1).atStartOfDay();
+        // ASM-512: sem datas, hoje e os 6 dias anteriores
+        LocalDate ultimoDia = dataFim != null ? dataFim : LocalDate.now();
+        LocalDate primeiroDia = dataInicio != null ? dataInicio : ultimoDia.minusDays(6);
+        LocalDateTime inicio = primeiroDia.atStartOfDay();
+        LocalDateTime fim = ultimoDia.plusDays(1).atStartOfDay();
         List<RelatorioUsoResponseDTO.Pico> picos = repository.picosPorHora(inicio, fim).stream()
                 .map(linha -> new RelatorioUsoResponseDTO.Pico(dataHora(linha[0]), ((Number) linha[1]).longValue()))
                 .toList();
