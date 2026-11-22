@@ -84,6 +84,45 @@ class RelatorioUsoIntegrationTest {
         assertThat(usuarios).extracting(u -> u.get("requisicoes").asLong()).containsExactly(3L, 1L);
     }
 
+    @Test
+    @DisplayName("@spec:AC-662 Só o período pedido entra no relatório")
+    void soOPeriodoPedido() throws Exception {
+        LocalDate inicio = LocalDate.now().minusDays(40);
+        LocalDate fim = inicio.plusDays(1);
+        Long investidor = usuario(Papel.INVESTIDOR).getId();
+        registrar(investidor, inicio.minusDays(1).atTime(23, 59), 1);
+        registrar(investidor, inicio.atTime(0, 0), 1);
+        registrar(investidor, fim.atTime(23, 59), 1);
+        registrar(investidor, fim.plusDays(1).atTime(0, 0), 1);
+
+        JsonNode relatorio = relatorio("dataInicio=" + inicio + "&dataFim=" + fim);
+
+        assertThat(relatorio.get("total").asLong()).isEqualTo(2);
+        assertThat(requisicoesDe(relatorio, investidor)).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-662 Sem datas, valem os últimos 7 dias")
+    void semDatasValemUltimos7Dias() throws Exception {
+        Long investidor = usuario(Papel.INVESTIDOR).getId();
+        // muitas requisições para ficar entre os 10 que mais chamaram, à frente dos registros de outros testes
+        registrar(investidor, LocalDate.now().minusDays(1).atTime(10, 0), 60);
+        registrar(investidor, LocalDate.now().minusDays(8).atTime(10, 0), 1);
+
+        JsonNode relatorio = relatorio("");
+
+        assertThat(requisicoesDe(relatorio, investidor)).isEqualTo(60);
+    }
+
+    private static long requisicoesDe(JsonNode relatorio, Long usuarioId) {
+        for (JsonNode usuario : relatorio.get("usuarios")) {
+            if (usuario.get("id").asLong() == usuarioId) {
+                return usuario.get("requisicoes").asLong();
+            }
+        }
+        throw new AssertionError("usuário " + usuarioId + " fora do relatório");
+    }
+
     private JsonNode relatorio(String filtros) throws Exception {
         String json = mockMvc.perform(get("/admin/uso?" + filtros).header("Authorization", "Bearer " + tokenAdmin))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
