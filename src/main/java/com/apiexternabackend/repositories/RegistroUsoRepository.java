@@ -32,4 +32,14 @@ public interface RegistroUsoRepository extends Repository<RegistroUso, Long> {
             order by requisicoes desc, hora desc
             limit 10""", nativeQuery = true)
     List<Object[]> picosPorHora(@Param("inicio") LocalDateTime inicio, @Param("fim") LocalDateTime fim);
+
+    // empate pelo menor id (ASM-514)
+    @Query(value = """
+            select r.usuario_id, u.email, count(*) as requisicoes from registro_uso r
+            join usuario u on u.id = r.usuario_id
+            where r.registrado_em >= :inicio and r.registrado_em < :fim
+            group by r.usuario_id, u.email
+            order by requisicoes desc, r.usuario_id
+            limit 10""", nativeQuery = true)
+    List<Object[]> usuariosQueMaisChamaram(@Param("inicio") LocalDateTime inicio, @Param("fim") LocalDateTime fim);
 }

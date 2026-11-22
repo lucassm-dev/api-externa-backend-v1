@@ -22,7 +22,11 @@ public class RelatorioUsoService {
         List<RelatorioUsoResponseDTO.Pico> picos = repository.picosPorHora(inicio, fim).stream()
                 .map(linha -> new RelatorioUsoResponseDTO.Pico(dataHora(linha[0]), ((Number) linha[1]).longValue()))
                 .toList();
-        return new RelatorioUsoResponseDTO(repository.contarNoPeriodo(inicio, fim), picos);
+        List<RelatorioUsoResponseDTO.UsuarioUso> usuarios = repository.usuariosQueMaisChamaram(inicio, fim).stream()
+                .map(linha -> new RelatorioUsoResponseDTO.UsuarioUso(
+                        ((Number) linha[0]).longValue(), (String) linha[1], ((Number) linha[2]).longValue()))
+                .toList();
+        return new RelatorioUsoResponseDTO(repository.contarNoPeriodo(inicio, fim), picos, usuarios);
     }
 
     // consulta nativa: o driver pode devolver Timestamp ou LocalDateTime
