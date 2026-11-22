@@ -105,7 +105,7 @@ class AuthMeIntegrationTest {
     }
 
     @Test
-    @DisplayName("@spec:AC-574 Resposta tem só id, nome, email e papel, sem senha")
+    @DisplayName("@spec:AC-574 Resposta tem só id, nome, email, papel e fotoUrl, sem senha")
     void respostaNaoTrazSenha() throws Exception {
         String email = emailUnico();
         cadastrar("Sem Senha", email);
@@ -113,7 +113,7 @@ class AuthMeIntegrationTest {
         String json = me(logar(email)).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         JsonNode corpo = objectMapper.readTree(json);
 
-        assertThat(corpo.fieldNames()).toIterable().containsExactlyInAnyOrder("id", "nome", "email", "papel");
+        assertThat(corpo.fieldNames()).toIterable().containsExactlyInAnyOrder("id", "nome", "email", "papel", "fotoUrl");
         assertThat(json).doesNotContain("senha123").doesNotContain("$2a$");
     }
 

@@ -11,6 +11,7 @@ import com.apiexternabackend.domains.dtos.AuthLoginRequestDTO;
 import com.apiexternabackend.domains.dtos.AuthTokenResponseDTO;
 import com.apiexternabackend.domains.dtos.InvestidorResponseDTO;
 import com.apiexternabackend.mappers.InvestidorMapper;
+import com.apiexternabackend.repositories.FotoPerfilRepository;
 import com.apiexternabackend.repositories.InvestidorRepository;
 import com.apiexternabackend.repositories.UsuarioRepository;
 import com.apiexternabackend.resources.exceptions.AcessoNegadoException;
@@ -47,6 +48,7 @@ class AutenticacaoServiceTest {
     @Mock private InvestidorMapper mapper;
     @Mock private PasswordEncoder passwordEncoder;
     @Mock private JwtService jwtService;
+    @Mock private FotoPerfilRepository fotoPerfilRepository;
 
     @InjectMocks
     private AutenticacaoService service;

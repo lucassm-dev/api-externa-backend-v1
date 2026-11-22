@@ -1,0 +1,196 @@
+package com.apiexternabackend.config;
+
+import com.apiexternabackend.domains.dtos.AuthCadastroRequestDTO;
+import com.apiexternabackend.domains.dtos.AuthLoginRequestDTO;
+import com.apiexternabackend.domains.dtos.AuthTokenResponseDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockMultipartFile;
+import com.apiexternabackend.resources.exceptions.GlobalExceptionHandler;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.nullValue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+/**
+ * spec-25 (#30): foto de perfil, conforme ADR-017. Feita em TDD (Aula 15).
+ */
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
+class FotoPerfilIntegrationTest {
+
+    private static final int DOIS_MB = 2 * 1024 * 1024;
+    private static final byte[] ASSINATURA_PNG = {(byte) 0x89, 'P', 'N', 'G', '\r', '\n', 0x1A, '\n'};
+
+    @Autowired private MockMvc mockMvc;
+    @Autowired private ObjectMapper objectMapper;
+
+    @Test
+    @DisplayName("@spec:AC-633 Arquivo acima de 2 MB é recusado com AUT-016")
+    void arquivoAcimaDoLimite() throws Exception {
+        String token = token(cadastrar());
+
+        enviar(token, png(DOIS_MB + 1))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.codigo").value("AUT-016"));
+        foto(token).andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-633 Upload acima do teto do multipart também responde AUT-016, não erro interno")
+    void uploadAcimaDoTetoDoMultipart() {
+        // o MockMvc não aplica o teto do multipart, então o handler é chamado direto
+        var resposta = new GlobalExceptionHandler().handleUploadGrande(new MockHttpServletRequest("PUT", "/auth/me/foto"));
+
+        assertThat(resposta.getStatusCode().value()).isEqualTo(422);
+        assertThat(resposta.getBody().getCodigo()).isEqualTo("AUT-016");
+    }
+
+    @Test
+    @DisplayName("@spec:AC-634 Conteúdo que não é JPEG, PNG nem WebP é recusado com AUT-017, mesmo declarado como imagem")
+    void formatoInvalido() throws Exception {
+        String token = token(cadastrar());
+        byte[] pdf = "%PDF-1.4 conteudo qualquer".getBytes();
+
+        enviar(token, pdf)
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.codigo").value("AUT-017"));
+        foto(token).andExpect(status().isNotFound());
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @ValueSource(strings = {"image/jpeg", "image/png", "image/webp"})
+    @DisplayName("@spec:AC-635 Envio e leitura devolvem os mesmos bytes com o tipo detectado")
+    void envioELeitura(String tipo) throws Exception {
+        String token = token(cadastrar());
+        byte[] imagem = imagem(tipo);
+
+        enviar(token, imagem).andExpect(status().isNoContent());
+
+        foto(token)
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(tipo))
+                .andExpect(content().bytes(imagem));
+    }
+
+    @Test
+    @DisplayName("@spec:AC-636 Enviar outra foto substitui a anterior")
+    void trocarFoto() throws Exception {
+        String token = token(cadastrar());
+        enviar(token, imagem("image/png")).andExpect(status().isNoContent());
+
+        byte[] nova = imagem("image/jpeg");
+        enviar(token, nova).andExpect(status().isNoContent());
+
+        foto(token).andExpect(content().contentType("image/jpeg")).andExpect(content().bytes(nova));
+    }
+
+    @Test
+    @DisplayName("@spec:AC-638 Cada usuário só lê, troca e remove a própria foto; sem token é 401")
+    void cadaUmNaPropriaFoto() throws Exception {
+        String tokenA = token(cadastrar());
+        String tokenB = token(cadastrar());
+        byte[] fotoA = imagem("image/png");
+        enviar(tokenA, fotoA).andExpect(status().isNoContent());
+
+        foto(tokenB).andExpect(status().isNotFound());
+        enviar(tokenB, imagem("image/jpeg")).andExpect(status().isNoContent());
+        mockMvc.perform(delete("/auth/me/foto").header("Authorization", "Bearer " + tokenB))
+                .andExpect(status().isNoContent());
+        foto(tokenA).andExpect(status().isOk()).andExpect(content().bytes(fotoA));
+
+        mockMvc.perform(get("/auth/me/foto")).andExpect(status().isUnauthorized());
+        mockMvc.perform(delete("/auth/me/foto")).andExpect(status().isUnauthorized());
+        mockMvc.perform(multipart(HttpMethod.PUT, "/auth/me/foto")
+                        .file(new MockMultipartFile("arquivo", "f.png", MediaType.IMAGE_PNG_VALUE, fotoA)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-637 Remover a foto responde 204 e a leitura passa a dar 404")
+    void removerFoto() throws Exception {
+        String token = token(cadastrar());
+        enviar(token, imagem("image/png")).andExpect(status().isNoContent());
+
+        mockMvc.perform(delete("/auth/me/foto").header("Authorization", "Bearer " + token))
+                .andExpect(status().isNoContent());
+
+        foto(token).andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-639 GET /auth/me informa fotoUrl com foto e null sem foto")
+    void meInformaFoto() throws Exception {
+        String token = token(cadastrar());
+        me(token).andExpect(jsonPath("$.fotoUrl").value(nullValue()));
+
+        enviar(token, imagem("image/png")).andExpect(status().isNoContent());
+
+        me(token).andExpect(jsonPath("$.fotoUrl").value("/auth/me/foto"));
+    }
+
+    private ResultActions me(String token) throws Exception {
+        return mockMvc.perform(get("/auth/me").header("Authorization", "Bearer " + token));
+    }
+
+    private static byte[] imagem(String tipo) {
+        byte[] assinatura = switch (tipo) {
+            case "image/jpeg" -> new byte[]{(byte) 0xFF, (byte) 0xD8, (byte) 0xFF, (byte) 0xE0};
+            case "image/png" -> ASSINATURA_PNG;
+            default -> "RIFF\0\0\0\0WEBPVP8 ".getBytes(StandardCharsets.US_ASCII);
+        };
+        return Arrays.copyOf(assinatura, assinatura.length + 64);
+    }
+
+    private static byte[] png(int tamanho) {
+        return Arrays.copyOf(ASSINATURA_PNG, tamanho);
+    }
+
+    private ResultActions enviar(String token, byte[] conteudo) throws Exception {
+        MockMultipartFile arquivo = new MockMultipartFile("arquivo", "foto.png", MediaType.IMAGE_PNG_VALUE, conteudo);
+        return mockMvc.perform(multipart(HttpMethod.PUT, "/auth/me/foto").file(arquivo)
+                .header("Authorization", "Bearer " + token));
+    }
+
+    private ResultActions foto(String token) throws Exception {
+        return mockMvc.perform(get("/auth/me/foto").header("Authorization", "Bearer " + token));
+    }
+
+    private String token(String email) throws Exception {
+        String json = mockMvc.perform(post("/auth/login").contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new AuthLoginRequestDTO(email, "senha123"))))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        return objectMapper.readValue(json, AuthTokenResponseDTO.class).getToken();
+    }
+
+    private String cadastrar() throws Exception {
+        String email = "foto" + System.nanoTime() + "@email.com";
+        mockMvc.perform(post("/auth/cadastro").contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new AuthCadastroRequestDTO("Foto", email,
+                                String.format("%011d", System.nanoTime() % 100_000_000_000L), "senha123"))))
+                .andExpect(status().isCreated());
+        return email;
+    }
+}

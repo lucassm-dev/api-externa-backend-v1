@@ -79,8 +79,8 @@ válida e nunca exponha a senha, para que a rota não vaze dado de acesso.
 
 - **Dado** um investidor logado
 - **Quando** ele chama `GET /auth/me`
-- **Então** a resposta tem só os campos `id`, `nome`, `email` e `papel` —
-  nenhum campo de senha nem o hash
+- **Então** a resposta tem só os campos `id`, `nome`, `email`, `papel` e
+  `fotoUrl` (este acrescentado pela spec-25) — nenhum campo de senha nem o hash
 
 #### AC-575 — Cadastro e login continuam públicos
 

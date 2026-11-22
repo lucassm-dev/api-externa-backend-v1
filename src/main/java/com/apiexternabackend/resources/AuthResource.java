@@ -9,6 +9,11 @@ import com.apiexternabackend.domains.dtos.UsuarioLogadoResponseDTO;
 import com.apiexternabackend.services.AutenticacaoService;
 import com.apiexternabackend.services.RecuperacaoSenhaService;
 import com.apiexternabackend.services.TrocaEmailService;
+import com.apiexternabackend.services.FotoPerfilService;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import com.apiexternabackend.domains.dtos.PedirTrocaEmailRequestDTO;
 import com.apiexternabackend.domains.dtos.ConfirmarTrocaEmailRequestDTO;
 import com.apiexternabackend.domains.dtos.EsqueciSenhaRequestDTO;
@@ -17,8 +22,10 @@ import com.apiexternabackend.domains.dtos.TrocarSenhaRequestDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -34,6 +41,7 @@ public class AuthResource {
     private final AutenticacaoService service;
     private final RecuperacaoSenhaService recuperacaoSenhaService;
     private final TrocaEmailService trocaEmailService;
+    private final FotoPerfilService fotoPerfilService;
 
     @PostMapping("/cadastro")
     public ResponseEntity<InvestidorResponseDTO> cadastrar(@RequestBody @Valid AuthCadastroRequestDTO dto) {
@@ -75,6 +83,26 @@ public class AuthResource {
                                                     @RequestBody @Valid ConfirmarTrocaEmailRequestDTO dto) {
         trocaEmailService.confirmar(principal.id(), dto.getCodigo());
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/me/foto")
+    public ResponseEntity<Void> enviarFoto(@AuthenticationPrincipal InvestidorPrincipal principal,
+                                           @RequestParam("arquivo") MultipartFile arquivo) throws IOException {
+        fotoPerfilService.enviar(principal.id(), arquivo);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/me/foto")
+    public ResponseEntity<Void> removerFoto(@AuthenticationPrincipal InvestidorPrincipal principal) {
+        fotoPerfilService.remover(principal.id());
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/me/foto")
+    public ResponseEntity<byte[]> foto(@AuthenticationPrincipal InvestidorPrincipal principal) {
+        return fotoPerfilService.buscar(principal.id())
+                .map(f -> ResponseEntity.ok().contentType(MediaType.parseMediaType(f.getTipo())).body(f.getConteudo()))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/me")

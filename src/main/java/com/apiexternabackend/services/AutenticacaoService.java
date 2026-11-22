@@ -12,6 +12,7 @@ import com.apiexternabackend.domains.dtos.UsuarioLogadoResponseDTO;
 import com.apiexternabackend.domains.enums.Papel;
 import com.apiexternabackend.domains.enums.SituacaoUsuario;
 import com.apiexternabackend.mappers.InvestidorMapper;
+import com.apiexternabackend.repositories.FotoPerfilRepository;
 import com.apiexternabackend.repositories.InvestidorRepository;
 import com.apiexternabackend.repositories.UsuarioRepository;
 import com.apiexternabackend.resources.exceptions.AcessoNegadoException;
@@ -41,6 +42,7 @@ public class AutenticacaoService {
     private final InvestidorMapper mapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final FotoPerfilRepository fotoPerfilRepository;
 
     @Transactional
     public InvestidorResponseDTO cadastrar(AuthCadastroRequestDTO dto) {
@@ -112,6 +114,7 @@ public class AutenticacaoService {
                 .filter(u -> u.getSituacao() != SituacaoUsuario.EXCLUIDO)
                 .orElseThrow(() -> new CredenciaisInvalidasException("AUT-005", "Token ausente ou inválido."));
         String nome = repository.findById(usuarioId).map(Investidor::getNome).orElse(null);
-        return new UsuarioLogadoResponseDTO(usuario.getId(), nome, usuario.getEmail(), usuario.getPapel());
+        String fotoUrl = fotoPerfilRepository.existsById(usuarioId) ? "/auth/me/foto" : null;
+        return new UsuarioLogadoResponseDTO(usuario.getId(), nome, usuario.getEmail(), usuario.getPapel(), fotoUrl);
     }
 }
