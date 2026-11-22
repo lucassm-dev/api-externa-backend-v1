@@ -1,0 +1,348 @@
+{
+  "version": 1,
+  "large": true,
+  "documentationContract": "onp-docs-v1",
+  "domains": [],
+  "clientRequest": "Registrar as requisições à API por usuário: quando e qual tipo de operação. Não registrar corpo da requisição, senha nem token. Definir por quanto tempo os registros ficam guardados.",
+  "review": {
+    "summary": "Li ADR-011 (JWT pelo resource server), ADR-013 (papéis), specs 14, 16, 17, 18, 22 e 11 (CORS) e a spec-19 (registro administrativo). O único ponto de contato é SecurityConfig.securityFilterChain, que ganha um addFilterAfter(RegistroUsoFilter, AuthorizationFilter). Não muda rotas públicas, CORS, conversão do JWT, papéis, nem o status/corpo de nenhuma resposta; só lê o principal já autenticado e grava em tabela nova, de forma assíncrona e engolindo falhas. Sem conflito semântico com as regras dessas features.",
+    "reviewer": "Claude Code (Opus 5.5), sessão de 2026-11-22, feature spec-28-registro-uso-api",
+    "conflicts": [
+      {
+        "id": "impacto:autenticacao-investidor",
+        "automatic": true,
+        "feature": "autenticacao-investidor",
+        "summary": "A mudança interfere no domínio da feature autenticacao-investidor.",
+        "files": [
+          "src/main/java/com/apiexternabackend/config/SecurityConfig.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/autenticacao-investidor/spec.md"
+      },
+      {
+        "id": "impacto:investidor",
+        "automatic": true,
+        "feature": "investidor",
+        "summary": "A mudança interfere no domínio da feature investidor.",
+        "files": [
+          "src/main/java/com/apiexternabackend/ApiExternaBackendApplication.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/investidor/spec.md"
+      },
+      {
+        "id": "impacto:spec-11-cors",
+        "automatic": true,
+        "feature": "spec-11-cors",
+        "summary": "A mudança interfere no domínio da feature spec-11-cors.",
+        "files": [
+          "src/main/java/com/apiexternabackend/config/SecurityConfig.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-11-cors/spec.md"
+      },
+      {
+        "id": "impacto:spec-14-jwt-resource-server",
+        "automatic": true,
+        "feature": "spec-14-jwt-resource-server",
+        "summary": "A mudança interfere no domínio da feature spec-14-jwt-resource-server.",
+        "files": [
+          "src/main/java/com/apiexternabackend/config/SecurityConfig.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-14-jwt-resource-server/spec.md"
+      },
+      {
+        "id": "impacto:spec-16-papeis-matriz-acesso",
+        "automatic": true,
+        "feature": "spec-16-papeis-matriz-acesso",
+        "summary": "A mudança interfere no domínio da feature spec-16-papeis-matriz-acesso.",
+        "files": [
+          "src/main/java/com/apiexternabackend/config/SecurityConfig.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-16-papeis-matriz-acesso/spec.md"
+      },
+      {
+        "id": "impacto:spec-17-auth-me",
+        "automatic": true,
+        "feature": "spec-17-auth-me",
+        "summary": "A mudança interfere no domínio da feature spec-17-auth-me.",
+        "files": [
+          "src/main/java/com/apiexternabackend/config/SecurityConfig.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-17-auth-me/spec.md"
+      },
+      {
+        "id": "impacto:spec-18-gerenciar-usuarios",
+        "automatic": true,
+        "feature": "spec-18-gerenciar-usuarios",
+        "summary": "A mudança interfere no domínio da feature spec-18-gerenciar-usuarios.",
+        "files": [
+          "src/main/java/com/apiexternabackend/config/SecurityConfig.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-18-gerenciar-usuarios/spec.md"
+      },
+      {
+        "id": "impacto:spec-22-esqueci-senha",
+        "automatic": true,
+        "feature": "spec-22-esqueci-senha",
+        "summary": "A mudança interfere no domínio da feature spec-22-esqueci-senha.",
+        "files": [
+          "src/main/java/com/apiexternabackend/config/SecurityConfig.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-22-esqueci-senha/spec.md"
+      }
+    ],
+    "fingerprint": "ae63a8195ce83514cc4f941b3cc78ab8c52aa0f1e1078cc5868965bd15d3d283",
+    "ownFingerprint": "c2a9e3ce2d02687e7237291770ba050b6d242dfa319b6b2e80b150b25a193cf9",
+    "reviewedAt": "2026-11-22T15:35:02.779Z",
+    "documents": [
+      ".spec/features/autenticacao-investidor/design.md",
+      ".spec/features/autenticacao-investidor/spec.md",
+      ".spec/features/autenticacao-investidor/tasks.md",
+      ".spec/features/cadastro-corretora/spec.md",
+      ".spec/features/cadastro-corretora/tasks.md",
+      ".spec/features/carteira/spec.md",
+      ".spec/features/carteira/tasks.md",
+      ".spec/features/catalogo-acao/spec.md",
+      ".spec/features/catalogo-acao/tasks.md",
+      ".spec/features/deploy-homelab/spec.md",
+      ".spec/features/deploy-homelab/tasks.md",
+      ".spec/features/investidor/spec.md",
+      ".spec/features/investidor/tasks.md",
+      ".spec/features/operacao-movimentacao/spec.md",
+      ".spec/features/operacao-movimentacao/tasks.md",
+      ".spec/features/refactor-cnpj-delete/spec.md",
+      ".spec/features/refactor-cnpj-delete/tasks.md",
+      ".spec/features/spec-01-padronizacao-erros/spec.md",
+      ".spec/features/spec-01-padronizacao-erros/tasks.md",
+      ".spec/features/spec-03-recadastro-exclusao/design.md",
+      ".spec/features/spec-03-recadastro-exclusao/spec.md",
+      ".spec/features/spec-03-recadastro-exclusao/tasks.md",
+      ".spec/features/spec-04-preco-editavel/design.md",
+      ".spec/features/spec-04-preco-editavel/spec.md",
+      ".spec/features/spec-04-preco-editavel/tasks.md",
+      ".spec/features/spec-06-lucro-realizado/spec.md",
+      ".spec/features/spec-06-lucro-realizado/tasks.md",
+      ".spec/features/spec-07-cache-cotacao/spec.md",
+      ".spec/features/spec-07-cache-cotacao/tasks.md",
+      ".spec/features/spec-08-conversao-cambio/design.md",
+      ".spec/features/spec-08-conversao-cambio/spec.md",
+      ".spec/features/spec-08-conversao-cambio/tasks.md",
+      ".spec/features/spec-09-barra-cotacoes/design.md",
+      ".spec/features/spec-09-barra-cotacoes/spec.md",
+      ".spec/features/spec-09-barra-cotacoes/tasks.md",
+      ".spec/features/spec-10-vazamento-investidor-inativo/spec.md",
+      ".spec/features/spec-10-vazamento-investidor-inativo/tasks.md",
+      ".spec/features/spec-11-cors/spec.md",
+      ".spec/features/spec-11-cors/tasks.md",
+      ".spec/features/spec-12-barra-um-ativo-por-requisicao/spec.md",
+      ".spec/features/spec-12-barra-um-ativo-por-requisicao/tasks.md",
+      ".spec/features/spec-13-autorizacao-investidor/spec.md",
+      ".spec/features/spec-13-autorizacao-investidor/tasks.md",
+      ".spec/features/spec-14-jwt-resource-server/design.md",
+      ".spec/features/spec-14-jwt-resource-server/spec.md",
+      ".spec/features/spec-14-jwt-resource-server/tasks.md",
+      ".spec/features/spec-15-identidade-usuario/spec.md",
+      ".spec/features/spec-15-identidade-usuario/tasks.md",
+      ".spec/features/spec-16-papeis-matriz-acesso/spec.md",
+      ".spec/features/spec-16-papeis-matriz-acesso/tasks.md",
+      ".spec/features/spec-17-auth-me/spec.md",
+      ".spec/features/spec-17-auth-me/tasks.md",
+      ".spec/features/spec-18-gerenciar-usuarios/spec.md",
+      ".spec/features/spec-18-gerenciar-usuarios/tasks.md",
+      ".spec/features/spec-19-auditoria-admin/spec.md",
+      ".spec/features/spec-19-auditoria-admin/tasks.md",
+      ".spec/features/spec-20-descontinuar-corretora/spec.md",
+      ".spec/features/spec-20-descontinuar-corretora/tasks.md",
+      ".spec/features/spec-21-acao-pela-pesquisa/spec.md",
+      ".spec/features/spec-21-acao-pela-pesquisa/tasks.md",
+      ".spec/features/spec-22-esqueci-senha/spec.md",
+      ".spec/features/spec-22-esqueci-senha/tasks.md",
+      ".spec/features/spec-23-trocar-senha/spec.md",
+      ".spec/features/spec-23-trocar-senha/tasks.md",
+      ".spec/features/spec-24-trocar-email/spec.md",
+      ".spec/features/spec-24-trocar-email/tasks.md",
+      ".spec/features/spec-25-foto-perfil/spec.md",
+      ".spec/features/spec-25-foto-perfil/tasks.md",
+      ".spec/features/spec-26-extrato-periodo-ticker/spec.md",
+      ".spec/features/spec-26-extrato-periodo-ticker/tasks.md",
+      ".spec/features/spec-27-extrato-carteira-tipo-resultado/spec.md",
+      ".spec/features/spec-27-extrato-carteira-tipo-resultado/tasks.md",
+      ".spec/features/spec-28-registro-uso-api/prd.md",
+      ".spec/features/spec-28-registro-uso-api/adr.md",
+      ".spec/features/spec-28-registro-uso-api/design.md",
+      ".spec/features/spec-28-registro-uso-api/spec.md",
+      ".spec/features/spec-28-registro-uso-api/tasks.md",
+      ".spec/features/spec-28-registro-uso-api/research.md",
+      ".spec/constituicao.md",
+      "onpspec.config.json"
+    ]
+  },
+  "decisions": [
+    {
+      "conflictId": "impacto:autenticacao-investidor",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28",
+      "fingerprint": "653474bc69d2c536f2e740cb99061f290ed2d9c9ba25f834166390900920fcc7",
+      "ownFingerprint": "f2c32f192037a60f367c0b0f1153e32df1835e85768a40d93a8a363d966b4406",
+      "conflictFingerprint": "c2cb768438c9e85a14302956c7c9bc9060cd249d6c9906c3f17e2c825d489c6b",
+      "answeredAt": "2026-11-22T15:34:50.898Z"
+    },
+    {
+      "conflictId": "impacto:investidor",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28",
+      "fingerprint": "653474bc69d2c536f2e740cb99061f290ed2d9c9ba25f834166390900920fcc7",
+      "ownFingerprint": "f2c32f192037a60f367c0b0f1153e32df1835e85768a40d93a8a363d966b4406",
+      "conflictFingerprint": "0c6163ab5da5090109477b471c502abde0337218a4b02df27da979558a516c00",
+      "answeredAt": "2026-11-22T15:34:51.077Z"
+    },
+    {
+      "conflictId": "impacto:spec-11-cors",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28",
+      "fingerprint": "653474bc69d2c536f2e740cb99061f290ed2d9c9ba25f834166390900920fcc7",
+      "ownFingerprint": "f2c32f192037a60f367c0b0f1153e32df1835e85768a40d93a8a363d966b4406",
+      "conflictFingerprint": "25080f0cd0b6e07d147ef5fdeaf69ff98b214190c0188fa605bacdee4883f532",
+      "answeredAt": "2026-11-22T15:34:51.248Z"
+    },
+    {
+      "conflictId": "impacto:spec-14-jwt-resource-server",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28",
+      "fingerprint": "653474bc69d2c536f2e740cb99061f290ed2d9c9ba25f834166390900920fcc7",
+      "ownFingerprint": "f2c32f192037a60f367c0b0f1153e32df1835e85768a40d93a8a363d966b4406",
+      "conflictFingerprint": "422adb35a81949396dfdcb6e876dbe8c7f4444740d67fcf36071bf4159402862",
+      "answeredAt": "2026-11-22T15:34:51.424Z"
+    },
+    {
+      "conflictId": "impacto:spec-16-papeis-matriz-acesso",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28",
+      "fingerprint": "653474bc69d2c536f2e740cb99061f290ed2d9c9ba25f834166390900920fcc7",
+      "ownFingerprint": "f2c32f192037a60f367c0b0f1153e32df1835e85768a40d93a8a363d966b4406",
+      "conflictFingerprint": "2e12591e103b474984bdc922e0915d8882eeec7fb391b0c01c53aac119dc0b32",
+      "answeredAt": "2026-11-22T15:34:51.718Z"
+    },
+    {
+      "conflictId": "impacto:spec-17-auth-me",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28",
+      "fingerprint": "653474bc69d2c536f2e740cb99061f290ed2d9c9ba25f834166390900920fcc7",
+      "ownFingerprint": "f2c32f192037a60f367c0b0f1153e32df1835e85768a40d93a8a363d966b4406",
+      "conflictFingerprint": "0b4043a3ba561cf9f2773c078c43d86d53fe91459c99010354cbf0a0a5e8ab2f",
+      "answeredAt": "2026-11-22T15:34:51.933Z"
+    },
+    {
+      "conflictId": "impacto:spec-18-gerenciar-usuarios",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28",
+      "fingerprint": "653474bc69d2c536f2e740cb99061f290ed2d9c9ba25f834166390900920fcc7",
+      "ownFingerprint": "f2c32f192037a60f367c0b0f1153e32df1835e85768a40d93a8a363d966b4406",
+      "conflictFingerprint": "1cbf39632e07ff10a9e7b03f3019e242a7000bb7ddc88b43f0259a546616c137",
+      "answeredAt": "2026-11-22T15:34:52.180Z"
+    },
+    {
+      "conflictId": "impacto:spec-22-esqueci-senha",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28",
+      "fingerprint": "653474bc69d2c536f2e740cb99061f290ed2d9c9ba25f834166390900920fcc7",
+      "ownFingerprint": "f2c32f192037a60f367c0b0f1153e32df1835e85768a40d93a8a363d966b4406",
+      "conflictFingerprint": "eeee6a5520a76b767b5806436768d4b6fc26c1d1589c37f5e5518714c9a163ba",
+      "answeredAt": "2026-11-22T15:34:52.464Z"
+    },
+    {
+      "conflictId": "impacto:autenticacao-investidor",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28",
+      "fingerprint": "ae63a8195ce83514cc4f941b3cc78ab8c52aa0f1e1078cc5868965bd15d3d283",
+      "ownFingerprint": "c2a9e3ce2d02687e7237291770ba050b6d242dfa319b6b2e80b150b25a193cf9",
+      "conflictFingerprint": "c2cb768438c9e85a14302956c7c9bc9060cd249d6c9906c3f17e2c825d489c6b",
+      "answeredAt": "2026-11-22T15:35:03.026Z"
+    },
+    {
+      "conflictId": "impacto:investidor",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28",
+      "fingerprint": "ae63a8195ce83514cc4f941b3cc78ab8c52aa0f1e1078cc5868965bd15d3d283",
+      "ownFingerprint": "c2a9e3ce2d02687e7237291770ba050b6d242dfa319b6b2e80b150b25a193cf9",
+      "conflictFingerprint": "0c6163ab5da5090109477b471c502abde0337218a4b02df27da979558a516c00",
+      "answeredAt": "2026-11-22T15:35:03.204Z"
+    },
+    {
+      "conflictId": "impacto:spec-11-cors",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28",
+      "fingerprint": "ae63a8195ce83514cc4f941b3cc78ab8c52aa0f1e1078cc5868965bd15d3d283",
+      "ownFingerprint": "c2a9e3ce2d02687e7237291770ba050b6d242dfa319b6b2e80b150b25a193cf9",
+      "conflictFingerprint": "25080f0cd0b6e07d147ef5fdeaf69ff98b214190c0188fa605bacdee4883f532",
+      "answeredAt": "2026-11-22T15:35:03.375Z"
+    },
+    {
+      "conflictId": "impacto:spec-14-jwt-resource-server",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28",
+      "fingerprint": "ae63a8195ce83514cc4f941b3cc78ab8c52aa0f1e1078cc5868965bd15d3d283",
+      "ownFingerprint": "c2a9e3ce2d02687e7237291770ba050b6d242dfa319b6b2e80b150b25a193cf9",
+      "conflictFingerprint": "422adb35a81949396dfdcb6e876dbe8c7f4444740d67fcf36071bf4159402862",
+      "answeredAt": "2026-11-22T15:35:03.553Z"
+    },
+    {
+      "conflictId": "impacto:spec-16-papeis-matriz-acesso",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28",
+      "fingerprint": "ae63a8195ce83514cc4f941b3cc78ab8c52aa0f1e1078cc5868965bd15d3d283",
+      "ownFingerprint": "c2a9e3ce2d02687e7237291770ba050b6d242dfa319b6b2e80b150b25a193cf9",
+      "conflictFingerprint": "2e12591e103b474984bdc922e0915d8882eeec7fb391b0c01c53aac119dc0b32",
+      "answeredAt": "2026-11-22T15:35:03.725Z"
+    },
+    {
+      "conflictId": "impacto:spec-17-auth-me",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28",
+      "fingerprint": "ae63a8195ce83514cc4f941b3cc78ab8c52aa0f1e1078cc5868965bd15d3d283",
+      "ownFingerprint": "c2a9e3ce2d02687e7237291770ba050b6d242dfa319b6b2e80b150b25a193cf9",
+      "conflictFingerprint": "0b4043a3ba561cf9f2773c078c43d86d53fe91459c99010354cbf0a0a5e8ab2f",
+      "answeredAt": "2026-11-22T15:35:03.907Z"
+    },
+    {
+      "conflictId": "impacto:spec-18-gerenciar-usuarios",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28",
+      "fingerprint": "ae63a8195ce83514cc4f941b3cc78ab8c52aa0f1e1078cc5868965bd15d3d283",
+      "ownFingerprint": "c2a9e3ce2d02687e7237291770ba050b6d242dfa319b6b2e80b150b25a193cf9",
+      "conflictFingerprint": "1cbf39632e07ff10a9e7b03f3019e242a7000bb7ddc88b43f0259a546616c137",
+      "answeredAt": "2026-11-22T15:35:04.093Z"
+    },
+    {
+      "conflictId": "impacto:spec-22-esqueci-senha",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 8 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-28",
+      "fingerprint": "ae63a8195ce83514cc4f941b3cc78ab8c52aa0f1e1078cc5868965bd15d3d283",
+      "ownFingerprint": "c2a9e3ce2d02687e7237291770ba050b6d242dfa319b6b2e80b150b25a193cf9",
+      "conflictFingerprint": "eeee6a5520a76b767b5806436768d4b6fc26c1d1589c37f5e5518714c9a163ba",
+      "answeredAt": "2026-11-22T15:35:04.272Z"
+    }
+  ]
+}
