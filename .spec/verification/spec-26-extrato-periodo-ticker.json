@@ -1,0 +1,32 @@
+{
+  "feature": "spec-26-extrato-periodo-ticker",
+  "timestamp": "2026-11-22T04:27:55.627Z",
+  "gitRev": "7cbaa60",
+  "command": "./mvnw -q test",
+  "reporter": "exitcode",
+  "exitCode": 0,
+  "testsParsed": 0,
+  "results": {
+    "AC-640": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-641": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-642": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-643": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    }
+  },
+  "principles": {}
+}

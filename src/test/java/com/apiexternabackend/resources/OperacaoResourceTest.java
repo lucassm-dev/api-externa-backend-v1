@@ -117,7 +117,7 @@ class OperacaoResourceTest {
     @DisplayName("@spec:AC-409 GET /operacoes retorna histórico do investidor do token")
     void deveRetornarHistoricoComCampos() throws Exception {
         OperacaoResponseDTO op = buildResponse(TipoOperacao.COMPRA);
-        when(consultaService.historico(eq(INVESTIDOR_ID), any()))
+        when(consultaService.historico(eq(INVESTIDOR_ID), any(), any(), any(), any()))
                 .thenReturn(new PageImpl<>(List.of(op), PageRequest.of(0, 10), 1));
 
         mockMvc.perform(get("/operacoes"))

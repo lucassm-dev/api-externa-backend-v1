@@ -23,10 +23,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -57,8 +59,10 @@ public class OperacaoResource {
 
     @GetMapping("/operacoes")
     public ResponseEntity<Page<OperacaoResponseDTO>> historico(
+            @RequestParam(required = false) LocalDate dataInicio, @RequestParam(required = false) LocalDate dataFim,
+            @RequestParam(required = false) String ticker,
             Pageable pageable, @AuthenticationPrincipal InvestidorPrincipal principal) {
-        return ResponseEntity.ok(consultaService.historico(principal.id(), pageable));
+        return ResponseEntity.ok(consultaService.historico(principal.id(), dataInicio, dataFim, ticker, pageable));
     }
 
     @PutMapping("/operacoes/{id}")

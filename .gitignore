@@ -31,3 +31,5 @@ graphify-out/
 
 # Python venv (criado pelo graphify)
 .venv/
+.ai-memory
+.ai-memory.toml

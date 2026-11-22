@@ -80,3 +80,11 @@ endereço, para não perder a conta por um erro de digitação.
 ## Fora de escopo
 
 - Avisar o e-mail antigo da troca
+
+## Suposições
+
+Nenhuma.
+
+## Perguntas em aberto
+
+Nenhuma.

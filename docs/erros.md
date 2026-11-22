@@ -76,6 +76,7 @@ Implementação: `src/main/java/com/apiexternabackend/resources/exceptions/`.
 | OPE-003 | Sem posição na ação para vender | 422 | RegraVioladaException |
 | OPE-004 | Quantidade de venda excede a posição atual | 422 | RegraVioladaException |
 | OPE-005 | Preço unitário **digitado manualmente** com mais de 2 casas decimais (BRL/USD usam 2 casas de subunidade) — preço automático (buscado na fonte) nunca cai aqui, é arredondado em vez de validado | 422 | RegraVioladaException |
+| OPE-006 | Extrato (`GET /operacoes`) com `dataFim` anterior a `dataInicio` (SPEC-26, ADR-018) | 422 | RegraVioladaException |
 
 ## AUT — Investidor / autenticação
 
