@@ -1,7 +1,7 @@
 {
   "feature": "spec-21-acao-pela-pesquisa",
-  "timestamp": "2026-11-21T23:29:24.909Z",
-  "gitRev": "0f0b87a",
+  "timestamp": "2026-11-22T00:29:35.698Z",
+  "gitRev": "4649c9f",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

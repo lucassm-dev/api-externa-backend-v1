@@ -1,7 +1,7 @@
 {
   "feature": "spec-19-auditoria-admin",
-  "timestamp": "2026-11-21T23:28:20.919Z",
-  "gitRev": "0f0b87a",
+  "timestamp": "2026-11-22T00:28:29.414Z",
+  "gitRev": "4649c9f",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

@@ -7,6 +7,7 @@ import com.apiexternabackend.domains.dtos.AuthCadastroRequestDTO;
 import com.apiexternabackend.domains.dtos.AuthLoginRequestDTO;
 import com.apiexternabackend.domains.dtos.AuthTokenResponseDTO;
 import com.apiexternabackend.domains.dtos.InvestidorResponseDTO;
+import com.apiexternabackend.domains.dtos.TrocarSenhaRequestDTO;
 import com.apiexternabackend.domains.dtos.UsuarioLogadoResponseDTO;
 import com.apiexternabackend.domains.enums.Papel;
 import com.apiexternabackend.domains.enums.SituacaoUsuario;
@@ -23,7 +24,9 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.regex.Pattern;
 
 @Service
@@ -78,6 +81,26 @@ public class AutenticacaoService {
         if (usuario.getSituacao() == SituacaoUsuario.BLOQUEADO) {
             throw new AcessoNegadoException("AUT-009", "Conta bloqueada. Procure o suporte.");
         }
+
+        Jwt token = jwtService.gerar(usuario.getId(), usuario.getPapel());
+        return new AuthTokenResponseDTO(token.getTokenValue(), "Bearer", token.getExpiresAt());
+    }
+
+    // #27: o token devolvido mantém logado só quem trocou; os anteriores caem pelo senhaAlteradaEm
+    @Transactional
+    public AuthTokenResponseDTO trocarSenha(Long usuarioId, TrocarSenhaRequestDTO dto) {
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new CredenciaisInvalidasException("AUT-005", "Token ausente ou inválido."));
+        if (!passwordEncoder.matches(dto.getSenhaAtual(), usuario.getSenha())) {
+            throw new RegraVioladaException("AUT-014", "Senha atual incorreta.");
+        }
+        if (!POLITICA_SENHA.matcher(dto.getNovaSenha()).matches()) {
+            throw new RegraVioladaException("AUT-008",
+                    "Senha deve ter no mínimo 8 caracteres, com pelo menos uma letra e um número.");
+        }
+        usuario.setSenha(passwordEncoder.encode(dto.getNovaSenha()));
+        // iat do JWT tem precisão de segundos: o token novo, emitido no mesmo segundo, continua válido
+        usuario.setSenhaAlteradaEm(Instant.now().truncatedTo(ChronoUnit.SECONDS));
 
         Jwt token = jwtService.gerar(usuario.getId(), usuario.getPapel());
         return new AuthTokenResponseDTO(token.getTokenValue(), "Bearer", token.getExpiresAt());
