@@ -1,0 +1,502 @@
+{
+  "version": 1,
+  "large": false,
+  "domains": [],
+  "decisions": [
+    {
+      "conflictId": "impacto:autenticacao-investidor",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 19 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-30",
+      "fingerprint": "2a1016c9cb23c13139b0ed7dbf797891cce47d8204e493217885ff7d2b31758e",
+      "ownFingerprint": "c1b455fc7f1b939b4b4811496ccc14cdd38ccf14121af84d25e6cd424c8122eb",
+      "conflictFingerprint": "993ef3a5a921e8edd08dc3ea369734cb794eabc09e7059fb2638e661a76ae87a",
+      "answeredAt": "2026-11-22T17:31:20.655Z"
+    },
+    {
+      "conflictId": "impacto:spec-01-padronizacao-erros",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 19 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-30",
+      "fingerprint": "2a1016c9cb23c13139b0ed7dbf797891cce47d8204e493217885ff7d2b31758e",
+      "ownFingerprint": "c1b455fc7f1b939b4b4811496ccc14cdd38ccf14121af84d25e6cd424c8122eb",
+      "conflictFingerprint": "88e64e079e6e918a66a9e758ef5c9cfc7b35ae00987a4404966e0a3489344d4b",
+      "answeredAt": "2026-11-22T17:31:20.815Z"
+    },
+    {
+      "conflictId": "impacto:spec-03-recadastro-exclusao",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 19 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-30",
+      "fingerprint": "2a1016c9cb23c13139b0ed7dbf797891cce47d8204e493217885ff7d2b31758e",
+      "ownFingerprint": "c1b455fc7f1b939b4b4811496ccc14cdd38ccf14121af84d25e6cd424c8122eb",
+      "conflictFingerprint": "8a064a15d893e473ca19b75e0b2f09c513c6c7b0b21e63c488658847a80ee754",
+      "answeredAt": "2026-11-22T17:31:21.000Z"
+    },
+    {
+      "conflictId": "impacto:spec-04-preco-editavel",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 19 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-30",
+      "fingerprint": "2a1016c9cb23c13139b0ed7dbf797891cce47d8204e493217885ff7d2b31758e",
+      "ownFingerprint": "c1b455fc7f1b939b4b4811496ccc14cdd38ccf14121af84d25e6cd424c8122eb",
+      "conflictFingerprint": "5fe984d947bfc087e1c774955ce0e2e48d5431f9804fed0ed72bdda5b7382680",
+      "answeredAt": "2026-11-22T17:31:21.163Z"
+    },
+    {
+      "conflictId": "impacto:spec-06-lucro-realizado",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 19 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-30",
+      "fingerprint": "2a1016c9cb23c13139b0ed7dbf797891cce47d8204e493217885ff7d2b31758e",
+      "ownFingerprint": "c1b455fc7f1b939b4b4811496ccc14cdd38ccf14121af84d25e6cd424c8122eb",
+      "conflictFingerprint": "10f7e652a8fc04a1019d23b0164b55bb3eda6565bb7883c9f8a0b89a0cb31142",
+      "answeredAt": "2026-11-22T17:31:21.328Z"
+    },
+    {
+      "conflictId": "impacto:spec-07-cache-cotacao",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 19 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-30",
+      "fingerprint": "2a1016c9cb23c13139b0ed7dbf797891cce47d8204e493217885ff7d2b31758e",
+      "ownFingerprint": "c1b455fc7f1b939b4b4811496ccc14cdd38ccf14121af84d25e6cd424c8122eb",
+      "conflictFingerprint": "781faa199f44a2d82155a59971f2e0105b9497577bb2603522c6f538f2866bd9",
+      "answeredAt": "2026-11-22T17:31:21.493Z"
+    },
+    {
+      "conflictId": "impacto:spec-08-conversao-cambio",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 19 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-30",
+      "fingerprint": "2a1016c9cb23c13139b0ed7dbf797891cce47d8204e493217885ff7d2b31758e",
+      "ownFingerprint": "c1b455fc7f1b939b4b4811496ccc14cdd38ccf14121af84d25e6cd424c8122eb",
+      "conflictFingerprint": "cf152dd20afb2f64dfbd7accb234129a512f3f783bb054db76fc9842f7069a42",
+      "answeredAt": "2026-11-22T17:31:21.665Z"
+    },
+    {
+      "conflictId": "impacto:spec-09-barra-cotacoes",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 19 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-30",
+      "fingerprint": "2a1016c9cb23c13139b0ed7dbf797891cce47d8204e493217885ff7d2b31758e",
+      "ownFingerprint": "c1b455fc7f1b939b4b4811496ccc14cdd38ccf14121af84d25e6cd424c8122eb",
+      "conflictFingerprint": "0aa6a68c7fde82e59004155747013ffe1adc19d584734910ad80e87dd9b6e2df",
+      "answeredAt": "2026-11-22T17:31:21.829Z"
+    },
+    {
+      "conflictId": "impacto:spec-10-vazamento-investidor-inativo",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 19 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-30",
+      "fingerprint": "2a1016c9cb23c13139b0ed7dbf797891cce47d8204e493217885ff7d2b31758e",
+      "ownFingerprint": "c1b455fc7f1b939b4b4811496ccc14cdd38ccf14121af84d25e6cd424c8122eb",
+      "conflictFingerprint": "9b686f79cbc735584bb45ad831ed9d60fc08642d8d9e45c116fc94a27d10afee",
+      "answeredAt": "2026-11-22T17:31:21.994Z"
+    },
+    {
+      "conflictId": "impacto:spec-18-gerenciar-usuarios",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 19 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-30",
+      "fingerprint": "2a1016c9cb23c13139b0ed7dbf797891cce47d8204e493217885ff7d2b31758e",
+      "ownFingerprint": "c1b455fc7f1b939b4b4811496ccc14cdd38ccf14121af84d25e6cd424c8122eb",
+      "conflictFingerprint": "831884b7434330eb1e0abce17890e1edf19b0090eda534aedda237a95c38b9b3",
+      "answeredAt": "2026-11-22T17:31:22.159Z"
+    },
+    {
+      "conflictId": "impacto:spec-20-descontinuar-corretora",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 19 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-30",
+      "fingerprint": "2a1016c9cb23c13139b0ed7dbf797891cce47d8204e493217885ff7d2b31758e",
+      "ownFingerprint": "c1b455fc7f1b939b4b4811496ccc14cdd38ccf14121af84d25e6cd424c8122eb",
+      "conflictFingerprint": "23b675acd6dc815ededfa05a327c3a5548bb8b3202cbc85d423fc3bd65a8c327",
+      "answeredAt": "2026-11-22T17:31:22.323Z"
+    },
+    {
+      "conflictId": "impacto:spec-21-acao-pela-pesquisa",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 19 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-30",
+      "fingerprint": "2a1016c9cb23c13139b0ed7dbf797891cce47d8204e493217885ff7d2b31758e",
+      "ownFingerprint": "c1b455fc7f1b939b4b4811496ccc14cdd38ccf14121af84d25e6cd424c8122eb",
+      "conflictFingerprint": "3feb9919d1bf1c5ca401d6aa6a5a20dc9800daa196265b2da8819d97ccc51cf2",
+      "answeredAt": "2026-11-22T17:31:22.491Z"
+    },
+    {
+      "conflictId": "impacto:spec-22-esqueci-senha",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 19 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-30",
+      "fingerprint": "2a1016c9cb23c13139b0ed7dbf797891cce47d8204e493217885ff7d2b31758e",
+      "ownFingerprint": "c1b455fc7f1b939b4b4811496ccc14cdd38ccf14121af84d25e6cd424c8122eb",
+      "conflictFingerprint": "c08dc409903bbea906d5844bff6a59cd55eceed87697cfeea1ab8223c245bf0e",
+      "answeredAt": "2026-11-22T17:31:22.654Z"
+    },
+    {
+      "conflictId": "impacto:spec-23-trocar-senha",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 19 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-30",
+      "fingerprint": "2a1016c9cb23c13139b0ed7dbf797891cce47d8204e493217885ff7d2b31758e",
+      "ownFingerprint": "c1b455fc7f1b939b4b4811496ccc14cdd38ccf14121af84d25e6cd424c8122eb",
+      "conflictFingerprint": "b80e665c64674cf94afdf944e2a2a791e8cdcb5f91262e18346901394099172c",
+      "answeredAt": "2026-11-22T17:31:22.819Z"
+    },
+    {
+      "conflictId": "impacto:spec-24-trocar-email",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 19 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-30",
+      "fingerprint": "2a1016c9cb23c13139b0ed7dbf797891cce47d8204e493217885ff7d2b31758e",
+      "ownFingerprint": "c1b455fc7f1b939b4b4811496ccc14cdd38ccf14121af84d25e6cd424c8122eb",
+      "conflictFingerprint": "09f5b14a58c1b510279da4520cb174047d0ceb27894ab54a9a9abb0677155572",
+      "answeredAt": "2026-11-22T17:31:22.998Z"
+    },
+    {
+      "conflictId": "impacto:spec-25-foto-perfil",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 19 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-30",
+      "fingerprint": "2a1016c9cb23c13139b0ed7dbf797891cce47d8204e493217885ff7d2b31758e",
+      "ownFingerprint": "c1b455fc7f1b939b4b4811496ccc14cdd38ccf14121af84d25e6cd424c8122eb",
+      "conflictFingerprint": "f29d4613c514d77829bf169ce20765825196c1bd22b0cfb6f4e0ea02d3c8aa41",
+      "answeredAt": "2026-11-22T17:31:23.171Z"
+    },
+    {
+      "conflictId": "impacto:spec-26-extrato-periodo-ticker",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 19 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-30",
+      "fingerprint": "2a1016c9cb23c13139b0ed7dbf797891cce47d8204e493217885ff7d2b31758e",
+      "ownFingerprint": "c1b455fc7f1b939b4b4811496ccc14cdd38ccf14121af84d25e6cd424c8122eb",
+      "conflictFingerprint": "813b99f6fcfb215e275a05f22036166cd9137990ceebd783ede44a74fea4cec5",
+      "answeredAt": "2026-11-22T17:31:23.339Z"
+    },
+    {
+      "conflictId": "impacto:spec-27-extrato-carteira-tipo-resultado",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 19 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-30",
+      "fingerprint": "2a1016c9cb23c13139b0ed7dbf797891cce47d8204e493217885ff7d2b31758e",
+      "ownFingerprint": "c1b455fc7f1b939b4b4811496ccc14cdd38ccf14121af84d25e6cd424c8122eb",
+      "conflictFingerprint": "955c072a3fd49588dc5f2d3758b0ecc1b3783d5e2ecbe625a168fd43999d0719",
+      "answeredAt": "2026-11-22T17:31:23.506Z"
+    },
+    {
+      "conflictId": "impacto:spec-28-registro-uso-api",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 19 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-30",
+      "fingerprint": "2a1016c9cb23c13139b0ed7dbf797891cce47d8204e493217885ff7d2b31758e",
+      "ownFingerprint": "c1b455fc7f1b939b4b4811496ccc14cdd38ccf14121af84d25e6cd424c8122eb",
+      "conflictFingerprint": "cf982ee6859065288524f5d6e1e00d7de3fc740e6acf3ef7fcd48a81e1360560",
+      "answeredAt": "2026-11-22T17:31:23.672Z"
+    }
+  ],
+  "clientRequest": "",
+  "review": {
+    "summary": "Li PRD 15.1/15.5, ADR-013, spec-18 (listagem admin), spec-28 (registro_uso) e docs/erros.md. A spec-30 cria GET /admin/uso (só ADMIN), lendo registro_uso por período. Pontos de contato: docs/erros.md recebe só a linha nova AUT-018 (nenhum código existente muda; mesmo padrão do OPE-006 da spec-26); RegistroUsoRepository (spec-28) ganha consultas de leitura, sem alterar gravação assíncrona nem descarte de 90 dias. Identificar o usuário respeita o PRD 15.1/ADR-013: o ADMIN vê id e e-mail (já vê na listagem da spec-18) e nunca conteúdo de carteira. Sem conflito semântico.",
+    "reviewer": "Claude Code (Opus 5.5), sessão de 2026-11-22, feature spec-30-relatorio-picos-requisicoes",
+    "conflicts": [
+      {
+        "id": "impacto:autenticacao-investidor",
+        "automatic": true,
+        "feature": "autenticacao-investidor",
+        "summary": "A mudança interfere no domínio da feature autenticacao-investidor.",
+        "files": [
+          "docs/erros.md"
+        ],
+        "domains": [],
+        "rule": ".spec/features/autenticacao-investidor/spec.md"
+      },
+      {
+        "id": "impacto:spec-01-padronizacao-erros",
+        "automatic": true,
+        "feature": "spec-01-padronizacao-erros",
+        "summary": "A mudança interfere no domínio da feature spec-01-padronizacao-erros.",
+        "files": [
+          "docs/erros.md"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-01-padronizacao-erros/spec.md"
+      },
+      {
+        "id": "impacto:spec-03-recadastro-exclusao",
+        "automatic": true,
+        "feature": "spec-03-recadastro-exclusao",
+        "summary": "A mudança interfere no domínio da feature spec-03-recadastro-exclusao.",
+        "files": [
+          "docs/erros.md"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-03-recadastro-exclusao/spec.md"
+      },
+      {
+        "id": "impacto:spec-04-preco-editavel",
+        "automatic": true,
+        "feature": "spec-04-preco-editavel",
+        "summary": "A mudança interfere no domínio da feature spec-04-preco-editavel.",
+        "files": [
+          "docs/erros.md"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-04-preco-editavel/spec.md"
+      },
+      {
+        "id": "impacto:spec-06-lucro-realizado",
+        "automatic": true,
+        "feature": "spec-06-lucro-realizado",
+        "summary": "A mudança interfere no domínio da feature spec-06-lucro-realizado.",
+        "files": [
+          "docs/erros.md"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-06-lucro-realizado/spec.md"
+      },
+      {
+        "id": "impacto:spec-07-cache-cotacao",
+        "automatic": true,
+        "feature": "spec-07-cache-cotacao",
+        "summary": "A mudança interfere no domínio da feature spec-07-cache-cotacao.",
+        "files": [
+          "docs/erros.md"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-07-cache-cotacao/spec.md"
+      },
+      {
+        "id": "impacto:spec-08-conversao-cambio",
+        "automatic": true,
+        "feature": "spec-08-conversao-cambio",
+        "summary": "A mudança interfere no domínio da feature spec-08-conversao-cambio.",
+        "files": [
+          "docs/erros.md"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-08-conversao-cambio/spec.md"
+      },
+      {
+        "id": "impacto:spec-09-barra-cotacoes",
+        "automatic": true,
+        "feature": "spec-09-barra-cotacoes",
+        "summary": "A mudança interfere no domínio da feature spec-09-barra-cotacoes.",
+        "files": [
+          "docs/erros.md"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-09-barra-cotacoes/spec.md"
+      },
+      {
+        "id": "impacto:spec-10-vazamento-investidor-inativo",
+        "automatic": true,
+        "feature": "spec-10-vazamento-investidor-inativo",
+        "summary": "A mudança interfere no domínio da feature spec-10-vazamento-investidor-inativo.",
+        "files": [
+          "docs/erros.md"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-10-vazamento-investidor-inativo/spec.md"
+      },
+      {
+        "id": "impacto:spec-18-gerenciar-usuarios",
+        "automatic": true,
+        "feature": "spec-18-gerenciar-usuarios",
+        "summary": "A mudança interfere no domínio da feature spec-18-gerenciar-usuarios.",
+        "files": [
+          "docs/erros.md"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-18-gerenciar-usuarios/spec.md"
+      },
+      {
+        "id": "impacto:spec-20-descontinuar-corretora",
+        "automatic": true,
+        "feature": "spec-20-descontinuar-corretora",
+        "summary": "A mudança interfere no domínio da feature spec-20-descontinuar-corretora.",
+        "files": [
+          "docs/erros.md"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-20-descontinuar-corretora/spec.md"
+      },
+      {
+        "id": "impacto:spec-21-acao-pela-pesquisa",
+        "automatic": true,
+        "feature": "spec-21-acao-pela-pesquisa",
+        "summary": "A mudança interfere no domínio da feature spec-21-acao-pela-pesquisa.",
+        "files": [
+          "docs/erros.md"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-21-acao-pela-pesquisa/spec.md"
+      },
+      {
+        "id": "impacto:spec-22-esqueci-senha",
+        "automatic": true,
+        "feature": "spec-22-esqueci-senha",
+        "summary": "A mudança interfere no domínio da feature spec-22-esqueci-senha.",
+        "files": [
+          "docs/erros.md"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-22-esqueci-senha/spec.md"
+      },
+      {
+        "id": "impacto:spec-23-trocar-senha",
+        "automatic": true,
+        "feature": "spec-23-trocar-senha",
+        "summary": "A mudança interfere no domínio da feature spec-23-trocar-senha.",
+        "files": [
+          "docs/erros.md"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-23-trocar-senha/spec.md"
+      },
+      {
+        "id": "impacto:spec-24-trocar-email",
+        "automatic": true,
+        "feature": "spec-24-trocar-email",
+        "summary": "A mudança interfere no domínio da feature spec-24-trocar-email.",
+        "files": [
+          "docs/erros.md"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-24-trocar-email/spec.md"
+      },
+      {
+        "id": "impacto:spec-25-foto-perfil",
+        "automatic": true,
+        "feature": "spec-25-foto-perfil",
+        "summary": "A mudança interfere no domínio da feature spec-25-foto-perfil.",
+        "files": [
+          "docs/erros.md"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-25-foto-perfil/spec.md"
+      },
+      {
+        "id": "impacto:spec-26-extrato-periodo-ticker",
+        "automatic": true,
+        "feature": "spec-26-extrato-periodo-ticker",
+        "summary": "A mudança interfere no domínio da feature spec-26-extrato-periodo-ticker.",
+        "files": [
+          "docs/erros.md"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-26-extrato-periodo-ticker/spec.md"
+      },
+      {
+        "id": "impacto:spec-27-extrato-carteira-tipo-resultado",
+        "automatic": true,
+        "feature": "spec-27-extrato-carteira-tipo-resultado",
+        "summary": "A mudança interfere no domínio da feature spec-27-extrato-carteira-tipo-resultado.",
+        "files": [
+          "docs/erros.md"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-27-extrato-carteira-tipo-resultado/spec.md"
+      },
+      {
+        "id": "impacto:spec-28-registro-uso-api",
+        "automatic": true,
+        "feature": "spec-28-registro-uso-api",
+        "summary": "A mudança interfere no domínio da feature spec-28-registro-uso-api.",
+        "files": [
+          "src/main/java/com/apiexternabackend/repositories/RegistroUsoRepository.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-28-registro-uso-api/prd.md"
+      }
+    ],
+    "fingerprint": "2a1016c9cb23c13139b0ed7dbf797891cce47d8204e493217885ff7d2b31758e",
+    "ownFingerprint": "c1b455fc7f1b939b4b4811496ccc14cdd38ccf14121af84d25e6cd424c8122eb",
+    "reviewedAt": "2026-11-22T17:31:20.364Z",
+    "documents": [
+      ".spec/features/autenticacao-investidor/design.md",
+      ".spec/features/autenticacao-investidor/spec.md",
+      ".spec/features/autenticacao-investidor/tasks.md",
+      ".spec/features/cadastro-corretora/spec.md",
+      ".spec/features/cadastro-corretora/tasks.md",
+      ".spec/features/carteira/spec.md",
+      ".spec/features/carteira/tasks.md",
+      ".spec/features/catalogo-acao/spec.md",
+      ".spec/features/catalogo-acao/tasks.md",
+      ".spec/features/deploy-homelab/spec.md",
+      ".spec/features/deploy-homelab/tasks.md",
+      ".spec/features/investidor/spec.md",
+      ".spec/features/investidor/tasks.md",
+      ".spec/features/operacao-movimentacao/spec.md",
+      ".spec/features/operacao-movimentacao/tasks.md",
+      ".spec/features/refactor-cnpj-delete/spec.md",
+      ".spec/features/refactor-cnpj-delete/tasks.md",
+      ".spec/features/spec-01-padronizacao-erros/spec.md",
+      ".spec/features/spec-01-padronizacao-erros/tasks.md",
+      ".spec/features/spec-03-recadastro-exclusao/design.md",
+      ".spec/features/spec-03-recadastro-exclusao/spec.md",
+      ".spec/features/spec-03-recadastro-exclusao/tasks.md",
+      ".spec/features/spec-04-preco-editavel/design.md",
+      ".spec/features/spec-04-preco-editavel/spec.md",
+      ".spec/features/spec-04-preco-editavel/tasks.md",
+      ".spec/features/spec-06-lucro-realizado/spec.md",
+      ".spec/features/spec-06-lucro-realizado/tasks.md",
+      ".spec/features/spec-07-cache-cotacao/spec.md",
+      ".spec/features/spec-07-cache-cotacao/tasks.md",
+      ".spec/features/spec-08-conversao-cambio/design.md",
+      ".spec/features/spec-08-conversao-cambio/spec.md",
+      ".spec/features/spec-08-conversao-cambio/tasks.md",
+      ".spec/features/spec-09-barra-cotacoes/design.md",
+      ".spec/features/spec-09-barra-cotacoes/spec.md",
+      ".spec/features/spec-09-barra-cotacoes/tasks.md",
+      ".spec/features/spec-10-vazamento-investidor-inativo/spec.md",
+      ".spec/features/spec-10-vazamento-investidor-inativo/tasks.md",
+      ".spec/features/spec-11-cors/spec.md",
+      ".spec/features/spec-11-cors/tasks.md",
+      ".spec/features/spec-12-barra-um-ativo-por-requisicao/spec.md",
+      ".spec/features/spec-12-barra-um-ativo-por-requisicao/tasks.md",
+      ".spec/features/spec-13-autorizacao-investidor/spec.md",
+      ".spec/features/spec-13-autorizacao-investidor/tasks.md",
+      ".spec/features/spec-14-jwt-resource-server/design.md",
+      ".spec/features/spec-14-jwt-resource-server/spec.md",
+      ".spec/features/spec-14-jwt-resource-server/tasks.md",
+      ".spec/features/spec-15-identidade-usuario/spec.md",
+      ".spec/features/spec-15-identidade-usuario/tasks.md",
+      ".spec/features/spec-16-papeis-matriz-acesso/spec.md",
+      ".spec/features/spec-16-papeis-matriz-acesso/tasks.md",
+      ".spec/features/spec-17-auth-me/spec.md",
+      ".spec/features/spec-17-auth-me/tasks.md",
+      ".spec/features/spec-18-gerenciar-usuarios/spec.md",
+      ".spec/features/spec-18-gerenciar-usuarios/tasks.md",
+      ".spec/features/spec-19-auditoria-admin/spec.md",
+      ".spec/features/spec-19-auditoria-admin/tasks.md",
+      ".spec/features/spec-20-descontinuar-corretora/spec.md",
+      ".spec/features/spec-20-descontinuar-corretora/tasks.md",
+      ".spec/features/spec-21-acao-pela-pesquisa/spec.md",
+      ".spec/features/spec-21-acao-pela-pesquisa/tasks.md",
+      ".spec/features/spec-22-esqueci-senha/spec.md",
+      ".spec/features/spec-22-esqueci-senha/tasks.md",
+      ".spec/features/spec-23-trocar-senha/spec.md",
+      ".spec/features/spec-23-trocar-senha/tasks.md",
+      ".spec/features/spec-24-trocar-email/spec.md",
+      ".spec/features/spec-24-trocar-email/tasks.md",
+      ".spec/features/spec-25-foto-perfil/spec.md",
+      ".spec/features/spec-25-foto-perfil/tasks.md",
+      ".spec/features/spec-26-extrato-periodo-ticker/spec.md",
+      ".spec/features/spec-26-extrato-periodo-ticker/tasks.md",
+      ".spec/features/spec-27-extrato-carteira-tipo-resultado/spec.md",
+      ".spec/features/spec-27-extrato-carteira-tipo-resultado/tasks.md",
+      ".spec/features/spec-28-registro-uso-api/prd.md",
+      ".spec/features/spec-28-registro-uso-api/adr.md",
+      ".spec/features/spec-28-registro-uso-api/design.md",
+      ".spec/features/spec-28-registro-uso-api/spec.md",
+      ".spec/features/spec-28-registro-uso-api/tasks.md",
+      ".spec/features/spec-28-registro-uso-api/research.md",
+      ".spec/features/spec-29-relatorio-usuarios-situacao/spec.md",
+      ".spec/features/spec-29-relatorio-usuarios-situacao/tasks.md",
+      ".spec/features/spec-30-relatorio-picos-requisicoes/spec.md",
+      ".spec/features/spec-30-relatorio-picos-requisicoes/tasks.md",
+      ".spec/constituicao.md",
+      "onpspec.config.json"
+    ]
+  }
+}
