@@ -49,6 +49,18 @@ class FotoPerfilIntegrationTest {
         foto(token).andExpect(status().isNotFound());
     }
 
+    @Test
+    @DisplayName("@spec:AC-634 Conteúdo que não é JPEG, PNG nem WebP é recusado com AUT-017, mesmo declarado como imagem")
+    void formatoInvalido() throws Exception {
+        String token = token(cadastrar());
+        byte[] pdf = "%PDF-1.4 conteudo qualquer".getBytes();
+
+        enviar(token, pdf)
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.codigo").value("AUT-017"));
+        foto(token).andExpect(status().isNotFound());
+    }
+
     private static byte[] png(int tamanho) {
         return Arrays.copyOf(ASSINATURA_PNG, tamanho);
     }
