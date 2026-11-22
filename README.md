@@ -24,7 +24,7 @@ JWT e resultado consolidado numa moeda só.
 | Banco | PostgreSQL 16, migrações versionadas com Flyway (16 até aqui) |
 | Documentação | SpringDoc OpenAPI (Swagger UI) |
 | Mapeamento | MapStruct + Lombok |
-| Testes | JUnit 5, Mockito, MockMvc, H2 em memória — 233 testes em 28 classes |
+| Testes | JUnit 5, Mockito, MockMvc, H2 em memória, JaCoCo — 341 testes |
 | Empacotamento | Docker multi-stage — Maven compila, JRE roda |
 
 ---
@@ -210,9 +210,15 @@ CAR-001**, nunca 403. Dizer "existe, mas não é sua" já é vazar informação.
 ./mvnw test
 ```
 
-233 testes, H2 em memória — não precisa do Postgres no ar. Cada critério de aceite
+341 testes, H2 em memória — não precisa do Postgres no ar. Cada critério de aceite
 da especificação vira um teste anotado com `@spec:AC-xxx` no título, e é isso que
 permite auditar a spec contra o código em vez de confiar nela.
+
+Cobertura com JaCoCo (Aula 15): `./mvnw clean verify` roda os testes, gera o
+relatório em `target/site/jacoco/index.html` e falha o build abaixo de 80% de
+linhas ou 55% de ramos. O CI roda o mesmo comando e publica o relatório como
+artefato `relatorio-jacoco`. Linha de base medida em 2026-11-21: 87,9% de linhas
+e 70,7% de ramos.
 
 ---
 
