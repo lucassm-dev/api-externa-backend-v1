@@ -1,7 +1,7 @@
 {
   "feature": "spec-30-relatorio-picos-requisicoes",
-  "timestamp": "2026-11-22T17:55:38.103Z",
-  "gitRev": "db74fd8",
+  "timestamp": "2026-11-22T18:00:19.486Z",
+  "gitRev": "62534dd",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
