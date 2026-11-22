@@ -1,7 +1,7 @@
 {
   "feature": "spec-20-descontinuar-corretora",
-  "timestamp": "2026-11-22T18:23:42.370Z",
-  "gitRev": "4d8a11e",
+  "timestamp": "2026-11-22T19:03:44.464Z",
+  "gitRev": "5a5808d",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

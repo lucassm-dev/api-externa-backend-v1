@@ -60,6 +60,16 @@ deploy/deploy.sh
   (o `SPRING_PROFILES_ACTIVE=prod` do override já reduz o log a não
   despejar SQL — AC-525).
 
+### Fuso horário
+
+A imagem do backend sobe a JVM com `-Duser.timezone=America/Sao_Paulo` (no
+`ENTRYPOINT` do `Dockerfile`, AC-666). Os horários gravados pela aplicação
+(operações, extrato, relatório de picos) ficam no horário de Brasília mesmo
+que o servidor esteja em UTC, então não é preciso mudar o fuso do servidor.
+
+- [ ] Conferir, depois do deploy, que um lançamento feito agora aparece no
+  extrato com o horário de Brasília.
+
 ## 3. Acesso pela tailnet
 
 Só o frontend publica porta (AC-522); banco e API ficam só na rede interna do

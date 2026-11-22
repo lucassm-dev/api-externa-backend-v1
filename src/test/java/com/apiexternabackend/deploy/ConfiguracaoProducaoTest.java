@@ -169,4 +169,17 @@ class ConfiguracaoProducaoTest {
         assertThat(portas).hasSize(1);
         assertThat(String.valueOf(portas.get(0))).startsWith("127.0.0.1:");
     }
+
+    @Test
+    void imagem_roda_no_fuso_de_brasilia() throws IOException {
+        // @spec:AC-666
+        String entrypoint = Files.readAllLines(Path.of("Dockerfile")).stream()
+                .filter(linha -> linha.startsWith("ENTRYPOINT"))
+                .findFirst()
+                .orElseThrow();
+
+        // a flag só vale para a JVM se vier antes do -jar
+        assertThat(entrypoint).contains("\"-Duser.timezone=America/Sao_Paulo\", \"-jar\"");
+        assertThat(Files.readString(Path.of("docs/deploy.md"))).contains("America/Sao_Paulo");
+    }
 }

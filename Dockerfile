@@ -36,4 +36,7 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=5 \
   CMD wget --quiet --tries=1 -O /dev/null http://localhost:8080/v3/api-docs || exit 1
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# As datas são gravadas com LocalDateTime.now(), no fuso da JVM. Fixar aqui
+# mantém o horário de Brasília seja qual for o fuso do host (#61). A JVM traz a
+# própria base de fusos, então a alpine não precisa de tzdata.
+ENTRYPOINT ["java", "-Duser.timezone=America/Sao_Paulo", "-jar", "app.jar"]
