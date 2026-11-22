@@ -1,0 +1,52 @@
+{
+  "feature": "spec-24-trocar-email",
+  "timestamp": "2026-11-22T01:09:34.637Z",
+  "gitRev": "95e338c",
+  "command": "./mvnw -q test",
+  "reporter": "exitcode",
+  "exitCode": 0,
+  "testsParsed": 0,
+  "results": {
+    "AC-625": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-626": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-627": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-628": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-629": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-630": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-631": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    },
+    "AC-632": {
+      "status": "pass",
+      "testName": null,
+      "method": "exitcode"
+    }
+  },
+  "principles": {}
+}
