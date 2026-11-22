@@ -1,7 +1,7 @@
 # Spec: Relatório de picos de requisições
 
 > feature: spec-30-relatorio-picos-requisicoes
-> status: pronta
+> status: implementada
 
 ## Contexto
 
