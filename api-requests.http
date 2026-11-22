@@ -1,31 +1,42 @@
 ### =====================================================================
 ### Roteiro de testes manuais — api-externa-backend
-### Cobre SPEC-01 a SPEC-09. Cada bloco tem um comentário dizendo o que
-### testa e o status/código esperado. Rode em ordem — cada seção depende
-### dos IDs criados na anterior.
+### Cobre SPEC-01 a SPEC-31 (milestones v0.1 a v0.7). Cada bloco tem um
+### comentário dizendo o que testa e o status/código esperado. Rode em
+### ordem — cada seção depende dos IDs criados na anterior.
 ###
 ### Como usar:
-### 1. Suba a aplicação (perfil dev): ./mvnw spring-boot:run
-### 2. Rode o bloco de LOGIN, copie o "token" da resposta e cole em @token.
-### 3. Vá rodando os blocos em ordem, colando os IDs das respostas nas
-###    variáveis (@corretoraId, @carteiraId, @acaoId, @acaoUsId, @operacaoId)
-###    conforme forem aparecendo.
-### 4. Todo endpoint fora de /auth/** exige "Authorization: Bearer {{token}}"
-###    — sem isso, é 401 (AUT-005), que é o próprio primeiro teste de erro
-###    da seção de autenticação.
+### 1. Defina ADMIN_EMAIL e ADMIN_SENHA no .env (senha com letra e número,
+###    8+ caracteres) — o primeiro ADMIN é criado na subida (spec-16).
+###    Para as seções 8.x (e-mail) defina também MAIL_USERNAME/MAIL_FROM e
+###    a senha SMTP; sem isso o envio falha.
+### 2. Suba a aplicação (perfil dev): ./mvnw spring-boot:run
+### 3. Rode o LOGIN do investidor (1.6) e cole o "token" em @token; rode o
+###    LOGIN do admin (1.11) e cole em @tokenAdmin.
+### 4. Vá rodando os blocos em ordem, colando os IDs das respostas nas
+###    variáveis (@corretoraId, @carteiraId, @acaoId, @acaoUsId,
+###    @operacaoId, @usuarioId) conforme forem aparecendo.
+### 5. Todo endpoint fora de /auth/cadastro, /auth/login, /auth/esqueci-senha
+###    e /auth/redefinir-senha exige "Authorization: Bearer ..." — sem isso,
+###    é 401 AUT-005.
+### 6. Rotas de investidor (/investidores, /carteiras, /operacoes) recusam o
+###    token de ADMIN e rotas /admin/** recusam o de INVESTIDOR: 403 AUT-007.
 ### =====================================================================
 
 @baseUrl = http://localhost:8080
-@token = COLE_AQUI_O_TOKEN_APOS_O_LOGIN
+@token = COLE_AQUI_O_TOKEN_DO_INVESTIDOR
+@tokenAdmin = COLE_AQUI_O_TOKEN_DO_ADMIN
+@adminEmail = admin@email.com
+@adminSenha = admin1234
 @corretoraId = 1
 @carteiraId = 1
 @acaoId = 1
 @acaoUsId = 2
 @operacaoId = 1
+@usuarioId = 1
 
 
 ### =====================================================================
-### 1. AUTENTICAÇÃO (SPEC-02) — AUT-001..008, AC-001/002/435/436/438..441
+### 1. AUTENTICAÇÃO (SPEC-02/15/16/17) — AUT-001..008, AC-001/002/435/436/438..441
 ### =====================================================================
 
 ### 1.1 [OK] Cadastro de investidor — 201, retorna o investidor sem senha
@@ -114,29 +125,64 @@ GET {{baseUrl}}/investidores
 GET {{baseUrl}}/investidores
 Authorization: Bearer token-invalido-de-mentirinha
 
+### 1.11 [OK] Login do ADMIN inicial (ADMIN_EMAIL/ADMIN_SENHA do .env) — 200, copie o token para @tokenAdmin
+### ajuste @adminEmail/@adminSenha no topo para bater com o seu .env
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{adminEmail}}",
+  "senha": "{{adminSenha}}"
+}
+
+### 1.12 [OK] Usuário logado (investidor) — 200, id, nome, email, papel=INVESTIDOR, fotoUrl=null (spec-17)
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+
+### 1.13 [OK] Usuário logado (admin) — 200, papel=ADMIN e nome=null (admin não tem investidor)
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{tokenAdmin}}
+
+### 1.14 [ERRO] Usuário logado sem token — 401 AUT-005
+GET {{baseUrl}}/auth/me
+
 
 ### =====================================================================
-### 2. INVESTIDOR — a partir daqui, todo request usa Authorization: Bearer
+### 2. INVESTIDOR (SPEC-10/13) — só enxerga a própria conta
 ### =====================================================================
 
-### 2.1 [OK] Listar investidores — 200, página com o investidor cadastrado em 1.1
+### 2.1 [OK] Listar investidores — 200, página só com o próprio investidor
 GET {{baseUrl}}/investidores
 Authorization: Bearer {{token}}
 
-### 2.2 [OK] Buscar investidor por id — 200 (troque o id se não for 1)
+### 2.2 [OK] Buscar investidor por id — 200 (troque o id pelo da resposta 1.1)
 GET {{baseUrl}}/investidores/1
 Authorization: Bearer {{token}}
 
-### 2.3 [ERRO] Buscar investidor com id inexistente — 404 AUT-003
+### 2.3 [ERRO] Buscar investidor com id inexistente ou de outra pessoa — 404 AUT-003 (nunca 403)
 GET {{baseUrl}}/investidores/999999
 Authorization: Bearer {{token}}
 
+### 2.4 [ERRO] ADMIN acessando rota de investidor — 403 AUT-007 (spec-16)
+GET {{baseUrl}}/investidores
+Authorization: Bearer {{tokenAdmin}}
+
 
 ### =====================================================================
-### 3. CORRETORA (SPEC-01/03) — COR-001..004, EXT-007
+### 3. CORRETORA (SPEC-01/03/16/20) — COR-001..006, EXT-007
+### Cadastro, exclusão e descontinuação são só do ADMIN; leitura é de todos.
 ### =====================================================================
 
-### 3.1 [OK] Cadastrar corretora — 201 (CNPJ real, deve passar CVM)
+### 3.1 [OK] Cadastrar corretora (ADMIN) — 201 (CNPJ real, deve passar CVM)
+POST {{baseUrl}}/corretoras
+Content-Type: application/json
+Authorization: Bearer {{tokenAdmin}}
+
+{
+  "cnpj": "02332886000104"
+}
+
+### 3.2 [ERRO] Investidor tentando cadastrar corretora — 403 AUT-007
 POST {{baseUrl}}/corretoras
 Content-Type: application/json
 Authorization: Bearer {{token}}
@@ -145,66 +191,99 @@ Authorization: Bearer {{token}}
   "cnpj": "02332886000104"
 }
 
-### 3.2 [ERRO] CNPJ com formato inválido — 400 VAL-001 (falha no @Pattern do DTO)
+### 3.3 [ERRO] CNPJ com formato inválido — 400 VAL-001 (falha no @Pattern do DTO)
 POST {{baseUrl}}/corretoras
 Content-Type: application/json
-Authorization: Bearer {{token}}
+Authorization: Bearer {{tokenAdmin}}
 
 {
   "cnpj": "123"
 }
 
-### 3.3 [ERRO] CNPJ que não existe na Receita/CVM — 422 COR-003
+### 3.4 [ERRO] CNPJ que não existe na Receita/CVM — 422 COR-003
 POST {{baseUrl}}/corretoras
 Content-Type: application/json
-Authorization: Bearer {{token}}
+Authorization: Bearer {{tokenAdmin}}
 
 {
-  "cnpj": "12345678000100"
+  "cnpj": "11111111000191"
 }
 
-### 3.4 [ERRO] CNPJ duplicado entre corretoras ativas — 409 COR-002
+### 3.5 [ERRO] CNPJ duplicado entre corretoras ativas — 409 COR-002
 POST {{baseUrl}}/corretoras
 Content-Type: application/json
-Authorization: Bearer {{token}}
+Authorization: Bearer {{tokenAdmin}}
 
 {
   "cnpj": "02332886000104"
 }
 
-### 3.5 [OK] Listar corretoras — 200
+### 3.6 [OK] Listar corretoras (investidor) — 200
 GET {{baseUrl}}/corretoras
 Authorization: Bearer {{token}}
 
-### 3.6 [OK] Buscar corretora por id — 200 (copie o id da resposta de 3.1 para @corretoraId)
+### 3.7 [OK] Buscar corretora por id — 200 (copie o id da resposta de 3.1 para @corretoraId)
 GET {{baseUrl}}/corretoras/{{corretoraId}}
 Authorization: Bearer {{token}}
 
-### 3.7 [ERRO] Buscar corretora por id inexistente — 404 COR-001
+### 3.8 [ERRO] Buscar corretora por id inexistente — 404 COR-001
 GET {{baseUrl}}/corretoras/999999
 Authorization: Bearer {{token}}
 
-### 3.8 [OK] Buscar corretora por CNPJ — 200
+### 3.9 [OK] Buscar corretora por CNPJ — 200
 GET {{baseUrl}}/corretoras/cnpj/02332886000104
 Authorization: Bearer {{token}}
 
-### ---- Os próximos dois (3.9/3.10) só depois de criar carteira+ação
-### (seções 4 e 5) — voltam aqui para provar exclusão bloqueada/permitida.
+### ---- 3.10..3.16 dependem de carteira criada (seção 4) — volte aqui depois dela.
 
-### 3.9 [ERRO] Excluir corretora com carteira ativa vinculada — 422 COR-004
-### (rode isso DEPOIS de criar a carteira na seção 4 — antes disso vai dar 204)
-DELETE {{baseUrl}}/corretoras/{{corretoraId}}
+### 3.10 [OK] Carteiras afetadas pela corretora (ADMIN) — 200, contagem/lista das carteiras vinculadas (spec-20)
+GET {{baseUrl}}/corretoras/{{corretoraId}}/carteiras-afetadas
+Authorization: Bearer {{tokenAdmin}}
+
+### 3.11 [ERRO] Carteiras afetadas pedidas pelo investidor — 403 AUT-007
+GET {{baseUrl}}/corretoras/{{corretoraId}}/carteiras-afetadas
 Authorization: Bearer {{token}}
 
-### 3.10 [OK] Recadastrar o mesmo CNPJ depois de excluir — 201 (prova SPEC-03/Q-MAP-07)
-### (só funciona depois de excluir de verdade a corretora — exclua a carteira
-### vinculada primeiro, senão cai no erro 3.9)
-POST {{baseUrl}}/corretoras
+### 3.12 [ERRO] Excluir corretora com carteira ativa vinculada — 422 COR-004
+DELETE {{baseUrl}}/corretoras/{{corretoraId}}
+Authorization: Bearer {{tokenAdmin}}
+
+### 3.13 [ERRO] Descontinuar sem motivo — 400 VAL-001
+PATCH {{baseUrl}}/corretoras/{{corretoraId}}/descontinuar
+Content-Type: application/json
+Authorization: Bearer {{tokenAdmin}}
+
+{
+  "motivo": ""
+}
+
+### 3.14 [OK] Descontinuar corretora (ADMIN) — 200, descontinuada=true; carteiras existentes continuam operando
+PATCH {{baseUrl}}/corretoras/{{corretoraId}}/descontinuar
+Content-Type: application/json
+Authorization: Bearer {{tokenAdmin}}
+
+{
+  "motivo": "Corretora encerrou as operações"
+}
+
+### 3.15 [ERRO] Descontinuar de novo — 422 COR-006
+PATCH {{baseUrl}}/corretoras/{{corretoraId}}/descontinuar
+Content-Type: application/json
+Authorization: Bearer {{tokenAdmin}}
+
+{
+  "motivo": "De novo"
+}
+
+### 3.16 [ERRO] Criar carteira em corretora descontinuada — 422 COR-005
+POST {{baseUrl}}/carteiras
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "cnpj": "02332886000104"
+  "corretoraId": {{corretoraId}},
+  "mercado": "BR",
+  "nome": "Carteira Nova"
 }
 
 
@@ -277,72 +356,49 @@ Authorization: Bearer {{token}}
 
 
 ### =====================================================================
-### 5. AÇÃO (SPEC-01/03/05/07) — ACA-001..004, EXT-008
+### 5. AÇÃO (SPEC-01/03/07/21) — ACA-001, EXT-008
+### Desde a spec-21 não existe cadastro manual: a ação entra no catálogo
+### na primeira pesquisa por ticker informando ?mercado=BR|US.
 ### =====================================================================
 
-### 5.1 [ERRO] Cadastrar ação sem ter carteira ativa — 409 ACA-004
-### (só reproduz isso com um investidor NOVO, sem nenhuma carteira ainda —
-### use outro login/token, ou pule este teste se já criou a carteira da seção 4)
+### 5.1 [ERRO] Cadastro manual não existe mais — 405 (spec-21)
 POST {{baseUrl}}/acoes
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "ticker": "VALE3",
+  "ticker": "PETR4",
   "mercado": "BR"
 }
 
-### 5.2 [OK] Cadastrar ação BR — 201, retorna cotação e dataHoraCotacao (AC-201)
+### 5.2 [OK] Pesquisar ação BR nova — 200, inclui no catálogo com cotação e dataHoraCotacao (spec-21)
 ### tickers liberados sem token/sem limite no sandbox da brapi: PETR4, VALE3, ITUB4, MGLU3
-POST {{baseUrl}}/acoes
-Content-Type: application/json
+GET {{baseUrl}}/acoes/ticker/PETR4?mercado=BR
 Authorization: Bearer {{token}}
 
-{
-  "ticker": "PETR4",
-  "mercado": "BR"
-}
-
-### 5.3 [OK] Cadastrar ação US — 201, moeda USD (AC-202)
-POST {{baseUrl}}/acoes
-Content-Type: application/json
+### 5.3 [OK] Pesquisar ação US nova — 200, moeda USD
+GET {{baseUrl}}/acoes/ticker/AAPL?mercado=US
 Authorization: Bearer {{token}}
 
-{
-  "ticker": "AAPL",
-  "mercado": "US"
-}
-
-### 5.4 [ERRO] Ticker duplicado entre ações ativas — 409 ACA-002
-POST {{baseUrl}}/acoes
-Content-Type: application/json
+### 5.4 [OK] Pesquisar de novo sem mercado — 200, já está no catálogo (não chama a fonte)
+### copie o id desta resposta para @acaoId, e o de 5.3 para @acaoUsId
+GET {{baseUrl}}/acoes/ticker/petr4
 Authorization: Bearer {{token}}
 
-{
-  "ticker": "PETR4",
-  "mercado": "BR"
-}
-
-### 5.5 [ERRO] Ticker inexistente na fonte — 422 EXT-008
-POST {{baseUrl}}/acoes
-Content-Type: application/json
-Authorization: Bearer {{token}}
-
-{
-  "ticker": "XXXX9",
-  "mercado": "BR"
-}
-
-### 5.6 [OK] Listar ações — 200
-GET {{baseUrl}}/acoes
-Authorization: Bearer {{token}}
-
-### 5.7 [OK] Buscar ação por ticker — 200 (copie o id da resposta de 5.2 para @acaoId, e o de 5.3 para @acaoUsId)
-GET {{baseUrl}}/acoes/ticker/PETR4
-Authorization: Bearer {{token}}
-
-### 5.8 [ERRO] Buscar ticker inexistente — 404 ACA-001
+### 5.5 [ERRO] Ticker fora do catálogo sem informar mercado — 404 ACA-001
 GET {{baseUrl}}/acoes/ticker/ZZZZ1
+Authorization: Bearer {{token}}
+
+### 5.6 [ERRO] Ticker inexistente na fonte — 422 EXT-008
+GET {{baseUrl}}/acoes/ticker/ZZZZ1?mercado=BR
+Authorization: Bearer {{token}}
+
+### 5.7 [ERRO] Mercado inválido — 400 VAL-002
+GET {{baseUrl}}/acoes/ticker/PETR4?mercado=XX
+Authorization: Bearer {{token}}
+
+### 5.8 [OK] Listar ações — 200
+GET {{baseUrl}}/acoes
 Authorization: Bearer {{token}}
 
 ### 5.9 [OK] Atualizar cotação — 200, dataHoraCotacao muda só se passou o TTL (15min, SPEC-07)
@@ -357,15 +413,17 @@ Authorization: Bearer {{token}}
 PUT {{baseUrl}}/acoes/999999/atualizar-cotacao
 Authorization: Bearer {{token}}
 
-### ---- 5.12 excluir com posição ativa: rode DEPOIS de comprar (seção 6)
-
-### 5.12 [ERRO] Excluir ação com posição ativa — 422 ACA-003
+### 5.12 [ERRO] Excluir ação não existe mais — 404 (spec-21; a rota some, então nem é 405)
 DELETE {{baseUrl}}/acoes/PETR4
+Authorization: Bearer {{token}}
+
+### 5.13 [OK] Pesquisar MGLU3 — 200, fica no catálogo sem posição (usada no 6.9)
+GET {{baseUrl}}/acoes/ticker/MGLU3?mercado=BR
 Authorization: Bearer {{token}}
 
 
 ### =====================================================================
-### 6. OPERAÇÃO (SPEC-01/03/04/06/07/08) — OPE-001/003/004/005
+### 6. OPERAÇÃO (SPEC-01/03/04/06/07/08/27) — OPE-001/003/004/005/006
 ### =====================================================================
 
 ### 6.1 [OK] Comprar com cotação automática — 201, precoManual=false, cotacaoNoMomento preenchida (AC-401/456/461)
@@ -462,14 +520,14 @@ Authorization: Bearer {{token}}
   "quantidade": 999999
 }
 
-### 6.9 [ERRO] Vender ação sem nenhuma posição — 422 OPE-003
+### 6.9 [ERRO] Vender ação sem nenhuma posição (MGLU3, incluída no 5.13 e nunca comprada) — 422 OPE-003
 POST {{baseUrl}}/operacoes/venda
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
   "carteiraId": {{carteiraId}},
-  "ticker": "AAPL",
+  "ticker": "MGLU3",
   "quantidade": 999999
 }
 
@@ -547,6 +605,35 @@ Authorization: Bearer {{token}}
 }
 
 
+### 6.21 [OK] Histórico filtrado por período — 200 (spec-27)
+GET {{baseUrl}}/operacoes?dataInicio=2026-01-01&dataFim=2026-12-31
+Authorization: Bearer {{token}}
+
+### 6.22 [OK] Histórico filtrado por ticker, carteira e tipo — 200, só as compras de PETR4 da carteira
+GET {{baseUrl}}/operacoes?ticker=PETR4&carteiraId={{carteiraId}}&tipo=COMPRA
+Authorization: Bearer {{token}}
+
+### 6.23 [OK] Histórico só das vendas com lucro — 200 (resultado=LUCRO|PREJUIZO)
+GET {{baseUrl}}/operacoes?tipo=VENDA&resultado=LUCRO
+Authorization: Bearer {{token}}
+
+### 6.24 [OK] Histórico paginado e ordenado — 200
+GET {{baseUrl}}/operacoes?page=0&size=5&sort=dataHora,desc
+Authorization: Bearer {{token}}
+
+### 6.25 [ERRO] Data final anterior à inicial — 422 OPE-006
+GET {{baseUrl}}/operacoes?dataInicio=2026-12-31&dataFim=2026-01-01
+Authorization: Bearer {{token}}
+
+### 6.26 [ERRO] Tipo inválido no filtro — 400 VAL-002 (fieldErrors.tipo)
+GET {{baseUrl}}/operacoes?tipo=TROCA
+Authorization: Bearer {{token}}
+
+### 6.27 [ERRO] ADMIN acessando operações — 403 AUT-007
+GET {{baseUrl}}/operacoes
+Authorization: Bearer {{tokenAdmin}}
+
+
 ### =====================================================================
 ### 7. MERCADO (SPEC-09) — barra de cotações
 ### =====================================================================
@@ -561,21 +648,366 @@ Authorization: Bearer {{token}}
 
 
 ### =====================================================================
-### 8. LIMPEZA (opcional) — exclusões finais, na ordem inversa de dependência
+### 8. PERFIL (SPEC-22..25) — senha, e-mail e foto. AUT-008/013..017, EXT-012
 ### =====================================================================
 
-### 8.1 [OK] Excluir carteira (depois de zerar toda posição vendendo tudo) — 204
+### 8.1 [ERRO] Trocar senha com a senha atual errada — 422 AUT-014
+PUT {{baseUrl}}/auth/senha
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "senhaAtual": "senhaErrada1",
+  "novaSenha": "novaSenha123"
+}
+
+### 8.2 [ERRO] Trocar senha para uma fora da política — 422 AUT-008
+PUT {{baseUrl}}/auth/senha
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "senhaAtual": "senha123",
+  "novaSenha": "curta"
+}
+
+### 8.3 [OK] Trocar senha — 200, devolve token NOVO: cole em @token (spec-23)
+PUT {{baseUrl}}/auth/senha
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "senhaAtual": "senha123",
+  "novaSenha": "novaSenha123"
+}
+
+### 8.4 [ERRO] Usar o token ANTIGO depois da troca — 401 AUT-005 (tokens anteriores caem)
+### rode este com o token de antes do 8.3 colado aqui na mão
+GET {{baseUrl}}/auth/me
+Authorization: Bearer COLE_AQUI_O_TOKEN_ANTIGO
+
+### 8.5 [OK] Esqueci a senha — 202 sempre, com e-mail existente ou não (spec-22, não revela nada)
+POST {{baseUrl}}/auth/esqueci-senha
+Content-Type: application/json
+
+{
+  "email": "investidor.teste@email.com"
+}
+
+### 8.6 [OK] Esqueci a senha com e-mail inexistente — 202 (mesma resposta do 8.5)
+POST {{baseUrl}}/auth/esqueci-senha
+Content-Type: application/json
+
+{
+  "email": "nao.existe@email.com"
+}
+
+### 8.7 [ERRO] Redefinir com código errado — 422 AUT-013 (5 erros invalidam o código)
+POST {{baseUrl}}/auth/redefinir-senha
+Content-Type: application/json
+
+{
+  "email": "investidor.teste@email.com",
+  "codigo": "000000",
+  "novaSenha": "outraSenha123"
+}
+
+### 8.8 [OK] Redefinir com o código de 6 dígitos que chegou no e-mail — 204 (vale 10 min)
+### depois disso a senha é "outraSenha123": refaça o login (1.6 com a senha nova) e atualize @token
+POST {{baseUrl}}/auth/redefinir-senha
+Content-Type: application/json
+
+{
+  "email": "investidor.teste@email.com",
+  "codigo": "COLE_O_CODIGO_DO_EMAIL",
+  "novaSenha": "outraSenha123"
+}
+
+### 8.9 [ERRO] Reusar o mesmo código — 422 AUT-013 (código é de uso único)
+POST {{baseUrl}}/auth/redefinir-senha
+Content-Type: application/json
+
+{
+  "email": "investidor.teste@email.com",
+  "codigo": "COLE_O_CODIGO_DO_EMAIL",
+  "novaSenha": "outraSenha123"
+}
+
+### 8.10 [ERRO] Pedir troca de e-mail com senha errada — 422 AUT-014
+POST {{baseUrl}}/auth/email
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "novoEmail": "novo.email@email.com",
+  "senhaAtual": "senhaErrada1"
+}
+
+### 8.11 [ERRO] Pedir troca para e-mail já usado — 409 AUT-001
+POST {{baseUrl}}/auth/email
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "novoEmail": "{{adminEmail}}",
+  "senhaAtual": "outraSenha123"
+}
+
+### 8.12 [OK] Pedir troca de e-mail — 202, código vai para o NOVO e-mail (spec-24)
+### use um e-mail real seu; 4º pedido em 15 min dá 422 AUT-015; falha no SMTP dá 503 EXT-012
+POST {{baseUrl}}/auth/email
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "novoEmail": "novo.email@email.com",
+  "senhaAtual": "outraSenha123"
+}
+
+### 8.13 [ERRO] Confirmar com código errado — 422 AUT-013
+POST {{baseUrl}}/auth/email/confirmar
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "codigo": "000000"
+}
+
+### 8.14 [OK] Confirmar troca de e-mail — 204; /auth/me passa a mostrar o novo e-mail e o login usa ele
+POST {{baseUrl}}/auth/email/confirmar
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "codigo": "COLE_O_CODIGO_DO_EMAIL"
+}
+
+### 8.15 [OK] Enviar foto de perfil — 204 (spec-25). Ponha um foto-teste.png (até 2 MB) na raiz do projeto
+PUT {{baseUrl}}/auth/me/foto
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=FotoBoundary
+
+--FotoBoundary
+Content-Disposition: form-data; name="arquivo"; filename="foto-teste.png"
+Content-Type: image/png
+
+< ./foto-teste.png
+--FotoBoundary--
+
+### 8.16 [ERRO] Enviar arquivo que não é imagem — 422 AUT-017 (formato vem do conteúdo, não da extensão)
+PUT {{baseUrl}}/auth/me/foto
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=FotoBoundary
+
+--FotoBoundary
+Content-Disposition: form-data; name="arquivo"; filename="falsa.png"
+Content-Type: image/png
+
+isto nao e uma imagem
+--FotoBoundary--
+
+### 8.17 [ERRO] Foto acima de 2 MB — 422 AUT-016 (troque por um arquivo grande, ex.: foto-grande.jpg)
+PUT {{baseUrl}}/auth/me/foto
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=FotoBoundary
+
+--FotoBoundary
+Content-Disposition: form-data; name="arquivo"; filename="foto-grande.jpg"
+Content-Type: image/jpeg
+
+< ./foto-grande.jpg
+--FotoBoundary--
+
+### 8.18 [OK] Baixar a foto — 200 com o binário e Content-Type da imagem; /auth/me mostra fotoUrl
+GET {{baseUrl}}/auth/me/foto
+Authorization: Bearer {{token}}
+
+### 8.19 [OK] Remover a foto — 204
+DELETE {{baseUrl}}/auth/me/foto
+Authorization: Bearer {{token}}
+
+### 8.20 [ERRO] Baixar foto depois de remover — 404 (sem corpo)
+GET {{baseUrl}}/auth/me/foto
+Authorization: Bearer {{token}}
+
+
+### =====================================================================
+### 9. ADMIN — USUÁRIOS (SPEC-16/18/19/29) — AUT-001/007/008/011/012, AUT-009/010
+### =====================================================================
+
+### 9.1 [ERRO] Investidor acessando rota de admin — 403 AUT-007
+GET {{baseUrl}}/admin/usuarios
+Authorization: Bearer {{token}}
+
+### 9.2 [OK] Listar usuários — 200, página com email, nome, papel, situacao, carteiras, temPosicao
+### copie o id do investidor da seção 1 para @usuarioId
+GET {{baseUrl}}/admin/usuarios
+Authorization: Bearer {{tokenAdmin}}
+
+### 9.3 [OK] Filtrar por situação e papel — 200
+GET {{baseUrl}}/admin/usuarios?situacao=ATIVO&papel=INVESTIDOR&page=0&size=10
+Authorization: Bearer {{tokenAdmin}}
+
+### 9.4 [OK] Filtrar por EXCLUIDO — 200 com página vazia (excluídos nunca aparecem)
+GET {{baseUrl}}/admin/usuarios?situacao=EXCLUIDO
+Authorization: Bearer {{tokenAdmin}}
+
+### 9.5 [ERRO] Situação inválida — 400 VAL-002
+GET {{baseUrl}}/admin/usuarios?situacao=SUSPENSO
+Authorization: Bearer {{tokenAdmin}}
+
+### 9.6 [OK] Totais por situação — 200, {"ATIVO": n, "BLOQUEADO": n} sempre com as duas chaves (spec-29)
+GET {{baseUrl}}/admin/usuarios/totais
+Authorization: Bearer {{tokenAdmin}}
+
+### 9.7 [OK] Totais só de investidores — 200
+GET {{baseUrl}}/admin/usuarios/totais?papel=INVESTIDOR
+Authorization: Bearer {{tokenAdmin}}
+
+### 9.8 [OK] Criar outro ADMIN — 201, papel=ADMIN
+POST {{baseUrl}}/admin/usuarios
+Content-Type: application/json
+Authorization: Bearer {{tokenAdmin}}
+
+{
+  "email": "admin2@email.com",
+  "senha": "admin2senha1"
+}
+
+### 9.9 [ERRO] Criar ADMIN com e-mail já usado — 409 AUT-001
+POST {{baseUrl}}/admin/usuarios
+Content-Type: application/json
+Authorization: Bearer {{tokenAdmin}}
+
+{
+  "email": "admin2@email.com",
+  "senha": "admin2senha1"
+}
+
+### 9.10 [ERRO] Criar ADMIN com senha fraca — 422 AUT-008
+POST {{baseUrl}}/admin/usuarios
+Content-Type: application/json
+Authorization: Bearer {{tokenAdmin}}
+
+{
+  "email": "admin3@email.com",
+  "senha": "fraca"
+}
+
+### 9.11 [ERRO] Bloquear sem motivo — 400 VAL-001
+PATCH {{baseUrl}}/admin/usuarios/{{usuarioId}}/bloquear
+Content-Type: application/json
+Authorization: Bearer {{tokenAdmin}}
+
+{
+  "motivo": ""
+}
+
+### 9.12 [ERRO] Bloquear usuário inexistente — 404 AUT-012
+PATCH {{baseUrl}}/admin/usuarios/999999/bloquear
+Content-Type: application/json
+Authorization: Bearer {{tokenAdmin}}
+
+{
+  "motivo": "Teste"
+}
+
+### 9.13 [ERRO] ADMIN bloqueando a si mesmo — 422 AUT-011 (troque o id pelo do admin, veja 1.13)
+PATCH {{baseUrl}}/admin/usuarios/1/bloquear
+Content-Type: application/json
+Authorization: Bearer {{tokenAdmin}}
+
+{
+  "motivo": "Teste"
+}
+
+### 9.14 [OK] Bloquear investidor — 200, situacao=BLOQUEADO e motivoBloqueio preenchido (grava auditoria, spec-19)
+PATCH {{baseUrl}}/admin/usuarios/{{usuarioId}}/bloquear
+Content-Type: application/json
+Authorization: Bearer {{tokenAdmin}}
+
+{
+  "motivo": "Atividade suspeita"
+}
+
+### 9.15 [ERRO] Investidor bloqueado usando o token que já tinha — 401 AUT-010
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+
+### 9.16 [ERRO] Login do bloqueado com a senha certa — 403 AUT-009 (e-mail já trocado no 8.14; com senha errada continua 401 AUT-004)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "novo.email@email.com",
+  "senha": "outraSenha123"
+}
+
+### 9.17 [OK] Desbloquear — 200, situacao=ATIVO e motivoBloqueio=null; login volta a funcionar
+PATCH {{baseUrl}}/admin/usuarios/{{usuarioId}}/desbloquear
+Authorization: Bearer {{tokenAdmin}}
+
+
+### =====================================================================
+### 10. ADMIN — RELATÓRIO DE USO (SPEC-28/30) — AUT-018
+### Conta requisições autenticadas; picos por hora e top 10 usuários.
+### =====================================================================
+
+### 10.1 [OK] Relatório padrão — 200, hoje e os 6 dias anteriores: total, picos[{hora, requisicoes}], usuarios[{id, email, requisicoes}]
+GET {{baseUrl}}/admin/uso
+Authorization: Bearer {{tokenAdmin}}
+
+### 10.2 [OK] Relatório de um período — 200
+GET {{baseUrl}}/admin/uso?dataInicio=2026-11-01&dataFim=2026-11-30
+Authorization: Bearer {{tokenAdmin}}
+
+### 10.3 [OK] Período sem uso — 200, total=0 e listas vazias
+GET {{baseUrl}}/admin/uso?dataInicio=2020-01-01&dataFim=2020-01-31
+Authorization: Bearer {{tokenAdmin}}
+
+### 10.4 [ERRO] Data final anterior à inicial — 422 AUT-018
+GET {{baseUrl}}/admin/uso?dataInicio=2026-11-30&dataFim=2026-11-01
+Authorization: Bearer {{tokenAdmin}}
+
+### 10.5 [ERRO] Data em formato inválido — 400 VAL-002
+GET {{baseUrl}}/admin/uso?dataInicio=30-11-2026
+Authorization: Bearer {{tokenAdmin}}
+
+### 10.6 [ERRO] Investidor pedindo o relatório — 403 AUT-007
+GET {{baseUrl}}/admin/uso
+Authorization: Bearer {{token}}
+
+
+### =====================================================================
+### 11. LIMPEZA (opcional) — exclusões finais, na ordem inversa de dependência
+### =====================================================================
+
+### 11.1 [OK] Excluir carteira (depois de zerar toda posição vendendo tudo) — 204
 DELETE {{baseUrl}}/carteiras/{{carteiraId}}
 Authorization: Bearer {{token}}
 
-### 8.2 [OK] Excluir ação (depois de zerar a posição) — 204
-DELETE {{baseUrl}}/acoes/PETR4
-Authorization: Bearer {{token}}
-
-### 8.3 [OK] Excluir corretora (depois de excluir a carteira vinculada) — 204
+### 11.2 [OK] Excluir corretora (ADMIN, depois de excluir a carteira vinculada) — 204
 DELETE {{baseUrl}}/corretoras/{{corretoraId}}
-Authorization: Bearer {{token}}
+Authorization: Bearer {{tokenAdmin}}
 
-### 8.4 [OK] Excluir investidor — 204
+### 11.3 [OK] Recadastrar o mesmo CNPJ depois de excluir — 201 (prova SPEC-03/Q-MAP-07)
+POST {{baseUrl}}/corretoras
+Content-Type: application/json
+Authorization: Bearer {{tokenAdmin}}
+
+{
+  "cnpj": "02332886000104"
+}
+
+### 11.4 [OK] Excluir a própria conta de investidor — 204; e-mail e CPF ficam livres para novo cadastro
 DELETE {{baseUrl}}/investidores/1
 Authorization: Bearer {{token}}
+
+### 11.5 [ERRO] Login da conta excluída — 401 AUT-004
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "novo.email@email.com",
+  "senha": "outraSenha123"
+}
