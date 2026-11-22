@@ -18,12 +18,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.lang.reflect.Field;
@@ -32,11 +32,8 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -56,14 +53,18 @@ class RegistroUsoIntegrationTest {
     @Autowired private InvestidorRepository investidorRepository;
     @Autowired private CorretoraRepository corretoraRepository;
     @Autowired private CarteiraRepository carteiraRepository;
-    @SpyBean private RegistroUsoRepository registroRepository;
+    @Autowired private RegistroUsoRepository registroRepository;
     @Autowired private TransactionTemplate transacao;
+    @Autowired private ThreadPoolTaskExecutor executor;
+    @Autowired private JdbcTemplate jdbc;
 
     private Investidor investidor;
     private String token;
 
     @BeforeEach
     void preparar() {
+        jdbc.execute("CREATE TRIGGER IF NOT EXISTS registro_uso_teste BEFORE INSERT ON registro_uso FOR EACH ROW CALL '"
+                + RegistroUsoTrigger.class.getName() + "'");
         investidor = investidor();
         token = jwtService.gerar(investidor.getUsuario().getId(), Papel.INVESTIDOR).getTokenValue();
     }
@@ -132,24 +133,43 @@ class RegistroUsoIntegrationTest {
     @Test
     @DisplayName("@spec:AC-654 a resposta não espera a gravação do registro")
     void respostaNaoEsperaGravacao() throws Exception {
-        CountDownLatch liberar = new CountDownLatch(1);
-        CountDownLatch terminou = new CountDownLatch(1);
-        doAnswer(gravacao -> {
-            liberar.await(5, TimeUnit.SECONDS);
-            terminou.countDown();
-            return gravacao.getArgument(0);
-        }).when(registroRepository).save(any());
-
+        RegistroUsoTrigger.travar = new CountDownLatch(1);
+        long concluidasAntes = gravacoesConcluidas();
         try {
             long inicio = System.nanoTime();
             mockMvc.perform(get("/operacoes").header("Authorization", "Bearer " + token)).andExpect(status().isOk());
             assertThat(Duration.ofNanos(System.nanoTime() - inicio)).isLessThan(Duration.ofSeconds(2));
         } finally {
-            liberar.countDown();
+            RegistroUsoTrigger.travar.countDown();
+            esperarGravacao(concluidasAntes);
+            RegistroUsoTrigger.travar = null;
         }
-        // o spy não é thread-safe: só reseta depois que a gravação assíncrona terminou
-        assertThat(terminou.await(5, TimeUnit.SECONDS)).isTrue();
-        Mockito.reset(registroRepository);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-655 falha ao gravar o registro não afeta a resposta")
+    void falhaNaGravacaoNaoAfetaResposta() throws Exception {
+        RegistroUsoTrigger.falhar = true;
+        long concluidasAntes = gravacoesConcluidas();
+        try {
+            mockMvc.perform(get("/operacoes").header("Authorization", "Bearer " + token)).andExpect(status().isOk());
+            esperarGravacao(concluidasAntes);
+        } finally {
+            RegistroUsoTrigger.falhar = false;
+        }
+        assertThat(registroRepository.findByUsuarioId(investidor.getUsuario().getId())).isEmpty();
+    }
+
+    private long gravacoesConcluidas() {
+        return executor.getThreadPoolExecutor().getCompletedTaskCount();
+    }
+
+    // espera a tarefa assíncrona desta requisição terminar, com sucesso ou não
+    private void esperarGravacao(long concluidasAntes) throws InterruptedException {
+        for (int i = 0; i < 100 && gravacoesConcluidas() <= concluidasAntes; i++) {
+            Thread.sleep(50);
+        }
+        assertThat(gravacoesConcluidas()).isGreaterThan(concluidasAntes);
     }
 
     // a gravação é assíncrona: espera até 3 s pelo registro do usuário
