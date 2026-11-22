@@ -10,6 +10,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.Instant;
@@ -33,6 +34,16 @@ public class GlobalExceptionHandler {
                 "Dados inválidos", "Verifique os campos informados", request.getRequestURI());
         ex.getBindingResult().getFieldErrors()
                 .forEach(fe -> err.addFieldError(fe.getField(), fe.getDefaultMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+    }
+
+    // spec-27: parâmetro de URL com tipo errado (ex.: tipo=TROCA) é erro do cliente, não erro interno
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<StandardError> handleParametroInvalido(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
+        StandardError err = new StandardError(
+                Instant.now(), HttpStatus.BAD_REQUEST.value(), "VAL-002",
+                "Parâmetro inválido", "Verifique os parâmetros informados", request.getRequestURI());
+        err.addFieldError(ex.getName(), "Valor inválido: " + ex.getValue());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
 

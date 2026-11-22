@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * spec-26 (#32): filtros de período e ticker no extrato, conforme ADR-018.
+ * spec-26 (#32) e spec-27 (#33): filtros do extrato, conforme ADR-018.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -118,6 +118,92 @@ class ExtratoFiltrosIntegrationTest {
                 .andExpect(jsonPath("$.totalElements").value(2))
                 .andExpect(jsonPath("$.content.length()").value(1));
         assertThat(ids(extrato(""))).hasSize(4);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-644 Filtro por carteira traz só as operações dela")
+    void porCarteira() throws Exception {
+        Carteira outra = carteira(investidor);
+        Long nessa = operacao(carteira, acaoA, "2026-03-05T10:00").getId();
+        operacao(outra, acaoA, "2026-03-06T10:00");
+
+        assertThat(ids(extrato("?carteiraId=" + carteira.getId()))).containsExactly(nessa);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-645 Carteira de outro investidor devolve lista vazia")
+    void carteiraAlheia() throws Exception {
+        Carteira alheia = carteira(investidor());
+        operacao(alheia, acaoA, "2026-03-05T10:00");
+        operacao(carteira, acaoA, "2026-03-05T10:00");
+
+        assertThat(ids(extrato("?carteiraId=" + alheia.getId()))).isEmpty();
+    }
+
+    @Test
+    @DisplayName("@spec:AC-646 Filtro por tipo traz só as vendas")
+    void porTipo() throws Exception {
+        operacao(carteira, acaoA, "2026-03-05T10:00");
+        Long v = venda(carteira, "2026-03-06T10:00", "5.00").getId();
+
+        assertThat(ids(extrato("?tipo=VENDA"))).containsExactly(v);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-647 Resultado LUCRO traz só vendas com lucro realizado positivo")
+    void resultadoLucro() throws Exception {
+        operacao(carteira, acaoA, "2026-03-01T10:00");
+        Long lucro = venda(carteira, "2026-03-02T10:00", "5.00").getId();
+        venda(carteira, "2026-03-03T10:00", "-3.00");
+        venda(carteira, "2026-03-04T10:00", "0.00");
+
+        String json = extrato("?resultado=LUCRO").andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        assertThat(ids(extrato("?resultado=LUCRO"))).containsExactly(lucro);
+        assertThat(objectMapper.readTree(json).at("/content/0/lucroRealizado").decimalValue())
+                .isEqualByComparingTo("5.00");
+    }
+
+    @Test
+    @DisplayName("@spec:AC-648 Resultado PREJUIZO traz só vendas com lucro realizado negativo")
+    void resultadoPrejuizo() throws Exception {
+        operacao(carteira, acaoA, "2026-03-01T10:00");
+        venda(carteira, "2026-03-02T10:00", "5.00");
+        Long prejuizo = venda(carteira, "2026-03-03T10:00", "-3.00").getId();
+        venda(carteira, "2026-03-04T10:00", "0.00");
+
+        assertThat(ids(extrato("?resultado=PREJUIZO"))).containsExactly(prejuizo);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-649 Resultado só traz vendas do próprio investidor")
+    void resultadoSoDoProprio() throws Exception {
+        Long minha = venda(carteira, "2026-03-02T10:00", "5.00").getId();
+        Long alheia = venda(carteira(investidor()), "2026-03-02T11:00", "7.00").getId();
+
+        assertThat(ids(extrato("?resultado=LUCRO"))).containsExactly(minha).doesNotContain(alheia);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-650 Valor inválido em parâmetro de URL responde 400 VAL-002")
+    void parametroInvalido() throws Exception {
+        extrato("?tipo=TROCA")
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.codigo").value("VAL-002"))
+                .andExpect(jsonPath("$.fieldErrors[0].field").value("tipo"));
+    }
+
+    private Operacao venda(Carteira carteira, String dataHora, String lucroRealizado) {
+        Operacao op = new Operacao();
+        op.setCarteira(carteira);
+        op.setAcao(acaoA);
+        op.setTipo(TipoOperacao.VENDA);
+        op.setQuantidade(1);
+        op.setPrecoUnitario(new BigDecimal("10.00"));
+        op.setDataHora(LocalDateTime.parse(dataHora));
+        op.setLucroRealizado(new BigDecimal(lucroRealizado));
+        op.setLucroRealizadoBrl(new BigDecimal(lucroRealizado));
+        return operacaoRepository.save(op);
     }
 
     private ResultActions extrato(String query) throws Exception {

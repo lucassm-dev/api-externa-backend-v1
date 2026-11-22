@@ -7,6 +7,8 @@ import com.apiexternabackend.domains.dtos.LucroRealizadoResponseDTO;
 import com.apiexternabackend.domains.dtos.OperacaoEditarDTO;
 import com.apiexternabackend.domains.dtos.OperacaoRequestDTO;
 import com.apiexternabackend.domains.dtos.OperacaoResponseDTO;
+import com.apiexternabackend.domains.enums.ResultadoOperacao;
+import com.apiexternabackend.domains.enums.TipoOperacao;
 import com.apiexternabackend.services.ConsultaOperacaoService;
 import com.apiexternabackend.services.OperacaoService;
 import jakarta.validation.Valid;
@@ -60,9 +62,11 @@ public class OperacaoResource {
     @GetMapping("/operacoes")
     public ResponseEntity<Page<OperacaoResponseDTO>> historico(
             @RequestParam(required = false) LocalDate dataInicio, @RequestParam(required = false) LocalDate dataFim,
-            @RequestParam(required = false) String ticker,
+            @RequestParam(required = false) String ticker, @RequestParam(required = false) Long carteiraId,
+            @RequestParam(required = false) TipoOperacao tipo, @RequestParam(required = false) ResultadoOperacao resultado,
             Pageable pageable, @AuthenticationPrincipal InvestidorPrincipal principal) {
-        return ResponseEntity.ok(consultaService.historico(principal.id(), dataInicio, dataFim, ticker, pageable));
+        return ResponseEntity.ok(consultaService.historico(principal.id(), dataInicio, dataFim, ticker,
+                carteiraId, tipo, resultado, pageable));
     }
 
     @PutMapping("/operacoes/{id}")

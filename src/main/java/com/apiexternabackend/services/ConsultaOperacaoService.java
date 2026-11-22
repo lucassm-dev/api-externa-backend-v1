@@ -6,6 +6,7 @@ import com.apiexternabackend.domains.dtos.CarteiraAcaoResponseDTO;
 import com.apiexternabackend.domains.dtos.CarteiraConsolidadaResponseDTO;
 import com.apiexternabackend.domains.dtos.LucroRealizadoResponseDTO;
 import com.apiexternabackend.domains.dtos.OperacaoResponseDTO;
+import com.apiexternabackend.domains.enums.ResultadoOperacao;
 import com.apiexternabackend.domains.enums.TipoOperacao;
 import com.apiexternabackend.mappers.CarteiraAcaoMapper;
 import com.apiexternabackend.mappers.OperacaoMapper;
@@ -37,7 +38,8 @@ public class ConsultaOperacaoService {
     private final CambioCacheService cambioCacheService;
 
     public Page<OperacaoResponseDTO> historico(Long investidorId, LocalDate dataInicio, LocalDate dataFim,
-                                               String ticker, Pageable pageable) {
+                                               String ticker, Long carteiraId, TipoOperacao tipo,
+                                               ResultadoOperacao resultado, Pageable pageable) {
         if (dataInicio != null && dataFim != null && dataFim.isBefore(dataInicio)) {
             throw new RegraVioladaException("OPE-006", "Data final anterior à data inicial");
         }
@@ -45,6 +47,8 @@ public class ConsultaOperacaoService {
                         dataInicio == null ? null : dataInicio.atStartOfDay(),
                         dataFim == null ? null : dataFim.plusDays(1).atStartOfDay(),
                         ticker == null || ticker.isBlank() ? null : ticker.trim().toUpperCase(),
+                        carteiraId, tipo,
+                        resultado == null ? null : resultado == ResultadoOperacao.LUCRO,
                         pageable)
                 .map(operacaoMapper::toResponse);
     }

@@ -14,7 +14,7 @@ Toda resposta de erro da API segue o mesmo formato (`StandardError`):
 }
 ```
 
-`fieldErrors` só é preenchido em erro de validação (`VAL-001`, 400). Nenhuma
+`fieldErrors` só é preenchido em erro de validação (`VAL-001` e `VAL-002`, 400). Nenhuma
 resposta de erro traz stacktrace ou nome de classe interna — exceção não
 mapeada (bug) vira `SYS-001` (500) genérico.
 
@@ -127,6 +127,7 @@ Implementação: `src/main/java/com/apiexternabackend/resources/exceptions/`.
 | Código | Situação | Status HTTP |
 |---|---|---|
 | VAL-001 | Corpo da requisição inválido — detalhe de cada campo em `fieldErrors` | 400 |
+| VAL-002 | Parâmetro de URL com valor do tipo errado (ex.: `tipo=TROCA`, `dataInicio=abc`) — o nome do parâmetro vem em `fieldErrors` (SPEC-27) | 400 |
 
 ## SYS — Erro interno inesperado
 
