@@ -447,7 +447,7 @@ Aba nova onde o investidor monta relatórios das **próprias** movimentações. 
 - Picos de requisições por usuário, para controle de uso
 - `[A]` Demais filtros
 
-Respeita 15.1: relatórios do administrador mostram uso e situação das contas, nunca o conteúdo das carteiras. `[A]` Se os picos são mostrados por usuário identificado ou de forma agregada.
+Respeita 15.1: relatórios do administrador mostram uso e situação das contas, nunca o conteúdo das carteiras. `[D]` Os picos mostram o usuário identificado (id e e-mail): as 10 horas com mais requisições e os 10 usuários que mais chamaram a API no período (decisão do dono do produto em 2026-11-22, #36, spec-30).
 
 ### 15.6. Ordem proposta `[P]`
 

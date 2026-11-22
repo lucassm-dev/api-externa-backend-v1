@@ -1,0 +1,189 @@
+package com.apiexternabackend.config;
+
+import com.apiexternabackend.domains.RegistroUso;
+import com.apiexternabackend.domains.Usuario;
+import com.apiexternabackend.domains.enums.Papel;
+import com.apiexternabackend.domains.enums.SituacaoUsuario;
+import com.apiexternabackend.repositories.RegistroUsoRepository;
+import com.apiexternabackend.repositories.UsuarioRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+/**
+ * spec-30: relatório de picos de requisições sobre o registro_uso da spec-28. Cada teste usa um dia
+ * próprio no passado, para não contar registros gravados por outros testes do mesmo banco.
+ */
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
+class RelatorioUsoIntegrationTest {
+
+    @Autowired private MockMvc mockMvc;
+    @Autowired private ObjectMapper objectMapper;
+    @Autowired private JwtService jwtService;
+    @Autowired private UsuarioRepository usuarioRepository;
+    @Autowired private RegistroUsoRepository registroRepository;
+
+    private String tokenAdmin;
+
+    @BeforeEach
+    void preparar() {
+        tokenAdmin = jwtService.gerar(usuario(Papel.ADMIN).getId(), Papel.ADMIN).getTokenValue();
+    }
+
+    @Test
+    @DisplayName("@spec:AC-660 Horas de pico do período")
+    void horasDePico() throws Exception {
+        LocalDate dia = LocalDate.now().minusDays(30);
+        Long investidor = usuario(Papel.INVESTIDOR).getId();
+        registrar(investidor, dia.atTime(14, 5), 3);
+        registrar(investidor, dia.atTime(15, 10), 1);
+        registrar(investidor, dia.atTime(9, 0), 2);
+
+        JsonNode relatorio = relatorio("dataInicio=" + dia + "&dataFim=" + dia);
+
+        assertThat(relatorio.get("total").asLong()).isEqualTo(6);
+        assertThat(horas(relatorio)).containsExactly(dia.atTime(14, 0), dia.atTime(9, 0), dia.atTime(15, 0));
+        assertThat(relatorio.get("picos")).extracting(p -> p.get("requisicoes").asLong()).containsExactly(3L, 2L, 1L);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-661 Usuários que mais chamaram a API, identificados")
+    void usuariosIdentificados() throws Exception {
+        LocalDate dia = LocalDate.now().minusDays(31);
+        Usuario maisAtivo = usuario(Papel.INVESTIDOR);
+        Usuario menosAtivo = usuario(Papel.INVESTIDOR);
+        registrar(menosAtivo.getId(), dia.atTime(10, 0), 1);
+        registrar(maisAtivo.getId(), dia.atTime(11, 0), 3);
+
+        JsonNode relatorio = relatorio("dataInicio=" + dia + "&dataFim=" + dia);
+
+        List<String> chaves = new ArrayList<>();
+        relatorio.fieldNames().forEachRemaining(chaves::add);
+        assertThat(chaves).containsExactlyInAnyOrder("total", "picos", "usuarios");
+        JsonNode usuarios = relatorio.get("usuarios");
+        assertThat(usuarios).extracting(u -> u.get("id").asLong()).containsExactly(maisAtivo.getId(), menosAtivo.getId());
+        assertThat(usuarios).extracting(u -> u.get("email").asText()).containsExactly(maisAtivo.getEmail(), menosAtivo.getEmail());
+        assertThat(usuarios).extracting(u -> u.get("requisicoes").asLong()).containsExactly(3L, 1L);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-662 Só o período pedido entra no relatório")
+    void soOPeriodoPedido() throws Exception {
+        LocalDate inicio = LocalDate.now().minusDays(40);
+        LocalDate fim = inicio.plusDays(1);
+        Long investidor = usuario(Papel.INVESTIDOR).getId();
+        registrar(investidor, inicio.minusDays(1).atTime(23, 59), 1);
+        registrar(investidor, inicio.atTime(0, 0), 1);
+        registrar(investidor, fim.atTime(23, 59), 1);
+        registrar(investidor, fim.plusDays(1).atTime(0, 0), 1);
+
+        JsonNode relatorio = relatorio("dataInicio=" + inicio + "&dataFim=" + fim);
+
+        assertThat(relatorio.get("total").asLong()).isEqualTo(2);
+        assertThat(requisicoesDe(relatorio, investidor)).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-662 Sem datas, valem os últimos 7 dias")
+    void semDatasValemUltimos7Dias() throws Exception {
+        Long investidor = usuario(Papel.INVESTIDOR).getId();
+        // muitas requisições para ficar entre os 10 que mais chamaram, à frente dos registros de outros testes
+        registrar(investidor, LocalDate.now().minusDays(1).atTime(10, 0), 60);
+        registrar(investidor, LocalDate.now().minusDays(8).atTime(10, 0), 1);
+
+        JsonNode relatorio = relatorio("");
+
+        assertThat(requisicoesDe(relatorio, investidor)).isEqualTo(60);
+    }
+
+    @Test
+    @DisplayName("@spec:AC-663 No máximo 10 horas e 10 usuários")
+    void noMaximoDezHorasEDezUsuarios() throws Exception {
+        LocalDate dia = LocalDate.now().minusDays(50);
+        List<Long> usuarios = new ArrayList<>();
+        for (int i = 1; i <= 12; i++) {
+            Long usuario = usuario(Papel.INVESTIDOR).getId();
+            usuarios.add(usuario);
+            registrar(usuario, dia.atTime(i - 1, 0), i);
+        }
+
+        JsonNode relatorio = relatorio("dataInicio=" + dia + "&dataFim=" + dia);
+
+        assertThat(relatorio.get("picos")).extracting(p -> p.get("requisicoes").asLong())
+                .containsExactly(12L, 11L, 10L, 9L, 8L, 7L, 6L, 5L, 4L, 3L);
+        assertThat(relatorio.get("usuarios")).extracting(u -> u.get("id").asLong())
+                .containsExactlyElementsOf(usuarios.subList(2, 12).reversed());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-664 Período invertido é recusado")
+    void periodoInvertidoRecusado() throws Exception {
+        LocalDate hoje = LocalDate.now();
+
+        mockMvc.perform(get("/admin/uso?dataInicio=" + hoje + "&dataFim=" + hoje.minusDays(1))
+                        .header("Authorization", "Bearer " + tokenAdmin))
+                .andExpect(status().isUnprocessableEntity()).andExpect(jsonPath("$.codigo").value("AUT-018"));
+    }
+
+    @Test
+    @DisplayName("@spec:AC-665 Só o ADMIN vê o relatório")
+    void soAdminVeRelatorio() throws Exception {
+        String tokenInvestidor = jwtService.gerar(usuario(Papel.INVESTIDOR).getId(), Papel.INVESTIDOR).getTokenValue();
+
+        mockMvc.perform(get("/admin/uso").header("Authorization", "Bearer " + tokenInvestidor))
+                .andExpect(status().isForbidden()).andExpect(jsonPath("$.codigo").value("AUT-007"));
+        mockMvc.perform(get("/admin/uso"))
+                .andExpect(status().isUnauthorized()).andExpect(jsonPath("$.codigo").value("AUT-005"));
+    }
+
+    private static long requisicoesDe(JsonNode relatorio, Long usuarioId) {
+        for (JsonNode usuario : relatorio.get("usuarios")) {
+            if (usuario.get("id").asLong() == usuarioId) {
+                return usuario.get("requisicoes").asLong();
+            }
+        }
+        throw new AssertionError("usuário " + usuarioId + " fora do relatório");
+    }
+
+    private JsonNode relatorio(String filtros) throws Exception {
+        String json = mockMvc.perform(get("/admin/uso?" + filtros).header("Authorization", "Bearer " + tokenAdmin))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        return objectMapper.readTree(json);
+    }
+
+    private static List<LocalDateTime> horas(JsonNode relatorio) {
+        List<LocalDateTime> horas = new ArrayList<>();
+        relatorio.get("picos").forEach(p -> horas.add(LocalDateTime.parse(p.get("hora").asText())));
+        return horas;
+    }
+
+    // grava direto no repositório: o relatório lê o registro, não importa como ele foi feito
+    private void registrar(Long usuarioId, LocalDateTime quando, int vezes) {
+        for (int i = 0; i < vezes; i++) {
+            registroRepository.save(new RegistroUso(usuarioId, "GET", "/operacoes", 200, quando.plusSeconds(i)));
+        }
+    }
+
+    private Usuario usuario(Papel papel) {
+        return usuarioRepository.save(new Usuario(null, "relatorio" + System.nanoTime() + "@email.com", "hash", papel, SituacaoUsuario.ATIVO));
+    }
+}

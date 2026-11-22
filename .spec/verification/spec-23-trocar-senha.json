@@ -1,7 +1,7 @@
 {
   "feature": "spec-23-trocar-senha",
-  "timestamp": "2026-11-22T17:18:21.951Z",
-  "gitRev": "1949c45",
+  "timestamp": "2026-11-22T18:25:49.474Z",
+  "gitRev": "4d8a11e",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
