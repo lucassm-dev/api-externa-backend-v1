@@ -24,6 +24,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -131,6 +132,16 @@ class RelatorioUsoIntegrationTest {
                 .containsExactly(12L, 11L, 10L, 9L, 8L, 7L, 6L, 5L, 4L, 3L);
         assertThat(relatorio.get("usuarios")).extracting(u -> u.get("id").asLong())
                 .containsExactlyElementsOf(usuarios.subList(2, 12).reversed());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-664 Período invertido é recusado")
+    void periodoInvertidoRecusado() throws Exception {
+        LocalDate hoje = LocalDate.now();
+
+        mockMvc.perform(get("/admin/uso?dataInicio=" + hoje + "&dataFim=" + hoje.minusDays(1))
+                        .header("Authorization", "Bearer " + tokenAdmin))
+                .andExpect(status().isUnprocessableEntity()).andExpect(jsonPath("$.codigo").value("AUT-018"));
     }
 
     private static long requisicoesDe(JsonNode relatorio, Long usuarioId) {
