@@ -106,6 +106,22 @@ class GestaoUsuariosIntegrationTest {
     }
 
     @Test
+    @DisplayName("@spec:AC-657 Listagem filtra por papel")
+    void listagemFiltraPorPapel() throws Exception {
+        Investidor ativo = investidor(SituacaoUsuario.ATIVO, "Ativo Papel");
+        Investidor bloqueado = investidor(SituacaoUsuario.BLOQUEADO, "Bloqueado Papel");
+
+        List<JsonNode> investidores = listarCom("papel=INVESTIDOR");
+        assertThat(ids(investidores)).contains(ativo.getId(), bloqueado.getId()).doesNotContain(admin.getId());
+        assertThat(investidores).allMatch(u -> u.get("papel").asText().equals("INVESTIDOR"));
+
+        List<JsonNode> investidoresBloqueados = listarCom("papel=INVESTIDOR&situacao=BLOQUEADO");
+        assertThat(ids(investidoresBloqueados)).contains(bloqueado.getId()).doesNotContain(ativo.getId());
+        assertThat(investidoresBloqueados).allMatch(u -> u.get("papel").asText().equals("INVESTIDOR")
+                && u.get("situacao").asText().equals("BLOQUEADO"));
+    }
+
+    @Test
     @DisplayName("@spec:AC-577 Listagem não mostra conteúdo financeiro nem senha")
     void listagemSemConteudoFinanceiro() throws Exception {
         Investidor investidor = investidor(SituacaoUsuario.ATIVO, "Rico");
@@ -261,7 +277,11 @@ class GestaoUsuariosIntegrationTest {
     }
 
     private List<JsonNode> listar(String situacao) throws Exception {
-        String url = "/admin/usuarios?size=1000" + (situacao == null ? "" : "&situacao=" + situacao);
+        return listarCom(situacao == null ? "" : "situacao=" + situacao);
+    }
+
+    private List<JsonNode> listarCom(String filtros) throws Exception {
+        String url = "/admin/usuarios?size=1000&" + filtros;
         String json = mockMvc.perform(get(url).header("Authorization", "Bearer " + tokenAdmin))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         List<JsonNode> linhas = new ArrayList<>();
