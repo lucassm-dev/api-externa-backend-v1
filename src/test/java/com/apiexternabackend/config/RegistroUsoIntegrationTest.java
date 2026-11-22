@@ -23,7 +23,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -70,6 +72,27 @@ class RegistroUsoIntegrationTest {
         assertThat(registro.getRota()).isEqualTo("/carteiras/{id}/posicoes");
         assertThat(registro.getStatus()).isEqualTo(200);
         assertThat(registro.getRegistradoEm()).isBetween(antes, LocalDateTime.now());
+    }
+
+    @Test
+    @DisplayName("@spec:AC-652 registro não guarda dado sensível")
+    void registroSemDadoSensivel() throws Exception {
+        mockMvc.perform(get("/operacoes").param("ticker", "PETR4").header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk());
+
+        RegistroUso registro = esperarRegistro(investidor.getUsuario().getId());
+        assertThat(registro.getRota()).isEqualTo("/operacoes");
+        assertThat(Arrays.stream(RegistroUso.class.getDeclaredFields()).map(Field::getName))
+                .containsExactlyInAnyOrder("id", "usuarioId", "metodo", "rota", "status", "registradoEm");
+    }
+
+    @Test
+    @DisplayName("@spec:AC-652 rota inexistente é registrada como desconhecida, sem a URL digitada")
+    void rotaInexistenteSemUrlCrua() throws Exception {
+        mockMvc.perform(get("/rota-que-nao-existe/12345678900").header("Authorization", "Bearer " + token))
+                .andExpect(status().isNotFound());
+
+        assertThat(esperarRegistro(investidor.getUsuario().getId()).getRota()).isEqualTo("desconhecida");
     }
 
     // a gravação é assíncrona: espera até 3 s pelo registro do usuário
