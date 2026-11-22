@@ -20,4 +20,16 @@ public interface RegistroUsoRepository extends Repository<RegistroUso, Long> {
     @Modifying
     @Query("delete from RegistroUso r where r.registradoEm < :limite")
     int apagarAnterioresA(@Param("limite") LocalDateTime limite);
+
+    @Query(value = "select count(*) from registro_uso where registrado_em >= :inicio and registrado_em < :fim", nativeQuery = true)
+    long contarNoPeriodo(@Param("inicio") LocalDateTime inicio, @Param("fim") LocalDateTime fim);
+
+    // spec-30: date_trunc e limit funcionam no H2 dos testes e no PostgreSQL
+    @Query(value = """
+            select date_trunc('hour', registrado_em) as hora, count(*) as requisicoes from registro_uso
+            where registrado_em >= :inicio and registrado_em < :fim
+            group by date_trunc('hour', registrado_em)
+            order by requisicoes desc, hora desc
+            limit 10""", nativeQuery = true)
+    List<Object[]> picosPorHora(@Param("inicio") LocalDateTime inicio, @Param("fim") LocalDateTime fim);
 }
