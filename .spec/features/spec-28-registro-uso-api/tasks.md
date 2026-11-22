@@ -4,7 +4,7 @@
 
 > feature: spec-28-registro-uso-api
 
-## T-522 — Registrar cada requisição autenticada sem dado sensível [pendente]
+## T-522 — Registrar cada requisição autenticada sem dado sensível [em-andamento]
 
 - Refs: US-476, AC-651, AC-652, AC-653
 - Arquivos: src/main/resources/db/migration/V24__registro_uso.sql, src/main/java/com/apiexternabackend/domains/RegistroUso.java, src/main/java/com/apiexternabackend/repositories/RegistroUsoRepository.java, src/main/java/com/apiexternabackend/config/RegistroUsoFilter.java, src/main/java/com/apiexternabackend/config/SecurityConfig.java, src/test/java/com/apiexternabackend/config/RegistroUsoIntegrationTest.java
