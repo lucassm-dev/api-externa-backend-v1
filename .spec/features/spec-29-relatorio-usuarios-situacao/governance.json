@@ -92,6 +92,56 @@
       "ownFingerprint": "609ed8318c737b48ab0086605f2a3cb1b9df50aff2016520a4811a5bf7dd2a43",
       "conflictFingerprint": "dec79f6d5e79ba0643667ccceeb1135546efb81534a384a44c23f08394e9e9f3",
       "answeredAt": "2026-11-22T16:44:03.464Z"
+    },
+    {
+      "conflictId": "ac-568-filtro-papel",
+      "choice": "prosseguir",
+      "answer": "Ajustar o teste do AC-568 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: AC-568 x filtro ?papel= da spec-29",
+      "fingerprint": "b6f715510d8e8b55fe97304ad6d1b67aeb90fcd88a20e4bfcb60dbed2c9f2a17",
+      "ownFingerprint": "041e1e5d4a09413707bf94df40bebda953b751d604100c16463f47e825043fcb",
+      "conflictFingerprint": "489129a8005218ee06224972e28c7fc3071415113d37e948b104250686549655",
+      "answeredAt": "2026-11-22T16:56:19.324Z"
+    },
+    {
+      "conflictId": "impacto:spec-15-identidade-usuario",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 4 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-29",
+      "fingerprint": "b6f715510d8e8b55fe97304ad6d1b67aeb90fcd88a20e4bfcb60dbed2c9f2a17",
+      "ownFingerprint": "041e1e5d4a09413707bf94df40bebda953b751d604100c16463f47e825043fcb",
+      "conflictFingerprint": "f9109fc3f72289d90ba6200d7a65a20c1af1de7d1a2a67721e39e3d8a1ebfa93",
+      "answeredAt": "2026-11-22T16:56:19.460Z"
+    },
+    {
+      "conflictId": "impacto:spec-16-papeis-matriz-acesso",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 4 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-29",
+      "fingerprint": "b6f715510d8e8b55fe97304ad6d1b67aeb90fcd88a20e4bfcb60dbed2c9f2a17",
+      "ownFingerprint": "041e1e5d4a09413707bf94df40bebda953b751d604100c16463f47e825043fcb",
+      "conflictFingerprint": "04c3bc719709a1f2712c66f80c30e63429168189ea16013b62255242d39c63c2",
+      "answeredAt": "2026-11-22T16:56:19.593Z"
+    },
+    {
+      "conflictId": "impacto:spec-18-gerenciar-usuarios",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 4 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-29",
+      "fingerprint": "b6f715510d8e8b55fe97304ad6d1b67aeb90fcd88a20e4bfcb60dbed2c9f2a17",
+      "ownFingerprint": "041e1e5d4a09413707bf94df40bebda953b751d604100c16463f47e825043fcb",
+      "conflictFingerprint": "cf2c45b5e8e783d84012083b4f0a6ca9d5b08c23baae4218a5fc680491022123",
+      "answeredAt": "2026-11-22T16:56:19.730Z"
+    },
+    {
+      "conflictId": "impacto:spec-19-auditoria-admin",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 4 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-29",
+      "fingerprint": "b6f715510d8e8b55fe97304ad6d1b67aeb90fcd88a20e4bfcb60dbed2c9f2a17",
+      "ownFingerprint": "041e1e5d4a09413707bf94df40bebda953b751d604100c16463f47e825043fcb",
+      "conflictFingerprint": "dec79f6d5e79ba0643667ccceeb1135546efb81534a384a44c23f08394e9e9f3",
+      "answeredAt": "2026-11-22T16:56:19.863Z"
     }
   ],
   "clientRequest": "",
@@ -155,9 +205,9 @@
         "rule": ".spec/features/spec-16-papeis-matriz-acesso/spec.md#ac-568--autocadastro-ignora-papel-enviado-e-nenhuma-entrada-da-api-aceita-papel"
       }
     ],
-    "fingerprint": "ec5dacc0d53d5cf0abacd9615518ce2425ed47a89dffadbf3b7cc521629fc418",
-    "ownFingerprint": "609ed8318c737b48ab0086605f2a3cb1b9df50aff2016520a4811a5bf7dd2a43",
-    "reviewedAt": "2026-11-22T16:43:57.309Z",
+    "fingerprint": "b6f715510d8e8b55fe97304ad6d1b67aeb90fcd88a20e4bfcb60dbed2c9f2a17",
+    "ownFingerprint": "041e1e5d4a09413707bf94df40bebda953b751d604100c16463f47e825043fcb",
+    "reviewedAt": "2026-11-22T16:56:19.153Z",
     "documents": [
       ".spec/features/autenticacao-investidor/design.md",
       ".spec/features/autenticacao-investidor/spec.md",

@@ -1,7 +1,7 @@
 # Spec: Relatório de usuários por situação
 
 > feature: spec-29-relatorio-usuarios-situacao
-> status: pronta
+> status: implementada
 
 ## Contexto
 
