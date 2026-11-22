@@ -1,7 +1,7 @@
 {
   "feature": "spec-26-extrato-periodo-ticker",
-  "timestamp": "2026-11-22T15:03:50.589Z",
-  "gitRev": "4d28792",
+  "timestamp": "2026-11-22T16:28:15.725Z",
+  "gitRev": "a0fdc79",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

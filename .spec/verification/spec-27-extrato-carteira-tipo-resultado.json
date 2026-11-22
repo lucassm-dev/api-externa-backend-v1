@@ -1,7 +1,7 @@
 {
   "feature": "spec-27-extrato-carteira-tipo-resultado",
-  "timestamp": "2026-11-22T15:04:31.717Z",
-  "gitRev": "4d28792",
+  "timestamp": "2026-11-22T16:29:00.328Z",
+  "gitRev": "a0fdc79",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

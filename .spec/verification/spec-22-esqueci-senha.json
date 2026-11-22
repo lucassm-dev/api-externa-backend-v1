@@ -1,7 +1,7 @@
 {
   "feature": "spec-22-esqueci-senha",
-  "timestamp": "2026-11-22T15:01:02.093Z",
-  "gitRev": "4d28792",
+  "timestamp": "2026-11-22T16:25:14.307Z",
+  "gitRev": "a0fdc79",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
