@@ -18,4 +18,7 @@ public class RegistroUsoService {
     public void registrar(RegistroUso registro) {
         repository.save(registro);
     }
+
+    public void descartarAntigos() {
+    }
 }

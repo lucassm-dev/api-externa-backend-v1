@@ -13,6 +13,7 @@ import com.apiexternabackend.repositories.CorretoraRepository;
 import com.apiexternabackend.repositories.InvestidorRepository;
 import com.apiexternabackend.repositories.RegistroUsoRepository;
 import com.apiexternabackend.repositories.UsuarioRepository;
+import com.apiexternabackend.services.RegistroUsoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -54,6 +55,7 @@ class RegistroUsoIntegrationTest {
     @Autowired private CorretoraRepository corretoraRepository;
     @Autowired private CarteiraRepository carteiraRepository;
     @Autowired private RegistroUsoRepository registroRepository;
+    @Autowired private RegistroUsoService registroUsoService;
     @Autowired private TransactionTemplate transacao;
     @Autowired private ThreadPoolTaskExecutor executor;
     @Autowired private JdbcTemplate jdbc;
@@ -158,6 +160,19 @@ class RegistroUsoIntegrationTest {
             RegistroUsoTrigger.falhar = false;
         }
         assertThat(registroRepository.findByUsuarioId(investidor.getUsuario().getId())).isEmpty();
+    }
+
+    @Test
+    @DisplayName("@spec:AC-656 registros com mais de 90 dias são apagados")
+    void descarteApagaRegistrosAntigos() {
+        Long usuarioId = investidor.getUsuario().getId();
+        LocalDateTime agora = LocalDateTime.now();
+        registroRepository.save(new RegistroUso(usuarioId, "GET", "/operacoes", 200, agora.minusDays(91)));
+        registroRepository.save(new RegistroUso(usuarioId, "GET", "/carteiras", 200, agora.minusDays(89)));
+
+        registroUsoService.descartarAntigos();
+
+        assertThat(registroRepository.findByUsuarioId(usuarioId)).extracting(RegistroUso::getRota).containsExactly("/carteiras");
     }
 
     private long gravacoesConcluidas() {

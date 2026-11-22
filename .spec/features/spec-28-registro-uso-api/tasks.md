@@ -16,7 +16,7 @@
 - Arquivos: src/main/java/com/apiexternabackend/services/RegistroUsoService.java, src/main/java/com/apiexternabackend/config/RegistroUsoFilter.java, src/main/java/com/apiexternabackend/ApiExternaBackendApplication.java, src/test/java/com/apiexternabackend/config/RegistroUsoIntegrationTest.java
 - Notas: depende da T-522. `@Async` no executor padrão do Spring Boot; erro na gravação vai para o log e não sobe para a requisição.
 
-## T-524 — Descarte diário dos registros com mais de 90 dias [pendente]
+## T-524 — Descarte diário dos registros com mais de 90 dias [em-andamento]
 
 - Refs: US-478, AC-656
 - Arquivos: src/main/java/com/apiexternabackend/services/RegistroUsoService.java, src/main/java/com/apiexternabackend/repositories/RegistroUsoRepository.java, src/main/java/com/apiexternabackend/ApiExternaBackendApplication.java, src/test/java/com/apiexternabackend/config/RegistroUsoIntegrationTest.java
