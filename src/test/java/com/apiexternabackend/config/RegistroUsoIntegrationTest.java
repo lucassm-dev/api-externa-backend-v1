@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -30,6 +31,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -93,6 +95,19 @@ class RegistroUsoIntegrationTest {
                 .andExpect(status().isNotFound());
 
         assertThat(esperarRegistro(investidor.getUsuario().getId()).getRota()).isEqualTo("desconhecida");
+    }
+
+    @Test
+    @DisplayName("@spec:AC-653 requisição sem token não é registrada")
+    void requisicaoSemTokenNaoRegistra() throws Exception {
+        long antes = registroRepository.count();
+
+        mockMvc.perform(post("/auth/login").contentType(MediaType.APPLICATION_JSON).content("{}"));
+        mockMvc.perform(post("/auth/cadastro").contentType(MediaType.APPLICATION_JSON).content("{}"));
+        mockMvc.perform(get("/operacoes")).andExpect(status().isUnauthorized());
+
+        Thread.sleep(300);
+        assertThat(registroRepository.count()).isEqualTo(antes);
     }
 
     // a gravação é assíncrona: espera até 3 s pelo registro do usuário
