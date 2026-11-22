@@ -1,7 +1,7 @@
 {
   "feature": "deploy-homelab",
-  "timestamp": "2026-11-22T17:01:25.748Z",
-  "gitRev": "1949c45",
+  "timestamp": "2026-11-22T18:08:36.622Z",
+  "gitRev": "4d8a11e",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
