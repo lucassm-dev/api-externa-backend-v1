@@ -13,7 +13,6 @@ import com.apiexternabackend.repositories.CorretoraRepository;
 import com.apiexternabackend.repositories.InvestidorRepository;
 import com.apiexternabackend.repositories.RegistroUsoRepository;
 import com.apiexternabackend.repositories.UsuarioRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -67,11 +66,6 @@ class RegistroUsoIntegrationTest {
     void preparar() {
         investidor = investidor();
         token = jwtService.gerar(investidor.getUsuario().getId(), Papel.INVESTIDOR).getTokenValue();
-    }
-
-    @AfterEach
-    void restaurarSpy() {
-        Mockito.reset(registroRepository);
     }
 
     @Test
@@ -139,8 +133,10 @@ class RegistroUsoIntegrationTest {
     @DisplayName("@spec:AC-654 a resposta não espera a gravação do registro")
     void respostaNaoEsperaGravacao() throws Exception {
         CountDownLatch liberar = new CountDownLatch(1);
+        CountDownLatch terminou = new CountDownLatch(1);
         doAnswer(gravacao -> {
             liberar.await(5, TimeUnit.SECONDS);
+            terminou.countDown();
             return gravacao.getArgument(0);
         }).when(registroRepository).save(any());
 
@@ -151,6 +147,9 @@ class RegistroUsoIntegrationTest {
         } finally {
             liberar.countDown();
         }
+        // o spy não é thread-safe: só reseta depois que a gravação assíncrona terminou
+        assertThat(terminou.await(5, TimeUnit.SECONDS)).isTrue();
+        Mockito.reset(registroRepository);
     }
 
     // a gravação é assíncrona: espera até 3 s pelo registro do usuário
