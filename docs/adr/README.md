@@ -14,7 +14,7 @@ restringe o que as telas podem prometer.
 | [007](007-exclusao-logica-com-bloqueio-por-vinculo-ativo.md) | Exclusão lógica com bloqueio por vínculo ativo | Sem lixeira, sem desfazer; bloqueio sempre explicado |
 | [008](008-preco-de-mercado-como-padrao-com-override-manual.md) | Preço de mercado por padrão, manual por opt-in | Formulário mostra preço e total antes de confirmar |
 | [009](009-contrato-unico-de-erro-com-codigo-por-dominio.md) | Contrato único de erro com código por domínio | Frontend trata por código, escreve os próprios textos |
-| [010](010-consultas-paginadas-sem-filtro-e-sem-serie-historica.md) | Consultas paginadas, sem filtro e sem série histórica | Extrato sem filtros no v1; nenhum gráfico de evolução |
+| [010](010-consultas-paginadas-sem-filtro-e-sem-serie-historica.md) | Consultas paginadas, sem filtro e sem série histórica — **filtros substituídos pelo ADR-018** | Extrato sem filtros no v1; nenhum gráfico de evolução |
 
 Decididas em 2026-11-18, implementação pendente:
 
@@ -32,3 +32,4 @@ Decididas em 2026-11-21, implementação pendente:
 |---|---|---|
 | [016](016-envio-de-email-por-smtp-gratuito.md) | E-mail por SMTP gratuito (Gmail com senha de app), credenciais em variáveis de ambiente | Pedido de código sempre responde igual; em fluxo autenticado, falha de envio vira 503 `EXT-012` |
 | [017](017-foto-de-perfil-no-banco.md) | Foto de perfil no Postgres, em tabela própria (`bytea`), até 2 MB, JPEG/PNG/WebP detectados pela assinatura | Backup continua um único `pg_dump`; banco cresce até 2 MB por usuário |
+| [018](018-filtros-no-extrato-de-operacoes.md) | Extrato `GET /operacoes` com filtros no servidor (período, ticker, carteira, tipo, lucro ou prejuízo realizado); sem exportação; substitui o ADR-010 na parte de filtros | Relatórios saem do extrato; série histórica continua fora |

@@ -1,7 +1,7 @@
 # ADR-010: Consultas paginadas, sem filtro no servidor e sem série histórica
 
 - **Data**: 2026-09-08
-- **Status**: Aceito
+- **Status**: Substituído parcialmente pelo [ADR-018](018-filtros-no-extrato-de-operacoes.md) (filtros); a parte de série histórica continua valendo
 - **Decisores**: Lucas Mendes (dono do produto)
 - **Tags**: dados, limitações, frontend
 
