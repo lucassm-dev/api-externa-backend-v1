@@ -6,6 +6,8 @@ import com.apiexternabackend.domains.dtos.AuthTokenResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,11 +18,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -59,6 +63,30 @@ class FotoPerfilIntegrationTest {
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.codigo").value("AUT-017"));
         foto(token).andExpect(status().isNotFound());
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @ValueSource(strings = {"image/jpeg", "image/png", "image/webp"})
+    @DisplayName("@spec:AC-635 Envio e leitura devolvem os mesmos bytes com o tipo detectado")
+    void envioELeitura(String tipo) throws Exception {
+        String token = token(cadastrar());
+        byte[] imagem = imagem(tipo);
+
+        enviar(token, imagem).andExpect(status().isNoContent());
+
+        foto(token)
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(tipo))
+                .andExpect(content().bytes(imagem));
+    }
+
+    private static byte[] imagem(String tipo) {
+        byte[] assinatura = switch (tipo) {
+            case "image/jpeg" -> new byte[]{(byte) 0xFF, (byte) 0xD8, (byte) 0xFF, (byte) 0xE0};
+            case "image/png" -> ASSINATURA_PNG;
+            default -> "RIFF\0\0\0\0WEBPVP8 ".getBytes(StandardCharsets.US_ASCII);
+        };
+        return Arrays.copyOf(assinatura, assinatura.length + 64);
     }
 
     private static byte[] png(int tamanho) {
