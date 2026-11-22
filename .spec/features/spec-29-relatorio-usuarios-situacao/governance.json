@@ -42,11 +42,61 @@
       "ownFingerprint": "8ae44e0fca8b2b17099afb5bba4fed9b02fac115885a1347cd59d37e36b7d888",
       "conflictFingerprint": "dec79f6d5e79ba0643667ccceeb1135546efb81534a384a44c23f08394e9e9f3",
       "answeredAt": "2026-11-22T16:37:36.933Z"
+    },
+    {
+      "conflictId": "ac-568-filtro-papel",
+      "choice": "prosseguir",
+      "answer": "Ajustar o teste do AC-568 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: AC-568 x filtro ?papel= da spec-29",
+      "fingerprint": "ec5dacc0d53d5cf0abacd9615518ce2425ed47a89dffadbf3b7cc521629fc418",
+      "ownFingerprint": "609ed8318c737b48ab0086605f2a3cb1b9df50aff2016520a4811a5bf7dd2a43",
+      "conflictFingerprint": "489129a8005218ee06224972e28c7fc3071415113d37e948b104250686549655",
+      "answeredAt": "2026-11-22T16:44:02.877Z"
+    },
+    {
+      "conflictId": "impacto:spec-15-identidade-usuario",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 4 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-29",
+      "fingerprint": "ec5dacc0d53d5cf0abacd9615518ce2425ed47a89dffadbf3b7cc521629fc418",
+      "ownFingerprint": "609ed8318c737b48ab0086605f2a3cb1b9df50aff2016520a4811a5bf7dd2a43",
+      "conflictFingerprint": "f9109fc3f72289d90ba6200d7a65a20c1af1de7d1a2a67721e39e3d8a1ebfa93",
+      "answeredAt": "2026-11-22T16:44:03.025Z"
+    },
+    {
+      "conflictId": "impacto:spec-16-papeis-matriz-acesso",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 4 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-29",
+      "fingerprint": "ec5dacc0d53d5cf0abacd9615518ce2425ed47a89dffadbf3b7cc521629fc418",
+      "ownFingerprint": "609ed8318c737b48ab0086605f2a3cb1b9df50aff2016520a4811a5bf7dd2a43",
+      "conflictFingerprint": "04c3bc719709a1f2712c66f80c30e63429168189ea16013b62255242d39c63c2",
+      "answeredAt": "2026-11-22T16:44:03.170Z"
+    },
+    {
+      "conflictId": "impacto:spec-18-gerenciar-usuarios",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 4 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-29",
+      "fingerprint": "ec5dacc0d53d5cf0abacd9615518ce2425ed47a89dffadbf3b7cc521629fc418",
+      "ownFingerprint": "609ed8318c737b48ab0086605f2a3cb1b9df50aff2016520a4811a5bf7dd2a43",
+      "conflictFingerprint": "cf2c45b5e8e783d84012083b4f0a6ca9d5b08c23baae4218a5fc680491022123",
+      "answeredAt": "2026-11-22T16:44:03.326Z"
+    },
+    {
+      "conflictId": "impacto:spec-19-auditoria-admin",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 4 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-29",
+      "fingerprint": "ec5dacc0d53d5cf0abacd9615518ce2425ed47a89dffadbf3b7cc521629fc418",
+      "ownFingerprint": "609ed8318c737b48ab0086605f2a3cb1b9df50aff2016520a4811a5bf7dd2a43",
+      "conflictFingerprint": "dec79f6d5e79ba0643667ccceeb1135546efb81534a384a44c23f08394e9e9f3",
+      "answeredAt": "2026-11-22T16:44:03.464Z"
     }
   ],
   "clientRequest": "",
   "review": {
-    "summary": "Li ADR-013, spec-15, spec-16, spec-18 e spec-19. A spec-29 acrescenta o parâmetro opcional papel em GET /admin/usuarios (sem ele, resposta idêntica à da spec-18, AC-576) e a rota GET /admin/usuarios/totais, que herda o @PreAuthorize(hasRole('ADMIN')) da classe (matriz da spec-16). Totais só contam ATIVO e BLOQUEADO, coerente com a listagem que esconde excluídos (spec-18) e com o ADR-013 (ADMIN vê indicadores, nunca conteúdo de carteira). Não toca em bloqueio, criação de ADMIN, identidade nem registro administrativo. Sem conflito semântico.",
+    "summary": "Li ADR-013, spec-15, spec-16, spec-18 e spec-19. A spec-29 acrescenta o filtro opcional papel em GET /admin/usuarios (sem ele, resposta idêntica à da spec-18) e a rota GET /admin/usuarios/totais, que herda o @PreAuthorize(hasRole('ADMIN')) da classe. Conflito encontrado na implementação: o teste do AC-568 (spec-16) recusa qualquer parâmetro de controller chamado papel, embora o texto do AC-568 só proíba campo de papel em DTO de entrada. Não toca em bloqueio, criação de ADMIN, identidade nem registro administrativo.",
     "reviewer": "Claude Code (Opus 5.5), sessão de 2026-11-22, feature spec-29-relatorio-usuarios-situacao",
     "conflicts": [
       {
@@ -55,7 +105,8 @@
         "feature": "spec-15-identidade-usuario",
         "summary": "A mudança interfere no domínio da feature spec-15-identidade-usuario.",
         "files": [
-          "src/main/java/com/apiexternabackend/repositories/UsuarioRepository.java"
+          "src/main/java/com/apiexternabackend/repositories/UsuarioRepository.java",
+          "src/test/java/com/apiexternabackend/config/IdentidadeUsuarioIntegrationTest.java"
         ],
         "domains": [],
         "rule": ".spec/features/spec-15-identidade-usuario/spec.md"
@@ -66,7 +117,8 @@
         "feature": "spec-16-papeis-matriz-acesso",
         "summary": "A mudança interfere no domínio da feature spec-16-papeis-matriz-acesso.",
         "files": [
-          "src/main/java/com/apiexternabackend/repositories/UsuarioRepository.java"
+          "src/main/java/com/apiexternabackend/repositories/UsuarioRepository.java",
+          "src/test/java/com/apiexternabackend/config/IdentidadeUsuarioIntegrationTest.java"
         ],
         "domains": [],
         "rule": ".spec/features/spec-16-papeis-matriz-acesso/spec.md"
@@ -96,11 +148,16 @@
         ],
         "domains": [],
         "rule": ".spec/features/spec-19-auditoria-admin/spec.md"
+      },
+      {
+        "id": "ac-568-filtro-papel",
+        "summary": "O filtro ?papel= da listagem do ADMIN cai na varredura do teste do AC-568, que recusa qualquer parâmetro chamado papel.",
+        "rule": ".spec/features/spec-16-papeis-matriz-acesso/spec.md#ac-568--autocadastro-ignora-papel-enviado-e-nenhuma-entrada-da-api-aceita-papel"
       }
     ],
-    "fingerprint": "192d5a81462afe8ae16b7a71d5f4daa37bcf591dd6e8a239bc2aa3932a760aeb",
-    "ownFingerprint": "8ae44e0fca8b2b17099afb5bba4fed9b02fac115885a1347cd59d37e36b7d888",
-    "reviewedAt": "2026-11-22T16:37:36.429Z",
+    "fingerprint": "ec5dacc0d53d5cf0abacd9615518ce2425ed47a89dffadbf3b7cc521629fc418",
+    "ownFingerprint": "609ed8318c737b48ab0086605f2a3cb1b9df50aff2016520a4811a5bf7dd2a43",
+    "reviewedAt": "2026-11-22T16:43:57.309Z",
     "documents": [
       ".spec/features/autenticacao-investidor/design.md",
       ".spec/features/autenticacao-investidor/spec.md",

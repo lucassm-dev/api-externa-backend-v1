@@ -16,6 +16,10 @@ Decisões do dono do produto (2026-11-22):
    `{"ATIVO": n, "BLOQUEADO": n}`; a listagem paginada não muda de formato.
 2. `papel` é opcional na listagem e nos totais, combinado com `situacao`.
 3. Usuários excluídos não entram nos totais, como já não entram na listagem.
+4. O teste do AC-568 (spec-16) recusava qualquer parâmetro chamado `papel`. O
+   texto do AC-568 só proíbe campo de papel em DTO de entrada; o teste passa a
+   aceitar `papel` como filtro em rota `GET` e continua recusando em corpo e em
+   rota que grava.
 
 ## Histórias
 
@@ -56,6 +60,7 @@ bloqueados, para acompanhar a situação das contas.
 |---|---|---|---|
 | ASM-508 | Totais em rota nova `GET /admin/usuarios/totais`, com as duas situações sempre presentes (0 quando não há ninguém) | confirmada | Dono do produto, 2026-11-22: "Rota nova /totais" |
 | ASM-509 | `papel` filtra listagem e totais; excluídos não entram nos totais | confirmada | Dono do produto, 2026-11-22: "Filtra por papel, sem excluídos" |
+| ASM-510 | Filtro `?papel=` em rota `GET` não fere o AC-568 (spec-16), que protege contra atribuir papel pela API | confirmada | Dono do produto, 2026-11-22: "Ajustar o teste do AC-568" |
 
 ## Perguntas em aberto
 
