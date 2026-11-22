@@ -106,6 +106,7 @@ Implementação: `src/main/java/com/apiexternabackend/resources/exceptions/`.
 | AUT-012 | Usuário não encontrado na gestão de usuários (inclui excluído — spec-18) | 404 | RecursoNaoEncontradoException |
 | AUT-013 | Código de recuperação inválido, expirado, já usado ou sem tentativas (spec-22) | 422 | RegraVioladaException |
 | AUT-014 | Senha atual incorreta na troca de senha (spec-23) | 422 | RegraVioladaException |
+| AUT-015 | Limite de pedidos de código de troca de e-mail (3 a cada 15 min — spec-24) | 422 | RegraVioladaException |
 
 ## EXT — Integração externa
 
@@ -116,6 +117,7 @@ Implementação: `src/main/java/com/apiexternabackend/resources/exceptions/`.
 | EXT-009 | Limite de requisições da fonte de cotação excedido — em `PUT /acoes/{id}/atualizar-cotacao` continua 429 explícito; em compra/venda, desde a SPEC-07 (Q-MAP-06), não derruba mais a operação | 429 (atualizar-cotacao) / prossegue com aviso (compra/venda) | IntegracaoExternaException (limiteExcedido=true) |
 | EXT-010 | Fonte de cotação indisponível (não é limite de cota) — mesmo tratamento: 503/fallback em atualizar-cotacao, prossegue com aviso em compra/venda | 503 (atualizar-cotacao) / prossegue com aviso (compra/venda) | IntegracaoExternaException (limiteExcedido=false) |
 | EXT-011 | Câmbio USD-BRL indisponível — AwesomeAPI (primária) e PTAX BCB (fallback) falharam. Em compra/venda ou consolidado, prossegue com a última taxa em cache (com aviso); sem taxa em cache alguma vez, a operação é recusada | prossegue com aviso, ou recusa se nunca houve taxa em cache | IntegracaoExternaException (limiteExcedido=false) |
+| EXT-012 | Serviço de e-mail indisponível no envio de código em fluxo autenticado (ADR-016 — spec-24); nada pendente é gravado | 503 | IntegracaoExternaException (limiteExcedido=false) |
 
 ## VAL — Validação de payload
 

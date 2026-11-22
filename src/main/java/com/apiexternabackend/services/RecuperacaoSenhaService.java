@@ -49,7 +49,7 @@ public class RecuperacaoSenhaService {
                 .orElse(null);
         Instant agora = Instant.now();
         if (usuario == null
-                || codigoRepository.countByUsuarioAndCriadoEmAfter(usuario, agora.minus(JANELA_PEDIDOS)) >= MAX_PEDIDOS) {
+                || codigoRepository.countByUsuarioAndNovoEmailIsNullAndCriadoEmAfter(usuario, agora.minus(JANELA_PEDIDOS)) >= MAX_PEDIDOS) {
             return;
         }
 
@@ -68,7 +68,7 @@ public class RecuperacaoSenhaService {
             return;
         }
 
-        codigoRepository.findByUsuarioAndUsadoEmIsNull(usuario).forEach(c -> c.setUsadoEm(agora));
+        codigoRepository.findByUsuarioAndNovoEmailIsNullAndUsadoEmIsNull(usuario).forEach(c -> c.setUsadoEm(agora));
         CodigoRecuperacao novo = new CodigoRecuperacao();
         novo.setUsuario(usuario);
         novo.setCodigoHash(passwordEncoder.encode(codigo));
@@ -83,7 +83,7 @@ public class RecuperacaoSenhaService {
         Usuario usuario = usuarioRepository.findByEmailAndSituacaoNot(email, SituacaoUsuario.EXCLUIDO)
                 .filter(u -> u.getSituacao() == SituacaoUsuario.ATIVO)
                 .orElseThrow(this::codigoInvalido);
-        CodigoRecuperacao atual = codigoRepository.findFirstByUsuarioAndUsadoEmIsNullOrderByCriadoEmDesc(usuario)
+        CodigoRecuperacao atual = codigoRepository.findFirstByUsuarioAndNovoEmailIsNullAndUsadoEmIsNullOrderByCriadoEmDesc(usuario)
                 .filter(c -> c.getExpiraEm().isAfter(Instant.now()) && c.getTentativas() < MAX_TENTATIVAS)
                 .orElseThrow(this::codigoInvalido);
 
