@@ -64,6 +64,26 @@ class RelatorioUsoIntegrationTest {
         assertThat(relatorio.get("picos")).extracting(p -> p.get("requisicoes").asLong()).containsExactly(3L, 2L, 1L);
     }
 
+    @Test
+    @DisplayName("@spec:AC-661 Usuários que mais chamaram a API, identificados")
+    void usuariosIdentificados() throws Exception {
+        LocalDate dia = LocalDate.now().minusDays(31);
+        Usuario maisAtivo = usuario(Papel.INVESTIDOR);
+        Usuario menosAtivo = usuario(Papel.INVESTIDOR);
+        registrar(menosAtivo.getId(), dia.atTime(10, 0), 1);
+        registrar(maisAtivo.getId(), dia.atTime(11, 0), 3);
+
+        JsonNode relatorio = relatorio("dataInicio=" + dia + "&dataFim=" + dia);
+
+        List<String> chaves = new ArrayList<>();
+        relatorio.fieldNames().forEachRemaining(chaves::add);
+        assertThat(chaves).containsExactlyInAnyOrder("total", "picos", "usuarios");
+        JsonNode usuarios = relatorio.get("usuarios");
+        assertThat(usuarios).extracting(u -> u.get("id").asLong()).containsExactly(maisAtivo.getId(), menosAtivo.getId());
+        assertThat(usuarios).extracting(u -> u.get("email").asText()).containsExactly(maisAtivo.getEmail(), menosAtivo.getEmail());
+        assertThat(usuarios).extracting(u -> u.get("requisicoes").asLong()).containsExactly(3L, 1L);
+    }
+
     private JsonNode relatorio(String filtros) throws Exception {
         String json = mockMvc.perform(get("/admin/uso?" + filtros).header("Authorization", "Bearer " + tokenAdmin))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
