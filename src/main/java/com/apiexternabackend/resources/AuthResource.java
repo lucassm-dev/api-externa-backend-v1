@@ -10,6 +10,7 @@ import com.apiexternabackend.services.AutenticacaoService;
 import com.apiexternabackend.services.RecuperacaoSenhaService;
 import com.apiexternabackend.domains.dtos.EsqueciSenhaRequestDTO;
 import com.apiexternabackend.domains.dtos.RedefinirSenhaRequestDTO;
+import com.apiexternabackend.domains.dtos.TrocarSenhaRequestDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,6 +51,12 @@ public class AuthResource {
     public ResponseEntity<Void> redefinirSenha(@RequestBody @Valid RedefinirSenhaRequestDTO dto) {
         recuperacaoSenhaService.redefinir(dto.getEmail(), dto.getCodigo(), dto.getNovaSenha());
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/senha")
+    public ResponseEntity<AuthTokenResponseDTO> trocarSenha(@AuthenticationPrincipal InvestidorPrincipal principal,
+                                                            @RequestBody @Valid TrocarSenhaRequestDTO dto) {
+        return ResponseEntity.ok(service.trocarSenha(principal.id(), dto));
     }
 
     @GetMapping("/me")

@@ -105,6 +105,7 @@ Implementação: `src/main/java/com/apiexternabackend/resources/exceptions/`.
 | AUT-011 | ADMIN tentando bloquear a si mesmo (spec-18) | 422 | RegraVioladaException |
 | AUT-012 | Usuário não encontrado na gestão de usuários (inclui excluído — spec-18) | 404 | RecursoNaoEncontradoException |
 | AUT-013 | Código de recuperação inválido, expirado, já usado ou sem tentativas (spec-22) | 422 | RegraVioladaException |
+| AUT-014 | Senha atual incorreta na troca de senha (spec-23) | 422 | RegraVioladaException |
 
 ## EXT — Integração externa
 
