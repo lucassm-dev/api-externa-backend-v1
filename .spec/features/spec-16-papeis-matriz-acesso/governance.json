@@ -242,12 +242,322 @@
       "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
       "conflictFingerprint": "26ee384820dbf5590f53befefbe51bc3920b73c104a6dafae3bb269ecfc7ece6",
       "answeredAt": "2026-11-21T05:42:10.123Z"
+    },
+    {
+      "conflictId": "impacto:autenticacao-investidor",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "cbd9d0332cd74332d32324e3b48e2190d938829a13f27332e1becf953ad24112",
+      "answeredAt": "2026-11-22T04:31:04.331Z"
+    },
+    {
+      "conflictId": "impacto:cadastro-corretora",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "872579b1420cfaabdc417f8731a6ce970c36d6ef2a52b1363e063aa7b44aed46",
+      "answeredAt": "2026-11-22T04:31:04.707Z"
+    },
+    {
+      "conflictId": "impacto:carteira",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "33f72817b5dfa59581b84f65d886787ce7dbb3e1fcee793c0afca58e11fa3b1c",
+      "answeredAt": "2026-11-22T04:31:05.081Z"
+    },
+    {
+      "conflictId": "impacto:catalogo-acao",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "e7474afd2c97ad080e079860b804e188538a79cb5073a46fe4c87769cb95c40d",
+      "answeredAt": "2026-11-22T04:31:05.459Z"
+    },
+    {
+      "conflictId": "impacto:investidor",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "4e690ea2ef291051a8c11c5da9b70d287a1d4fbb744741994c59cd9165bd374d",
+      "answeredAt": "2026-11-22T04:31:05.839Z"
+    },
+    {
+      "conflictId": "impacto:operacao-movimentacao",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "e1805a94bc994e05bca6edd5c610c9742ced023b4c6110aa1bb1de034be37d7c",
+      "answeredAt": "2026-11-22T04:31:06.209Z"
+    },
+    {
+      "conflictId": "impacto:refactor-cnpj-delete",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "f8d382a99e842c6e1cbe1667de35b4cc456eff5d39e0bec455ce2c454dce9401",
+      "answeredAt": "2026-11-22T04:31:06.574Z"
+    },
+    {
+      "conflictId": "impacto:spec-01-padronizacao-erros",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "34a1f177aa2ad81199759d859a11fca9adb1e67e4203bdd254ee15070d0cfb16",
+      "answeredAt": "2026-11-22T04:31:06.932Z"
+    },
+    {
+      "conflictId": "impacto:spec-03-recadastro-exclusao",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "8cbb5183afa4d4ca81e7d06984ccd58128f5d700c116f866222eb4a79f758758",
+      "answeredAt": "2026-11-22T04:31:07.298Z"
+    },
+    {
+      "conflictId": "impacto:spec-04-preco-editavel",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "e4cca9983fd27ced322ab44b75a6baa60082fa0e4ac2fdd584b3e81e7398174f",
+      "answeredAt": "2026-11-22T04:31:07.662Z"
+    },
+    {
+      "conflictId": "impacto:spec-06-lucro-realizado",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "7a4a156f379cfb0bfb1052b9c47275ce403d7fe575cecc4e93b53535bb479f58",
+      "answeredAt": "2026-11-22T04:31:08.029Z"
+    },
+    {
+      "conflictId": "impacto:spec-07-cache-cotacao",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "495968926ea19194cfb5b527848b0c6ec3f5c5a26c69c78b5d87bb9bb6642ca0",
+      "answeredAt": "2026-11-22T04:31:08.407Z"
+    },
+    {
+      "conflictId": "impacto:spec-08-conversao-cambio",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "e268565a7d6bee0580e349428d1316def3c83a52ec343373f776dd86ab3249f6",
+      "answeredAt": "2026-11-22T04:31:08.774Z"
+    },
+    {
+      "conflictId": "impacto:spec-09-barra-cotacoes",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "1736ddceef08a60e999c5723997a9eac9c332cc1145bbdf1b6913fda174dc926",
+      "answeredAt": "2026-11-22T04:31:09.141Z"
+    },
+    {
+      "conflictId": "impacto:spec-10-vazamento-investidor-inativo",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "c22702d0254976007e647b2d3872000383610f6cf9342c4b6b67de39af7f1300",
+      "answeredAt": "2026-11-22T04:31:09.515Z"
+    },
+    {
+      "conflictId": "impacto:spec-11-cors",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "25080f0cd0b6e07d147ef5fdeaf69ff98b214190c0188fa605bacdee4883f532",
+      "answeredAt": "2026-11-22T04:31:09.891Z"
+    },
+    {
+      "conflictId": "impacto:spec-12-barra-um-ativo-por-requisicao",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "18037a70dc697792975b5be363372f4a4a546247c39b590f7671078fded63653",
+      "answeredAt": "2026-11-22T04:31:10.266Z"
+    },
+    {
+      "conflictId": "impacto:spec-13-autorizacao-investidor",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "26ee384820dbf5590f53befefbe51bc3920b73c104a6dafae3bb269ecfc7ece6",
+      "answeredAt": "2026-11-22T04:31:10.657Z"
+    },
+    {
+      "conflictId": "impacto:spec-14-jwt-resource-server",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "f27558c1257ae25beb5ce5e0e8f88b5d2d30f64160bdcfc642c552f4554d03c5",
+      "answeredAt": "2026-11-22T04:31:11.026Z"
+    },
+    {
+      "conflictId": "impacto:spec-15-identidade-usuario",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "1cb77a8d924def7c3de3eb868c8d3012a40094bb73e9da9da0c1970eae742bd2",
+      "answeredAt": "2026-11-22T04:31:11.391Z"
+    },
+    {
+      "conflictId": "impacto:spec-17-auth-me",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "d727dd8516aa53fe450f8bd8c39f5af26a39e960a1a633be5103835042afd629",
+      "answeredAt": "2026-11-22T04:31:11.756Z"
+    },
+    {
+      "conflictId": "impacto:spec-18-gerenciar-usuarios",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "1a79ad50ec5e25ad641d455fe48dcfb8aa584ee42103e1704e777e6e200341ed",
+      "answeredAt": "2026-11-22T04:31:12.123Z"
+    },
+    {
+      "conflictId": "impacto:spec-19-auditoria-admin",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "0d13d007bc792defb57e49cbf06906cc4b4f44f8209e4533f97ae62475708691",
+      "answeredAt": "2026-11-22T04:31:12.501Z"
+    },
+    {
+      "conflictId": "impacto:spec-20-descontinuar-corretora",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "634b0b1f714e2fda2644ee45e9a3156df18d0bbd5b49890ebde24a21db2257f6",
+      "answeredAt": "2026-11-22T04:31:12.859Z"
+    },
+    {
+      "conflictId": "impacto:spec-21-acao-pela-pesquisa",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "1b8b6c110b0c08ffdadaee3716a0d834c2560ffbd6f4866489d50c6f11d8123e",
+      "answeredAt": "2026-11-22T04:31:13.237Z"
+    },
+    {
+      "conflictId": "impacto:spec-22-esqueci-senha",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "eeee6a5520a76b767b5806436768d4b6fc26c1d1589c37f5e5518714c9a163ba",
+      "answeredAt": "2026-11-22T04:31:13.603Z"
+    },
+    {
+      "conflictId": "impacto:spec-23-trocar-senha",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "3e2a38c7538777468f6824dd66815a5abf2960d4a840413c1139a8902cc1fd73",
+      "answeredAt": "2026-11-22T04:31:13.976Z"
+    },
+    {
+      "conflictId": "impacto:spec-25-foto-perfil",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "2793b1ce5961aec8538830dfd1e7160c49ddfa043dea17604909ffb418b7cbb2",
+      "answeredAt": "2026-11-22T04:31:14.354Z"
+    },
+    {
+      "conflictId": "impacto:spec-26-extrato-periodo-ticker",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "e77fee7d9266162f977bfa79c7a10ea8c9ca0d12f66adbfd3805169339d6bc34",
+      "answeredAt": "2026-11-22T04:31:14.732Z"
+    },
+    {
+      "conflictId": "catalogo-corretoras-so-admin",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "b7cdb30b254d2bbb9cb0bd3744e70e5628c7e036bab76056693b35fd138cfd5b",
+      "answeredAt": "2026-11-22T04:31:15.108Z"
+    },
+    {
+      "conflictId": "papel-real-no-token",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 30 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-16",
+      "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+      "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+      "conflictFingerprint": "799e9f6d9a59a190719c987c86121dd09fd4a9d286cb1b8b5d76c6818aa0d692",
+      "answeredAt": "2026-11-22T04:31:15.483Z"
     }
   ],
   "clientRequest": "",
   "review": {
-    "summary": "spec-16 coloca @PreAuthorize em todos os resources e o papel real no token. Mudam regra: (1) rotas de /acoes ficam como estão, liberadas aos dois papéis até a #24 (decisão 3 revista pelo dono do produto); (2) POST/DELETE de /corretoras passam a ser só ADMIN; (3) o token deixa de levar ROLE_INVESTIDOR fixo (ASM-461 da spec-14) e o ADMIN passa a fazer login (ASM-466 da spec-15). Nos demais domínios (carteira, operações, investidor, spec-01, spec-04 a spec-13, spec-17), o comportamento para o investidor não muda; o ADMIN recebe 403 nas rotas de dados do investidor e 200 nas de consulta. spec-17 só acompanha a nova assinatura de JwtService.gerar no teste do AC-571.",
-    "reviewer": "Claude Code (claude-opus-5-5), sessão interativa de 2026-11-21",
+    "summary": "Revisão refeita em 2026-11-22 porque a revisão anterior ficou desatualizada: depois do merge da spec-16, as specs 17 a 26 editaram os mesmos arquivos (SecurityConfig, AutenticacaoService, resources e testes) e o motor passou a apontar sobreposição com elas. A regra da spec-16 não mudou: (1) /acoes continua liberado aos dois papéis; (2) POST/DELETE de /corretoras são só ADMIN; (3) o token leva o papel real e o ADMIN faz login. As specs 17 a 26 foram construídas em cima dessa matriz, sem contradizê-la: cada uma tem a própria governança. Para o investidor, o comportamento dos demais domínios continua igual; o ADMIN recebe 403 nas rotas de dados do investidor e 200 nas de consulta. Os 272 critérios de aceite do projeto passam no verify de 2026-11-22 (gitRev 7cbaa60).",
+    "reviewer": "Claude Code (claude-opus-5-5), sessão interativa de 2026-11-22",
     "conflicts": [
       {
         "id": "impacto:autenticacao-investidor",
@@ -384,18 +694,6 @@
         ],
         "domains": [],
         "rule": ".spec/features/spec-04-preco-editavel/spec.md"
-      },
-      {
-        "id": "impacto:spec-05-carteira-obrigatoria",
-        "automatic": true,
-        "feature": "spec-05-carteira-obrigatoria",
-        "summary": "A mudança interfere no domínio da feature spec-05-carteira-obrigatoria.",
-        "files": [
-          "src/main/java/com/apiexternabackend/resources/AcaoResource.java",
-          "src/test/java/com/apiexternabackend/resources/AcaoResourceTest.java"
-        ],
-        "domains": [],
-        "rule": ".spec/features/spec-05-carteira-obrigatoria/spec.md"
       },
       {
         "id": "impacto:spec-06-lucro-realizado",
@@ -545,6 +843,101 @@
         "rule": ".spec/features/spec-17-auth-me/spec.md"
       },
       {
+        "id": "impacto:spec-18-gerenciar-usuarios",
+        "automatic": true,
+        "feature": "spec-18-gerenciar-usuarios",
+        "summary": "A mudança interfere no domínio da feature spec-18-gerenciar-usuarios.",
+        "files": [
+          "src/main/java/com/apiexternabackend/config/SecurityConfig.java",
+          "src/main/java/com/apiexternabackend/repositories/UsuarioRepository.java",
+          "src/test/java/com/apiexternabackend/config/MatrizAcessoIntegrationTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-18-gerenciar-usuarios/spec.md"
+      },
+      {
+        "id": "impacto:spec-19-auditoria-admin",
+        "automatic": true,
+        "feature": "spec-19-auditoria-admin",
+        "summary": "A mudança interfere no domínio da feature spec-19-auditoria-admin.",
+        "files": [
+          "src/main/java/com/apiexternabackend/resources/CorretoraResource.java",
+          "src/test/java/com/apiexternabackend/resources/CorretoraResourceTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-19-auditoria-admin/spec.md"
+      },
+      {
+        "id": "impacto:spec-20-descontinuar-corretora",
+        "automatic": true,
+        "feature": "spec-20-descontinuar-corretora",
+        "summary": "A mudança interfere no domínio da feature spec-20-descontinuar-corretora.",
+        "files": [
+          "src/main/java/com/apiexternabackend/resources/CorretoraResource.java",
+          "src/test/java/com/apiexternabackend/resources/CarteiraResourceTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-20-descontinuar-corretora/spec.md"
+      },
+      {
+        "id": "impacto:spec-21-acao-pela-pesquisa",
+        "automatic": true,
+        "feature": "spec-21-acao-pela-pesquisa",
+        "summary": "A mudança interfere no domínio da feature spec-21-acao-pela-pesquisa.",
+        "files": [
+          "src/main/java/com/apiexternabackend/resources/AcaoResource.java",
+          "src/test/java/com/apiexternabackend/config/MatrizAcessoIntegrationTest.java",
+          "src/test/java/com/apiexternabackend/resources/AcaoResourceTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-21-acao-pela-pesquisa/spec.md"
+      },
+      {
+        "id": "impacto:spec-22-esqueci-senha",
+        "automatic": true,
+        "feature": "spec-22-esqueci-senha",
+        "summary": "A mudança interfere no domínio da feature spec-22-esqueci-senha.",
+        "files": [
+          "src/main/java/com/apiexternabackend/config/SecurityConfig.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-22-esqueci-senha/spec.md"
+      },
+      {
+        "id": "impacto:spec-23-trocar-senha",
+        "automatic": true,
+        "feature": "spec-23-trocar-senha",
+        "summary": "A mudança interfere no domínio da feature spec-23-trocar-senha.",
+        "files": [
+          "src/main/java/com/apiexternabackend/services/AutenticacaoService.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-23-trocar-senha/spec.md"
+      },
+      {
+        "id": "impacto:spec-25-foto-perfil",
+        "automatic": true,
+        "feature": "spec-25-foto-perfil",
+        "summary": "A mudança interfere no domínio da feature spec-25-foto-perfil.",
+        "files": [
+          "src/main/java/com/apiexternabackend/services/AutenticacaoService.java",
+          "src/main/resources/application.properties"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-25-foto-perfil/spec.md"
+      },
+      {
+        "id": "impacto:spec-26-extrato-periodo-ticker",
+        "automatic": true,
+        "feature": "spec-26-extrato-periodo-ticker",
+        "summary": "A mudança interfere no domínio da feature spec-26-extrato-periodo-ticker.",
+        "files": [
+          "src/main/java/com/apiexternabackend/resources/OperacaoResource.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-26-extrato-periodo-ticker/spec.md"
+      },
+      {
         "id": "catalogo-corretoras-so-admin",
         "summary": "Investidor perde POST/DELETE de /corretoras.",
         "rule": ".spec/features/cadastro-corretora/spec.md"
@@ -555,9 +948,9 @@
         "rule": ".spec/features/spec-14-jwt-resource-server/spec.md"
       }
     ],
-    "fingerprint": "aec969da2b0c07a7a589d6926205c2884275fb0f5ad2733de17a6f350439ec2e",
-    "ownFingerprint": "268e8cb1f7e48cafe1062927986e423384a39afc54d30a90f7bf2b0cdf75b65e",
-    "reviewedAt": "2026-11-21T05:41:48.751Z",
+    "fingerprint": "0f00b6f4f1a1bb9a96e3688f762353795ffc905b1ccce572e16452275cfbc3f3",
+    "ownFingerprint": "c5776d5e5fb7a22faf4d01afe6284799028c75efcf6ce8e2eabede8c92633992",
+    "reviewedAt": "2026-11-22T04:30:21.957Z",
     "documents": [
       ".spec/features/autenticacao-investidor/design.md",
       ".spec/features/autenticacao-investidor/spec.md",
@@ -584,8 +977,6 @@
       ".spec/features/spec-04-preco-editavel/design.md",
       ".spec/features/spec-04-preco-editavel/spec.md",
       ".spec/features/spec-04-preco-editavel/tasks.md",
-      ".spec/features/spec-05-carteira-obrigatoria/spec.md",
-      ".spec/features/spec-05-carteira-obrigatoria/tasks.md",
       ".spec/features/spec-06-lucro-realizado/spec.md",
       ".spec/features/spec-06-lucro-realizado/tasks.md",
       ".spec/features/spec-07-cache-cotacao/spec.md",
@@ -613,6 +1004,24 @@
       ".spec/features/spec-16-papeis-matriz-acesso/tasks.md",
       ".spec/features/spec-17-auth-me/spec.md",
       ".spec/features/spec-17-auth-me/tasks.md",
+      ".spec/features/spec-18-gerenciar-usuarios/spec.md",
+      ".spec/features/spec-18-gerenciar-usuarios/tasks.md",
+      ".spec/features/spec-19-auditoria-admin/spec.md",
+      ".spec/features/spec-19-auditoria-admin/tasks.md",
+      ".spec/features/spec-20-descontinuar-corretora/spec.md",
+      ".spec/features/spec-20-descontinuar-corretora/tasks.md",
+      ".spec/features/spec-21-acao-pela-pesquisa/spec.md",
+      ".spec/features/spec-21-acao-pela-pesquisa/tasks.md",
+      ".spec/features/spec-22-esqueci-senha/spec.md",
+      ".spec/features/spec-22-esqueci-senha/tasks.md",
+      ".spec/features/spec-23-trocar-senha/spec.md",
+      ".spec/features/spec-23-trocar-senha/tasks.md",
+      ".spec/features/spec-24-trocar-email/spec.md",
+      ".spec/features/spec-24-trocar-email/tasks.md",
+      ".spec/features/spec-25-foto-perfil/spec.md",
+      ".spec/features/spec-25-foto-perfil/tasks.md",
+      ".spec/features/spec-26-extrato-periodo-ticker/spec.md",
+      ".spec/features/spec-26-extrato-periodo-ticker/tasks.md",
       ".spec/constituicao.md",
       "onpspec.config.json"
     ]

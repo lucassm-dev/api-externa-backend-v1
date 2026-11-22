@@ -104,3 +104,7 @@ e não possa ser usado para abuso.
 | ID | Suposição | Status | Resolução |
 |---|---|---|---|
 | ASM-503 | O `iat` do JWT tem precisão de segundos: token emitido no mesmo segundo da troca continua valendo. | aberta | — |
+
+## Perguntas em aberto
+
+Nenhuma.

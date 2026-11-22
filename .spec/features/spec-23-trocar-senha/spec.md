@@ -56,3 +56,11 @@ manter minha conta segura e encerrar sessões em outros dispositivos.
 ## Fora de escopo
 
 - Impedir que a nova senha seja igual à atual
+
+## Suposições
+
+Nenhuma.
+
+## Perguntas em aberto
+
+Nenhuma.

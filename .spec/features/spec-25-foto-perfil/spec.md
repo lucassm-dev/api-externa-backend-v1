@@ -78,3 +78,11 @@ para ser reconhecido no sistema.
 
 - Redimensionar ou comprimir a imagem (ADR-017)
 - Ver a foto de outro usuário
+
+## Suposições
+
+Nenhuma.
+
+## Perguntas em aberto
+
+Nenhuma.

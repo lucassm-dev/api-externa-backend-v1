@@ -62,12 +62,132 @@
       "ownFingerprint": "2d3f60988f896f93775e098a3c948bc38146fcff07d90fffd8006805e43bcfba",
       "conflictFingerprint": "078f37fa9331d960c3981e361e994aa1a6d1f63dc4bcc3261c812ed263041513",
       "answeredAt": "2026-11-21T05:00:58.147Z"
+    },
+    {
+      "conflictId": "impacto:autenticacao-investidor",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 12 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-17",
+      "fingerprint": "42093e5e2c3f650ace522a2a5fa509dd4997ec9b78541acacd7111b07ce8842b",
+      "ownFingerprint": "1fda0221060b00ae33dee5ebb1532dd2a88dc7741f2fbb9244cfdbf6759d1033",
+      "conflictFingerprint": "e401db0ac48100f2449f379ad0cabd6952dbcbf8855fd5a76fd3e66ce35ba7ba",
+      "answeredAt": "2026-11-22T04:31:16.001Z"
+    },
+    {
+      "conflictId": "impacto:spec-10-vazamento-investidor-inativo",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 12 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-17",
+      "fingerprint": "42093e5e2c3f650ace522a2a5fa509dd4997ec9b78541acacd7111b07ce8842b",
+      "ownFingerprint": "1fda0221060b00ae33dee5ebb1532dd2a88dc7741f2fbb9244cfdbf6759d1033",
+      "conflictFingerprint": "e1ada1cbb03e0da7bdbf9deb7ca06b94ad15718cb62ffb15b9125d5294c852c7",
+      "answeredAt": "2026-11-22T04:31:16.125Z"
+    },
+    {
+      "conflictId": "impacto:spec-11-cors",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 12 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-17",
+      "fingerprint": "42093e5e2c3f650ace522a2a5fa509dd4997ec9b78541acacd7111b07ce8842b",
+      "ownFingerprint": "1fda0221060b00ae33dee5ebb1532dd2a88dc7741f2fbb9244cfdbf6759d1033",
+      "conflictFingerprint": "25080f0cd0b6e07d147ef5fdeaf69ff98b214190c0188fa605bacdee4883f532",
+      "answeredAt": "2026-11-22T04:31:16.249Z"
+    },
+    {
+      "conflictId": "impacto:spec-14-jwt-resource-server",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 12 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-17",
+      "fingerprint": "42093e5e2c3f650ace522a2a5fa509dd4997ec9b78541acacd7111b07ce8842b",
+      "ownFingerprint": "1fda0221060b00ae33dee5ebb1532dd2a88dc7741f2fbb9244cfdbf6759d1033",
+      "conflictFingerprint": "f7bb753d02a83c9eec35e834045c65d7088ff5f87bc5e4682704c39f8a0c2cfc",
+      "answeredAt": "2026-11-22T04:31:16.371Z"
+    },
+    {
+      "conflictId": "impacto:spec-15-identidade-usuario",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 12 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-17",
+      "fingerprint": "42093e5e2c3f650ace522a2a5fa509dd4997ec9b78541acacd7111b07ce8842b",
+      "ownFingerprint": "1fda0221060b00ae33dee5ebb1532dd2a88dc7741f2fbb9244cfdbf6759d1033",
+      "conflictFingerprint": "078f37fa9331d960c3981e361e994aa1a6d1f63dc4bcc3261c812ed263041513",
+      "answeredAt": "2026-11-22T04:31:16.495Z"
+    },
+    {
+      "conflictId": "impacto:spec-16-papeis-matriz-acesso",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 12 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-17",
+      "fingerprint": "42093e5e2c3f650ace522a2a5fa509dd4997ec9b78541acacd7111b07ce8842b",
+      "ownFingerprint": "1fda0221060b00ae33dee5ebb1532dd2a88dc7741f2fbb9244cfdbf6759d1033",
+      "conflictFingerprint": "35f22452a4acdad25ef8ff6c2d2ac6f842c0c11cc5f11932a8270ca7379a398b",
+      "answeredAt": "2026-11-22T04:31:16.619Z"
+    },
+    {
+      "conflictId": "impacto:spec-18-gerenciar-usuarios",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 12 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-17",
+      "fingerprint": "42093e5e2c3f650ace522a2a5fa509dd4997ec9b78541acacd7111b07ce8842b",
+      "ownFingerprint": "1fda0221060b00ae33dee5ebb1532dd2a88dc7741f2fbb9244cfdbf6759d1033",
+      "conflictFingerprint": "1cbf39632e07ff10a9e7b03f3019e242a7000bb7ddc88b43f0259a546616c137",
+      "answeredAt": "2026-11-22T04:31:16.745Z"
+    },
+    {
+      "conflictId": "impacto:spec-22-esqueci-senha",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 12 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-17",
+      "fingerprint": "42093e5e2c3f650ace522a2a5fa509dd4997ec9b78541acacd7111b07ce8842b",
+      "ownFingerprint": "1fda0221060b00ae33dee5ebb1532dd2a88dc7741f2fbb9244cfdbf6759d1033",
+      "conflictFingerprint": "ad986f9d19eda86e7ce6264a2aac73061ccbab04e0ce3c123837215324866edf",
+      "answeredAt": "2026-11-22T04:31:16.867Z"
+    },
+    {
+      "conflictId": "impacto:spec-23-trocar-senha",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 12 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-17",
+      "fingerprint": "42093e5e2c3f650ace522a2a5fa509dd4997ec9b78541acacd7111b07ce8842b",
+      "ownFingerprint": "1fda0221060b00ae33dee5ebb1532dd2a88dc7741f2fbb9244cfdbf6759d1033",
+      "conflictFingerprint": "13bc4f2c60f0824d0da8c1f115a05b3da084eea7636b6318c03253ef40f9e7ca",
+      "answeredAt": "2026-11-22T04:31:16.991Z"
+    },
+    {
+      "conflictId": "impacto:spec-24-trocar-email",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 12 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-17",
+      "fingerprint": "42093e5e2c3f650ace522a2a5fa509dd4997ec9b78541acacd7111b07ce8842b",
+      "ownFingerprint": "1fda0221060b00ae33dee5ebb1532dd2a88dc7741f2fbb9244cfdbf6759d1033",
+      "conflictFingerprint": "09d933863a14000f0dc66aa61b018482ec6b2205d5b16f2a48a1ddbbeef779c0",
+      "answeredAt": "2026-11-22T04:31:17.114Z"
+    },
+    {
+      "conflictId": "impacto:spec-25-foto-perfil",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 12 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-17",
+      "fingerprint": "42093e5e2c3f650ace522a2a5fa509dd4997ec9b78541acacd7111b07ce8842b",
+      "ownFingerprint": "1fda0221060b00ae33dee5ebb1532dd2a88dc7741f2fbb9244cfdbf6759d1033",
+      "conflictFingerprint": "5c63a000e95c15d16a571396acebf8655f089f010eb358b86807f5a59d842f13",
+      "answeredAt": "2026-11-22T04:31:17.239Z"
+    },
+    {
+      "conflictId": "rotas-publicas-auth",
+      "choice": "prosseguir",
+      "answer": "Prosseguir nas 12 (Recommended)",
+      "source": "AskUserQuestion, sessão Claude Code de 2026-11-22, pergunta: spec-17",
+      "fingerprint": "42093e5e2c3f650ace522a2a5fa509dd4997ec9b78541acacd7111b07ce8842b",
+      "ownFingerprint": "1fda0221060b00ae33dee5ebb1532dd2a88dc7741f2fbb9244cfdbf6759d1033",
+      "conflictFingerprint": "876dd6f618db8f9b3d6b3caed56aeacd4c35a2697bcf32f3beb46b48e53bc13b",
+      "answeredAt": "2026-11-22T04:31:17.366Z"
     }
   ],
   "clientRequest": "",
   "review": {
-    "summary": "T-504 altera SecurityConfig e AutenticacaoService. Única mudança de regra: ROTAS_PUBLICAS deixa de liberar /auth/** inteiro e passa a liberar só /auth/cadastro e /auth/login (Swagger inalterado), para /auth/me exigir token; AC-575 garante que cadastro e login continuam públicos. CORS (spec-11), emissão/validação do JWT (spec-14), reuso de e-mail/CPF (spec-10) e o modelo usuario/investidor (spec-15) não mudam: AutenticacaoService só ganha um método de leitura.",
-    "reviewer": "Claude Code (claude-opus-5-5), sessão interativa de 2026-11-21",
+    "summary": "Revisão refeita em 2026-11-22 porque a revisão anterior ficou desatualizada: depois do merge da spec-17, as specs 16, 18 e 22 a 25 editaram SecurityConfig, AuthResource e AutenticacaoService, e o motor passou a apontar sobreposição com elas. A regra da spec-17 não mudou: ROTAS_PUBLICAS libera só /auth/cadastro e /auth/login (mais as rotas públicas que as specs 22 a 24 acrescentaram com governança própria), e /auth/me exige token. As specs posteriores só acrescentaram endpoints e campos (ex.: foto no UsuarioLogadoResponseDTO da spec-25), sem contradizer o /auth/me. Os 272 critérios de aceite do projeto passam no verify de 2026-11-22 (gitRev 7cbaa60).",
+    "reviewer": "Claude Code (claude-opus-5-5), sessão interativa de 2026-11-22",
     "conflicts": [
       {
         "id": "impacto:autenticacao-investidor",
@@ -128,14 +248,86 @@
         "rule": ".spec/features/spec-15-identidade-usuario/spec.md"
       },
       {
+        "id": "impacto:spec-16-papeis-matriz-acesso",
+        "automatic": true,
+        "feature": "spec-16-papeis-matriz-acesso",
+        "summary": "A mudança interfere no domínio da feature spec-16-papeis-matriz-acesso.",
+        "files": [
+          "src/main/java/com/apiexternabackend/config/SecurityConfig.java",
+          "src/main/java/com/apiexternabackend/services/AutenticacaoService.java",
+          "src/test/java/com/apiexternabackend/config/AuthMeIntegrationTest.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-16-papeis-matriz-acesso/spec.md"
+      },
+      {
+        "id": "impacto:spec-18-gerenciar-usuarios",
+        "automatic": true,
+        "feature": "spec-18-gerenciar-usuarios",
+        "summary": "A mudança interfere no domínio da feature spec-18-gerenciar-usuarios.",
+        "files": [
+          "src/main/java/com/apiexternabackend/config/SecurityConfig.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-18-gerenciar-usuarios/spec.md"
+      },
+      {
+        "id": "impacto:spec-22-esqueci-senha",
+        "automatic": true,
+        "feature": "spec-22-esqueci-senha",
+        "summary": "A mudança interfere no domínio da feature spec-22-esqueci-senha.",
+        "files": [
+          "src/main/java/com/apiexternabackend/config/SecurityConfig.java",
+          "src/main/java/com/apiexternabackend/resources/AuthResource.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-22-esqueci-senha/spec.md"
+      },
+      {
+        "id": "impacto:spec-23-trocar-senha",
+        "automatic": true,
+        "feature": "spec-23-trocar-senha",
+        "summary": "A mudança interfere no domínio da feature spec-23-trocar-senha.",
+        "files": [
+          "src/main/java/com/apiexternabackend/resources/AuthResource.java",
+          "src/main/java/com/apiexternabackend/services/AutenticacaoService.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-23-trocar-senha/spec.md"
+      },
+      {
+        "id": "impacto:spec-24-trocar-email",
+        "automatic": true,
+        "feature": "spec-24-trocar-email",
+        "summary": "A mudança interfere no domínio da feature spec-24-trocar-email.",
+        "files": [
+          "src/main/java/com/apiexternabackend/resources/AuthResource.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-24-trocar-email/spec.md"
+      },
+      {
+        "id": "impacto:spec-25-foto-perfil",
+        "automatic": true,
+        "feature": "spec-25-foto-perfil",
+        "summary": "A mudança interfere no domínio da feature spec-25-foto-perfil.",
+        "files": [
+          "src/main/java/com/apiexternabackend/domains/dtos/UsuarioLogadoResponseDTO.java",
+          "src/main/java/com/apiexternabackend/resources/AuthResource.java",
+          "src/main/java/com/apiexternabackend/services/AutenticacaoService.java"
+        ],
+        "domains": [],
+        "rule": ".spec/features/spec-25-foto-perfil/spec.md"
+      },
+      {
         "id": "rotas-publicas-auth",
         "summary": "/auth/** deixa de ser inteiro público; só cadastro e login continuam sem token.",
         "rule": ".spec/features/spec-14-jwt-resource-server/spec.md"
       }
     ],
-    "fingerprint": "e128bb505359f4873326fab956151ed8343667354e86f19dc66328b735cf59bd",
-    "ownFingerprint": "2d3f60988f896f93775e098a3c948bc38146fcff07d90fffd8006805e43bcfba",
-    "reviewedAt": "2026-11-21T04:59:23.070Z",
+    "fingerprint": "42093e5e2c3f650ace522a2a5fa509dd4997ec9b78541acacd7111b07ce8842b",
+    "ownFingerprint": "1fda0221060b00ae33dee5ebb1532dd2a88dc7741f2fbb9244cfdbf6759d1033",
+    "reviewedAt": "2026-11-22T04:30:22.361Z",
     "documents": [
       ".spec/features/autenticacao-investidor/design.md",
       ".spec/features/autenticacao-investidor/spec.md",
@@ -162,8 +354,6 @@
       ".spec/features/spec-04-preco-editavel/design.md",
       ".spec/features/spec-04-preco-editavel/spec.md",
       ".spec/features/spec-04-preco-editavel/tasks.md",
-      ".spec/features/spec-05-carteira-obrigatoria/spec.md",
-      ".spec/features/spec-05-carteira-obrigatoria/tasks.md",
       ".spec/features/spec-06-lucro-realizado/spec.md",
       ".spec/features/spec-06-lucro-realizado/tasks.md",
       ".spec/features/spec-07-cache-cotacao/spec.md",
@@ -187,8 +377,28 @@
       ".spec/features/spec-14-jwt-resource-server/tasks.md",
       ".spec/features/spec-15-identidade-usuario/spec.md",
       ".spec/features/spec-15-identidade-usuario/tasks.md",
+      ".spec/features/spec-16-papeis-matriz-acesso/spec.md",
+      ".spec/features/spec-16-papeis-matriz-acesso/tasks.md",
       ".spec/features/spec-17-auth-me/spec.md",
       ".spec/features/spec-17-auth-me/tasks.md",
+      ".spec/features/spec-18-gerenciar-usuarios/spec.md",
+      ".spec/features/spec-18-gerenciar-usuarios/tasks.md",
+      ".spec/features/spec-19-auditoria-admin/spec.md",
+      ".spec/features/spec-19-auditoria-admin/tasks.md",
+      ".spec/features/spec-20-descontinuar-corretora/spec.md",
+      ".spec/features/spec-20-descontinuar-corretora/tasks.md",
+      ".spec/features/spec-21-acao-pela-pesquisa/spec.md",
+      ".spec/features/spec-21-acao-pela-pesquisa/tasks.md",
+      ".spec/features/spec-22-esqueci-senha/spec.md",
+      ".spec/features/spec-22-esqueci-senha/tasks.md",
+      ".spec/features/spec-23-trocar-senha/spec.md",
+      ".spec/features/spec-23-trocar-senha/tasks.md",
+      ".spec/features/spec-24-trocar-email/spec.md",
+      ".spec/features/spec-24-trocar-email/tasks.md",
+      ".spec/features/spec-25-foto-perfil/spec.md",
+      ".spec/features/spec-25-foto-perfil/tasks.md",
+      ".spec/features/spec-26-extrato-periodo-ticker/spec.md",
+      ".spec/features/spec-26-extrato-periodo-ticker/tasks.md",
       ".spec/constituicao.md",
       "onpspec.config.json"
     ]
