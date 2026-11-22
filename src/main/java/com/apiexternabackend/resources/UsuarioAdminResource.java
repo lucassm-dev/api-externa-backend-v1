@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/admin/usuarios")
 @PreAuthorize("hasRole('ADMIN')")
@@ -38,6 +40,11 @@ public class UsuarioAdminResource {
                                                                 @RequestParam(required = false) Papel papel,
                                                                 @PageableDefault(sort = "id") Pageable pageable) {
         return ResponseEntity.ok(service.listar(situacao, papel, pageable));
+    }
+
+    @GetMapping("/totais")
+    public ResponseEntity<Map<SituacaoUsuario, Long>> totais(@RequestParam(required = false) Papel papel) {
+        return ResponseEntity.ok(service.totais(papel));
     }
 
     @PostMapping
