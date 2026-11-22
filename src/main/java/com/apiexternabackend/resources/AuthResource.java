@@ -22,6 +22,7 @@ import com.apiexternabackend.domains.dtos.TrocarSenhaRequestDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -91,8 +92,10 @@ public class AuthResource {
     }
 
     @GetMapping("/me/foto")
-    public ResponseEntity<byte[]> foto() {
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<byte[]> foto(@AuthenticationPrincipal InvestidorPrincipal principal) {
+        return fotoPerfilService.buscar(principal.id())
+                .map(f -> ResponseEntity.ok().contentType(MediaType.parseMediaType(f.getTipo())).body(f.getConteudo()))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/me")
