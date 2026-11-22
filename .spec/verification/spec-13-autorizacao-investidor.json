@@ -1,7 +1,7 @@
 {
   "feature": "spec-13-autorizacao-investidor",
-  "timestamp": "2026-11-22T04:15:52.405Z",
-  "gitRev": "7cbaa60",
+  "timestamp": "2026-11-22T04:57:35.340Z",
+  "gitRev": "5541bd3",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

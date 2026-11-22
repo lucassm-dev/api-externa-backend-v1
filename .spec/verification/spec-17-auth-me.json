@@ -1,7 +1,7 @@
 {
   "feature": "spec-17-auth-me",
-  "timestamp": "2026-11-22T04:19:37.917Z",
-  "gitRev": "7cbaa60",
+  "timestamp": "2026-11-22T05:00:20.212Z",
+  "gitRev": "5541bd3",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
