@@ -40,13 +40,13 @@ aqui.
   foto por usuário), `conteudo` (`bytea`), `tipo` (o media type detectado) e
   `atualizada_em`. Fica fora de `usuario` para que as consultas de usuário,
   que rodam a cada requisição autenticada, não carreguem a imagem.
-- **Tamanho máximo**: 2 MB. Acima disso, a foto é recusada.
+- **Tamanho máximo**: 10 MB. Acima disso, a foto é recusada.
 - **Formatos**: JPEG, PNG e WebP. O formato é detectado pelos primeiros bytes
   do arquivo (a assinatura), e não pela extensão nem pelo `Content-Type`
   enviado pelo cliente. Arquivo que não bate com nenhuma das três assinaturas
   é recusado.
 - **Sem processamento**: a imagem é guardada como veio, sem redimensionar nem
-  comprimir. O limite de 2 MB já segura o crescimento; redimensionar fica a
+  comprimir. O limite de 10 MB já segura o crescimento; redimensionar fica a
   cargo do frontend, se ele quiser.
 - **Entrega**: a imagem sai por um endpoint da API, com o `Content-Type`
   guardado na tabela. A forma exata (rotas e resposta do `GET /auth/me`) fica
@@ -66,9 +66,9 @@ uma funcionalidade pequena, e tira o dado do homelab.
 
 ### Consequências negativas
 
-- O banco cresce até 2 MB por usuário com foto, e o dump cresce junto
+- O banco cresce até 10 MB por usuário com foto, e o dump cresce junto
 - Cada exibição da foto passa pela API e pelo banco, sem CDN
-- Sem redimensionamento, uma foto de 2 MB é entregue inteira mesmo onde
+- Sem redimensionamento, uma foto de 10 MB é entregue inteira mesmo onde
   aparece pequena
 - Migrar para disco ou serviço externo depois exige mover os dados existentes
 

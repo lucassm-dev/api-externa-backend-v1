@@ -6,7 +6,7 @@
 ## Contexto
 
 Issue #30 (PRD 15.3), armazenamento decidido no ADR-017: a foto fica no
-Postgres, em tabela própria, até 2 MB, em JPEG, PNG ou WebP detectados pela
+Postgres, em tabela própria, até 10 MB, em JPEG, PNG ou WebP detectados pela
 assinatura do arquivo, guardada como veio.
 
 Implementada em TDD (Aula 15): cada critério entra por um commit com o teste
@@ -18,7 +18,7 @@ Decisões de projeto (respondidas pelo dono do produto em 2026-11-21):
    `PUT /auth/me/foto` (multipart, campo `arquivo`) envia ou troca e responde
    204; `DELETE /auth/me/foto` remove e responde 204; `GET /auth/me/foto`
    devolve a imagem com o tipo detectado, ou 404 sem foto.
-2. Arquivo acima de 2 MB responde `422 AUT-016`; formato fora de JPEG, PNG e
+2. Arquivo acima de 10 MB responde `422 AUT-016`; formato fora de JPEG, PNG e
    WebP responde `422 AUT-017`.
 3. `GET /auth/me` ganha `fotoUrl`: `/auth/me/foto` com foto, `null` sem foto.
    Isso altera o AC-574 (spec-17), que passa a aceitar esse campo.
@@ -30,10 +30,10 @@ Decisões de projeto (respondidas pelo dono do produto em 2026-11-21):
 Como usuário logado, quero enviar, trocar e remover a minha foto de perfil,
 para ser reconhecido no sistema.
 
-#### AC-633 — Arquivo acima de 2 MB é recusado
+#### AC-633 — Arquivo acima de 10 MB é recusado
 
 - **Dado** um usuário logado
-- **Quando** envia uma imagem com mais de 2 MB
+- **Quando** envia uma imagem com mais de 10 MB
 - **Então** recebe 422 `AUT-016` e nenhuma foto é gravada
 
 #### AC-634 — Formato fora de JPEG, PNG e WebP é recusado

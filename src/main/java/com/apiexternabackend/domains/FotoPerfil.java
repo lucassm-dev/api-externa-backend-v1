@@ -24,7 +24,7 @@ public class FotoPerfil {
     private Long usuarioId;
 
     // length só pesa no H2 dos testes (varbinary); no Postgres a coluna é bytea
-    @Column(nullable = false, length = 2 * 1024 * 1024)
+    @Column(nullable = false, length = 10 * 1024 * 1024)
     private byte[] conteudo;
 
     @Column(nullable = false, length = 20)

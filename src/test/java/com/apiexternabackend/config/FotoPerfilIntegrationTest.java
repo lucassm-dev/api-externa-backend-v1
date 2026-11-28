@@ -41,18 +41,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 class FotoPerfilIntegrationTest {
 
-    private static final int DOIS_MB = 2 * 1024 * 1024;
+    private static final int DEZ_MB = 10 * 1024 * 1024;
     private static final byte[] ASSINATURA_PNG = {(byte) 0x89, 'P', 'N', 'G', '\r', '\n', 0x1A, '\n'};
 
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
 
     @Test
-    @DisplayName("@spec:AC-633 Arquivo acima de 2 MB é recusado com AUT-016")
+    @DisplayName("@spec:AC-633 Arquivo acima de 10 MB é recusado com AUT-016")
     void arquivoAcimaDoLimite() throws Exception {
         String token = token(cadastrar());
 
-        enviar(token, png(DOIS_MB + 1))
+        enviar(token, png(DEZ_MB + 1))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.codigo").value("AUT-016"));
         foto(token).andExpect(status().isNotFound());

@@ -31,5 +31,5 @@ Decididas em 2026-11-21, implementação pendente:
 | ADR | Decisão | Impacto principal no frontend |
 |---|---|---|
 | [016](016-envio-de-email-por-smtp-gratuito.md) | E-mail por SMTP gratuito (Gmail com senha de app), credenciais em variáveis de ambiente | Pedido de código sempre responde igual; em fluxo autenticado, falha de envio vira 503 `EXT-012` |
-| [017](017-foto-de-perfil-no-banco.md) | Foto de perfil no Postgres, em tabela própria (`bytea`), até 2 MB, JPEG/PNG/WebP detectados pela assinatura | Backup continua um único `pg_dump`; banco cresce até 2 MB por usuário |
+| [017](017-foto-de-perfil-no-banco.md) | Foto de perfil no Postgres, em tabela própria (`bytea`), até 10 MB, JPEG/PNG/WebP detectados pela assinatura | Backup continua um único `pg_dump`; banco cresce até 10 MB por usuário |
 | [018](018-filtros-no-extrato-de-operacoes.md) | Extrato `GET /operacoes` com filtros no servidor (período, ticker, carteira, tipo, lucro ou prejuízo realizado); sem exportação; substitui o ADR-010 na parte de filtros | Relatórios saem do extrato; série histórica continua fora |
