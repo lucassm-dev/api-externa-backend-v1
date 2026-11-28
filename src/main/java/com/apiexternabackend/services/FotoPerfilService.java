@@ -17,7 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FotoPerfilService {
 
-    static final long TAMANHO_MAXIMO = 2 * 1024 * 1024;
+    static final long TAMANHO_MAXIMO = 10 * 1024 * 1024;
     private static final byte[] JPEG = {(byte) 0xFF, (byte) 0xD8, (byte) 0xFF};
     private static final byte[] PNG = {(byte) 0x89, 'P', 'N', 'G', '\r', '\n', 0x1A, '\n'};
 
@@ -25,7 +25,7 @@ public class FotoPerfilService {
 
     public void enviar(Long usuarioId, MultipartFile arquivo) throws IOException {
         if (arquivo.getSize() > TAMANHO_MAXIMO) {
-            throw new RegraVioladaException("AUT-016", "A foto deve ter no máximo 2 MB.");
+            throw new RegraVioladaException("AUT-016", "A foto deve ter no máximo 10 MB.");
         }
         byte[] conteudo = arquivo.getBytes();
         // ADR-017: o formato vem da assinatura do conteúdo, nunca da extensão nem do Content-Type do cliente

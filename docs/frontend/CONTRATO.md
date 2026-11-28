@@ -54,7 +54,7 @@ Quando o backend mudar: no repositório do backend, rode `./mvnw spring-boot:run
 | Papel | Rotas |
 |---|---|
 | INVESTIDOR | `/investidores`, `/carteiras/**`, `/operacoes/**` (ADMIN recebe 403) |
-| ADMIN | `/admin/**`; cadastrar, excluir e descontinuar corretora; `/corretoras/{id}/carteiras-afetadas` |
+| ADMIN | `/admin/**`; cadastrar, excluir e descontinuar corretora; `/corretoras/{id}/carteiras-afetadas`; incluir ação nova no catálogo |
 | Ambos | `/auth/me`, `/auth/senha`, `/auth/email`, `/auth/me/foto`, leitura de `/corretoras` e `/acoes`, `/mercado/barra-cotacoes` |
 
 ADMIN não tem investidor: em `/auth/me`, `nome` vem `null`.

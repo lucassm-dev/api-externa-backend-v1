@@ -1,7 +1,7 @@
 {
   "feature": "spec-28-registro-uso-api",
-  "timestamp": "2026-11-22T19:09:21.598Z",
-  "gitRev": "5a5808d",
+  "timestamp": "2026-11-28T19:41:23.632Z",
+  "gitRev": "f8f365b",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

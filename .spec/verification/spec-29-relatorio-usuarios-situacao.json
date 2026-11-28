@@ -1,7 +1,7 @@
 {
   "feature": "spec-29-relatorio-usuarios-situacao",
-  "timestamp": "2026-11-22T19:10:03.252Z",
-  "gitRev": "5a5808d",
+  "timestamp": "2026-11-28T19:42:05.527Z",
+  "gitRev": "f8f365b",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

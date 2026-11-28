@@ -1,7 +1,7 @@
 {
   "feature": "spec-31-fuso-brasilia",
-  "timestamp": "2026-11-22T19:11:27.888Z",
-  "gitRev": "5a5808d",
+  "timestamp": "2026-11-28T19:43:33.895Z",
+  "gitRev": "f8f365b",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

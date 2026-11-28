@@ -1,7 +1,7 @@
 {
   "feature": "refactor-cnpj-delete",
-  "timestamp": "2026-11-22T18:51:00.196Z",
-  "gitRev": "5a5808d",
+  "timestamp": "2026-11-28T09:17:03.466Z",
+  "gitRev": "f8f365b",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
