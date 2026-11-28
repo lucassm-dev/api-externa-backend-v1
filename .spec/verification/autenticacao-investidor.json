@@ -1,7 +1,7 @@
 {
   "feature": "autenticacao-investidor",
-  "timestamp": "2026-11-22T18:46:01.243Z",
-  "gitRev": "5a5808d",
+  "timestamp": "2026-11-28T06:24:14.983Z",
+  "gitRev": "f8f365b",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

@@ -1,7 +1,7 @@
 {
   "feature": "catalogo-acao",
-  "timestamp": "2026-11-22T18:48:09.782Z",
-  "gitRev": "5a5808d",
+  "timestamp": "2026-11-28T06:28:25.538Z",
+  "gitRev": "f8f365b",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,

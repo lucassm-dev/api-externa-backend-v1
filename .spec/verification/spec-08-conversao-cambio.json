@@ -1,7 +1,7 @@
 {
   "feature": "spec-08-conversao-cambio",
-  "timestamp": "2026-11-22T18:55:16.585Z",
-  "gitRev": "5a5808d",
+  "timestamp": "2026-11-28T17:37:10.591Z",
+  "gitRev": "f8f365b",
   "command": "./mvnw -q test",
   "reporter": "exitcode",
   "exitCode": 0,
